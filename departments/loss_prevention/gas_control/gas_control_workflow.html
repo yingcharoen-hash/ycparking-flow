@@ -1,446 +1,467 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบควบคุมการตรวจแก๊ส (Swimlane Workflow) - ยิ่งเจริญ OPR</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Prompt', sans-serif; background-color: #f1f5f9; overflow-x: hidden; }
-        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        
-        /* CSS Grid สำหรับ Swimlane - 5 คอลัมน์เฟสงานเพื่อให้รองรับ Emergency Response */
-        .swimlane-grid {
-            display: grid;
-            grid-template-columns: 180px repeat(5, 1fr);
-            width: 100%;
-        }
-        
-        .grid-cell {
-            border-right: 1px solid #e2e8f0;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            background-color: inherit;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>กระบวนการควบคุมและตรวจสอบระบบแก๊ส — แผนกป้องกันการสูญเสีย (LP)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f5f5f7;
+  --card-bg: #ffffff;
+  --text-main: #1d1d1f;
+  --text-muted: #86868b;
+  --accent-blue: #0071e3;
+  --gold: #d8a032; 
+  --gold-lt: #fdf6e3;
+  --red: #ff3b30;
+  --red-lt: #ffeceb;
+  --green: #34c759;
+  --green-lt: #ebf9ee;
+  --teal: #5ac8fa;
+  --teal-lt: #eaf8ff;
+  --purple: #af52de;
+  --purple-lt: #f4eafe;
+  --orange: #ff9500;
+  --orange-lt: #fff4e5;
+  --gray50: #f5f5f7;
+  --gray100: #e5e5ea;
+  --gray200: #d1d1d6;
+  --gray400: #8e8e93;
+  --gray600: #48484a;
+  --gray700: #3a3a3c;
+  --gray800: #1c1c1e;
+  
+  --finance-bg: #e8dff5;
+  --hr-bg: #ffe4c4;
+  --night-bg: #e5e5ea;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Sarabun", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
 
-        .sticky-detail-container { 
-            position: sticky; 
-            top: 20px;
-            height: 100%;
-        }
-        
-        .transition-layout {
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+/* ===== HEADER ===== */
+.header {
+  background: #000000;
+  color: #f5f5f7;
+  padding: 48px 48px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 50% 0%, rgba(0,113,227,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+.header-inner { position: relative; z-index: 1; }
+.header-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a1a1a6;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.header-title { font-size: 32px; font-weight: 700; color: #ffffff; line-height: 1.25; letter-spacing: -0.5px; }
+.header-title em { color: var(--accent-blue); font-style: normal; }
+.header-meta { display: flex; gap: 32px; margin-top: 24px; flex-wrap: wrap; }
+.meta-item { display: flex; flex-direction: column; gap: 4px; }
+.meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #86868b; font-weight: 600; }
+.meta-value { font-size: 13px; color: #f5f5f7; font-weight: 500; }
 
-        .step-title-text {
-            font-size: 14px;
-            font-weight: 900; 
-        }
+/* ===== LAYOUT ===== */
+.page { display: flex; gap: 0; min-height: calc(100vh - 120px); }
 
-        .tag-badge {
-            font-size: 9px;
-            padding: 2px 8px;
-            border-radius: 99px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-    </style>
+/* ===== SWIMLANE (LEFT) ===== */
+.swimlane-col { flex: 1; min-width: 0; overflow-x: auto; padding: 32px 24px 48px 24px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.swimlane-col.has-panel { flex: 0 0 58%; }
+
+.sl-wrap { background: var(--card-bg); border-radius: 24px; box-shadow: 0 12px 32px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid rgba(0,0,0,0.04); min-width: 800px; }
+.sl-table { width: 100%; border-collapse: collapse; }
+
+.lane-lbl { width: 150px; vertical-align: middle; text-align: center; padding: 20px 16px; font-size: 12px; font-weight: 600; color: var(--text-main); line-height: 1.5; border-right: 1px solid var(--gray200); border-bottom: 1px solid var(--gray200); }
+.lane-lbl.pt { background: #fafafc; }
+.lane-lbl.security { background: var(--teal-lt); }
+.lane-lbl.lp { background: var(--hr-bg); }
+.lane-lbl.audit { background: var(--finance-bg); }
+.lane-lbl.mgmt { background: var(--night-bg); }
+.lane-lbl.hdr { background: var(--gray100); color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border-top-left-radius: 24px; }
+
+.sl-steps { padding: 16px 24px; vertical-align: middle; border-bottom: 1px solid var(--gray200); }
+.sl-steps.audit-bg { background: rgba(175, 82, 222, 0.05); }
+
+.flow { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+
+.step { position: relative; border-radius: 16px; padding: 16px; border: none; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); min-width: 150px; max-width: 200px; user-select: none; background: #f5f5f7; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); text-align: left; }
+.step:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06), inset 0 0 0 1px rgba(0,0,0,0.02); }
+.step.active { outline: none; transform: translateY(-4px) scale(1.02); box-shadow: 0 0 0 2px var(--accent-blue), 0 12px 32px rgba(0,113,227,0.15); }
+
+.step.ops { background: #f0f4f8; }
+.step.risk { background: var(--red-lt); box-shadow: inset 0 0 0 1px rgba(255,59,48,0.2); }
+.step.ctrl { background: var(--green-lt); }
+.step.fin { background: var(--purple-lt); }
+.step.teal { background: var(--teal-lt); }
+.step.hr-card { background: var(--orange-lt); }
+.step.night-card { background: var(--gray100); }
+.step.emg-card { background: #fee2e2; border: 1px solid #fca5a5; }
+
+.step-num { font-size: 10px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+.step-text { font-size: 13px; font-weight: 600; color: var(--text-main); line-height: 1.5; }
+.step.risk .step-text { color: var(--red); }
+.step.emg-card .step-text { color: #b91c1c; }
+
+.badge { position: absolute; top: -8px; right: -8px; font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 12px; white-space: nowrap; pointer-events: none; }
+.badge.r { background: var(--red); color: #fff; box-shadow: 0 4px 12px rgba(255,59,48,0.3); }
+.badge.c { background: var(--green); color: #fff; box-shadow: 0 4px 12px rgba(52,199,89,0.3); }
+
+/* Detail Panel */
+.panel-col { width: 0; overflow: hidden; transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1); flex-shrink: 0; }
+.panel-col.open { width: 42%; }
+
+.panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(40px) saturate(200%); border-radius: 24px; margin: 32px 24px 48px 0; box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05); overflow: hidden; height: calc(100% - 80px); display: flex; flex-direction: column; }
+.panel-head { padding: 24px 24px 20px; display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(0,0,0,0.08); }
+.panel-head-left { flex: 1; }
+.panel-step-id { font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px; }
+.panel-title { font-size: 18px; font-weight: 600; color: var(--text-main); line-height: 1.3; }
+.panel-close { width: 32px; height: 32px; background: rgba(0,0,0,0.05); border: none; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; margin-left: 16px; }
+.panel-close:hover { background: rgba(0,0,0,0.1); }
+
+.panel-body { flex: 1; overflow-y: auto; padding: 24px; }
+.panel-body::-webkit-scrollbar { width: 6px; }
+.panel-body::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
+
+.panel-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--gray200); }
+.task-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.task-item { display: flex; gap: 12px; align-items: flex-start; }
+.task-dot { width: 8px; height: 8px; background: var(--accent-blue); border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.task-text { font-size: 14px; color: var(--text-main); font-weight: 500; line-height: 1.6; }
+
+.warning-box { background: var(--red-lt); border-radius: 16px; padding: 16px 20px; margin-bottom: 24px; }
+.warning-title { font-size: 11px; font-weight: 600; color: var(--red); text-transform: uppercase; margin-bottom: 8px; }
+.warning-text { font-size: 13px; font-weight: 500; color: #a32020; line-height: 1.6; }
+
+.img-box { margin-bottom: 24px; border-radius: 16px; overflow: hidden; border: 1px solid var(--gray200); }
+.img-box img { width: 100%; display: block; }
+.img-caption { padding: 12px; background: var(--gray100); font-size: 11px; color: var(--gray700); text-align: center; }
+
+@media print {
+  .nav-links, .panel-col, .badge { display: none !important; }
+  body { background: #fff !important; }
+  .swimlane-col { width: 100% !important; padding: 0 !important; }
+  .sl-wrap { border: 1px solid #000; box-shadow: none !important; }
+}
+</style>
 </head>
-<body class="bg-slate-50">
-    <div id="root"></div>
+<body>
 
-    <script type="text/babel">
-        const { useState } = React;
+<div class="header">
+  <div style="position:absolute; top:24px; right:40px; display:flex; gap:10px; z-index:10;" class="nav-links">
+    <a href="../../../index.html" style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); color:#fff; text-decoration:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; transition:all .2s; display:flex; align-items:center; gap:6px;">🏢 หน้าหลักบริษัท</a>
+    <button onclick="window.print()" style="background:#fff; color:#1d1d1f; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12px; display:flex; align-items:center; gap:6px;">🖨️ พิมพ์รายงาน</button>
+  </div>
+  <div class="header-inner">
+    <div class="header-badge">เอกสารตรวจสอบภายใน · Internal Audit Document</div>
+    <div class="header-title">กระบวนการปฏิบัติงานและระงับเหตุฉุกเฉิน<br><em>แผนกป้องกันการสูญเสีย (LP) — ระบบ Gas Control</em></div>
+    <div class="header-meta">
+      <div class="meta-item"><span class="meta-label">ระบบหลัก</span><span class="meta-value">Gas Metering & Solenoid</span></div>
+      <div class="meta-item"><span class="meta-label">จุดเสี่ยงวิกฤต</span><span class="meta-value">3 จุด</span></div>
+      <div class="meta-item"><span class="meta-label">รอบความถี่</span><span class="meta-value">รายชั่วโมง / รายวัน / ฉุกเฉิน</span></div>
+    </div>
+  </div>
+</div>
 
-        // --- ไอคอน Gas Detector Industrial Design ---
-        const GasDetectorIcon = ({ size = "48" }) => (
-            <svg width={size} height={size} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="16" y="8" width="32" height="48" rx="4" fill="#334155" stroke="#1e293b" strokeWidth="2"/>
-                <path d="M16 14L14 16V48L16 50" stroke="#fbbf24" strokeWidth="3" strokeLinecap="round"/>
-                <path d="M48 14L50 16V48L48 50" stroke="#fbbf24" strokeWidth="3" strokeLinecap="round"/>
-                <rect x="21" y="16" width="22" height="14" rx="1" fill="#ecfdf5" stroke="#065f46" strokeWidth="1"/>
-                <path d="M24 23L28 20L32 25L36 21L40 24" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="32" cy="6" r="4" fill="#475569" stroke="#1e293b" strokeWidth="1"/>
-                <circle cx="26" cy="38" r="3" fill="#ef4444" stroke="#991b1b" strokeWidth="1"/>
-                <circle cx="38" cy="38" r="3" fill="#10b981" stroke="#065f46" strokeWidth="1"/>
-                <rect x="26" y="46" width="12" height="4" rx="1" fill="#64748b"/>
-                <circle cx="50" cy="12" r="1.5" fill="#ef4444">
-                    <animate attributeName="opacity" values="1;0.2;1" dur="1s" repeatCount="indefinite" />
-                </circle>
-            </svg>
-        );
+<div class="page">
+  <!-- ซ้าย: Swimlane -->
+  <div class="swimlane-col" id="swimlaneCol">
+    <div class="sl-wrap">
+      <table class="sl-table">
+        <tbody>
+          <tr>
+            <td class="lane-lbl hdr">หน่วยงาน/หน้าที่</td>
+            <td class="lane-lbl hdr" style="text-align:left; padding-left:24px; width:auto; border-right:none;">ขั้นตอนการปฏิบัติงาน (แบ่งตามเฟส)</td>
+          </tr>
+          
+          <!-- PT -->
+          <tr>
+            <td class="lane-lbl pt">ผู้จัดส่ง (PT)<br><span style="font-size:10px; font-weight:400; color:var(--text-muted);">Receiving</span></td>
+            <td class="sl-steps">
+              <div class="flow">
+                <button class="step ops" onclick="showPanel('1', this)">
+                  <div class="step-num">STEP 1</div>
+                  <div class="step-text">A1 — ขั้นตอนการส่ง-รับถังแก๊สลงสถานี</div>
+                  <div class="badge c">จุดควบคุม</div>
+                </button>
+              </div>
+            </td>
+          </tr>
 
-        const Icons = {
-            Doc: () => (
-                <svg className="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            ),
-            Line: () => (
-                <svg className="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.083.922.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975 1.748-1.921 2.547-3.692 2.547-5.968z"></path></svg>
-            ),
-            Emergency: () => (
-                <svg className="w-5 h-5 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            ),
-            Verify: () => (
-                <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-            )
-        };
+          <!-- Security -->
+          <tr>
+            <td class="lane-lbl security">รปภ. / ศูนย์อาหาร<br><span style="font-size:10px; font-weight:400; color:var(--text-muted);">Hourly / Daily / Emergency</span></td>
+            <td class="sl-steps counter-bg">
+              <div class="flow">
+                <button class="step teal" onclick="showPanel('3', this)">
+                  <div class="step-num">STEP 3</div>
+                  <div class="step-text">R1 — ตรวจความพร้อมสถานีรายชั่วโมง</div>
+                </button>
+                <button class="step teal" onclick="showPanel('5', this)">
+                  <div class="step-num">STEP 5</div>
+                  <div class="step-text">R2 — ตรวจความเรียบร้อยร้านค้ารายวัน</div>
+                </button>
+                <button class="step emg-card" onclick="showPanel('E1', this)">
+                  <div class="step-num">EMG 1</div>
+                  <div class="step-text">🚨 แจ้งเหตุและควบคุมเบื้องต้น</div>
+                  <div class="badge r">วิกฤต</div>
+                </button>
+              </div>
+            </td>
+          </tr>
 
-        const App = () => {
-            const [activeStep, setActiveStep] = useState(null);
-            const [showImage, setShowImage] = useState(false);
+          <!-- LP -->
+          <tr>
+            <td class="lane-lbl lp">ทีม LP<br><span style="font-size:10px; font-weight:400; color:var(--text-muted);">Loss Prevention</span></td>
+            <td class="sl-steps hr-bg">
+              <div class="flow">
+                <button class="step hr-card" onclick="showPanel('3-V', this)">
+                  <div class="step-num">STEP 3-V</div>
+                  <div class="step-text">V1 — ทวนสอบเทคนิคสถานี (1-11)</div>
+                </button>
+                <button class="step hr-card" onclick="showPanel('5-V', this)">
+                  <div class="step-num">STEP 5-V</div>
+                  <div class="step-text">A2 — ทวนสอบระบบร้านค้า (1-22)</div>
+                </button>
+                <button class="step emg-card" onclick="showPanel('E2', this)">
+                  <div class="step-num">EMG 2</div>
+                  <div class="step-text">🚨 ระงับเหตุและประสานซ่อมด่วน</div>
+                </button>
+                <button class="step hr-card" onclick="showPanel('7', this)">
+                  <div class="step-num">STEP 7</div>
+                  <div class="step-text">สรุปรายงานความปลอดภัยประจำเดือน</div>
+                </button>
+              </div>
+            </td>
+          </tr>
 
-            const roles = [
-                { id: 'pt', name: 'ผู้จัดส่ง (PT)', color: 'bg-slate-100', text: 'text-slate-700' },
-                { id: 'security', name: 'รปภ. / ศูนย์อาหาร', color: 'bg-blue-50', text: 'text-blue-700' },
-                { id: 'lp', name: 'ทีม LP (Loss Prevention)', color: 'bg-amber-50', text: 'text-amber-700' },
-                { id: 'audit', name: 'Audit ', color: 'bg-purple-50', text: 'text-purple-700' },
-                { id: 'mgmt', name: 'ผู้บริหาร / ฝ่าย OPR', color: 'bg-emerald-50', text: 'text-emerald-700' },
-            ];
+          <!-- Audit -->
+          <tr>
+            <td class="lane-lbl audit">Audit<br><span style="font-size:10px; font-weight:400; color:var(--text-muted);">ส่วนกลาง</span></td>
+            <td class="sl-steps fin-bg">
+              <div class="flow">
+                <button class="step fin" onclick="showPanel('2', this)">
+                  <div class="step-num">STEP 2</div>
+                  <div class="step-text">Audit: สุ่มตรวจการรับมอบ</div>
+                </button>
+                <button class="step fin" onclick="showPanel('4', this)">
+                  <div class="step-num">STEP 4</div>
+                  <div class="step-text">Audit: ทวนสอบรายงานรายวัน</div>
+                </button>
+                <button class="step fin" onclick="showPanel('6', this)">
+                  <div class="step-num">STEP 6</div>
+                  <div class="step-text">Audit: ทวนสอบแผนซ่อมบำรุง (PM)</div>
+                </button>
+              </div>
+            </td>
+          </tr>
 
-            const phases = ['ตรวจรับ (Receiving)', 'รายชั่วโมง / รายวัน', 'รายสัปดาห์ / ทวนสอบ', 'รายเดือน / Audit', 'ระงับเหตุ (Emergency)'];
+          <!-- MGMT -->
+          <tr>
+            <td class="lane-lbl mgmt">ผู้บริหาร / OPR<br><span style="font-size:10px; font-weight:400; color:var(--text-muted);">Management</span></td>
+            <td class="sl-steps">
+              <div class="flow">
+                <button class="step emg-card" onclick="showPanel('E3', this)">
+                  <div class="step-num">EMG 3</div>
+                  <div class="step-text">🚨 ตรวจสอบซ้ำและฟื้นฟูระบบ</div>
+                </button>
+                <button class="step night-card" onclick="showPanel('8', this)">
+                  <div class="step-num">STEP 8</div>
+                  <div class="step-text">รับรองนโยบาย OPR & สั่งการวิกฤต</div>
+                </button>
+              </div>
+            </td>
+          </tr>
 
-            const workflow = [
-                { 
-                    id: 1, phase: 0, role: 'pt', title: 'A1 — ขั้นตอนการส่ง-รับถังแก๊สลงสถานี', 
-                    tasks: [
-                        'ผู้จัดส่ง (PT) นำถังแก๊สลงจากรถวางหน้าสถานีตามจำนวนสั่งซื้อ (สถานี A, B, ยิ่งเจริญสแควร์ และลาน 4)',
-                        'ตรวจสอบจำนวนถังแก๊สตรงตามใบส่งของ และสภาพภายนอกของถังว่ามีความพร้อมใช้งานหรือไม่',
-                        'ทำความสะอาดพื้นที่และจุดเชื่อมต่อทุกครั้งก่อนนำถังใหม่เข้าระบบ',
-                        'ตรวจสอบถังใหม่ทุกถังด้วยเครื่องวัดระบบแก๊ส (Portable Detector) โดยค่าต้องเป็น 0 เท่านั้น',
-                        'ลงลายมือชื่อรับมอบในเอกสาร และแจ้งรายงานเข้ากลุ่ม Line ทันที'
-                    ],
-                    docs: [{ icon: <Icons.Doc />, text: 'ใบส่งแก๊ส / ใบรับมอบสินค้า' }],
-                    responsibles: ['พนักงาน PT', 'รปภ. ประจำจุดสถานี'],
-                    frequency: 'ทุกครั้งที่มีการจัดส่ง',
-                    warning: 'ห้ามรับถังเข้าสถานีหากเครื่องวัดตรวจพบค่ารั่วไหล (ค่า > 0)',
-                    hasImage: true, imageUrl: 'https://lh3.googleusercontent.com/d/1nXsAvQCWZVOQDcmjFiIbwV3Y-V_kgUSQ',
-                    imageLabel: 'ดูภาพขั้นตอน A1', imageDescription: 'พนักงานตรวจสอบความปลอดภัยถังแก๊สใหม่หน้าสถานีแก๊ส'
-                },
-                { 
-                    id: 3, phase: 1, role: 'security', title: 'R1 — ตรวจความพร้อมสถานีรายชั่วโมง', 
-                    linkTag: 'STATION 1-11',
-                    tasks: [
-                        'ดำเนินการตรวจสอบแรงดันแก๊สภายในสถานีตามเกจวัด (ปกติแรงดันต้องไม่น้อยกว่า 20 PSI)',
-                        'เกจหมายเลข 1: ตรวจวัดแรงดันในท่อเมนหลักที่รับแก๊สเข้าระบบ',
-                        'เกจหมายเลข 2: ตรวจวัดแรงดันภายในสถานี (Station Pressure)',
-                        'เกจหมายเลข 3: ตรวจวัดแรงดันฝั่งซ้ายและขวาของระบบจ่ายแก๊ส',
-                        'หมายเลข 8: ตรวจอุณหภูมิหม้อต้ม (Vaporizer) มาตรฐาน 60-80 องศา',
-                        'หมายเลข 9: ตรวจสอบระดับน้ำในหม้อต้ม ต้องอยู่ที่ระดับ MAX สูงสุดเสมอ',
-                        'ตรวจสอบตู้จ่ายแก๊ส และพื้นที่โดยรอบสถานี'
-                    ],
-                    docs: [{ icon: <Icons.Doc />, text: 'บันทึกเอกสารประจำวัน' }, { icon: <Icons.Line />, text: 'กลุ่มรายงานแก๊ส (Line)' }],
-                    responsibles: ['รปภ.ประจำจุดแดง (ลิฟต์โหลดดิ้ง)/อาคารพลาซ่า'],
-                    frequency: 'ดำเนินการตรวจทุกๆ 1 ชั่วโมง',
-                    warning: 'หากแรงดันต่ำกว่า 20 PSI ให้แจ้งหัวหน้าชุด รปภ.เพื่อประสานงานทีมช่างทันที',
-                    hasImage: true, imageUrl: 'https://lh3.googleusercontent.com/d/1kXrOEqYCU9O65dYtfdqkEx3muCw0ta_3',
-                    imageLabel: 'ดูผังตำแหน่งเกจ 1-11', imageDescription: 'ผังตำแหน่งเกจวัดแรงดันและระบบควบคุมหม้อต้มภายในสถานีแก๊ส'
-                },
-                { 
-                    id: 5, phase: 1, role: 'security', title: 'R2 — ตรวจความเรียบร้อยร้านค้ารายวัน', 
-                    linkTag: 'SHOPS 1-22',
-                    tasks: [
-                        'รวบรวมรายงานภาพถ่ายการตรวจประจำวันจากร้านค้า Food Court และ Take Home',
-                        'ตรวจสอบจุดเชื่อมต่อ Gas Meter เบื้องต้นด้วยตาเปล่าตามผังจุดตรวจร้านค้า',
-                        'เช็คความสะอาดและระเบียบพื้นที่รอบจุด Gas Meter ร้านค้า ต้องไม่มีสิ่งของกีดขวาง',
-                        'สรุปประวัติการแจ้งเหตุผิดปกติจากผู้ค้าประจำวันเสนอทีม LP'
-                    ],
-                    docs: [{ icon: <Icons.Line />, text: 'คลังภาพรายงานร้านค้า (Line)' }],
-                    responsibles: ['จนท.ศูนย์อาหาร / หัวหน้าชุดรปภ.'],
-                    frequency: 'ทุกวัน (เช้า-บ่าย)',
-                    warning: 'ห้ามอนุญาตให้ร้านค้าวางสิ่งของบังจุด Gas Meter หรือเก็บถังแก๊สสำรองในพื้นที่ขาย',
-                    hasImage: true, imageUrl: 'https://lh3.googleusercontent.com/d/1aHc4kcXUwiqmAJ2Vzx6XVNa_2HbavFby',
-                    imageLabel: 'ดูผังร้านค้า 1-22', imageDescription: 'จุดติดตั้ง Gas Meter และวาล์วเปิด-ปิดแก๊สหลังร้านค้า'
-                },
-                { 
-                    id: '3-V', phase: 2, role: 'lp', title: 'V1 — ทวนสอบเทคนิคสถานี (1-11)', 
-                    linkTag: 'STATION 1-11',
-                    isVerifying: 3,
-                    tasks: [
-                        'เมื่อมีการเปลี่ยนถังแก๊ส ให้ตรวจหมายเลข 1-2',
-                        'ใช้แค่ท่อสีน้ำเงินเท่านั้น เพื่อความปลอดภัยของหมายเลข 1',
-                        'ตรวจสอบแรงดันหมายเลข 4 ว่าแก๊สที่ใช้งานอยู่หมดหรือยัง',
-                        'สังเกตุหมายเลข 5 ว่ามีแสดงสถานะแถบสีแดงหรือไม่ เมื่อแสดงแถบสีแดง หมายความว่า แก๊สฝั่งที่ใช้งานอยู่หมดให้โยกคันโยกลงด้านล่างทีละ 15 องศา ไปอีกฝั่ง',
-                        'ทวนสอบระบบหม้อต้ม (หมายเลข 8–9): อุณหภูมิต้องไม่ต่ำกว่า 60 องศา และน้ำต้องเต็มเกณฑ์ เมื่อน้ำหมดเติมน้ำในช่องหมายเลข 7',
-                        'ตรวจสอบแรงดันขาออกจากหม้อต้มหมายเลข 6 เทียบกับหมายเลข 10 ต้องใกล้เคียงกัน',
-                        'ตรวจสอบแรงดันขาออกจากหมายเลข 11 ไปจ่ายให้แต่ละโซน',
-                        'ตรวจสอบพลาสติกสีเหลืองหมายเลข 3 จะกระเด็นหลุดเมื่อแรงดันเกิน',
-                        'ตรวจสอบความสม่ำเสมอของบันทึก R1 ย้อนหลัง 100%'
-                    ],
-                    docs: [{ icon: <Icons.Verify />, text: 'Weekly Technical Audit (LP)' }],
-                    responsibles: ['เจ้าหน้าที่ LP', 'ทีมช่างอาคาร'],
-                    frequency: 'สัปดาห์ละ 2 ครั้ง',
-                    warning: 'ต้องทดสอบการทำงานของระบบตัดแก๊สอัตโนมัติ (Solenoid Interlock) อย่างน้อยสัปดาห์ละครั้ง',
-                    hasImage: true, imageUrl: 'https://lh3.googleusercontent.com/d/1kXrOEqYCU9O65dYtfdqkEx3muCw0ta_3',
-                    imageLabel: 'ดูภาพอ้างอิงเทคนิค 1-11', imageDescription: 'การตรวจสอบทางเทคนิคเชิงลึกที่สถานีแก๊สโดยแผนก LP'
-                },
-                { 
-                    id: '5-V', phase: 2, role: 'lp', title: 'A2 — ทวนสอบระบบร้านค้า (1-22)', 
-                    linkTag: 'SHOPS 1-22',
-                    isVerifying: 5,
-                    tasks: [
-                        'ใช้ Portable Gas Detector ตรวจแก๊สรั่ว โดยตรวจวัดหมายเลข 1-20',
-                        'หมายเลข 19 คือ เตาของโครงการ, หมายเลข 20 คือ เตาของลูกค้า',
-                        'ทดสอบ Solenoid Valve (หมายเลข 6): ต้องมี "แรงดึงดูดวัตถุที่เป็นเหล็ก" ขณะเปิดวาล์วใช้งาน',
-                        'ทดสอบโซลินอยด์วาล์ว (หมายเลข 8) ขณะที่สั่งเปิด ว่าปกติหรือไม่ ปกติ คือ โซลินอยด์วาล์วมีแรงดึงดูด วัตถุที่เป็นเหล็ก',
-                        'ตรวจสอบการทำงาน Gas Leak Detector (หมายเลข 21) ว่าปกติหรือไม่ ปกติ คือ ตรวจจับแก๊สได้ โซลินอยด์จะตัดการทำงานทันที',
-                        'ตรวจสอบ Control Box (หมายเลข 22): ไฟสถานะติดทุกดวงหรือไม่, ปุ่ม On/Off ใช้งานได้ปกติ, เสียง Buzzer ดังเป็นปกติมั้ย',
-                        'ตรวจสอบความถูกต้องของรายงานประเมินความเสี่ยง Supplier (PT)'
-                    ],
-                    docs: [{ icon: <Icons.Verify />, text: 'Weekly Shop Verification Report' }],
-                    responsibles: ['เจ้าหน้าที่ LP (Loss Prevention)'],
-                    frequency: 'สัปดาห์ละ 2 ครั้ง',
-                    warning: 'Gas Leak Detector แต่ละร้านต้องไม่ชำรุด เช่นเปียกน้ำ หรือมีคราบน้ำมันอุดตัน',
-                    hasImage: true, imageUrl: 'https://lh3.googleusercontent.com/d/1aHc4kcXUwiqmAJ2Vzx6XVNa_2HbavFby',
-                    imageLabel: 'ดูผังร้านค้า 1-22', imageDescription: 'จุดตรวจสอบทางเทคนิคระบบ Gas Meter และ Solenoid Valve ร้านค้า'
-                },
-                { 
-                    id: 'E1', phase: 4, role: 'security', title: '🚨 แจ้งเหตุและควบคุมเบื้องต้น', 
-                    tasks: [
-                        'เมื่อพบแก๊สรั่ว/กลิ่นผิดปกติ รปภ. แจ้งหัวหน้าชุด และ LP ทันที',
-                        'กั้นพื้นที่อันตรายในรัศมี 5 เมตร ห้ามบุคคลภายนอกเข้าโดยเด็ดขาด',
-                        'ห้ามให้เกิดประกายไฟในพื้นที่ และห้ามเปิด/ปิดสวิตช์ไฟฟ้าทุกชนิดในจุดเกิดเหตุ'
-                    ],
-                    docs: [{ icon: <Icons.Emergency />, text: 'บันทึกเหตุฉุกเฉินเบื้องต้น' }],
-                    responsibles: ['รปภ. ประจำจุด / ผู้ตรวจพบเหตุ'],
-                    frequency: 'ทันทีที่พบความผิดปกติ',
-                    warning: 'เน้นความปลอดภัยในชีวิตก่อนทรัพย์สินเสมอ หากรุนแรงให้กดปุ่มหยุดฉุกเฉิน (EMG Stop)',
-                    hasImage: false
-                },
-                { 
-                    id: 'E2', phase: 4, role: 'lp', title: '🚨 ระงับเหตุและประสานซ่อมด่วน', 
-                    tasks: [
-                        'LP/ทีมช่างอาคาร ดำเนินการปิดวาล์วเมนหลัก (Main Valve) ของโซนที่เกิดเหตุ',
-                        'ประสานทีมช่างจากบริษัท Supplier แก๊ส (PT) เข้าแก้ไขจุดรั่วไหลทันที',
-                        'ใช้เครื่องตรวจวัดแก๊สติดตามความเข้มข้นของแก๊สในอากาศจนกว่าจะปลอดภัย'
-                    ],
-                    docs: [{ icon: <Icons.Verify />, text: 'บันทึกการระงับเหตุทางเทคนิค' }],
-                    responsibles: ['เจ้าหน้าที่ LP / ทีมช่างอาคาร / PT'],
-                    frequency: 'ทันทีเมื่อได้รับแจ้งเหตุ',
-                    warning: 'ห้ามจ่ายแก๊สเข้าระบบจนกว่าทีมช่างจะยืนยันการซ่อมแซมเสร็จสิ้น 100%',
-                    hasImage: false
-                },
-                { 
-                    id: 'E3', phase: 4, role: 'mgmt', title: '🚨 ตรวจสอบซ้ำและฟื้นฟูระบบ', 
-                    tasks: [
-                        'ตรวจสอบความเรียบร้อยหลังการซ่อมแซม ค่าวัดแก๊สต้องเป็น 0 เท่านั้น',
-                        'จัดทำ Incident Report ระบุสาเหตุ (Root Cause) และมาตรการป้องกันซ้ำ',
-                        'ผู้บริหาร (COO) รับรองรายงานและสั่งการเปิดระบบการจ่ายแก๊สปกติ'
-                    ],
-                    docs: [{ icon: <Icons.Doc />, text: 'Incident & Recovery Report' }],
-                    responsibles: ['ผู้บริหาร (COO) / ฝ่าย OPR'],
-                    frequency: 'หลังระงับเหตุสำเร็จ',
-                    warning: 'ต้องถอดบทเรียนเพื่อปรับปรุงมาตรฐานความปลอดภัย OPR ในรอบถัดไป',
-                    hasImage: false
-                },
-                { id: 2, phase: 0, role: 'audit', title: 'Audit: สุ่มตรวจการรับมอบ', tasks: ['สุ่มเข้าตรวจสอบหน้างานขณะจัดส่งแก๊ส','ตรวจเช็คความถูกต้องของ PPE พนักงาน','ทวนสอบขั้นตอนการใช้เครื่องวัดแก๊ส รปภ.'], docs: [{icon:<Icons.Verify/>, text:'Spot Check Report'}], responsibles: ['Audit ส่วนกลาง'], frequency: 'สุ่มตรวจสอบ', warning: 'เมื่อพบว่าไม่ปลอดภัยทำบันทึกรายงานส่ง ผจก.ฝ่ายอาคารสถานที่และ COO', hasImage: false },
-                { id: 4, phase: 1, role: 'audit', title: 'Audit: ทวนสอบรายงานรายวัน', tasks: ['ตรวจสอบความครบถ้วนของ Digital Log ทุกชั่วโมง','รายงานสรุปประเด็น Error ประจำวัน'], docs: [{icon:<Icons.Verify/>, text:'Log Audit Report'}], responsibles: ['Audit ส่วนกลาง'], frequency: 'ทุกวัน', warning: 'ข้อมูลที่ขาดหายเกิน 2 ชม. คือความเสี่ยงกลาง', hasImage: false },
-                { id: 6, phase: 2, role: 'audit', title: 'Audit: ทวนสอบแผนซ่อมบำรุง (PM)', tasks: ['ตรวจสอบความถูกต้องของรายงานประเมินความเสี่ยง Supplier (PT)','ทวนสอบการซ่อมอุปกรณ์แจ้งเสียตามกำหนด','ตรวจความพร้อมถังดับเพลิงรอบสถานี'], docs: [{icon:<Icons.Verify/>, text:'Safety Area Checklist'}], responsibles: ['Audit / Safety Manager'], frequency: 'รายสัปดาห์', warning: 'อุปกรณ์แจ้งซ่อมเกิน 7 วัน ต้องทำรายงานถึง COO', hasImage: false },
-                { id: 7, phase: 3, role: 'lp', title: 'สรุปรายงานความปลอดภัยประจำเดือน', tasks: ['รวบรวมสถิติ Error และจุดเสี่ยงรายเดือน','ประเมิน Safety Score ประสิทธิภาพทีม รปภ.','จัดทำสรุปภาพรวมเสนอต่อที่ประชุมผู้บริหาร'], docs: [{icon:<Icons.Doc/>, text:'Monthly Safety Summary'}], responsibles: ['ผู้จัดการแผนก LP'], frequency: 'ทุกสิ้นเดือน', warning: 'ข้อมูลสถิติต้องตรวจสอบย้อนหลังได้ 100%', hasImage: false },
-                { id: 8, phase: 3, role: 'mgmt', title: 'รับรองนโยบาย OPR & สั่งการวิกฤต', tasks: ['พิจารณารับรองรายงานประจำเดือนของโครงการ','อนุมัติงบประมาณซ่อมบำรุงเชิงป้องกัน','สั่งการประกาศภาวะฉุกเฉินกรณีพบความเสี่ยงวิกฤต'], docs: [{icon:<Icons.Doc/>, text:'Management Audit Review'}], responsibles: ['ผู้บริหาร (COO)'], frequency: 'ทุกเดือน', warning: 'การสั่งการต้องสอดคล้องกับแผนระงับอัคคีภัยของโครงการ', hasImage: false }
-            ];
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-            const renderDetailPanel = () => {
-                const step = workflow.find(s => s.id === activeStep);
-                if (!step) return null;
+  <!-- ขวา: Panel -->
+  <div class="panel-col" id="panelCol">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-head-left">
+          <div class="panel-step-id" id="pId">STEP XX</div>
+          <div class="panel-title" id="pTitle">-</div>
+        </div>
+        <button class="panel-close" onclick="closePanel()">✕</button>
+      </div>
+      <div class="panel-body">
+        
+        <div class="panel-section">
+          <div class="panel-section-title">รายละเอียดปฏิบัติงาน</div>
+          <div class="task-list" id="pTasks"></div>
+        </div>
 
-                return (
-                    <div className="h-full bg-white rounded-[2.5rem] border-2 border-slate-200 shadow-2xl overflow-hidden animate-in slide-in-from-right-10 duration-500 ease-out flex flex-col">
-                        <div className={`p-6 border-b flex justify-between items-center shrink-0 ${step.phase === 4 ? 'bg-red-700 text-white border-red-800' : 'bg-slate-900 text-white border-slate-700'}`}>
-                            <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black shadow-lg border border-white/20 ${step.phase === 4 ? 'bg-red-500' : 'bg-blue-600'}`}>
-                                    {step.phase === 4 ? <span className="text-2xl">🚨</span> : <GasDetectorIcon size="28" />}
-                                </div>
-                                <div>
-                                    <h3 className="text-xl font-black leading-tight uppercase tracking-tight">{step.title}</h3>
-                                    <div className="flex gap-2 mt-1">
-                                        <span className="bg-white/20 text-white/90 text-[9px] font-bold px-2 py-0.5 rounded border border-white/30 uppercase font-mono tracking-tighter">ID: {step.id}</span>
-                                        {step.linkTag && <span className="bg-emerald-500/20 text-emerald-300 text-[9px] font-bold px-2 py-0.5 rounded border border-emerald-500/30 font-mono tracking-tighter">📍 {step.linkTag}</span>}
-                                    </div>
-                                </div>
-                            </div>
-                            <button onClick={() => {setActiveStep(null); setShowImage(false);}} className="bg-white/10 hover:bg-red-500 text-white w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 shadow-lg text-2xl">×</button>
-                        </div>
-                        
-                        <div className="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar">
-                            <div>
-                                <div className="flex items-center justify-between mb-5 border-b border-slate-100 pb-3">
-                                    <h4 className="text-slate-900 font-black flex items-center text-lg uppercase tracking-tight">
-                                        <span className="bg-blue-100 text-blue-600 p-2 rounded-lg mr-3 shadow-sm text-sm">📝</span> รายละเอียดการปฏิบัติงาน
-                                    </h4>
-                                    {step.isVerifying && <span className="bg-purple-100 text-purple-700 text-[10px] font-black px-3 py-1 rounded-full border border-purple-200">🔍 ทวนสอบขั้นตอนที่ {step.isVerifying}</span>}
-                                </div>
-                                <ul className="space-y-4">
-                                    {step.tasks.map((t, i) => (
-                                        <li key={i} className="flex items-start text-slate-700 text-base group">
-                                            <span className="mr-3 text-blue-500 font-black text-2xl mt-0.5">–</span> 
-                                            <span className="group-hover:text-slate-950 transition-colors leading-relaxed font-semibold">{t}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+        <div id="pWarning" class="warning-box" style="display:none;">
+          <div class="warning-title">⚠️ จุดสำคัญที่ต้องระวัง</div>
+          <div class="warning-text" id="pWarningText"></div>
+        </div>
 
-                            {step.hasImage && (
-                                <div className="mt-6">
-                                    <button onClick={() => setShowImage(!showImage)} className={`w-full flex items-center justify-center space-x-3 font-black py-5 rounded-[1.5rem] border-2 transition-all shadow-xl active:scale-95 ${showImage ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-800 border-slate-300 hover:bg-slate-50'}`}>
-                                        <span className="text-2xl">{showImage ? '✖' : '📷'}</span>
-                                        <span className="uppercase tracking-widest font-black">{showImage ? 'ปิดรูปภาพ' : step.imageLabel}</span>
-                                    </button>
-                                    {showImage && (
-                                        <div className="mt-5 bg-slate-900 rounded-[2rem] p-2 border-4 border-slate-800 overflow-hidden shadow-2xl animate-in zoom-in duration-300">
-                                            <div className="relative bg-white rounded-[1.2rem] overflow-hidden">
-                                                <img src={step.imageUrl} className="w-full h-auto block bg-white" alt="Ref" onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
-                                                <div className="hidden h-64 flex-col items-center justify-center text-slate-400 bg-slate-100 italic p-6 text-center">
-                                                    <p className="font-bold text-slate-600 mb-2 tracking-tight">🖼️ ไม่สามารถดึงรูปภาพได้</p>
-                                                    <p className="text-[10px]">โปรดตรวจสอบลิงก์ใน Drive</p>
-                                                </div>
-                                            </div>
-                                            <div className="bg-slate-800 text-white p-5 text-xs">
-                                                <p className="font-black text-blue-400 mb-2 uppercase tracking-tighter italic">📌 ข้อมูลอ้างอิงจากแผนผังมาตรฐาน:</p>
-                                                <p className="opacity-90 leading-relaxed font-medium">{step.imageDescription}</p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+        <div id="pImgWrap" class="img-box" style="display:none;">
+          <img id="pImg" src="" alt="">
+          <div class="img-caption" id="pImgCap"></div>
+        </div>
 
-                            <div className="space-y-6">
-                                <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-200 shadow-inner">
-                                    <h4 className="text-slate-500 text-[10px] mb-4 font-black uppercase tracking-[0.3em] border-b border-slate-200 pb-2">เอกสาร / ระบบรายงาน</h4>
-                                    <div className="grid gap-3">
-                                        {step.docs.map((d, i) => (
-                                            <div key={i} className="bg-white border border-slate-200 text-slate-800 text-sm p-4 rounded-2xl shadow-sm flex items-center">
-                                                {d.icon} <span className="font-black">{d.text}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
+        <div class="panel-section">
+          <div class="panel-section-title">ผู้รับผิดชอบ / เอกสาร / ความถี่</div>
+          <div style="font-size:13px; margin-bottom:8px;"><strong>ผู้รับผิดชอบ:</strong> <span id="pResp"></span></div>
+          <div style="font-size:13px; margin-bottom:8px;"><strong>ความถี่:</strong> <span id="pFreq"></span></div>
+          <div style="font-size:13px;"><strong>เอกสาร:</strong> <span id="pDoc"></span></div>
+        </div>
 
-                                <div className={`${step.phase === 4 ? 'bg-red-600 text-white' : 'bg-red-50 text-red-950'} p-6 rounded-[2rem] border-2 border-red-100 relative overflow-hidden group shadow-md`}>
-                                    <h4 className="text-[10px] mb-2 font-black uppercase flex items-center">
-                                        <span className="mr-2 text-2xl font-black">⚠️</span> จุดสำคัญที่ต้องระวัง
-                                    </h4>
-                                    <p className="text-base leading-relaxed font-black relative z-10">{step.warning}</p>
-                                </div>
-                            </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-                            <div className="pt-8 border-t border-slate-100 flex flex-col items-end shrink-0 pb-10">
-                                <h4 className="text-slate-400 text-[10px] mb-3 font-black uppercase tracking-[0.2em]">หน่วยงานที่รับผิดชอบหลัก</h4>
-                                <ul className="space-y-2 text-right">
-                                    {step.responsibles.map((res, idx) => (
-                                        <li key={idx} className="text-sm text-slate-700 font-bold flex items-center justify-end group">
-                                            <span className="mr-3 group-hover:text-blue-600 transition-colors">{res}</span>
-                                            <div className="w-2.5 h-2.5 bg-blue-600 rounded-full shadow-sm border border-white"></div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
+<script>
+const stepData = {
+  '1': { 
+    title: 'A1 — ขั้นตอนการส่ง-รับถังแก๊สลงสถานี', 
+    tasks: ['ผู้จัดส่ง (PT) นำถังแก๊สลงจากรถวางหน้าสถานีตามจำนวนสั่งซื้อ','ตรวจสอบจำนวนถังแก๊สตรงตามใบส่งของ และสภาพภายนอก','ทำความสะอาดพื้นที่และจุดเชื่อมต่อก่อนเข้าระบบ','ตรวจสอบด้วยเครื่อง Portable Detector (ต้องเป็น 0)','ลงลายมือชื่อและแจ้งเข้ากลุ่ม Line'],
+    resp: 'พนักงาน PT, รปภ.', freq: 'ทุกครั้งที่มีการจัดส่ง', doc: 'ใบส่งแก๊ส / ใบรับมอบสินค้า', 
+    warning: 'ห้ามรับถังเข้าสถานีหากเครื่องวัดตรวจพบค่ารั่วไหล (ค่า > 0)',
+    img: 'https://lh3.googleusercontent.com/d/1nXsAvQCWZVOQDcmjFiIbwV3Y-V_kgUSQ', cap: 'พนักงานตรวจสอบความปลอดภัยถังแก๊ส'
+  },
+  '3': {
+    title: 'R1 — ตรวจความพร้อมสถานีรายชั่วโมง',
+    tasks: ['ตรวจสอบแรงดันภายในสถานี (ปกติต้องไม่น้อยกว่า 20 PSI)','เกจ 1: ตรวจวัดท่อเมนหลัก','เกจ 8: ตรวจอุณหภูมิหม้อต้ม (60-80 องศา)','ตรวจสอบระดับน้ำหม้อต้ม ต้องเต็ม MAX เสมอ'],
+    resp: 'รปภ.', freq: 'ทุกๆ 1 ชั่วโมง', doc: 'บันทึกเอกสารประจำวัน, Line',
+    warning: 'หากแรงดันต่ำกว่า 20 PSI แจ้งทีมช่างทันที',
+    img: 'https://lh3.googleusercontent.com/d/1kXrOEqYCU9O65dYtfdqkEx3muCw0ta_3', cap: 'ตำแหน่งเกจวัด 1-11'
+  },
+  '5': {
+    title: 'R2 — ตรวจความเรียบร้อยร้านค้ารายวัน',
+    tasks: ['รวบรวมรายงานภาพถ่ายจากร้านค้า Food Court','ตรวจสอบจุดเชื่อมต่อ Gas Meter เบื้องต้น','เช็คความสะอาดและระเบียบพื้นที่รอบจุด Gas Meter'],
+    resp: 'จนท.ศูนย์อาหาร / รปภ.', freq: 'ทุกวัน (เช้า-บ่าย)', doc: 'คลังภาพรายงาน (Line)',
+    warning: 'ห้ามอนุญาตให้ร้านค้าวางสิ่งของบังจุด Gas Meter',
+    img: 'https://lh3.googleusercontent.com/d/1aHc4kcXUwiqmAJ2Vzx6XVNa_2HbavFby', cap: 'ผังร้านค้า 1-22'
+  },
+  '3-V': {
+    title: 'V1 — ทวนสอบเทคนิคสถานี (1-11)',
+    tasks: ['ทวนสอบระบบหม้อต้ม: อุณหภูมิต้องไม่ต่ำกว่า 60 องศา','ตรวจสอบแรงดันขาออกเทียบกับหมายเลข 10','ตรวจสอบความสม่ำเสมอของบันทึก R1 ย้อนหลัง 100%'],
+    resp: 'เจ้าหน้าที่ LP, ทีมช่างอาคาร', freq: 'สัปดาห์ละ 2 ครั้ง', doc: 'Weekly Technical Audit',
+    warning: 'ต้องทดสอบการทำงานของระบบตัดแก๊สอัตโนมัติ (Solenoid) อย่างน้อยสัปดาห์ละครั้ง'
+  },
+  '5-V': {
+    title: 'A2 — ทวนสอบระบบร้านค้า (1-22)',
+    tasks: ['ใช้ Portable Gas Detector ตรวจแก๊สรั่ว (หมายเลข 1-20)','ทดสอบ Solenoid Valve: ต้องมีแรงดึงดูดขณะเปิด','ตรวจสอบการทำงาน Gas Leak Detector (ตัดเมื่อพบแก๊ส)'],
+    resp: 'เจ้าหน้าที่ LP', freq: 'สัปดาห์ละ 2 ครั้ง', doc: 'Weekly Shop Verification Report',
+    warning: 'Gas Leak Detector แต่ละร้านต้องไม่ชำรุด (เปียกน้ำ/คราบน้ำมัน)'
+  },
+  'E1': {
+    title: '🚨 แจ้งเหตุและควบคุมเบื้องต้น',
+    tasks: ['รปภ. แจ้งหัวหน้าชุด และ LP ทันทีเมื่อพบความผิดปกติ','กั้นพื้นที่รัศมี 5 เมตร ห้ามเข้าเด็ดขาด','ห้ามทำให้เกิดประกายไฟ / ห้ามเปิดปิดสวิตช์ไฟ'],
+    resp: 'รปภ. ประจำจุด', freq: 'ทันทีที่พบความผิดปกติ', doc: 'บันทึกเหตุฉุกเฉินเบื้องต้น',
+    warning: 'เน้นความปลอดภัยชีวิต หากรุนแรงให้กด EMG Stop ทันที'
+  },
+  'E2': {
+    title: '🚨 ระงับเหตุและประสานซ่อมด่วน',
+    tasks: ['LP/ช่าง ดำเนินการปิดวาล์วเมนหลักโซนที่เกิดเหตุ','ประสานช่าง Supplier (PT) เข้าแก้ไขทันที','ใช้เครื่องวัดแก๊สติดตามความเข้มข้นจนกว่าจะปลอดภัย'],
+    resp: 'LP / ช่างอาคาร / PT', freq: 'ทันที', doc: 'บันทึกการระงับเหตุทางเทคนิค',
+    warning: 'ห้ามจ่ายแก๊สจนกว่าจะยืนยันการซ่อมเสร็จ 100%'
+  },
+  'E3': {
+    title: '🚨 ตรวจสอบซ้ำและฟื้นฟูระบบ',
+    tasks: ['ตรวจสอบซ้ำ ค่าวัดแก๊สต้องเป็น 0 เท่านั้น','ทำ Incident Report ระบุ Root Cause','ผู้บริหารรับรองรายงานและสั่งเปิดระบบจ่ายแก๊ส'],
+    resp: 'ผู้บริหาร (COO) / OPR', freq: 'หลังระงับเหตุสำเร็จ', doc: 'Incident & Recovery Report',
+    warning: 'ต้องถอดบทเรียนเพื่อปรับปรุงรอบหน้า'
+  },
+  '2': {
+    title: 'Audit: สุ่มตรวจการรับมอบ',
+    tasks: ['สุ่มตรวจสอบหน้างานขณะจัดส่งแก๊ส','ตรวจเช็คความถูกต้อง PPE','ทวนสอบการใช้เครื่องวัด รปภ.'],
+    resp: 'Audit ส่วนกลาง', freq: 'สุ่มตรวจสอบ', doc: 'Spot Check Report',
+    warning: 'หากไม่ปลอดภัยทำรายงานแจ้ง ผจก. / COO'
+  },
+  '4': {
+    title: 'Audit: ทวนสอบรายงานรายวัน',
+    tasks: ['ตรวจสอบความครบถ้วนของ Digital Log ทุกชั่วโมง','รายงานสรุปประเด็น Error ประจำวัน'],
+    resp: 'Audit ส่วนกลาง', freq: 'ทุกวัน', doc: 'Log Audit Report',
+    warning: 'ข้อมูลขาดเกิน 2 ชม. คือความเสี่ยงกลาง'
+  },
+  '6': {
+    title: 'Audit: ทวนสอบแผนซ่อมบำรุง (PM)',
+    tasks: ['ตรวจสอบความถูกต้องรายงาน PM','ทวนสอบการซ่อมอุปกรณ์แจ้งเสีย','ตรวจความพร้อมถังดับเพลิง'],
+    resp: 'Audit / Safety Manager', freq: 'รายสัปดาห์', doc: 'Safety Area Checklist',
+    warning: 'อุปกรณ์แจ้งซ่อมเกิน 7 วันทำรายงานถึง COO'
+  },
+  '7': {
+    title: 'สรุปรายงานความปลอดภัยประจำเดือน',
+    tasks: ['รวบรวมสถิติ Error และจุดเสี่ยงรายเดือน','ประเมิน Safety Score ประสิทธิภาพทีม','จัดทำสรุปภาพรวมเสนอต่อผู้บริหาร'],
+    resp: 'ผู้จัดการแผนก LP', freq: 'ทุกสิ้นเดือน', doc: 'Monthly Safety Summary',
+    warning: 'สถิติต้องตรวจสอบย้อนหลังได้ 100%'
+  },
+  '8': {
+    title: 'รับรองนโยบาย OPR & สั่งการวิกฤต',
+    tasks: ['พิจารณารับรองรายงานประจำเดือน','อนุมัติงบประมาณซ่อมบำรุงเชิงป้องกัน','สั่งการภาวะฉุกเฉินระดับวิกฤต'],
+    resp: 'ผู้บริหาร (COO)', freq: 'ทุกเดือน', doc: 'Management Audit Review',
+    warning: 'การสั่งการต้องสอดคล้องกับแผนระงับอัคคีภัย'
+  }
+};
 
-                        <div className="p-6 border-t border-slate-50 flex items-center justify-between bg-slate-50/50 shrink-0">
-                            <div className="inline-flex bg-blue-100 text-blue-700 px-5 py-2 rounded-xl text-xs font-black tracking-wide border border-blue-200 shadow-sm">
-                                🕒 รอบความถี่: {step.frequency}
-                            </div>
-                        </div>
-                    </div>
-                );
-            };
+let currentBtn = null;
+function showPanel(id, btn) {
+  if (currentBtn) currentBtn.classList.remove('active');
+  btn.classList.add('active');
+  currentBtn = btn;
+  
+  const d = stepData[id];
+  document.getElementById('pId').innerText = 'STEP ' + id;
+  document.getElementById('pTitle').innerText = d.title;
+  document.getElementById('pResp').innerText = d.resp;
+  document.getElementById('pFreq').innerText = d.freq;
+  document.getElementById('pDoc').innerText = d.doc;
+  
+  const tHtml = d.tasks.map(t => `<div class="task-item"><div class="task-dot"></div><div class="task-text">${t}</div></div>`).join('');
+  document.getElementById('pTasks').innerHTML = tHtml;
+  
+  if (d.warning) {
+    document.getElementById('pWarning').style.display = 'block';
+    document.getElementById('pWarningText').innerText = d.warning;
+  } else {
+    document.getElementById('pWarning').style.display = 'none';
+  }
+  
+  if (d.img) {
+    document.getElementById('pImgWrap').style.display = 'block';
+    document.getElementById('pImg').src = d.img;
+    document.getElementById('pImgCap').innerText = d.cap;
+  } else {
+    document.getElementById('pImgWrap').style.display = 'none';
+  }
+  
+  document.getElementById('swimlaneCol').classList.add('has-panel');
+  document.getElementById('panelCol').classList.add('open');
+}
 
-            return (
-                <div className="min-h-screen p-4 md:p-10 bg-slate-100/50 text-slate-900">
-                    <div className="max-w-[1750px] mx-auto mb-6">
-                        <a href="../../../index.html" className="inline-flex items-center text-slate-500 hover:text-slate-800 font-semibold transition-colors bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                            กลับหน้าหลักบริษัท
-                        </a>
-                    </div>
-                    <header className="max-w-[1750px] mx-auto mb-10 flex flex-col md:flex-row items-center justify-between gap-8 px-4 text-center md:text-left">
-                        <div className="flex items-center space-x-6 flex-col md:flex-row">
-                            <div className="bg-slate-800 p-3 rounded-[1.8rem] shadow-2xl border-b-8 border-slate-950 flex items-center justify-center mb-4 md:mb-0">
-                                <GasDetectorIcon size="56" />
-                            </div>
-                            <div>
-                                <h1 className="text-3xl font-black text-slate-900 tracking-tighter uppercase leading-none mb-1">ระบบควบคุมการตรวจแก๊ส (OPR)</h1>
-                                <p className="text-slate-500 text-lg font-medium tracking-wide">ระบบบริหารจัดการมาตรฐานความปลอดภัยแก๊ส - ตลาดยิ่งเจริญ</p>
-                            </div>
-                        </div>
-                        <div className="bg-white p-4 px-10 rounded-[2rem] border-2 border-blue-100 shadow-xl flex items-center space-x-4 mx-auto md:mx-0">
-                             <div className="w-4 h-4 bg-green-500 rounded-full animate-pulse shadow-[0_0_15px_rgba(34,197,94,0.8)]"></div>
-                             <span className="font-black text-slate-800 tracking-[0.3em] text-xs uppercase tracking-widest font-mono">System Integrity Ready</span>
-                        </div>
-                    </header>
-
-                    <div className="max-w-[1750px] mx-auto flex flex-col lg:flex-row gap-10 items-stretch transition-layout min-h-[750px]">
-                        {/* ส่วนซ้าย: Swimlane Table */}
-                        <div className={`transition-all duration-500 bg-white rounded-[3.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.12)] border border-slate-200 overflow-hidden ${activeStep ? 'lg:w-[60%]' : 'w-full'}`}>
-                            <div className="bg-slate-50 swimlane-grid border-b-4 border-slate-200 shadow-sm shrink-0">
-                                <div className="grid-cell font-black text-slate-400 text-[10px] uppercase tracking-[0.5em] border-r-2 border-slate-200 text-center">Responsible</div>
-                                {phases.map((p, i) => (
-                                    <div key={i} className={`grid-cell font-black text-lg uppercase tracking-[0.1em] text-center ${i === 4 ? 'bg-red-50 text-red-600' : 'text-slate-900'}`}>{p}</div>
-                                ))}
-                            </div>
-                            
-                            {roles.map((r) => (
-                                <div key={r.id} className="swimlane-grid min-h-[220px] bg-white">
-                                    <div className={`grid-cell ${r.color} ${r.text} font-black text-lg text-center uppercase sticky left-0 z-20 border-r-2 border-slate-200`}>
-                                        <div className="bg-white/50 p-4 rounded-[1.5rem] w-full border border-white/40 backdrop-blur-sm shadow-sm">{r.name}</div>
-                                    </div>
-                                    {phases.map((_, pi) => (
-                                        <div key={pi} className={`grid-cell flex-col gap-5 border-r border-slate-100 last:border-r-0 ${pi === 4 ? 'bg-red-50/10' : 'bg-white'} transition-colors`}>
-                                            {workflow.filter(s => s.role === r.id && s.phase === pi).map(s => (
-                                                <div key={s.id} 
-                                                    className={`w-full max-w-[300px] p-6 rounded-[2.8rem] border-2 transition-all cursor-pointer relative shadow-lg group
-                                                        ${activeStep === s.id ? 'border-blue-600 bg-blue-50 scale-105 z-20 ring-[20px] ring-blue-50/50' : 
-                                                          s.phase === 4 ? 'border-red-200 bg-white hover:border-red-400' : 'border-slate-100 bg-white hover:border-blue-400 hover:shadow-2xl'}`}
-                                                    onClick={() => {setActiveStep(activeStep === s.id ? null : s.id); setShowImage(false);}}>
-                                                    
-                                                    <div className="flex items-center justify-between mb-4">
-                                                        <div className={`text-xs font-black px-5 py-2 rounded-full ${activeStep === s.id ? 'bg-blue-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 shadow-inner'}`}>STEP {s.id}</div>
-                                                        {s.hasImage && (
-                                                            <div className={`tag-badge border flex items-center gap-1 ${activeStep === s.id ? 'bg-blue-400/20 text-blue-100 border-blue-400' : 'bg-emerald-100 text-emerald-800 border-emerald-300'}`}>
-                                                                <div className={`w-1.5 h-1.5 rounded-full ${activeStep === s.id ? 'bg-blue-100' : 'bg-emerald-600'}`}></div>
-                                                                {s.linkTag ? s.linkTag : 'VISUAL'}
-                                                            </div>
-                                                        )}
-                                                        {s.phase === 4 && <span className="animate-pulse">🚨</span>}
-                                                    </div>
-                                                    
-                                                    <div className={`step-title-text leading-snug transition-colors duration-300 ${activeStep === s.id ? 'text-blue-900' : 'text-slate-800'}`}>{s.title}</div>
-                                                    {activeStep === s.id && <div className={`absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rotate-45 rounded shadow-2xl animate-pulse ${s.phase === 4 ? 'bg-red-600' : 'bg-blue-600'}`}></div>}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ))}
-                                </div>
-                            ))}
-                        </div>
-                        {/* ส่วนขวา: Side Panel รายละเอียด (สูงเท่าตาราง) */}
-                        {activeStep && (
-                            <div className="w-full lg:w-[38%] sticky-detail-container">
-                                {renderDetailPanel()}
-                            </div>
-                        )}
-                    </div>
-
-                    <footer className="max-w-[1750px] mx-auto mt-20 text-center text-slate-400 text-[11px] border-t border-slate-200 pt-10 pb-20">
-                        <p className="font-black uppercase mb-3 tracking-[0.4em] text-slate-500 text-sm italic tracking-widest leading-loose">© 2026 SAFETY OPR SYSTEM | OPERATIONAL PERFORMANCE REVIEW | YINGCHAROEN MARKET</p>
-                        <p className="opacity-50 font-bold uppercase tracking-widest italic tracking-tighter underline">Stable Release Build V1.0 | Integrated Emergency Response Flow & Technical Compliance</p>
-                    </footer>
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
+function closePanel() {
+  if (currentBtn) currentBtn.classList.remove('active');
+  currentBtn = null;
+  document.getElementById('swimlaneCol').classList.remove('has-panel');
+  document.getElementById('panelCol').classList.remove('open');
+}
+</script>
 </body>
 </html>

@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผังขั้นตอนการจัดเก็บรายได้ — แผนกบริหารที่จอดรถและห้องน้ำ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f5f5f7;
+  --card-bg: #ffffff;
+  --text-main: #1d1d1f;
+  --text-muted: #86868b;
+  --accent-blue: #0071e3;
+  --gold: #d8a032; 
+  --gold-lt: #fdf6e3;
+  --red: #ff3b30;
+  --red-lt: #ffeceb;
+  --green: #34c759;
+  --green-lt: #ebf9ee;
+  --teal: #5ac8fa;
+  --teal-lt: #eaf8ff;
+  --purple: #af52de;
+  --purple-lt: #f4eafe;
+  --orange: #ff9500;
+  --orange-lt: #fff4e5;
+  --gray50: #f5f5f7;
+  --gray100: #e5e5ea;
+  --gray200: #d1d1d6;
+  --gray400: #8e8e93;
+  --gray600: #48484a;
+  --gray800: #1c1c1e;
+  --shadow: 0 4px 24px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Sarabun", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  font-size: 13px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ======= HEADER ======= */
+.header {
+  background: #000000;
+  color: #f5f5f7;
+  padding: 48px 48px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 50% 0%, rgba(0,113,227,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+.header-inner { position: relative; z-index: 1; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.header-left { flex: 1; }
+.header-eyebrow {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a1a1a6;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.header-title { font-size: 32px; font-weight: 700; line-height: 1.25; color: #ffffff; letter-spacing: -0.5px; }
+.header-title em { color: var(--accent-blue); font-style: normal; }
+.header-meta { display: flex; gap: 32px; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; }
+.meta-item { display: flex; flex-direction: column; gap: 4px; }
+.meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #86868b; font-weight: 600; }
+.meta-value { font-size: 13px; color: #f5f5f7; font-weight: 500; }
+
+/* ======= TABS ======= */
+.tab-bar-wrap {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.tab-bar { display: flex; overflow-x: auto; padding: 0 40px; gap: 8px; scrollbar-width: none; }
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text-main); }
+.tab-btn.active { color: var(--text-main); border-bottom-color: var(--text-main); font-weight: 600; }
+.tab-num {
+  width: 20px; height: 20px; border-radius: 6px;
+  background: var(--gray200); color: var(--gray600);
+  font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.tab-btn.active .tab-num { background: var(--text-main); color: #fff; }
+
+/* ======= PANELS ======= */
+.tab-panel { display: none; padding: 48px 48px 80px; animation: fadein 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.tab-panel.active { display: block; }
+@keyframes fadein { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ======= SECTION HEADER ======= */
+.proc-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+.proc-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.04); background: #fff !important; }
+.proc-title { font-size: 20px; font-weight: 700; color: var(--text-main); letter-spacing: -0.3px; }
+.proc-sub { font-size: 13px; color: var(--text-muted); font-weight: 400; margin-top: 4px; }
+
+/* ======= SWIMLANE ======= */
+.swimlane-wrap { background: var(--card-bg); border-radius: 24px; box-shadow: var(--shadow-lg); overflow: hidden; border: 1px solid rgba(0,0,0,0.04); }
+.sl-table { width: 100%; border-collapse: collapse; }
+
+/* Lane label column */
+.sl-lane-label { width: 160px; background: #fafafc; color: var(--text-main); vertical-align: middle; text-align: center; padding: 20px 16px; font-size: 12px; font-weight: 600; line-height: 1.5; border-right: 1px solid var(--gray200); border-bottom: 1px solid var(--gray200); }
+.sl-lane-label.header-row { background: var(--gray100); color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border-top-left-radius: 24px; }
+
+/* Steps cell */
+.sl-steps { padding: 24px; vertical-align: top; border-bottom: 1px solid var(--gray200); }
+
+/* Flow — horizontal */
+.hflow { display: flex; align-items: center; flex-wrap: wrap; gap: 0; position: relative; }
+.hflow-item { display: flex; align-items: center; }
+.step-card { position: relative; border-radius: 16px; padding: 16px; min-width: 160px; max-width: 190px; border: none; text-align: left; background: #f5f5f7; transition: transform 0.2s; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); }
+.step-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06), inset 0 0 0 1px rgba(0,0,0,0.02); }
+
+.step-card.ops { background: #f0f4f8; }
+.step-card.clerk { background: var(--orange-lt); }
+.step-card.finance { background: var(--purple-lt); }
+.step-card.control { background: var(--green-lt); }
+.step-card.teal { background: var(--teal-lt); }
+.step-card.risk { background: var(--red-lt); box-shadow: inset 0 0 0 1px rgba(255,59,48,0.2); }
+.step-card.gold { background: var(--gold-lt); }
+
+.sc-num { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 6px; text-transform: uppercase; }
+.sc-text { font-size: 13px; font-weight: 600; color: var(--text-main); line-height: 1.5; }
+.step-card.risk .sc-text { color: var(--red); }
+.sc-doc { font-size: 11px; color: var(--accent-blue); font-weight: 500; margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+.sc-time { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.sc-by { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-weight: 400; }
+
+/* Badges */
+.badge-risk { position: absolute; top: -10px; right: -10px; background: var(--red); color: #fff; font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 12px; white-space: nowrap; box-shadow: 0 4px 12px rgba(255,59,48,0.3); }
+.badge-ctrl { position: absolute; top: -10px; right: -10px; background: var(--green); color: #fff; font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 12px; white-space: nowrap; box-shadow: 0 4px 12px rgba(52,199,89,0.3); }
+
+/* Arrow */
+.arrow { color: var(--gray400); font-size: 18px; padding: 0 12px; flex-shrink: 0; line-height: 1; font-weight: 300; }
+.arrow-down-wrap { display: flex; justify-content: center; padding: 8px 0; }
+.arrow-down { color: var(--gray400); font-size: 18px; line-height: 1; }
+
+/* Decision diamond */
+.diamond-wrap { display: flex; flex-direction: column; align-items: center; margin: 0 12px; }
+.diamond { width: 80px; height: 80px; background: #ffffff; border: 1px solid var(--gray200); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 16px; box-shadow: var(--shadow); }
+.diamond-text { transform: rotate(-45deg); font-size: 11px; font-weight: 600; color: var(--text-main); text-align: center; line-height: 1.4; width: 70px; }
+
+/* Column splits */
+.split-row { display: flex; gap: 0; flex-wrap: nowrap; }
+.split-col { flex: 1; padding: 0 12px; position: relative; }
+.split-col:not(:last-child)::after { content: ''; position: absolute; right: 0; top: 12px; bottom: 12px; width: 1px; background: var(--gray200); }
+.split-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--gray200); }
+
+/* Risk callout */
+.risk-callout { background: var(--red-lt); border-radius: 16px; padding: 16px 20px; display: flex; gap: 12px; align-items: flex-start; margin-top: 20px; }
+.rc-icon { font-size: 18px; flex-shrink: 0; }
+.rc-text { font-size: 13px; color: var(--red); font-weight: 600; line-height: 1.5; }
+.rc-sub { font-size: 12px; color: #a32020; font-weight: 400; margin-top: 4px; }
+
+/* ======= LEGEND ======= */
+.legend-bar { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; padding: 16px 48px; background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.08); }
+.legend-bar-inner { display: flex; width: 100%; gap: 32px; align-items: center; flex-wrap: wrap; }
+.legend-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-main); font-weight: 500; }
+.ldot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+/* ======= SUMMARY ======= */
+.summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 40px; }
+.sum-card { background: var(--card-bg); border-radius: 20px; padding: 24px; box-shadow: var(--shadow); border: none; }
+.sum-num { font-size: 32px; font-weight: 700; color: var(--text-main); letter-spacing: -1px; }
+.sum-card.g .sum-num { color: var(--orange); }
+.sum-card.r .sum-num { color: var(--red); }
+.sum-card.t .sum-num { color: var(--green); }
+.sum-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+
+/* ======= VFLOW (vertical steps) ======= */
+.vflow { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+
+/* ======= RISK TABLE ======= */
+.risk-tbl { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-lg); margin-top: 24px; background: #fff; border: 1px solid rgba(0,0,0,0.04); }
+.risk-tbl th { background: #fafafc; color: var(--text-muted); padding: 16px 20px; font-size: 12px; font-weight: 600; text-align: left; letter-spacing: 0.5px; text-transform: uppercase; border-bottom: 1px solid var(--gray200); }
+.risk-tbl td { background: #fff; padding: 16px 20px; font-size: 13px; border-bottom: 1px solid var(--gray100); vertical-align: top; line-height: 1.6; color: var(--text-main); }
+.risk-tbl tr:last-child td { border-bottom: none; }
+.risk-tbl tr:hover td { background: #fcfcfd; }
+.rl { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.rl.h { background: var(--red-lt); color: var(--red); }
+.rl.m { background: var(--orange-lt); color: var(--orange); }
+
+/* ======= FOOTER ======= */
+.footer { background: #000000; color: #a1a1a6; text-align: center; padding: 32px 48px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
+.footer strong { color: #f5f5f7; font-weight: 500; }
+
+/* ======= PRINT ======= */
+@media print {
+  @page { size: A4 landscape; margin: 10mm; }
+  .tab-bar-wrap { display: none !important; }
+  .header { padding: 0 !important; background: none !important; color: #000 !important; border-bottom: 2px solid #e5e5ea; display: none !important; }
+  body { background: #fff !important; }
+  .tab-panel { display: block !important; page-break-after: always; padding: 0 !important; animation: none !important; margin-bottom: 0 !important; }
+  .tab-panel:last-of-type { page-break-after: auto; }
+  .swimlane-wrap { box-shadow: none !important; border: 1px solid #000 !important; break-inside: avoid; page-break-inside: avoid; }
+  .risk-tbl { box-shadow: none !important; border: 1px solid #000 !important; break-inside: avoid; page-break-inside: avoid; }
+  .proc-header { margin-top: 10mm !important; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-eyebrow">เอกสารตรวจสอบภายใน (Internal Audit)</div>
+      <div class="header-title">ผังขั้นตอนการทำงาน <em>(รายกระบวนการ)</em></div>
+      <div class="header-meta">
+        <div class="meta-item"><span class="meta-label">แผนก</span><span class="meta-value">บริหารที่จอดรถและห้องน้ำ</span></div>
+        <div class="meta-item"><span class="meta-label">จำนวนกระบวนการ</span><span class="meta-value">8 กระบวนการ</span></div>
+        <div class="meta-item"><span class="meta-label">จัดทำเมื่อ</span><span class="meta-value">มิถุนายน 2568</span></div>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:12px;">
+      <button onclick="window.print()" style="background:#fff; color:#1d1d1f; border:none; padding:12px 24px; border-radius:24px; font-weight:700; cursor:pointer; font-size:14px; box-shadow:0 4px 12px rgba(0,0,0,0.1); transition:transform 0.2s;">🖨️ พิมพ์รายงานทั้งหมด (1-8)</button>
+      <div style="text-align:right;color:rgba(255,255,255,.45);font-size:10.5px;line-height:1.5;">
+        <div>แผนกบริหารที่จอดรถและห้องน้ำ</div>
+        <div>สำนักประธานเจ้าหน้าที่ฝ่ายปฏิบัติการ</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend-bar">
+  <span class="legend-title">สัญลักษณ์</span>
+  <div class="legend-item"><span class="ldot" style="background:var(--navy2)"></span>ผู้ปฏิบัติงานประจำจุด</div>
+  <div class="legend-item"><span class="ldot" style="background:var(--orange)"></span>เจ้าหน้าที่ธุรการ</div>
+  <div class="legend-item"><span class="ldot" style="background:var(--purple)"></span>ฝ่ายการเงิน / บัญชี</div>
+  <div class="legend-item"><span class="ldot" style="background:var(--teal)"></span>เอกสารที่เกี่ยวข้อง</div>
+  <div class="legend-item"><span class="ldot" style="background:var(--green)"></span>✓ จุดควบคุม</div>
+  <div class="legend-item"><span class="ldot" style="background:var(--red)"></span>⚠ จุดเสี่ยง</div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar-wrap">
+  <div class="tab-bar" id="tabBar">
+    <a class="tab-btn" href="index_8.html" style="text-decoration:none; color:var(--navy); border-right:2px solid var(--gray200); margin-right:8px; padding-right:20px; font-weight:800;">🏠 กลับหน้าหลัก</a>
+    <a class="tab-btn" href="workflow_swimlane_tabs.html" style="text-decoration:none; color:var(--navy); border-right:2px solid var(--gray200); margin-right:8px; padding-right:20px; font-weight:800;">📊 ผังกระบวนการ 1–8</a>
+    <button class="tab-btn active" onclick="switchTab(0,this)"><span class="tab-num">1</span>รถลงสินค้า ลาน2-4</button>
+    <button class="tab-btn" onclick="switchTab(1,this)"><span class="tab-num">2</span>รายเดือน (เปิดบัญชี)</button>
+    <button class="tab-btn" onclick="switchTab(2,this)"><span class="tab-num">3</span>ส่งใบแจ้งหนี้</button>
+    <button class="tab-btn" onclick="switchTab(3,this)"><span class="tab-num">4</span>ส่งใบทวงหนี้</button>
+    <button class="tab-btn" onclick="switchTab(4,this)"><span class="tab-num">5</span>ที่จอดรถจักรยานยนต์</button>
+    <button class="tab-btn" onclick="switchTab(5,this)"><span class="tab-num">6</span>ที่จอดรถยนต์ ลาน1</button>
+    <button class="tab-btn" onclick="switchTab(6,this)"><span class="tab-num">7</span>ที่จอดรถยนต์ ลาน2-3</button>
+    <button class="tab-btn" onclick="switchTab(7,this)"><span class="tab-num">8</span>คืนเงินค่าปรับบัตรหาย</button>
+  </div>
+</div>
+
+<!-- ===================== TAB 1 ===================== -->
+<div class="tab-panel active" id="panel-0">
+  <div class="proc-header">
+    <div class="proc-icon" style="background:#eef2f7;">🚛</div>
+    <div>
+      <div class="proc-title">1. จัดเก็บรายได้ค่าบริการรถลงสินค้า (ลาน 2, 3, 4)</div>
+      <div class="proc-sub">Goods-Loading Service Revenue · ผู้รับผิดชอบหลัก: ผู้ปฏิบัติการประจำจุด</div>
+    </div>
+  </div>
+  <div class="swimlane-wrap">
+    <table class="sl-table">
+      <!-- Header row -->
+      <tr>
+        <td class="sl-lane-label header-row">ผู้รับผิดชอบ</td>
+        <td class="sl-steps" style="background:var(--gray50);padding:10px 20px;">
+          <div style="font-size:10.5px;font-weight:800;color:var(--gray600);text-transform:uppercase;letter-spacing:.7px;">ขั้นตอนการปฏิบัติงาน (Flow จากซ้ายไปขวา)</div>
+        </td>
+      </tr>
+      <!-- Lane 1: ผู้ปฏิบัติการ -->
+      <tr>
+        <td class="sl-lane-label ops">ผู้ปฏิบัติการ<br>ประจำจุด</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card ops">
+                <div class="sc-num">ขั้น 1</div>
+                <div class="sc-text">จัดที่จอดรถให้ผู้ค้า</div>
+                <div class="sc-time">⏱ 5 นาที/คัน</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card risk">
+                <div class="sc-num">ขั้น 2</div>
+                <div class="sc-text">เก็บค่าบริการรถลงสินค้ารายวัน</div>
+                <div class="sc-doc">📄 ใบเสร็จรับเงิน</div>
+                <div class="sc-time">⏱ 5 นาที/คัน</div>
+                <span class="badge-risk">⚠ เสี่ยง</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card ops">
+                <div class="sc-num">ขั้น 3</div>
+                <div class="sc-text">เขียนใบเสร็จรับเงิน</div>
+                <div class="sc-doc">📄 ใบเสร็จรับเงิน</div>
+                <div class="sc-time">⏱ 5 นาที/คัน</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card control">
+                <div class="sc-num">ขั้น 4</div>
+                <div class="sc-text">บันทึกข้อมูลในระบบออนไลน์แต่ละประเภท</div>
+                <div class="sc-time">⏱ 20 นาที</div>
+                <span class="badge-ctrl">✓ ควบคุม</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card finance">
+                <div class="sc-num">ขั้น 5</div>
+                <div class="sc-text">รวบรวมรายได้พร้อมนำส่งเอกสารแผนกการเงิน</div>
+                <div class="sc-time">⏱ 10 นาที</div>
+                <span class="badge-ctrl">✓ ควบคุม</span>
+              </div>
+            </div>
+          </div>
+          <div class="risk-callout">
+            <span class="rc-icon">⚠️</span>
+            <div>
+              <div class="rc-text">จุดเสี่ยง: เก็บเงินสดโดยไม่ออกใบเสร็จ หรือออกใบเสร็จไม่ตรงกับยอดเงินที่รับจริง</div>
+              <div class="rc-sub">แนวทางตรวจสอบ: เปรียบเทียบจำนวนใบเสร็จที่ออกกับยอดในระบบออนไลน์ทุกวัน — สุ่มนับเงินสด ณ จุดเก็บ</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== TAB 2 ===================== -->
+<div class="tab-panel" id="panel-1">
+  <div class="proc-header">
+    <div class="proc-icon" style="background:var(--orange-lt);">🗂️</div>
+    <div>
+      <div class="proc-title">2. บริการรับชำระค่าจอดรถประเภทรายเดือน</div>
+      <div class="proc-sub">Monthly Parking Subscription · ผู้รับผิดชอบหลัก: เจ้าหน้าที่ธุรการ &amp; ฝ่ายการเงิน</div>
+    </div>
+  </div>
+  <div class="swimlane-wrap">
+    <table class="sl-table">
+      <tr>
+        <td class="sl-lane-label header-row">ผู้รับผิดชอบ</td>
+        <td class="sl-steps" style="background:var(--gray50);padding:10px 20px;">
+          <div style="font-size:10.5px;font-weight:800;color:var(--gray600);text-transform:uppercase;letter-spacing:.7px;">ขั้นตอนการปฏิบัติงาน (Flow จากซ้ายไปขวา)</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label clerk">เจ้าหน้าที่<br>ธุรการ</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card clerk">
+                <div class="sc-num">ขั้น 1</div>
+                <div class="sc-text">อธิบายระเบียบและให้เอกสารลูกค้า</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="diamond-wrap">
+                <div class="diamond"><span class="diamond-text">ตกลงทำสัญญา?</span></div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card clerk">
+                <div class="sc-num">ขั้น 2</div>
+                <div class="sc-text">เปิดหน้าบัญชีใหม่</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card control">
+                <div class="sc-num">ขั้น 3</div>
+                <div class="sc-text">ขอเอกสาร: สำเนาบัตร ปชช. + สำเนาทะเบียนรถ</div>
+                <span class="badge-ctrl">✓ ควบคุม</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card risk">
+                <div class="sc-num">ขั้น 4</div>
+                <div class="sc-text">คีย์ข้อมูลในระบบ CarPark + ทำบัตร + สติกเกอร์</div>
+                <span class="badge-risk">⚠ เสี่ยง</span>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label finance">ฝ่ายบัญชี /<br>การเงิน</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card finance">
+                <div class="sc-num">ขั้น 5</div>
+                <div class="sc-text">รับเอกสารเปิดหน้าบัญชีจากธุรการ</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card risk">
+                <div class="sc-num">ขั้น 6</div>
+                <div class="sc-text">ลูกค้าชำระค่าประกัน + ค่าบัตร กับฝ่ายการเงิน</div>
+                <span class="badge-risk">⚠ เสี่ยง</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card control">
+                <div class="sc-num">ขั้น 7</div>
+                <div class="sc-text">ส่งมอบบัตร + ใบเสร็จรับเงินให้ลูกค้า</div>
+                <div class="sc-doc">📄 ใบเสร็จรับเงิน</div>
+                <span class="badge-ctrl">✓ ควบคุม</span>
+              </div>
+            </div>
+          </div>
+          <div class="risk-callout">
+            <span class="rc-icon">⚠️</span>
+            <div>
+              <div class="rc-text">จุดเสี่ยง: คีย์ข้อมูลในระบบ CarPark ไม่ตรงกับเอกสาร หรือออกบัตรโดยไม่มีเอกสารครบถ้วน</div>
+              <div class="rc-sub">แนวทางตรวจสอบ: ตรวจสอบทะเบียนรถในระบบกับสำเนาเอกสารจริงอย่างน้อยเดือนละครั้ง</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== TAB 3 ===================== -->
+<div class="tab-panel" id="panel-2">
+  <div class="proc-header">
+    <div class="proc-icon" style="background:var(--purple-lt);">📬</div>
+    <div>
+      <div class="proc-title">3. งานบริการจัดส่งใบแจ้งหนี้รายเดือน</div>
+      <div class="proc-sub">Monthly Invoice Distribution · กำหนดวันชัดเจน: ส่งไม่เกินวันที่ 15 / ใบเสร็จไม่เกินวันที่ 20</div>
+    </div>
+  </div>
+  <div class="swimlane-wrap">
+    <table class="sl-table">
+      <tr>
+        <td class="sl-lane-label header-row">ผู้รับผิดชอบ</td>
+        <td class="sl-steps" style="background:var(--gray50);padding:10px 20px;">
+          <div style="font-size:10.5px;font-weight:800;color:var(--gray600);text-transform:uppercase;letter-spacing:.7px;">ขั้นตอนการปฏิบัติงาน (Flow จากซ้ายไปขวา)</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label finance">ฝ่ายบัญชี /<br>การเงิน</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card finance">
+                <div class="sc-num">ขั้น 1</div>
+                <div class="sc-text">จัดทำและออกใบแจ้งหนี้รายเดือน</div>
+                <div class="sc-time">⏱ ภายในสิ้นเดือน</div>
+                <div class="sc-doc">📄 ใบแจ้งหนี้</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <div style="font-size:10px;font-weight:700;color:var(--gray600);">ส่งให้ธุรการ</div>
+              <span class="arrow" style="transform:rotate(90deg);">→</span>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label clerk">เจ้าหน้าที่<br>ธุรการ</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card clerk">
+                <div class="sc-num">ขั้น 2</div>
+                <div class="sc-text">รับใบแจ้งหนี้จากฝ่ายบัญชี แล้วส่งต่อผู้ปฏิบัติงานประจำจุด</div>
+                <div class="sc-time">⏱ ภายในวันที่ 5</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <div style="font-size:10px;font-weight:700;color:var(--gray600);">ส่งต่อ</div>
+              <span class="arrow" style="transform:rotate(90deg);">→</span>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label ops">ผู้ปฏิบัติงาน<br>ประจำจุด</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card risk">
+                <div class="sc-num">ขั้น 3</div>
+                <div class="sc-text">นำใบแจ้งหนี้แจกให้ผู้ค้ารายเดือนครบทุกราย</div>
+                <div class="sc-time">⏱ ไม่เกินวันที่ 15</div>
+                <div class="sc-doc">📄 ใบแจ้งหนี้</div>
+                <span class="badge-risk">⚠ เสี่ยง</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card control">
+                <div class="sc-num">ขั้น 4</div>
+                <div class="sc-text">นำส่งใบเสร็จรับเงินให้ผู้ค้า (หลังรับชำระ)</div>
+                <div class="sc-time">⏱ ภายในวันที่ 20</div>
+                <div class="sc-doc">📄 ใบเสร็จรับเงิน</div>
+                <span class="badge-ctrl">✓ ควบคุม</span>
+              </div>
+            </div>
+          </div>
+          <div class="risk-callout">
+            <span class="rc-icon">⚠️</span>
+            <div>
+              <div class="rc-text">จุดเสี่ยง: ส่งใบแจ้งหนี้ล่าช้าหรือส่งผิดราย ทำให้ผู้ค้าไม่ได้รับข้อมูล</div>
+              <div class="rc-sub">แนวทางตรวจสอบ: มีรายชื่อผู้ค้าพร้อมลายเซ็นยืนยันการรับเอกสารก่อนวันที่ 15 ของทุกเดือน</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== TAB 4 ===================== -->
+<div class="tab-panel" id="panel-3">
+  <div class="proc-header">
+    <div class="proc-icon" style="background:var(--red-lt);">🔔</div>
+    <div>
+      <div class="proc-title">4. งานบริการจัดส่งใบทวงหนี้</div>
+      <div class="proc-sub">Debt Collection Notice · ตามระยะเวลาที่ฝ่ายการเงินกำหนด</div>
+    </div>
+  </div>
+  <div class="swimlane-wrap">
+    <table class="sl-table">
+      <tr>
+        <td class="sl-lane-label header-row">ผู้รับผิดชอบ</td>
+        <td class="sl-steps" style="background:var(--gray50);padding:10px 20px;">
+          <div style="font-size:10.5px;font-weight:800;color:var(--gray600);text-transform:uppercase;letter-spacing:.7px;">ขั้นตอนการปฏิบัติงาน (Flow จากซ้ายไปขวา)</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label finance">ฝ่ายการเงิน</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card finance">
+                <div class="sc-num">ต้นทาง</div>
+                <div class="sc-text">จัดทำใบทวงหนี้และส่งให้ผู้ปฏิบัติงาน</div>
+                <div class="sc-doc">📄 ใบทวงหนี้</div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label ops">ผู้ปฏิบัติงาน<br>ประจำจุด</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card risk">
+                <div class="sc-num">ขั้น 1</div>
+                <div class="sc-text">รับใบทวงหนี้จากฝ่ายการเงิน</div>
+                <div class="sc-doc">📄 ใบทวงหนี้</div>
+                <span class="badge-risk">⚠ เสี่ยง</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card ops">
+                <div class="sc-num">ขั้น 2</div>
+                <div class="sc-text">นำส่งใบทวงหนี้ให้ลูกค้าโดยตรง</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card control">
+                <div class="sc-num">ขั้น 3</div>
+                <div class="sc-text">นำสำเนาใบทวงหนี้คืนฝ่ายการเงิน 1 ใบ</div>
+                <span class="badge-ctrl">✓ ควบคุม</span>
+              </div>
+            </div>
+          </div>
+          <div class="risk-callout">
+            <span class="rc-icon">⚠️</span>
+            <div>
+              <div class="rc-text">จุดเสี่ยง: ไม่มีหลักฐานยืนยันว่าลูกค้าได้รับใบทวงหนี้ — สำเนาไม่ถูกส่งคืนฝ่ายการเงิน</div>
+              <div class="rc-sub">แนวทางตรวจสอบ: ขอลายเซ็นรับเอกสารจากลูกค้า — ตรวจสอบว่าสำเนาทุกฉบับถูกส่งคืนครบ</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== TAB 5 ===================== -->
+<div class="tab-panel" id="panel-4">
+  <div class="proc-header">
+    <div class="proc-icon" style="background:#eef2f7;">🏍️</div>
+    <div>
+      <div class="proc-title">5. จัดเก็บรายได้ค่าบริการที่จอดรถจักรยานยนต์</div>
+      <div class="proc-sub">Motorcycle Parking Revenue · ผู้รับผิดชอบหลัก: ผู้ปฏิบัติงานประจำจุด</div>
+    </div>
+  </div>
+  <div class="swimlane-wrap">
+    <table class="sl-table">
+      <tr>
+        <td class="sl-lane-label header-row">ผู้รับผิดชอบ</td>
+        <td class="sl-steps" style="background:var(--gray50);padding:10px 20px;">
+          <div style="font-size:10.5px;font-weight:800;color:var(--gray600);text-transform:uppercase;letter-spacing:.7px;">ขั้นตอนการปฏิบัติงาน (Flow จากซ้ายไปขวา)</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label ops">ผู้ปฏิบัติงาน<br>ประจำจุด</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card ops">
+                <div class="sc-num">ขั้น 1</div>
+                <div class="sc-text">จัดที่จอดรถให้ลูกค้า</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card ops">
+                <div class="sc-num">ขั้น 2</div>
+                <div class="sc-text">แจกบัตรให้ลูกค้า</div>
+                <div class="sc-doc">🎫 บัตรจอดรถ</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card risk">
+                <div class="sc-num">ขั้น 3</div>
+                <div class="sc-text">เก็บค่าบริการตามอัตรา</div>
+                <span class="badge-risk">⚠ เสี่ยง</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card ops">
+                <div class="sc-num">ขั้น 4</div>
+                <div class="sc-text">ช่วยบริการลูกค้าขนของขึ้นรถ</div>
+                <div class="sc-time">⏱ 1–5 นาที/คัน</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card control">
+                <div class="sc-num">ขั้น 5</div>
+                <div class="sc-text">ทำเอกสารพร้อมส่งเงิน</div>
+                <div class="sc-time">⏱ 5–10 นาที</div>
+                <div class="sc-doc">📄 ใบส่งเงิน</div>
+                <span class="badge-ctrl">✓ ควบคุม</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card ops">
+                <div class="sc-num">ขั้น 6</div>
+                <div class="sc-text">จดรายงานจำนวนรถเข้าออกรายชั่วโมง</div>
+              </div>
+            </div>
+          </div>
+          <div class="risk-callout">
+            <span class="rc-icon">⚠️</span>
+            <div>
+              <div class="rc-text">จุดเสี่ยง: ไม่มีระบบออกใบเสร็จอัตโนมัติ — นับรถ vs. เงินสดอาจคลาดเคลื่อน</div>
+              <div class="rc-sub">แนวทางตรวจสอบ: สุ่มนับเงินสดกับรายงานจำนวนรถเข้าออกรายชั่วโมง — ตรวจสอบใบส่งเงินกับยอดจริง</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== TAB 6 ===================== -->
+<div class="tab-panel" id="panel-5">
+  <div class="proc-header">
+    <div class="proc-icon" style="background:var(--teal-lt);">🅿️</div>
+    <div>
+      <div class="proc-title">6. จัดเก็บรายได้ค่าบริการที่จอดรถยนต์ ลานจอดรถที่ 1</div>
+      <div class="proc-sub">Car Parking Revenue — Lot 1 (Soft Card System) · ระยะเวลาดำเนินการ: 0.5–0.10 วินาที</div>
+    </div>
+  </div>
+  <div class="swimlane-wrap">
+    <table class="sl-table">
+      <tr>
+        <td class="sl-lane-label header-row">ผู้รับผิดชอบ</td>
+        <td class="sl-steps" style="background:var(--gray50);padding:10px 20px;">
+          <div style="font-size:10.5px;font-weight:800;color:var(--gray600);text-transform:uppercase;letter-spacing:.7px;">ขั้นตอนการปฏิบัติงาน (Flow จากซ้ายไปขวา)</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label ops">ผู้ปฏิบัติงาน<br>ประจำจุด<br>(ป้อมทางเข้า)</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card ops">
+                <div class="sc-num">ขั้น 1</div>
+                <div class="sc-text">สอบถามข้อมูลลูกค้า</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card risk">
+                <div class="sc-num">ขั้น 2</div>
+                <div class="sc-text">แจกบัตรอ่อน + แสตมป์เวลาเข้า</div>
+                <div class="sc-doc">🎫 บัตรจอดรถ (อ่อน)</div>
+                <span class="badge-risk">⚠ เสี่ยง</span>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label ops">ผู้ปฏิบัติงาน<br>ประจำจุด<br>(ป้อมทางออก)</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card risk">
+                <div class="sc-num">ขั้น 3</div>
+                <div class="sc-text">แสตมป์เวลาออก + เก็บเงินค่าบริการตามเวลาจอด</div>
+                <span class="badge-risk">⚠ เสี่ยง</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card finance">
+                <div class="sc-num">ขั้น 4</div>
+                <div class="sc-text">รวบรวมเงินรายได้ส่งการเงิน + ทำรายงาน</div>
+                <span class="badge-ctrl">✓ ควบคุม</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card control">
+                <div class="sc-num">ขั้น 5</div>
+                <div class="sc-text">จดบันทึกรถเข้าออกรายชั่วโมง ส่งรายงานแผนก</div>
+                <span class="badge-ctrl">✓ ควบคุม</span>
+              </div>
+            </div>
+          </div>
+          <div class="risk-callout">
+            <span class="rc-icon">⚠️</span>
+            <div>
+              <div class="rc-text">จุดเสี่ยงสูง: บัตรอ่อนแก้ไขเวลาได้ง่าย — รายรับเงินสดไม่มี Audit Trail อัตโนมัติ</div>
+              <div class="rc-sub">แนวทางตรวจสอบ: ตรวจนับบัตรออก/รับคืนให้ตรงยอดเงิน — พิจารณาอัพเกรดเป็นระบบอิเล็กทรอนิกส์</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== TAB 7 ===================== -->
+<div class="tab-panel" id="panel-6">
+  <div class="proc-header">
+    <div class="proc-icon" style="background:#eef2f7;">🚗</div>
+    <div>
+      <div class="proc-title">7. จัดเก็บรายได้ค่าบริการที่จอดรถยนต์ ลาน 2, 3</div>
+      <div class="proc-sub">Car Parking Revenue — Lot 2 &amp; 3 (Entry/Exit Booth + CarPark System)</div>
+    </div>
+  </div>
+  <div class="swimlane-wrap">
+    <table class="sl-table">
+      <tr>
+        <td class="sl-lane-label header-row">ผู้รับผิดชอบ</td>
+        <td class="sl-steps" style="background:var(--gray50);padding:10px 20px;">
+          <div style="font-size:10.5px;font-weight:800;color:var(--gray600);text-transform:uppercase;letter-spacing:.7px;">ขั้นตอนการปฏิบัติงาน แยกตามป้อม</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label ops" style="background:#1a4a6e;">ผู้ปฏิบัติงาน<br>ป้อมทางเข้า</td>
+        <td class="sl-steps">
+          <div style="font-size:10.5px;font-weight:800;color:#1a4a6e;margin-bottom:8px;padding-bottom:5px;border-bottom:1px dashed var(--gray200);">🔵 ป้อมทางเข้า</div>
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card ops">
+                <div class="sc-num">เข้า 1</div>
+                <div class="sc-text">คีย์ทะเบียนรถ + แจกบัตรจอดรถ</div>
+                <div class="sc-time">⏱ 0.2–0.5 วินาที</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card control">
+                <div class="sc-num">เข้า 2</div>
+                <div class="sc-text">ตรวจบัตรสมาชิกรายเดือน + บันทึกในระบบ CarPark</div>
+                <div class="sc-time">⏱ 0.2–0.5 วินาที</div>
+                <span class="badge-ctrl">✓ ควบคุม</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card risk">
+                <div class="sc-num">เข้า 3</div>
+                <div class="sc-text">แจกบัตรทุกคัน (ยกเว้น รัฐ / รายเดือน / รถเร่)</div>
+                <span class="badge-risk">⚠ เสี่ยง</span>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label ops" style="background:#6e1a1a;">ผู้ปฏิบัติงาน<br>ป้อมทางออก</td>
+        <td class="sl-steps">
+          <div style="font-size:10.5px;font-weight:800;color:#6e1a1a;margin-bottom:8px;padding-bottom:5px;border-bottom:1px dashed var(--gray200);">🔴 ป้อมทางออก</div>
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card ops">
+                <div class="sc-num">ออก 1</div>
+                <div class="sc-text">ส่งสัญญาณโบกมือให้รถหยุด</div>
+                <div class="sc-time">⏱ 0.2–0.5 วินาที</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card ops">
+                <div class="sc-num">ออก 2</div>
+                <div class="sc-text">รับบัตรจอดรถคืนจากลูกค้า</div>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card risk">
+                <div class="sc-num">ออก 3</div>
+                <div class="sc-text">ปรับเงินกรณีจอดเกินเวลา</div>
+                <span class="badge-risk">⚠ เสี่ยง</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card risk">
+                <div class="sc-num">ออก 4</div>
+                <div class="sc-text">ปรับเงินกรณีบัตรหาย + ทำเอกสาร</div>
+                <span class="badge-risk">⚠ เสี่ยง</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="hflow-item">
+              <div class="step-card finance">
+                <div class="sc-num">ออก 5</div>
+                <div class="sc-text">รวบรวมเงินค่าปรับส่งฝ่ายการเงิน</div>
+                <span class="badge-ctrl">✓ ควบคุม</span>
+              </div>
+            </div>
+          </div>
+          <div class="risk-callout">
+            <span class="rc-icon">⚠️</span>
+            <div>
+              <div class="rc-text">จุดเสี่ยงสูง: การยกเว้นบัตรบางประเภท (รัฐ/รถเร่) อาจใช้เป็นช่องทางทุจริต — ค่าปรับเป็นเงินสดไม่มีระบบ</div>
+              <div class="rc-sub">แนวทางตรวจสอบ: ออกใบเสร็จทุกครั้งที่เก็บค่าปรับ — ตรวจสอบนโยบายยกเว้นให้ชัดเจน — ติดตั้ง CCTV ณ จุดป้อม</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== TAB 8 ===================== -->
+<div class="tab-panel" id="panel-7">
+  <div class="proc-header">
+    <div class="proc-icon" style="background:var(--orange-lt);">💳</div>
+    <div>
+      <div class="proc-title">8. การคืนเงินค่าปรับบัตรหาย</div>
+      <div class="proc-sub">Lost Card Fine Refund Process · ผู้รับผิดชอบ: ผู้ปฏิบัติงาน / ธุรการ / ฝ่ายการเงิน</div>
+    </div>
+  </div>
+  <div class="swimlane-wrap">
+    <table class="sl-table">
+      <tr>
+        <td class="sl-lane-label header-row">ผู้รับผิดชอบ</td>
+        <td class="sl-steps" style="background:var(--gray50);padding:10px 20px;">
+          <div style="font-size:10.5px;font-weight:800;color:var(--gray600);text-transform:uppercase;letter-spacing:.7px;">ขั้นตอนการปฏิบัติงาน (Flow จากซ้ายไปขวา)</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label ops">ผู้ปฏิบัติงาน<br>ประจำจุด</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card ops">
+                <div class="sc-num">ขั้น 1</div>
+                <div class="sc-text">ลูกค้าพบบัตรและนำมาคืนพร้อมใบเสร็จเดิม</div>
+                <div class="sc-doc">📄 ใบเสร็จรับเงิน</div>
+                <div class="sc-time">⏱ 0.5–10 นาที</div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label clerk">เจ้าหน้าที่<br>ธุรการ</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card clerk">
+                <div class="sc-num">ขั้น 2</div>
+                <div class="sc-text">บันทึกการคืนเงินในระบบ CarPark</div>
+                <div class="sc-time">⏱ 0.5–10 นาที</div>
+                <span class="badge-ctrl">✓ ควบคุม</span>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="sl-lane-label finance">ฝ่ายการเงิน</td>
+        <td class="sl-steps">
+          <div class="hflow">
+            <div class="hflow-item">
+              <div class="step-card risk">
+                <div class="sc-num">ขั้น 3</div>
+                <div class="sc-text">ตรวจสอบกับระบบ CarPark แล้วอนุมัติเบิกเงินคืน</div>
+                <div class="sc-doc">🪪 บัตรประชาชน + เอกสารปรับบัตรหาย</div>
+                <div class="sc-time">⏱ 0.5–10 นาที</div>
+                <span class="badge-risk">⚠ เสี่ยง</span>
+              </div>
+            </div>
+          </div>
+          <div class="risk-callout">
+            <span class="rc-icon">⚠️</span>
+            <div>
+              <div class="rc-text">จุดเสี่ยง: เบิกเงินคืนซ้ำหรือใช้เอกสารปลอม — ไม่มีการตรวจสอบข้ามหน่วยงาน</div>
+              <div class="rc-sub">แนวทางตรวจสอบ: ฝ่ายการเงินต้องตรวจสอบกับระบบ CarPark ก่อนอนุมัติทุกครั้ง — บันทึก Transaction ทุกรายการ</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- RISK SUMMARY TABLE — แสดงใน Tab 8 เท่านั้น (ภาพรวม) -->
+  <div style="margin-top:36px;">
+    <div class="proc-header">
+      <div class="proc-icon" style="background:var(--red-lt);">⚠</div>
+      <div>
+        <div class="proc-title" style="color:var(--red);">สรุปจุดเสี่ยงและข้อแนะนำสำหรับผู้ตรวจสอบ (ภาพรวมทุกกระบวนการ)</div>
+        <div class="proc-sub">Risk Summary &amp; Internal Audit Recommendations</div>
+      </div>
+    </div>
+    <table class="risk-tbl">
+      <thead>
+        <tr>
+          <th style="width:4%">#</th>
+          <th style="width:18%">กระบวนการ</th>
+          <th style="width:28%">จุดเสี่ยง</th>
+          <th style="width:10%">ระดับ</th>
+          <th>ข้อแนะนำในการตรวจสอบ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="font-weight:800;color:var(--red);">1</td><td>เก็บค่ารถลงสินค้า</td><td>เก็บเงินสดไม่ออกใบเสร็จ หรือยอดไม่ตรง</td><td><span class="rl h">สูง</span></td><td>เปรียบเทียบใบเสร็จกับยอดระบบออนไลน์ทุกวัน — สุ่มนับเงินสด</td></tr>
+        <tr><td style="font-weight:800;color:var(--red);">2</td><td>เปิดบัญชีรายเดือน</td><td>คีย์ข้อมูล CarPark ไม่ตรงกับเอกสาร</td><td><span class="rl h">สูง</span></td><td>ตรวจทะเบียนรถในระบบกับสำเนาเอกสารจริงเดือนละครั้ง</td></tr>
+        <tr><td style="font-weight:800;color:var(--orange);">3</td><td>จัดส่งใบแจ้งหนี้</td><td>ส่งล่าช้า ส่งผิดราย ไม่มีหลักฐาน</td><td><span class="rl m">กลาง</span></td><td>รายชื่อพร้อมลายเซ็นก่อนวันที่ 15 ของทุกเดือน</td></tr>
+        <tr><td style="font-weight:800;color:var(--orange);">4</td><td>จัดส่งใบทวงหนี้</td><td>ไม่มีหลักฐานการส่ง — สำเนาไม่ถูกส่งคืน</td><td><span class="rl m">กลาง</span></td><td>ขอลายเซ็นรับเอกสาร — นับสำเนาให้ตรงกับจำนวนที่ส่ง</td></tr>
+        <tr><td style="font-weight:800;color:var(--red);">5</td><td>ที่จอดรถยนต์ ลาน 1</td><td>บัตรอ่อนแก้ไขเวลาได้ — ไม่มี Audit Trail</td><td><span class="rl h">สูง</span></td><td>ตรวจนับบัตรออก/รับคืนกับยอดเงิน — พิจารณาอัพเกรดระบบ</td></tr>
+        <tr><td style="font-weight:800;color:var(--red);">6</td><td>ป้อมทางออก ลาน 2–3</td><td>ยกเว้นบัตรบางประเภทอาจใช้เป็นช่องทุจริต</td><td><span class="rl h">สูง</span></td><td>ออกใบเสร็จทุกครั้งที่ปรับ — ตรวจสอบนโยบายยกเว้น — CCTV</td></tr>
+        <tr><td style="font-weight:800;color:var(--red);">7</td><td>คืนเงินค่าปรับบัตรหาย</td><td>เบิกคืนซ้ำหรือใช้เอกสารปลอม</td><td><span class="rl h">สูง</span></td><td>ตรวจสอบกับระบบ CarPark ก่อนอนุมัติทุกครั้ง — บันทึก Transaction</td></tr>
+        <tr><td style="font-weight:800;color:var(--orange);">8</td><td>จักรยานยนต์</td><td>ไม่มีระบบออกใบเสร็จอัตโนมัติ</td><td><span class="rl m">กลาง</span></td><td>สุ่มนับเงินสดกับรายงานรถเข้าออก — ตรวจใบส่งเงินกับยอดจริง</td></tr>
+      </tbody>
+    </table>
+
+    <div class="summary-grid">
+      <div class="sum-card n"><div class="sum-num">8</div><div class="sum-label">กระบวนการหลักทั้งหมด</div></div>
+      <div class="sum-card g"><div class="sum-num">35+</div><div class="sum-label">ขั้นตอนในกระบวนการ</div></div>
+      <div class="sum-card r"><div class="sum-num">5</div><div class="sum-label">จุดเสี่ยงระดับสูง ⚠</div></div>
+      <div class="sum-card t"><div class="sum-num">7</div><div class="sum-label">จุดควบคุมที่กำหนดไว้ ✓</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>แผนกบริหารที่จอดรถและห้องน้ำ | ฝ่ายบริหารกิจการภายในตลาด</span>
+  <strong>เอกสารตรวจสอบภายใน — ชั้นความลับ: ใช้ภายในองค์กรเท่านั้น</strong>
+  <span>มิถุนายน 2568</span>
+</div>
+
+<script>
+function switchTab(idx, btn) {
+  if (idx === 4) {
+    window.location.href = 'tab5_motorcycle.html';
+    return;
+  }
+  document.querySelectorAll('.tab-panel').forEach((p,i) => p.classList.toggle('active', i === idx));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  btn.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+}
+</script>
+</body>
+</html>

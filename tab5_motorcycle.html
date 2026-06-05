@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>กระบวนการที่ 5 — จัดเก็บรายได้ที่จอดรถจักรยานยนต์ (ลาน 2)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f5f5f7;
+  --card-bg: #ffffff;
+  --text-main: #1d1d1f;
+  --text-muted: #86868b;
+  --accent-blue: #0071e3;
+  --gold: #d8a032; 
+  --gold-lt: #fdf6e3;
+  --red: #ff3b30;
+  --red-lt: #ffeceb;
+  --green: #34c759;
+  --green-lt: #ebf9ee;
+  --teal: #5ac8fa;
+  --teal-lt: #eaf8ff;
+  --purple: #af52de;
+  --purple-lt: #f4eafe;
+  --orange: #ff9500;
+  --orange-lt: #fff4e5;
+  --gray50: #f5f5f7;
+  --gray100: #e5e5ea;
+  --gray200: #d1d1d6;
+  --gray400: #8e8e93;
+  --gray600: #48484a;
+  --gray700: #3a3a3c;
+  --gray800: #1c1c1e;
+  
+  --finance-bg: #e8dff5;
+  --hr-bg: #ffe4c4;
+  --night-bg: #e5e5ea;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Sarabun", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ===== HEADER ===== */
+.header {
+  background: #000000;
+  color: #f5f5f7;
+  padding: 48px 48px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 50% 0%, rgba(0,113,227,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+.header-inner { position: relative; z-index: 1; }
+.header-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a1a1a6;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.header-title { font-size: 32px; font-weight: 700; color: #ffffff; line-height: 1.25; letter-spacing: -0.5px; }
+.header-title em { color: var(--accent-blue); font-style: normal; }
+.header-meta { display: flex; gap: 32px; margin-top: 24px; flex-wrap: wrap; }
+.meta-item { display: flex; flex-direction: column; gap: 4px; }
+.meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #86868b; font-weight: 600; }
+.meta-value { font-size: 13px; color: #f5f5f7; font-weight: 500; }
+
+/* ===== LAYOUT ===== */
+.page { display: flex; gap: 0; min-height: calc(100vh - 120px); }
+
+/* ===== SWIMLANE (LEFT) ===== */
+.swimlane-col { flex: 1; min-width: 0; overflow-x: auto; padding: 32px 24px 48px 24px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.swimlane-col.has-panel { flex: 0 0 58%; }
+
+.sl-wrap { background: var(--card-bg); border-radius: 24px; box-shadow: 0 12px 32px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid rgba(0,0,0,0.04); min-width: 600px; }
+.sl-table { width: 100%; border-collapse: collapse; }
+
+/* Lane label */
+.lane-lbl { width: 140px; vertical-align: middle; text-align: center; padding: 20px 16px; font-size: 12px; font-weight: 600; color: var(--text-main); line-height: 1.5; border-right: 1px solid var(--gray200); border-bottom: 1px solid var(--gray200); }
+.lane-lbl.counter { background: var(--teal-lt); }
+.lane-lbl.ops { background: #fafafc; }
+.lane-lbl.hr { background: var(--hr-bg); }
+.lane-lbl.fin-field { background: var(--finance-bg); }
+.lane-lbl.fin-recv { background: var(--purple-lt); }
+.lane-lbl.night { background: var(--night-bg); }
+.lane-lbl.audit { background: var(--purple-lt); }
+.lane-lbl.hdr { background: var(--gray100); color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border-top-left-radius: 24px; }
+
+/* Steps cell */
+.sl-steps { padding: 24px; vertical-align: middle; border-bottom: 1px solid var(--gray200); }
+.sl-steps.audit-bg { background: rgba(175, 82, 222, 0.05); }
+.sl-steps.counter-bg { background: rgba(90, 200, 250, 0.05); }
+.sl-steps.hr-bg { background: rgba(255, 149, 0, 0.05); }
+.sl-steps.fin-bg { background: rgba(175, 82, 222, 0.05); }
+
+/* Flow row */
+.flow { display: flex; align-items: center; flex-wrap: wrap; gap: 0; }
+.flow-item { display: flex; align-items: center; }
+
+/* Step card */
+.step { position: relative; border-radius: 16px; padding: 16px; border: none; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); min-width: 140px; max-width: 175px; user-select: none; background: #f5f5f7; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); }
+.step:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06), inset 0 0 0 1px rgba(0,0,0,0.02); }
+.step.active { outline: none; transform: translateY(-4px) scale(1.02); box-shadow: 0 0 0 2px var(--accent-blue), 0 12px 32px rgba(0,113,227,0.15); }
+
+.step.ops { background: #f0f4f8; }
+.step.risk { background: var(--red-lt); box-shadow: inset 0 0 0 1px rgba(255,59,48,0.2); }
+.step.ctrl { background: var(--green-lt); }
+.step.fin { background: var(--purple-lt); }
+.step.teal { background: var(--teal-lt); }
+.step.hr-card { background: var(--orange-lt); }
+.step.night-card { background: var(--gray100); }
+
+.step-num { font-size: 10px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+.step-text { font-size: 13px; font-weight: 600; color: var(--text-main); line-height: 1.5; }
+.step.risk .step-text { color: var(--red); }
+
+/* Badge */
+.badge { position: absolute; top: -8px; right: -8px; font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 12px; white-space: nowrap; pointer-events: none; }
+.badge.r { background: var(--red); color: #fff; box-shadow: 0 4px 12px rgba(255,59,48,0.3); }
+.badge.c { background: var(--green); color: #fff; box-shadow: 0 4px 12px rgba(52,199,89,0.3); }
+.badge.w { background: var(--orange); color: #fff; box-shadow: 0 4px 12px rgba(255,149,0,0.3); }
+
+/* Arrow */
+.arr { color: var(--gray400); font-size: 18px; padding: 0 12px; flex-shrink: 0; font-weight: 300; }
+.arr-dot { color: var(--gray400); font-size: 14px; padding: 0 12px; flex-shrink: 0; }
+
+/* Case boxes inside ops lane */
+.case-box { background: #f5f5f7; border-radius: 16px; padding: 16px; border: 1px solid rgba(0,0,0,0.04); flex: 1; min-width: 150px; }
+.case-box.b { background: #f0f4f8; }
+.case-box.c { background: var(--green-lt); }
+.case-title { font-size: 11px; font-weight: 600; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.case-box.b .case-title { color: var(--accent-blue); }
+.case-box.c .case-title { color: var(--green); }
+
+/* Inline warning strips */
+.strip { border-radius: 8px; padding: 10px 14px; font-size: 12px; font-weight: 500; margin-top: 8px; line-height: 1.5; }
+.strip.y { background: var(--orange-lt); color: var(--orange); }
+.strip.r { background: var(--red-lt); color: var(--red); }
+
+/* ===== DETAIL PANEL (RIGHT) ===== */
+.panel-col { width: 0; overflow: hidden; transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1); flex-shrink: 0; }
+.panel-col.open { width: 42%; }
+
+.panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%); border-radius: 24px; margin: 32px 24px 48px 0; box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05); overflow: hidden; height: calc(100% - 80px); display: flex; flex-direction: column; }
+.panel-head { background: transparent; padding: 24px 24px 20px; display: flex; justify-content: space-between; align-items: flex-start; flex-shrink: 0; border-bottom: 1px solid rgba(0,0,0,0.08); }
+.panel-head-left { flex: 1; }
+.panel-step-id { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; }
+.panel-title { font-size: 18px; font-weight: 600; color: var(--text-main); line-height: 1.3; }
+.panel-close { width: 32px; height: 32px; background: rgba(0,0,0,0.05); border: none; border-radius: 50%; color: var(--text-main); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 16px; transition: background 0.2s; }
+.panel-close:hover { background: rgba(0,0,0,0.1); }
+
+.panel-body { flex: 1; overflow-y: auto; padding: 24px; }
+.panel-body::-webkit-scrollbar { width: 6px; }
+.panel-body::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
+
+.panel-section { margin-bottom: 24px; }
+.panel-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--gray200); }
+
+.task-list { display: flex; flex-direction: column; gap: 12px; }
+.task-item { display: flex; gap: 12px; align-items: flex-start; }
+.task-dot { width: 8px; height: 8px; background: var(--accent-blue); border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.task-text { font-size: 14px; color: var(--text-main); font-weight: 500; line-height: 1.6; }
+
+.doc-list { display: flex; flex-direction: column; gap: 8px; }
+.doc-item { background: rgba(255,255,255,0.6); border: 1px solid rgba(0,0,0,0.04); border-radius: 12px; padding: 12px 16px; font-size: 13px; font-weight: 500; color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+
+.warning-box { background: var(--red-lt); border-radius: 16px; padding: 16px 20px; }
+.warning-title { font-size: 11px; font-weight: 600; color: var(--red); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.warning-text { font-size: 13px; font-weight: 500; color: #a32020; line-height: 1.6; }
+
+.info-box { background: var(--teal-lt); border-radius: 16px; padding: 16px 20px; }
+.info-text { font-size: 13px; font-weight: 500; color: #0e4a60; line-height: 1.6; }
+
+.freq-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--text-main); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+.resp-list { display: flex; flex-direction: column; gap: 8px; }
+.resp-item { display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 500; color: var(--text-main); }
+.resp-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* ===== RISK TABLE (BELOW) ===== */
+.risk-section { padding: 0 24px 64px; }
+.risk-section-title { font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+.risk-badge-hd { background: var(--red-lt); color: var(--red); padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+
+.risk-tbl { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-lg); background: #fff; border: 1px solid rgba(0,0,0,0.04); }
+.risk-tbl th { background: #fafafc; color: var(--text-muted); padding: 16px 20px; font-size: 12px; font-weight: 600; text-align: left; letter-spacing: 0.5px; text-transform: uppercase; border-bottom: 1px solid var(--gray200); }
+.risk-tbl td { background: #fff; padding: 16px 20px; font-size: 13px; border-bottom: 1px solid var(--gray100); vertical-align: top; line-height: 1.6; color: var(--text-main); }
+.risk-tbl tr:last-child td { border-bottom: none; }
+.risk-tbl tr:hover td { background: #fcfcfd; }
+.rl { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.rl.h { background: var(--red-lt); color: var(--red); }
+.rl.v { background: #ff0000; color: #fff; }
+.rl.m { background: var(--orange-lt); color: var(--orange); }
+
+/* formula box */
+.formula { background: #f0f4f8; border-radius: 16px; padding: 24px; margin-bottom: 32px; border: 1px solid rgba(0,0,0,0.04); }
+.formula-title { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
+.formula-body { background: #fff; border-radius: 12px; padding: 16px 20px; font-size: 14px; font-weight: 600; color: var(--text-main); line-height: 2.2; box-shadow: 0 2px 12px rgba(0,0,0,0.02); }
+.f-green { color: var(--green); }
+.f-teal { background: var(--teal-lt); padding: 2px 8px; border-radius: 8px; color: var(--teal); font-weight: 600; }
+.f-blue { background: #e0edff; padding: 2px 8px; border-radius: 8px; color: #1a4a8e; font-weight: 600; }
+.f-orange { background: var(--orange-lt); padding: 2px 8px; border-radius: 8px; color: var(--orange); font-weight: 600; }
+.f-red { color: var(--red); font-weight: 600; }
+
+/* critical box */
+.critical { background: var(--red-lt); border: 1px solid rgba(255,59,48,0.2); border-radius: 16px; padding: 20px 24px; margin-bottom: 24px; }
+.critical-title { font-size: 13px; font-weight: 600; color: var(--red); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.critical-text { font-size: 14px; font-weight: 500; color: #a32020; line-height: 1.7; }
+
+/* ======= PRINT ======= */
+@media print {
+  @page { size: A4 landscape; margin: 10mm; }
+  
+  /* Hide interactive / unnecessary stuff */
+  .nav-links, .panel-close, .badge { display: none !important; }
+  
+  /* Reset header */
+  .header { padding: 0 !important; background: none !important; color: #000 !important; border-bottom: 2px solid #e5e5ea; }
+  .header-title, .meta-label, .meta-value { color: #000 !important; }
+  .header::after { display: none; }
+  .header-badge { color: #000; border: 1px solid #000; }
+  
+  /* Reset layout */
+  body { background: #fff !important; }
+  .page { display: block !important; height: auto !important; min-height: 0 !important; overflow: visible !important; }
+  .swimlane-col { display: block !important; padding: 0 !important; overflow: visible !important; width: 100% !important; flex: none !important; }
+  .sl-wrap { border: 1px solid #000; box-shadow: none !important; }
+  
+  /* Risk Section */
+  .risk-section { display: block !important; padding: 24px 0 0 !important; page-break-inside: avoid; }
+  .risk-tbl, .formula, .critical { border: 1px solid #000 !important; box-shadow: none !important; }
+  
+  /* Detail Panel on next page */
+  .panel-col { 
+    display: block !important; 
+    width: 100% !important; 
+    overflow: visible !important; 
+    page-break-before: always; /* Details start on next page */
+    margin-top: 20px;
+  }
+  .panel {
+    display: block !important; 
+    margin: 0 !important; 
+    box-shadow: none !important; 
+    border: 1px solid #000 !important; 
+    height: auto !important; 
+    background: #fff !important;
+    backdrop-filter: none !important;
+  }
+  .panel-body { overflow: visible !important; padding: 24px !important; }
+  .panel-head { background: #f5f5f7 !important; border-bottom: 1px solid #000 !important; }
+  .panel-title { color: #000 !important; }
+  .panel-step-id { color: #000 !important; }
+  
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div style="position:absolute; top:24px; right:40px; display:flex; gap:10px; z-index:10;" class="nav-links">
+    <a href="index_8.html" style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); color:#fff; text-decoration:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; transition:all .2s; display:flex; align-items:center; gap:6px;">🏠 กลับหน้าหลัก</a>
+    <a href="workflow_swimlane_tabs.html" style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); color:#fff; text-decoration:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; transition:all .2s; display:flex; align-items:center; gap:6px;">📊 ผังกระบวนการ 1–8</a>
+    <button onclick="window.print()" style="background:#fff; color:#1d1d1f; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12px; display:flex; align-items:center; gap:6px;">🖨️ พิมพ์รายงาน</button>
+  </div>
+  <div class="header-inner">
+    <div class="header-badge">กระบวนการที่ 5 · เอกสารตรวจสอบภายใน</div>
+    <div class="header-title">จัดเก็บรายได้ค่าบริการ<em>ที่จอดรถจักรยานยนต์ (ลาน 2)</em></div>
+    <div class="header-meta">
+      <div class="meta-item"><span class="meta-label">ระบบ</span><span class="meta-value">เครื่องนับรถ + YC Parking App</span></div>
+      <div class="meta-item"><span class="meta-label">สิทธิ์บุคลากร</span><span class="meta-value">30 ครั้ง/เดือน</span></div>
+      <div class="meta-item"><span class="meta-label">ผู้รับผิดชอบ</span><span class="meta-value">7 ฝ่าย</span></div>
+      <div class="meta-item"><span class="meta-label">จุดเสี่ยง</span><span class="meta-value">วิกฤต 1 · สูง 4 · กลาง 3</span></div>
+      <div class="meta-item"><span class="meta-label">คลิกที่ขั้นตอน</span><span class="meta-value">เพื่อดูรายละเอียด →</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE BODY -->
+<div class="page" id="page">
+
+  <!-- ===== SWIMLANE ===== -->
+  <div class="swimlane-col" id="sl-col">
+    <div class="sl-wrap">
+      <table class="sl-table">
+
+        <!-- Header row -->
+        <tr>
+          <td class="lane-lbl hdr">ผู้รับผิดชอบ</td>
+          <td class="sl-steps" style="background:var(--gray50);padding:10px 16px;">
+            <span style="font-size:10.5px;font-weight:800;color:var(--gray600);text-transform:uppercase;letter-spacing:.6px;">ขั้นตอน — คลิกที่แต่ละขั้นตอนเพื่อดูรายละเอียด</span>
+          </td>
+        </tr>
+
+        <!-- Row 1: เครื่องนับรถ -->
+        <tr>
+          <td class="lane-lbl counter">ระบบ<br>เครื่องนับรถ<br><span style="font-size:9px;opacity:.7;font-weight:400;">อัตโนมัติ</span></td>
+          <td class="sl-steps counter-bg">
+            <div class="flow">
+              <div class="flow-item">
+                <div class="step teal" onclick="showPanel('s1')">
+                  <div class="step-num">C-1</div>
+                  <div class="step-text">นับรถเข้า +1</div>
+                </div>
+              </div>
+              <span class="arr-dot">· · · จอดรถ · · ·</span>
+              <div class="flow-item">
+                <div class="step teal" onclick="showPanel('s2')">
+                  <div class="step-num">C-2</div>
+                  <div class="step-text">นับรถออก +1</div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 2: เจ้าหน้าที่เก็บเงิน -->
+        <tr>
+          <td class="lane-lbl ops">เจ้าหน้าที่<br>เก็บเงิน<br>มอเตอร์ไซค์</td>
+          <td class="sl-steps">
+            <div style="font-size:11px;font-weight:800;color:var(--gray600);margin-bottom:8px;">เมื่อรถออก — แยกตามประเภทผู้ใช้บริการ</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+
+              <!-- กรณี ก -->
+              <div class="case-box">
+                <div class="case-title">🟦 กรณี ก — ทั่วไป / สิทธิ์หมด</div>
+                <div class="step risk" onclick="showPanel('sA1')">
+                  <div class="step-num">ก-1</div>
+                  <div class="step-text">เก็บค่าบริการ<br>เงินสด / โอน / QR</div>
+                  <span class="badge r">⚠ R3</span>
+                </div>
+              </div>
+
+              <!-- กรณี ข -->
+              <div class="case-box b">
+                <div class="case-title">🟩 กรณี ข — บุคลากรตลาด (≤30 ครั้ง/เดือน)</div>
+                <div class="flow" style="flex-wrap:wrap;gap:4px;">
+                  <div class="flow-item">
+                    <div class="step ops" onclick="showPanel('sB1')">
+                      <div class="step-num">ข-1</div>
+                      <div class="step-text">สแกน QR บุคลากร ผ่าน YC Parking App</div>
+                    </div>
+                  </div>
+                  <span class="arr">→</span>
+                  <div class="flow-item">
+                    <div class="step ctrl" onclick="showPanel('sB2')">
+                      <div class="step-num">ข-2</div>
+                      <div class="step-text">ระบบหักโควต้า บันทึก Log</div>
+                      <span class="badge c">✓</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="strip y">⚠ สิทธิ์หมด → ไปกรณี ก</div>
+                <div class="strip r">🔴 ระบบล่ม → จดชื่อ+รหัส ยกเว้นชั่วคราว รายงาน HR ทันที</div>
+              </div>
+
+              <!-- กรณี ค -->
+              <div class="case-box c">
+                <div class="case-title">🟧 กรณี ค — บัตรจอดรถฟรี (ฟิตเนส)</div>
+                <div class="step ctrl" onclick="showPanel('sC1')">
+                  <div class="step-num">ค-1</div>
+                  <div class="step-text">รับบัตรจอดรถฟรี ยกเว้นค่าบริการ</div>
+                  <span class="badge c">✓ มีบัตร</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ปลายวัน -->
+            <div style="margin-top:12px;padding-top:10px;border-top:1.5px dashed var(--gray200);">
+              <div style="font-size:11px;font-weight:800;color:var(--gray600);margin-bottom:8px;">ปลายวัน</div>
+              <div class="flow" style="flex-wrap:wrap;gap:4px;">
+                <div class="flow-item">
+                  <div class="step ops" onclick="showPanel('s3')">
+                    <div class="step-num">ขั้น 3</div>
+                    <div class="step-text">บันทึกรถเข้า-ออก รายชั่วโมง</div>
+                  </div>
+                </div>
+                <span class="arr">→</span>
+                <div class="flow-item">
+                  <div class="step ops" onclick="showPanel('s4')">
+                    <div class="step-num">ขั้น 4</div>
+                    <div class="step-text">จัดทำใบสรุปส่งเงิน + บัตรฟรี</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 3: HR -->
+        <tr>
+          <td class="lane-lbl hr">ฝ่ายบุคคล<br>(HR)<br><span style="font-size:9px;opacity:.7;font-weight:400;">กรณีระบบล่ม</span></td>
+          <td class="sl-steps hr-bg">
+            <div class="flow" style="flex-wrap:wrap;gap:4px;">
+              <div class="flow-item">
+                <div class="step hr-card" onclick="showPanel('sHR1')">
+                  <div class="step-num">HR-1</div>
+                  <div class="step-text">รับรายงาน ตรวจสอบรายชื่อบุคลากร</div>
+                </div>
+              </div>
+              <span class="arr">→</span>
+              <div class="flow-item">
+                <div class="step ctrl" onclick="showPanel('sHR2')">
+                  <div class="step-num">HR-2</div>
+                  <div class="step-text">ปรับหักโควต้าย้อนหลัง เมื่อระบบกลับมา</div>
+                  <span class="badge c">✓ ปิด Loop</span>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 4: การเงินลงพื้นที่ -->
+        <tr>
+          <td class="lane-lbl fin-field">การเงิน<br>ลงพื้นที่<br><span style="font-size:9px;opacity:.7;font-weight:400;">ระหว่างวัน</span></td>
+          <td class="sl-steps fin-bg">
+            <div class="flow" style="flex-wrap:wrap;gap:4px;">
+              <div class="flow-item">
+                <div class="step fin" onclick="showPanel('sF1')">
+                  <div class="step-num">กง-1</div>
+                  <div class="step-text">จดมิเตอร์เริ่ม กันเงินทอน 200 บ.</div>
+                  <span class="badge c">✓ บันทึกเวลา</span>
+                </div>
+              </div>
+              <span class="arr">→</span>
+              <div class="flow-item">
+                <div class="step fin" onclick="showPanel('sF2')">
+                  <div class="step-num">กง-2</div>
+                  <div class="step-text">รับเงินสด ตรวจนับตามสูตรมิเตอร์</div>
+                  <span class="badge r">⚠ R2</span>
+                </div>
+              </div>
+              <span class="arr">→</span>
+              <div class="flow-item">
+                <div class="step ctrl" onclick="showPanel('sF3')">
+                  <div class="step-num">กง-3</div>
+                  <div class="step-text">บันทึกมิเตอร์สิ้นสุด ลงนาม 2 ฝ่าย</div>
+                  <span class="badge c">✓ ลายเซ็น</span>
+                </div>
+              </div>
+              <span class="arr">→</span>
+              <div class="flow-item">
+                <div class="step fin" onclick="showPanel('sF4')">
+                  <div class="step-num">กง-4</div>
+                  <div class="step-text">นำเงินส่งส่วนงานรับเงิน</div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 5: การเงินรับเงิน -->
+        <tr>
+          <td class="lane-lbl fin-recv">การเงิน<br>รับเงิน</td>
+          <td class="sl-steps">
+            <div class="flow" style="flex-wrap:wrap;gap:4px;">
+              <div class="flow-item">
+                <div class="step fin" onclick="showPanel('sR1')">
+                  <div class="step-num">รง-1</div>
+                  <div class="step-text">ตรวจนับเงิน + สแกน QR + บัตรฟรี ให้ตรงใบสรุป</div>
+                  <span class="badge w">⚠ R1</span>
+                </div>
+              </div>
+              <span class="arr">→</span>
+              <div class="flow-item">
+                <div class="step fin" onclick="showPanel('sR2')">
+                  <div class="step-num">รง-2</div>
+                  <div class="step-text">รวบรวมเงิน ส่ง ผจก.นำฝากธนาคาร</div>
+                </div>
+              </div>
+              <span class="arr">→</span>
+              <div class="flow-item">
+                <div class="step ctrl" onclick="showPanel('sR3')">
+                  <div class="step-num">รง-3</div>
+                  <div class="step-text">ส่งเอกสารให้แผนกบัญชี</div>
+                  <span class="badge c">✓ ปิดรอบวัน</span>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 6: หัวหน้างานกลางคืน -->
+        <tr>
+          <td class="lane-lbl night">หัวหน้างาน<br>กะกลางคืน<br><span style="font-size:9px;opacity:.7;font-weight:400;">สิ้นเดือน</span></td>
+          <td class="sl-steps">
+            <div class="flow" style="flex-wrap:wrap;gap:4px;">
+              <div class="flow-item">
+                <div class="step night-card" onclick="showPanel('sN1')">
+                  <div class="step-num">กค-1</div>
+                  <div class="step-text">บันทึกรถค้างจอด ณ เที่ยงคืน ทุกวัน</div>
+                  <span class="badge c">✓ รายวัน</span>
+                </div>
+              </div>
+              <span class="arr">→</span>
+              <div class="flow-item">
+                <div class="step night-card" onclick="showPanel('sN2')">
+                  <div class="step-num">กค-2</div>
+                  <div class="step-text">รีเซ็ตมิเตอร์นับรถ ทุกเที่ยงคืนสิ้นเดือน</div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 7: ผู้ตรวจสอบภายใน -->
+        <tr>
+          <td class="lane-lbl audit">ผู้ตรวจสอบ<br>ภายใน<br><span style="font-size:9px;opacity:.7;font-weight:400;">อิสระ</span></td>
+          <td class="sl-steps audit-bg">
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+
+              <div>
+                <div style="font-size:10.5px;font-weight:800;color:var(--purple);margin-bottom:6px;">🎲 สุ่มตรวจ (Random Audit)</div>
+                <div class="flow" style="gap:4px;flex-wrap:wrap;">
+                  <div class="flow-item"><div class="step fin" onclick="showPanel('aD1')"><div class="step-num">ตว-1</div><div class="step-text">ดึง YC Parking โดยตรง</div><span class="badge c">✓ อิสระ</span></div></div>
+                  <span class="arr">→</span>
+                  <div class="flow-item"><div class="step fin" onclick="showPanel('aD2')"><div class="step-num">ตว-2</div><div class="step-text">ขอยอดรายได้จากการเงิน</div></div></div>
+                  <span class="arr">→</span>
+                  <div class="flow-item"><div class="step fin" onclick="showPanel('aD3')"><div class="step-num">ตว-3</div><div class="step-text">คำนวณสูตร 3 ทาง</div></div></div>
+                  <span class="arr">→</span>
+                  <div class="flow-item"><div class="step risk" onclick="showPanel('aD4')"><div class="step-num">ตว-4</div><div class="step-text">ยอดต่างเกิน ±2 คัน → แจ้ง ผบห.</div><span class="badge r">⚠</span></div></div>
+                </div>
+              </div>
+
+              <div style="border-left:1.5px dashed #c0a0e0;padding-left:12px;">
+                <div style="font-size:10.5px;font-weight:800;color:var(--purple);margin-bottom:6px;">📆 รายสัปดาห์</div>
+                <div class="flow" style="gap:4px;flex-wrap:wrap;">
+                  <div class="flow-item"><div class="step fin" onclick="showPanel('aW1')"><div class="step-num">สน-1</div><div class="step-text">ดึงยอดก่อนลงพื้นที่</div></div></div>
+                  <span class="arr">→</span>
+                  <div class="flow-item"><div class="step fin" onclick="showPanel('aW2')"><div class="step-num">สน-2</div><div class="step-text">ลงพื้นที่นับเงิน</div></div></div>
+                  <span class="arr">→</span>
+                  <div class="flow-item"><div class="step ctrl" onclick="showPanel('aW3')"><div class="step-num">สน-3</div><div class="step-text">บันทึก ลงนาม 2 ฝ่าย</div><span class="badge c">✓</span></div></div>
+                  <span class="arr">→</span>
+                  <div class="flow-item"><div class="step fin" onclick="showPanel('aW4')"><div class="step-num">สน-4</div><div class="step-text">ตรวจ QR รายบุคคล</div></div></div>
+                </div>
+              </div>
+
+              <div style="border-left:1.5px dashed #c0a0e0;padding-left:12px;">
+                <div style="font-size:10.5px;font-weight:800;color:var(--purple);margin-bottom:6px;">📊 รายเดือน</div>
+                <div class="flow" style="gap:4px;flex-wrap:wrap;">
+                  <div class="flow-item"><div class="step fin" onclick="showPanel('aM1')"><div class="step-num">ดน-1</div><div class="step-text">รวบรวมสรุปยอดต่าง</div></div></div>
+                  <span class="arr">→</span>
+                  <div class="flow-item"><div class="step fin" onclick="showPanel('aM2')"><div class="step-num">ดน-2</div><div class="step-text">ตรวจโควต้าบุคลากร</div></div></div>
+                  <span class="arr">→</span>
+                  <div class="flow-item"><div class="step ctrl" onclick="showPanel('aM3')"><div class="step-num">ดน-3</div><div class="step-text">รายงาน ผบห. โดยตรง</div><span class="badge c">✓</span></div></div>
+                </div>
+              </div>
+
+            </div>
+          </td>
+        </tr>
+
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== DETAIL PANEL ===== -->
+  <div class="panel-col" id="panel-col">
+    <div class="panel" id="detail-panel">
+      <div class="panel-head">
+        <div class="panel-head-left">
+          <div class="panel-step-id" id="p-id">—</div>
+          <div class="panel-title" id="p-title">เลือกขั้นตอนเพื่อดูรายละเอียด</div>
+        </div>
+        <button class="panel-close" onclick="closePanel()">×</button>
+      </div>
+      <div class="panel-body" id="p-body"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== RISK & FORMULA (BELOW) ===== -->
+<div class="risk-section">
+
+  <div class="formula">
+    <div class="formula-title">📐 สูตรตรวจสอบรายได้ 3 ทาง — สำหรับสุ่มตรวจและยืนยันความถูกต้อง</div>
+    <div class="formula-body">
+      <span class="f-green">รายได้ที่ควรได้รับ</span> =
+      <span class="f-teal">ยอดรถออกจากบันทึก กง.</span> −
+      <span class="f-blue">สแกน QR บุคลากร (YC Parking โดยตรง)</span> −
+      <span class="f-orange">รถค้างจอดจากคืนก่อน</span> − <span class="f-orange">บัตรจอดรถฟรี</span> × <strong>อัตราค่าบริการ</strong><br>
+      <span class="f-green">รายได้จริงที่รับมา</span> = เงินสด + เงินโอน<br>
+      <span class="f-red">ยอดต่าง</span> = รายได้ที่ควรได้รับ − รายได้จริง → <strong>ต้องเท่ากับศูนย์</strong> | ต่างเกิน ±2 คัน → แจ้งผู้บริหารทันที
+    </div>
+  </div>
+
+  <div class="critical">
+    <div class="critical-title"><span style="font-size:18px;">🔴</span> จุดที่ควรเฝ้าระวังเชิงระบบ — ข้อจำกัดด้านการควบคุมภายใน</div>
+    <div class="critical-text">
+      <strong>ไม่มีรายงานระบบ (System Report) จากตู้เครื่องนับรถ</strong> ข้อมูลตั้งต้นเพื่อใช้คำนวณรายได้ทั้งหมดจึงต้องพึ่งพา <strong>การจดบันทึกด้วยมือ (Manual) และการลงนามรับรองร่วมกัน</strong><br>
+      <span style="color:var(--red);font-weight:800;">→ ความเสี่ยงที่อาจเกิดขึ้น: การคลาดเคลื่อนของข้อมูล และความเสี่ยงจากการสมรู้ร่วมคิด (Collusion Risk) เนื่องจากไม่มีหลักฐานเชิงประจักษ์จากระบบเพื่อใช้สอบทานความถูกต้องของเอกสาร</span><br>
+      <span style="color:#0056b3;font-weight:700;">💡 มาตรการลดความเสี่ยง: เพิ่มการสุ่มตรวจโดย IA | 🚀 แผนยกระดับในอนาคต: ใช้ฟอร์มออนไลน์พร้อมแนบรูปถ่ายหน้าปัดมิเตอร์เพื่อใช้อ้างอิง</span>
+    </div>
+  </div>
+
+  <div class="risk-section-title">
+    <span class="risk-badge-hd">⚠ การวิเคราะห์ความเสี่ยง</span>
+    จุดเสี่ยงที่ระบุได้จากกระบวนการจริง
+  </div>
+
+  <table class="risk-tbl">
+    <thead>
+      <tr>
+        <th style="width:4%">#</th>
+        <th style="width:20%">จุดเสี่ยง</th>
+        <th style="width:26%">รายละเอียด</th>
+        <th style="width:9%">ระดับ</th>
+        <th>แนวทางควบคุม — กิจกรรม Audit ที่รองรับ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#fff8f8;">
+        <td style="font-weight:800;color:var(--red);">R1</td>
+        <td><strong style="color:var(--red);">ข้อจำกัดด้านการสอบทานข้อมูล (Manual Record)</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">กง-1 | Audit: สน-1, สน-2</div></td>
+        <td>ตัวเลขตั้งต้นมาจากการจดบันทึกมือโดยไม่มี System Report ทำให้เกิดความเสี่ยงจากการสมรู้ร่วมคิด (Collusion Risk) ในการรับรองตัวเลขที่คลาดเคลื่อน</td>
+        <td><span class="rl v">วิกฤต</span></td>
+        <td>• (ปัจจุบัน) IA ลงพื้นที่สุ่มตรวจหน้าตู้จริง<br>• (แผนอนาคต) ใช้ Online Form บังคับแนบรูปถ่ายตู้</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;color:var(--red);">R2</td>
+        <td><strong>ตรวจเงินสดจากสูตรมิเตอร์มีความคลาดเคลื่อน</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">กง-2 | Audit: สน-2</div></td>
+        <td>สูตร (มิเตอร์ออก − มิเตอร์เริ่ม − 200) × อัตรา ไม่รวมสแกน QR และบัตรฟรีที่เกิดขึ้นในช่วงนั้น ทำให้ตัวเลขไม่ตรงกัน</td>
+        <td><span class="rl h">สูง</span></td>
+        <td>• การเงินต้องหักจำนวนสแกน QR และบัตรฟรีในช่วงเวลานั้นออกด้วย<br>• ปรับสูตรให้ครบ: (มิเตอร์ออก − มิเตอร์เริ่ม − สแกน QR − บัตรฟรี − เงินทอน 200) × อัตรา</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;color:var(--red);">R3</td>
+        <td><strong>เก็บเงินสดไม่มีใบเสร็จรายคัน</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">ก-1 | Audit: สน-2, สน-3</div></td>
+        <td>ไม่มีหลักฐานยืนยันการเก็บเงินรายคัน ตรวจสอบย้อนหลังได้ยาก เปิดช่องโหว่เก็บเงินไม่ครบ</td>
+        <td><span class="rl h">สูง</span></td>
+        <td>• สุ่มนับเงินสด ณ จุด (สน-2, สน-3) ช่วยตรวจกลางวัน<br>• พิจารณาออกสลิปหรือใบเสร็จย่อรายคัน<br>• ติดกล้องวงจรปิดบริเวณจุดรับเงิน</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;color:var(--red);">R4</td>
+        <td><strong>รถค้างจอดทำให้ยอดตัวนับคลาด</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">กค-1 | Audit: ตว-3</div></td>
+        <td>ตัวนับรีเซ็ตเที่ยงคืน รถค้างข้ามคืนถูกนับเข้าเมื่อวาน แต่นับออกวันนี้ ยอดรถออกจึงสูงกว่าความเป็นจริง</td>
+        <td><span class="rl h">สูง</span></td>
+        <td>• หัวหน้ากะกลางคืนบันทึกรถค้างจอดทุกวัน (กค-1)<br>• สูตรปรับ: รถออกจริง = รถออก − รถค้างเมื่อวาน + รถค้างวันนี้</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;color:var(--red);">R5</td>
+        <td><strong>QR Code บุคลากรถูกใช้แทนกัน</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">ข-1 | Audit: สน-4, ดน-2</div></td>
+        <td>ไม่มีการจำกัดครั้งต่อวัน บุคลากรอาจแชร์ QR หรือสแกนหลายครั้งต่อวันได้โดยไม่ผิดเงื่อนไข</td>
+        <td><span class="rl h">สูง</span></td>
+        <td>• ตรวจ Log รายบุคคลทุกสัปดาห์ (สน-4) สแกนเกิน 2 ครั้ง/วัน เรียกชี้แจง<br>• ต้องเห็นหน้าบุคลากรพร้อม QR ทุกครั้ง<br>• พิจารณากำหนดจำกัด 1–2 ครั้ง/วัน/คนในระบบ</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;color:var(--orange);">R6</td>
+        <td><strong>สิทธิ์บุคลากรหมด — ไม่มีขั้นตอนรองรับ</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">ข-1</div></td>
+        <td>สแกนไม่ผ่าน แต่ยังไม่มีขั้นตอนชัดเจน อาจยกเว้นค่าบริการโดยไม่มีหลักฐาน</td>
+        <td><span class="rl m">กลาง</span></td>
+        <td>• สแกนไม่ผ่าน → เก็บเงินปกติ (กรณี ก) ตามที่กำหนดใน Flow แล้ว<br>• ระบบควรแสดงข้อความ "สิทธิ์หมด" ให้เจ้าหน้าที่เห็น</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;color:var(--orange);">R7</td>
+        <td><strong>ระบบ YC Parking หยุดทำงาน</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">ข-1 / ข-2 | HR-2</div></td>
+        <td>ยกเว้นเงินชั่วคราวได้ตาม SOP แต่หากไม่ Reconcile ย้อนหลัง จะทำให้ยอดรายได้ขาดหาย</td>
+        <td><span class="rl m">กลาง</span></td>
+        <td>• HR ปรับหักโควต้าย้อนหลังให้ครบเมื่อระบบกลับมา (HR-2)<br>• Audit ตรวจสอบว่าครบทุกรายในรอบสัปดาห์ (สน-4)</td>
+      </tr>
+      <tr>
+        <td style="font-weight:800;color:var(--orange);">R8</td>
+        <td><strong>เครื่องนับรถขัดข้องหรือนับผิด</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">C-1, C-2 | Audit: สน-2</div></td>
+        <td>ฐานข้อมูลสูตร 3 ทางทั้งหมดพึ่งพาความถูกต้องของตัวนับ หากนับผิด ยอดคำนวณทั้งหมดคลาดเคลื่อน</td>
+        <td><span class="rl m">กลาง</span></td>
+        <td>• ตรวจสอบเครื่องนับเป็นประจำ บันทึกประวัติการซ่อม<br>• ต่างเกิน ±2 คัน/วัน ต้องตรวจสอบเครื่องก่อนสรุป<br>• ติดกล้องวงจรปิดบริเวณจุดเข้า-ออก</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+// ===== Step data =====
+const steps = {
+  s1:  { id:'C-1', title:'นับรถเข้า (อัตโนมัติ)', resp:['ระบบเครื่องนับรถ'], freq:'ทุกครั้งที่รถเข้า',
+         tasks:['รถเข้าช่องทางเดียว ทีละคัน','เครื่องนับบวก รถเข้า +1 อัตโนมัติ','ตัวนับรีเซ็ตทุกเที่ยงคืน (ไม่ใช่สิ้นเดือน)'],
+         docs:['🔢 ตัวนับรถเข้า (Counter)'] },
+  s2:  { id:'C-2', title:'นับรถออก (อัตโนมัติ)', resp:['ระบบเครื่องนับรถ'], freq:'ทุกครั้งที่รถออก',
+         tasks:['ทุกกรณีที่รถออก เครื่องบวก รถออก +1','ทั้งกรณี ก ข และ ค นับออกเหมือนกัน'],
+         docs:['🔢 ตัวนับรถออก (Counter)'] },
+  sA1: { id:'ก-1', title:'เก็บค่าบริการ — บุคคลทั่วไป / สิทธิ์หมด', resp:['เจ้าหน้าที่เก็บเงินมอเตอร์ไซค์'], freq:'ทุกครั้งที่รถออก',
+         tasks:['เก็บค่าบริการตามอัตราที่กำหนด','รับได้ทั้งเงินสด / เงินโอน / สแกน QR PromptPay','ไม่มีการออกใบเสร็จรายคัน (จุดเสี่ยง R3)','กรณีบุคลากรสิทธิ์หมด (สแกนไม่ผ่าน) → เก็บเงินปกติกรณีนี้'],
+         docs:['📄 ใบสรุปส่งเงิน (รวมปลายวัน)'],
+         warn:'ไม่มีใบเสร็จรายคัน — ตรวจสอบย้อนหลังได้ยาก ควรพิจารณาออกสลิปย่อหรือติดกล้องวงจรปิด' },
+  sB1: { id:'ข-1', title:'สแกน QR Code บุคลากร', resp:['เจ้าหน้าที่เก็บเงินมอเตอร์ไซค์'], freq:'ทุกครั้งที่บุคลากรออก',
+         tasks:['เจ้าหน้าที่ใช้แอป YC Parking สแกน QR Code ที่ HR ออกให้บุคลากร','ต้องเห็นหน้าบุคลากรพร้อม QR ทุกครั้ง (ป้องกันแชร์ QR)','ใช้ได้เฉพาะลาน 2 เท่านั้น','โควต้า 30 ครั้ง/เดือน ไม่จำกัดครั้งต่อวัน','สแกนไม่ผ่าน (สิทธิ์หมด) → เปลี่ยนไปกรณี ก เก็บเงินตามปกติ','ระบบล่ม → จดชื่อ + รหัสบุคลากร (ต้องให้หัวหน้างานเซ็นกำกับ) เพื่อใช้แนบส่งการเงิน'],
+         docs:['📱 แอป YC Parking'],
+         warn:'ไม่มีการจำกัดจำนวนครั้งต่อวัน ทำให้บุคลากรรายหนึ่งสแกนได้หลายครั้งต่อวัน — ควรเพิ่มเงื่อนไขในระบบ' },
+  sB2: { id:'ข-2', title:'ระบบหักโควต้าและบันทึก Log', resp:['ระบบ YC Parking (อัตโนมัติ)'], freq:'ทันทีหลังสแกน',
+         tasks:['ระบบหักสิทธิ์ 1 ครั้ง จากโควต้า 30 ครั้ง/เดือน','บันทึก Log วัน-เวลา รหัสบุคลากร ไว้ในระบบ','ข้อมูลนี้เป็นแหล่งอ้างอิงอิสระที่ผู้ตรวจสอบดึงได้โดยตรง'],
+         docs:['🖥️ YC Parking System Log'] },
+  sC1: { id:'ค-1', title:'รับบัตรจอดรถฟรี (ลูกค้าฟิตเนส)', resp:['เจ้าหน้าที่เก็บเงินมอเตอร์ไซค์'], freq:'เมื่อลูกค้าฟิตเนสออก',
+         tasks:['รับบัตรจอดรถฟรีคืนจากลูกค้าฟิตเนส','ยกเว้นค่าบริการโดยไม่เก็บเงิน','เก็บบัตรรวบรวมไว้เพื่อส่งพร้อมใบสรุปส่งเงินปลายวัน','บัตรจอดรถฟรี: เจ้าหน้าที่ฟิตเนสต้องไปเบิกจากแผนกขายพื้นที่เช่า'],
+         docs:['🎫 บัตรจอดรถฟรี (เบิกจากแผนกขายพื้นที่เช่า)'] },
+  s3:  { id:'ขั้น 3', title:'บันทึกจำนวนรถเข้า-ออก รายชั่วโมง', resp:['เจ้าหน้าที่เก็บเงินมอเตอร์ไซค์'], freq:'ทุก 1 ชั่วโมง',
+         tasks:['จดบันทึกค่ามิเตอร์รถเข้าและรถออกทุกชั่วโมง','ใช้เป็นเอกสารอ้างอิงสำหรับการตรวจสอบระหว่างวัน','รายงานนี้ส่งพร้อมใบสรุปส่งเงินปลายวัน'],
+         docs:['📋 รายงานบันทึกมิเตอร์เข้า-ออกรายชั่วโมง'] },
+  s4:  { id:'ขั้น 4', title:'จัดทำใบสรุปส่งเงิน', resp:['เจ้าหน้าที่เก็บเงินมอเตอร์ไซค์'], freq:'ปลายวัน (5–10 นาที)',
+         tasks:['รวบรวมเงินสดและเงินโอนทั้งหมด','รวบรวมบัตรจอดรถฟรีที่ได้รับทั้งหมด','กรอกใบสรุปส่งเงินพร้อมรายละเอียดแต่ละประเภท','ส่งเงิน + เอกสาร ให้ส่วนงานรับเงิน'],
+         docs:['📄 ใบสรุปส่งเงิน','🎫 บัตรจอดรถฟรี (รวบรวม)','📋 รายงานบันทึกมิเตอร์รายชั่วโมง'],
+         warn:'ใบสรุปส่งเงินจัดทำโดยเจ้าหน้าที่เก็บเงินเอง ซึ่งเป็นจุดเสี่ยง R1 — การเงินต้องตรวจเทียบกับ YC Parking โดยตรง' },
+  sHR1:{ id:'HR-1', title:'รับรายงานและตรวจสอบรายชื่อบุคลากร', resp:['เจ้าหน้าที่ฝ่ายบุคคล (HR)'], freq:'เมื่อได้รับแจ้งจากเจ้าหน้าที่ (กรณีระบบล่มเท่านั้น)',
+         tasks:['รับรายงานชื่อ + รหัสบุคลากรที่จดไว้ระหว่างระบบล่ม','ตรวจสอบว่ารายชื่อถูกต้องและครบถ้วน','เตรียมปรับโควต้าย้อนหลังเมื่อระบบกลับมา'],
+         docs:['📋 รายงานบุคลากรระบบล่ม (จดมือ)'] },
+  sHR2:{ id:'HR-2', title:'บันทึกรับทราบการใช้สิทธิ์ย้อนหลัง', resp:['เจ้าหน้าที่ฝ่ายบุคคล (HR)'], freq:'เมื่อระบบ YC Parking กลับมาทำงาน',
+         tasks:['บันทึกข้อมูลบุคลากรที่ใช้สิทธิ์ขณะระบบล่มเก็บไว้เป็นสถิติเพื่อรับทราบ','(ข้อจำกัด: ระบบหลังบ้าน YC ไม่สามารถปรับลดโควต้าย้อนหลังได้)','สรุปยอดเพื่อส่งให้ผู้ตรวจสอบภายในทราบเป็นข้อมูล'],
+         docs:['📋 ฐานข้อมูลการใช้สิทธิ์กรณีระบบล่ม'],
+         warn:'เมื่อไม่สามารถปรับหักโควต้าได้ จำนวนสิทธิบุคลากรคนนั้นก็จะไม่ถูกลด เท่ากับเดือนนั้นได้สิทธิ์มากกว่าคนอื่น (ความเหลื่อมล้ำทางสิทธิ์)' },
+  sF1: { id:'กง-1', title:'จดมิเตอร์เริ่มต้น (Manual)', resp:['เจ้าหน้าที่การเงินลงพื้นที่'], freq:'ระหว่างวัน ไม่แจ้งล่วงหน้า',
+         tasks:['บันทึกค่ามิเตอร์รถออก ณ เวลาที่ลงพื้นที่ลงในกระดาษ (มิเตอร์เริ่ม)','กันเงินทอนไว้ 200 บาท เพื่อใช้ในการทอนเงิน','แผนอนาคต: จะมีการใช้ฟอร์มออนไลน์บังคับถ่ายรูปหน้าตู้เป็นหลักฐาน'],
+         docs:['📝 กระดาษจดบันทึกมิเตอร์ (รอเปลี่ยนเป็น Online Form)'],
+         info:'ความเสี่ยงสูง: ไม่มีการอ้างอิงจากระบบ ต้องพึ่งพาการสุ่มตรวจของ IA เพื่อยืนยันว่าการเงินไม่ได้จดเลขต่ำกว่าจริง',
+         html:`<div class="sec" style="margin-top:20px;">
+    <div class="sec-title" style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:12px;border-bottom:1px solid var(--gray200);padding-bottom:8px;">📏 หลักเกณฑ์การบันทึกเลขมิเตอร์</div>
+    <div style="background:#fff;border-radius:8px;padding:16px;border:1.5px solid var(--teal);box-shadow:0 2px 4px rgba(0,0,0,.05);">
+      <div style="font-size:12.5px;font-weight:700;color:var(--gray800);line-height:1.8;">
+        <p style="margin-bottom:8px;"><strong style="color:var(--navy);">หลักการ:</strong> เลขมิเตอร์ต้นรอบใหม่ต้องเป็น "เลขลำดับถัดไป" จากเลขมิเตอร์สิ้นสุดรอบก่อนเสมอ</p>
+        <ol style="padding-left:16px;display:flex;flex-direction:column;gap:6px;">
+          <li>เลขมิเตอร์ต้นรอบใหม่ = เลขมิเตอร์สิ้นสุดรอบก่อน + 1</li>
+          <li><strong>ห้ามซ้ำ</strong> — เพราะจะทำให้นับรถคลาดเคลื่อน 1 คัน</li>
+        </ol>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;">
+          <div style="background:var(--green-lt);border-radius:6px;padding:10px;border:1px solid #78c8a0;">
+            <div style="font-size:10px;font-weight:800;color:var(--green);margin-bottom:6px;">✓ ถูกต้อง</div>
+            <div style="font-size:11.5px;color:var(--gray800);">สิ้นสุดรอบก่อน = <strong>100</strong><br>ต้นรอบใหม่ = <strong>101</strong> ✓</div>
+          </div>
+          <div style="background:var(--red-lt);border-radius:6px;padding:10px;border:1px solid var(--red);">
+            <div style="font-size:10px;font-weight:800;color:var(--red);margin-bottom:6px;">✗ ผิด — ห้ามทำ</div>
+            <div style="font-size:11.5px;color:var(--gray800);">สิ้นสุดรอบก่อน = <strong>100</strong><br>ต้นรอบใหม่ = <strong>100</strong> ✗ (ซ้ำ)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>` },
+  sF2: { id:'กง-2', title:'รับเงินสดและตรวจนับตามสูตรมิเตอร์', resp:['เจ้าหน้าที่การเงินลงพื้นที่'], freq:'ทันทีหลัง กง-1',
+         tasks:['รับเงินสดจากเจ้าหน้าที่เก็บเงิน','ตรวจนับให้ตรงตามสูตร: (มิเตอร์ออก − มิเตอร์เริ่ม − สแกน QR ช่วงนั้น − บัตรฟรีช่วงนั้น) × อัตราค่าบริการ − เงินทอน 200','หากไม่ตรง ต้องหาสาเหตุก่อนลงนาม'],
+         docs:['📋 รายงานบันทึกมิเตอร์'],
+         warn:'จุดเสี่ยง R2: สูตรเดิมไม่ได้หักจำนวนสแกน QR และบัตรฟรีในช่วงนั้น ทำให้ยอดไม่ตรง — ต้องปรับสูตรให้ครบ' },
+  sF3: { id:'กง-3', title:'บันทึกมิเตอร์สิ้นสุด ลงนาม 2 ฝ่าย', resp:['เจ้าหน้าที่การเงินลงพื้นที่','เจ้าหน้าที่เก็บเงินมอเตอร์ไซค์'], freq:'หลังตรวจนับเงินแล้ว',
+         tasks:['บันทึกค่ามิเตอร์รถออก ณ เวลาสิ้นสุดการตรวจ (มิเตอร์สิ้นสุด = มิเตอร์สิ้นสุดจริงหักเงินทอน 200)','ทั้งเจ้าหน้าที่การเงินและเจ้าหน้าที่เก็บเงินลงนามรับทราบ','เอกสารนี้เป็นหลักฐานที่ผู้ตรวจสอบใช้ยืนยันได้อิสระ'],
+         docs:['📄 รายงานบันทึกมิเตอร์ (มีลายเซ็น 2 ฝ่าย)'] },
+  sF4: { id:'กง-4', title:'นำเงินส่งส่วนงานรับเงิน', resp:['เจ้าหน้าที่การเงินลงพื้นที่'], freq:'หลัง กง-3',
+         tasks:['นำเงินสดที่เก็บมาส่งให้เจ้าหน้าที่การเงินส่วนงานรับเงิน','แนบรายงานบันทึกมิเตอร์ที่ลงนามแล้ว'] },
+  sR1: { id:'รง-1', title:'รับเอกสารและตรวจนับเงิน 4 รายการ', resp:['เจ้าหน้าที่การเงินส่วนงานรับเงิน'], freq:'ปลายวัน',
+         tasks:['ตรวจนับ 4 รายการให้ตรงกับใบสรุปส่งเงิน:','① เงินสด','② เงินโอน','③ จำนวนสแกน QR บุคลากร (บวกด้วยใบจดชื่อกรณีระบบล่ม ที่มีลายเซ็นหัวหน้างาน)','④ จำนวนบัตรจอดรถฟรี','หากพบความคลาดเคลื่อน ต้องหาสาเหตุก่อนรับเงิน'],
+         docs:['📄 ใบสรุปส่งเงิน','🎫 บัตรจอดรถฟรี','📊 รายงาน YC Parking / 📋 ใบจดชื่อกรณีระบบล่ม (เซ็นกำกับ)'],
+         warn:'จุดเสี่ยง R1: ใบสรุปส่งเงินจัดทำโดยเจ้าหน้าที่เก็บเงินเอง การตรวจสอบที่แท้จริงต้องเทียบกับ YC Parking โดยตรง ไม่ใช่แค่เทียบกับใบสรุปที่ส่งมา' },
+  sR2: { id:'รง-2', title:'รวบรวมเงินส่ง ผจก. นำฝากธนาคาร', resp:['เจ้าหน้าที่การเงินส่วนงานรับเงิน'], freq:'ปลายวัน',
+         tasks:['รวบรวมเงินสดจากทุกจุดส่ง','ผู้จัดการการเงินนำเงินฝากธนาคาร','Bank Statement เป็นหลักฐานยืนยันยอดเงินโอนได้อิสระ'],
+         docs:['💳 Bank Deposit Slip'] },
+  sR3: { id:'รง-3', title:'ส่งเอกสารให้แผนกบัญชี', resp:['เจ้าหน้าที่การเงินส่วนงานรับเงิน'], freq:'ปลายวัน',
+         tasks:['ส่งใบสรุปส่งเงินค่าจอดรถจักรยานยนต์ให้แผนกบัญชี','แผนกบัญชีบันทึกรายได้เข้าระบบ','ปิดรอบรายได้ประจำวัน'],
+         docs:['📄 ใบสรุปส่งเงิน → แผนกบัญชี'] },
+  sN1: { id:'กค-1', title:'บันทึกรถค้างจอด ณ เที่ยงคืน', resp:['หัวหน้างานกะกลางคืน'], freq:'ทุกวัน เที่ยงคืน',
+         tasks:['นับและบันทึกจำนวนรถที่ยังค้างจอดอยู่ ณ เวลาเที่ยงคืน','บันทึกในรายงานประจำวัน','ข้อมูลนี้ใช้ปรับสูตรตรวจสอบรายได้วันถัดไป: รถออกจริง = รถออก − รถค้างเมื่อวาน + รถค้างวันนี้'],
+         docs:['📋 รายงานรถค้างจอดประจำคืน'] },
+  sN2: { id:'กค-2', title:'รีเซ็ตมิเตอร์นับรถ', resp:['หัวหน้างานกะกลางคืน'], freq:'เที่ยงคืนของทุกวันสิ้นเดือน',
+         tasks:['รีเซ็ตตัวนับรถเข้าและรถออกกลับเป็นศูนย์','ต้องบันทึกรถค้างจอด (กค-1) ก่อนรีเซ็ตทุกครั้ง','บันทึกวันที่และเวลาที่รีเซ็ต'],
+         docs:['📋 บันทึกการรีเซ็ตมิเตอร์'],
+         warn:'หากรีเซ็ตโดยไม่บันทึกรถค้างจอดก่อน จะทำให้สูตรตรวจสอบรายได้วันถัดไปคลาดเคลื่อน' },
+  aD1: { id:'ตว-1', title:'ดึงรายงาน YC Parking โดยตรง', resp:['ผู้ตรวจสอบภายใน'], freq:'สุ่มตรวจ',
+         tasks:['เข้าระบบ YC Parking ดึงรายงานสแกน QR บุคลากรรายวันโดยตรง','ไม่รับตัวเลขจากเจ้าหน้าที่เก็บเงินหรือฝ่ายการเงิน','ตัวเลขนี้เป็นแหล่งข้อมูลอิสระเพียงแหล่งเดียวที่มีในปัจจุบัน'],
+         docs:['🖥️ YC Parking System — รายงานรายวัน'],
+         info:'นี่คือจุดเดียวที่ผู้ตรวจสอบได้ข้อมูลอิสระจริง ข้อมูลอื่นยังผ่านเจ้าหน้าที่เก็บเงิน' },
+  aD2: { id:'ตว-2', title:'ขอสรุปยอดรายได้จากฝ่ายการเงิน', resp:['ผู้ตรวจสอบภายใน'], freq:'สุ่มตรวจ',
+         tasks:['ขอรับสรุปยอดเงินสด + เงินโอนที่รับจริงจากฝ่ายการเงิน','ส่งผ่านช่องทางที่บันทึกได้ เช่น อีเมลหรือระบบ','ข้อจำกัด: ยอดนี้ยังมาจากฝ่ายการเงิน ยังไม่ใช่ข้อมูลอิสระ ต้องพัฒนาสู่ Read-only access'],
+         docs:['📊 สรุปยอดรายได้ประจำวัน จากฝ่ายการเงิน'],
+         warn:'ข้อจำกัดปัจจุบัน: ยอดนี้ยังมาจากฝ่ายการเงิน หากต้องการอิสระสมบูรณ์ต้องให้ Audit เข้าถึง Bank Statement หรือระบบบัญชีโดยตรง' },
+  aD3: { id:'ตว-3', title:'คำนวณสูตร 3 ทาง', resp:['ผู้ตรวจสอบภายใน'], freq:'สุ่มตรวจ',
+         tasks:['รายได้ที่ควรได้รับ = (รถออกจากตัวนับ − สแกน QR บุคลากร − บัตรจอดรถฟรี − รถค้างจอดเมื่อวาน) × อัตราค่าบริการ','เทียบกับรายได้จริงที่ได้รับจากฝ่ายการเงิน','ยอดต่าง = รายได้ที่ควรได้รับ − รายได้จริง → ต้องเท่ากับศูนย์'] },
+  aD4: { id:'ตว-4', title:'แจ้งผู้บริหารเมื่อยอดต่างเกินเกณฑ์', resp:['ผู้ตรวจสอบภายใน'], freq:'เมื่อพบความผิดปกติจากการสุ่มตรวจ',
+         tasks:['หากยอดต่างเกิน ±2 คัน รายงานผู้บริหารโดยตรงทันที','ไม่ผ่านฝ่ายการเงินหรือหัวหน้าแผนก','บันทึกรายละเอียดและสาเหตุที่คาดว่าจะเกิด'],
+         docs:['📄 รายงานแจ้งเตือนผู้บริหาร'],
+         warn:'การรายงานตรงถึงผู้บริหารโดยไม่ผ่านสายงาน เป็นกลไกสำคัญที่ทำให้กระบวนการ Audit มีความน่าเชื่อถือ' },
+  aW1: { id:'สน-1', title:'เตรียมข้อมูลก่อนลงพื้นที่', resp:['ผู้ตรวจสอบภายใน'], freq:'รายสัปดาห์ ไม่แจ้งล่วงหน้า',
+         tasks:['ดึงยอดรถออกสะสม + สแกน QR สะสม + บัตรฟรีสะสม จากระบบก่อนลงพื้นที่','คำนวณยอดเงินที่ควรมีในกระเป๋าเจ้าหน้าที่ ณ ช่วงเวลาปัจจุบัน','ไม่แจ้งเจ้าหน้าที่ล่วงหน้า'],
+         docs:['🖥️ YC Parking + ตัวนับรถ'],
+         info:'การรู้ยอดก่อนลงพื้นที่คือหัวใจของการสุ่มตรวจ — หากแจ้งล่วงหน้าจะไม่มีความหมาย' },
+  aW2: { id:'สน-2', title:'ลงพื้นที่ตรวจสอบมิเตอร์และเงินสด', resp:['ผู้ตรวจสอบภายใน'], freq:'รายสัปดาห์',
+         tasks:['สุ่มลงพื้นที่เพื่อตรวจสอบตัวเลขมิเตอร์หน้าตู้ของจริง (ป้องกันการทุจริตการจดบันทึก กง.)','นับเงินในกระเป๋าเจ้าหน้าที่ ณ ขณะนั้น','เทียบเลขมิเตอร์จริงกับบันทึก กง. และเทียบยอดเงินกับสูตร'],
+         docs:['📸 รูปถ่ายมิเตอร์','📋 แบบฟอร์มสุ่มตรวจ (ระบุ วัน เวลา ผู้ตรวจ)'] },
+  aW3: { id:'สน-3', title:'บันทึกผลและลงนาม 2 ฝ่าย', resp:['ผู้ตรวจสอบภายใน','เจ้าหน้าที่เก็บเงิน'], freq:'หลัง สน-2',
+         tasks:['บันทึกผลการนับเงิน: ตรงหรือต่างกันเท่าไร','ทั้งผู้ตรวจสอบและเจ้าหน้าที่เก็บเงินลงนามรับทราบ','ส่งรายงานตรงถึงผู้บริหาร ไม่ผ่านสายงาน'],
+         docs:['📄 รายงานสุ่มตรวจ (มีลายเซ็น 2 ฝ่าย) → ผู้บริหาร'] },
+  aW4: { id:'สน-4', title:'ตรวจประวัติสแกน QR รายบุคคล', resp:['ผู้ตรวจสอบภายใน'], freq:'รายสัปดาห์',
+         tasks:['ดึง Log การสแกน QR จากระบบ YC Parking แยกรายบุคคล','วิเคราะห์ความผิดปกติ (เช่น สแกนเข้า-ออกถี่เกินไป, มีการนำ QR ไปให้บุคคลอื่นใช้ซ้ำ)','ตรวจสอบว่า HR ปรับหักโควต้าย้อนหลังครบ (กรณีระบบล่ม)'],
+         docs:['🖥️ YC Parking — Log รายบุคคล'] },
+  aM1: { id:'ดน-1', title:'รวบรวมสรุปยอดต่างรายเดือน', resp:['ผู้ตรวจสอบภายใน'], freq:'สิ้นเดือน',
+         tasks:['รวบรวมรายงานสุ่มตรวจทุกครั้งของเดือน','วิเคราะห์แนวโน้ม: ยอดต่างเพิ่มขึ้นหรือลดลง','ระบุวัน/กะ/เจ้าหน้าที่ที่มียอดต่างสูงบ่อย'],
+         docs:['📊 รายงานสรุปยอดต่างรายเดือน'] },
+  aM2: { id:'ดน-2', title:'ตรวจสอบโควต้าบุคลากรทั้งเดือน', resp:['ผู้ตรวจสอบภายใน'], freq:'สิ้นเดือน',
+         tasks:['ตรวจสอบจำนวนสิทธิ์ที่ใช้ทั้งเดือนเทียบกับโควต้า 30 ครั้ง/บุคลากร','เทียบกับรายชื่อบุคลากรที่ HR ออกสิทธิ์ไว้','ตรวจสอบว่าบุคลากรที่ออกจากงานแล้วยังมี QR ที่ใช้งานได้หรือไม่'],
+         docs:['🖥️ YC Parking — สรุปรายเดือน','📋 รายชื่อบุคลากรที่ HR ออกสิทธิ์'] },
+  aM3: { id:'ดน-3', title:'จัดทำรายงานสรุป ส่งผู้บริหาร', resp:['ผู้ตรวจสอบภายใน'], freq:'สิ้นเดือน',
+         tasks:['สรุปผลการตรวจสอบรายเดือนทั้งหมด','ระบุจุดเสี่ยงที่พบและข้อเสนอแนะ','ส่งตรงถึงผู้บริหาร ไม่ผ่านสายงานปฏิบัติ'],
+         docs:['📄 รายงานสรุปการตรวจสอบภายในประจำเดือน'] }
+};
+
+// ===== Color by role =====
+const roleColors = {
+  'ระบบเครื่องนับรถ': '#1779a0',
+  'ระบบ YC Parking (อัตโนมัติ)': '#1779a0',
+  'เจ้าหน้าที่เก็บเงินมอเตอร์ไซค์': '#1a3050',
+  'เจ้าหน้าที่ฝ่ายบุคคล (HR)': '#c25c10',
+  'เจ้าหน้าที่การเงินลงพื้นที่': '#6b3a8e',
+  'เจ้าหน้าที่การเงินส่วนงานรับเงิน': '#4a2870',
+  'หัวหน้างานกะกลางคืน': '#374151',
+  'ผู้ตรวจสอบภายใน': '#3a1a6e',
+  'เจ้าหน้าที่เก็บเงิน': '#1a3050',
+};
+
+let currentStep = null;
+
+function showPanel(id) {
+  const data = steps[id];
+  if (!data) return;
+
+  // Active state
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  currentStep = id;
+
+  // Update header
+  document.getElementById('p-id').textContent = data.id;
+  document.getElementById('p-title').textContent = data.title;
+
+  // Build body
+  let html = '';
+
+  // Tasks
+  html += `<div class="panel-section">
+    <div class="panel-section-title">📝 รายละเอียดการปฏิบัติงาน</div>
+    <div class="task-list">`;
+  data.tasks.forEach(t => {
+    html += `<div class="task-item"><div class="task-dot"></div><div class="task-text">${t}</div></div>`;
+  });
+  html += `</div></div>`;
+
+  // Docs
+  if (data.docs && data.docs.length) {
+    html += `<div class="panel-section">
+      <div class="panel-section-title">📂 เอกสารที่เกี่ยวข้อง</div>
+      <div class="doc-list">`;
+    data.docs.forEach(d => {
+      html += `<div class="doc-item">${d}</div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  // Info box
+  if (data.info) {
+    html += `<div class="panel-section">
+      <div class="info-box"><div class="info-text">💡 ${data.info}</div></div>
+    </div>`;
+  }
+
+  // Custom HTML
+  if (data.html) {
+    html += data.html;
+  }
+
+  // Warning box
+  if (data.warn) {
+    html += `<div class="panel-section">
+      <div class="warning-box">
+        <div class="warning-title">⚠️ ข้อควรระวัง</div>
+        <div class="warning-text">${data.warn}</div>
+      </div>
+    </div>`;
+  }
+
+  // Responsible
+  if (data.resp && data.resp.length) {
+    html += `<div class="panel-section">
+      <div class="panel-section-title">👤 ผู้รับผิดชอบ</div>
+      <div class="resp-list">`;
+    data.resp.forEach(r => {
+      const color = roleColors[r] || '#5a6478';
+      html += `<div class="resp-item"><div class="resp-dot" style="background:${color}"></div>${r}</div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  // Frequency
+  if (data.freq) {
+    html += `<div class="panel-section">
+      <div class="panel-section-title">🕒 ความถี่</div>
+      <div class="freq-tag">🕒 ${data.freq}</div>
+    </div>`;
+  }
+
+  document.getElementById('p-body').innerHTML = html;
+
+  // Open panel
+  document.getElementById('panel-col').classList.add('open');
+  document.getElementById('sl-col').classList.add('has-panel');
+}
+
+function closePanel() {
+  document.getElementById('panel-col').classList.remove('open');
+  document.getElementById('sl-col').classList.remove('has-panel');
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  currentStep = null;
+}
+</script>
+</body>
+</html>

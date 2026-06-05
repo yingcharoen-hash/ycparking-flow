@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผังขั้นตอนการจัดเก็บรายได้ — แผนกบริหารที่จอดรถและห้องน้ำ</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f5f5f7;
+  --card-bg: #ffffff;
+  --text-main: #1d1d1f;
+  --text-muted: #86868b;
+  --accent-blue: #0071e3;
+  --accent-blue-lt: #e8f2fc;
+  --gold: #d8a032; 
+  --gold-lt: #fdf6e3;
+  --red: #ff3b30;
+  --red-lt: #ffeceb;
+  --green: #34c759;
+  --green-lt: #ebf9ee;
+  --orange: #ff9500;
+  --orange-lt: #fff4e5;
+  --teal: #5ac8fa;
+  --teal-lt: #eaf8ff;
+  --gray100: #f5f5f7;
+  --gray200: #e5e5ea;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Sarabun", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header (Dark Premium) */
+.header {
+  background: #000000;
+  color: #f5f5f7;
+  padding: 64px 56px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 50% 0%, rgba(0,113,227,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+.header-inner { position: relative; z-index: 1; }
+.header-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a1a1a6;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+.header-title {
+  font-size: 38px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+.header-title em {
+  color: var(--accent-blue);
+  font-style: normal;
+}
+.header-sub {
+  font-size: 16px;
+  color: #a1a1a6;
+  margin-top: 10px;
+  font-weight: 400;
+}
+.header-meta {
+  display: flex;
+  gap: 40px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  flex-wrap: wrap;
+}
+.meta-item { display: flex; flex-direction: column; gap: 4px; }
+.meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #86868b; font-weight: 600; }
+.meta-value { font-size: 14px; color: #f5f5f7; font-weight: 500; }
+
+/* Nav bar (Glassmorphism) */
+.nav-bar {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  padding: 0 56px;
+  display: flex;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-bar-inner { display: flex; width: 100%; gap: 16px; }
+.nav-btn {
+  padding: 16px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-btn:hover { color: var(--text-main); }
+.nav-btn.active {
+  color: var(--text-main);
+  border-bottom-color: var(--text-main);
+  font-weight: 600;
+}
+
+/* Main */
+.main { padding: 48px 56px 80px; }
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-line { flex: 1; height: 1px; background: var(--gray200); }
+
+/* Quick stats */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 48px; }
+.stat-card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+.stat-num { font-size: 36px; font-weight: 700; color: var(--text-main); letter-spacing: -1px; }
+.stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
+.stat-card.g .stat-num { color: var(--accent-blue); }
+.stat-card.r .stat-num { color: var(--red); }
+.stat-card.t .stat-num { color: var(--green); }
+
+/* Process grid */
+.proc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; margin-bottom: 48px; }
+
+.proc-card {
+  background: var(--card-bg);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.02);
+}
+.proc-card:hover {
+  transform: scale(1.015) translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+}
+.proc-card-top { padding: 24px 24px 20px; border-bottom: 1px solid var(--gray100); }
+.proc-num {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.proc-icon-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 4px; }
+.proc-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.proc-title { font-size: 16px; font-weight: 600; color: var(--text-main); line-height: 1.4; }
+.proc-sub { font-size: 13px; color: var(--text-muted); font-weight: 400; margin-top: 4px; }
+.proc-card-body { padding: 20px 24px 24px; }
+.proc-steps { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.proc-step-tag {
+  background: var(--gray100);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-main);
+}
+.proc-footer { display: flex; align-items: center; justify-content: space-between; }
+.proc-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.risk-chip { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.risk-chip.r { background: var(--red-lt); color: var(--red); }
+.risk-chip.o { background: var(--orange-lt); color: var(--orange); }
+.risk-chip.g { background: var(--green-lt); color: var(--green); }
+.proc-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent-blue);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s;
+}
+.proc-card:hover .proc-link { color: #0056b3; }
+
+/* ======= PRINT ======= */
+@media print {
+  @page { size: A4 portrait; margin: 10mm; }
+  .nav-bar { display: none !important; }
+  body { background: #fff; }
+  .header { padding: 24px 0; background: none !important; border-bottom: 2px solid #e5e5ea; }
+  .header-title, .header-sub, .meta-label, .meta-value { color: #000 !important; }
+  .header-badge { color: #000; border: 1px solid #000; }
+  .proc-card, .stat-card { box-shadow: none !important; border: 1px solid #d1d1d6; break-inside: avoid; page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">เอกสารตรวจสอบภายใน · Internal Audit Document</div>
+    <div class="header-title">ผังขั้นตอนการทำงาน<br><em>การจัดเก็บรายได้ — แผนกบริหารที่จอดรถและห้องน้ำ</em></div>
+    <div class="header-sub">ฝ่ายบริหารกิจการภายในตลาด | สำนักประธานเจ้าหน้าที่ฝ่ายปฏิบัติการ</div>
+    <div class="header-meta">
+      <div class="meta-item"><span class="meta-label">กระบวนการหลัก</span><span class="meta-value">8 กระบวนการ</span></div>
+      <div class="meta-item"><span class="meta-label">จุดเสี่ยงระดับสูง/วิกฤต</span><span class="meta-value">6 จุด</span></div>
+      <div class="meta-item"><span class="meta-label">จุดควบคุม</span><span class="meta-value">7+ จุด</span></div>
+      <div class="meta-item"><span class="meta-label">จัดทำ</span><span class="meta-value">มิถุนายน 2568</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-bar-inner">
+    <a class="nav-btn active" href="index.html">🏠 หน้าหลัก</a>
+    <a class="nav-btn" href="workflow_swimlane_tabs.html">📊 ผังกระบวนการ 1–8</a>
+    <a class="nav-btn" href="guide.html">📖 คู่มือการใช้งาน</a>
+    <button class="nav-btn" onclick="window.print()" style="margin-left:auto;">🖨️ พิมพ์รายงาน</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="stats-row">
+    <div class="stat-card n"><div class="stat-num">8</div><div class="stat-label">กระบวนการหลักทั้งหมด</div></div>
+    <div class="stat-card g"><div class="stat-num">35+</div><div class="stat-label">ขั้นตอนในกระบวนการ</div></div>
+    <div class="stat-card r"><div class="stat-num">6</div><div class="stat-label">จุดเสี่ยงระดับสูง/วิกฤต</div></div>
+    <div class="stat-card t"><div class="stat-num">7+</div><div class="stat-label">จุดควบคุม (Control Point)</div></div>
+  </div>
+
+  <div class="section-title">
+    <span>กระบวนการทั้งหมด 8 กระบวนการ</span>
+    <span class="section-line"></span>
+  </div>
+
+  <div class="proc-grid">
+
+    <a class="proc-card" href="workflow_swimlane_tabs.html?tab=0">
+      <div class="proc-card-top">
+        <div class="proc-num">กระบวนการที่ 1</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#eef2f7;">🚛</div>
+          <div>
+            <div class="proc-title">จัดเก็บรายได้ค่าบริการรถลงสินค้า</div>
+            <div class="proc-sub">ลาน 2, 3, 4 · Goods-Loading Service Revenue</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">จัดที่จอด</span>
+          <span class="proc-step-tag">เก็บค่าบริการ</span>
+          <span class="proc-step-tag">เขียนใบเสร็จ</span>
+          <span class="proc-step-tag">บันทึกระบบ</span>
+          <span class="proc-step-tag">นำส่งการเงิน</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges"><span class="risk-chip r">⚠ เสี่ยงสูง</span><span class="risk-chip g">✓ 2 จุดควบคุม</span></div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="proc-card" href="workflow_swimlane_tabs.html?tab=1">
+      <div class="proc-card-top">
+        <div class="proc-num">กระบวนการที่ 2</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#fdeee0;">🗂️</div>
+          <div>
+            <div class="proc-title">รับชำระค่าจอดรถประเภทรายเดือน</div>
+            <div class="proc-sub">Monthly Parking Subscription · เปิดบัญชีใหม่</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">อธิบายระเบียบ</span>
+          <span class="proc-step-tag">เปิดบัญชี</span>
+          <span class="proc-step-tag">ขอเอกสาร</span>
+          <span class="proc-step-tag">คีย์ CarPark</span>
+          <span class="proc-step-tag">ชำระค่าประกัน</span>
+          <span class="proc-step-tag">มอบบัตร</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges"><span class="risk-chip r">⚠ เสี่ยงสูง 2 จุด</span><span class="risk-chip g">✓ 2 จุดควบคุม</span></div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="proc-card" href="workflow_swimlane_tabs.html?tab=2">
+      <div class="proc-card-top">
+        <div class="proc-num">กระบวนการที่ 3</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#ede5f9;">📬</div>
+          <div>
+            <div class="proc-title">จัดส่งใบแจ้งหนี้รายเดือน</div>
+            <div class="proc-sub">Monthly Invoice Distribution · กำหนดวันชัดเจน</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">รับจากบัญชี</span>
+          <span class="proc-step-tag">ธุรการส่งต่อ ≤วันที่ 5</span>
+          <span class="proc-step-tag">แจกผู้ค้า ≤วันที่ 15</span>
+          <span class="proc-step-tag">ส่งใบเสร็จ ≤วันที่ 20</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges"><span class="risk-chip o">⚠ เสี่ยงกลาง</span><span class="risk-chip g">✓ 1 จุดควบคุม</span></div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="proc-card" href="workflow_swimlane_tabs.html?tab=3">
+      <div class="proc-card-top">
+        <div class="proc-num">กระบวนการที่ 4</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#fde8e8;">🔔</div>
+          <div>
+            <div class="proc-title">จัดส่งใบทวงหนี้</div>
+            <div class="proc-sub">Debt Collection Notice</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">รับจากการเงิน</span>
+          <span class="proc-step-tag">นำส่งลูกค้า</span>
+          <span class="proc-step-tag">คืนสำเนาการเงิน</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges"><span class="risk-chip o">⚠ เสี่ยงกลาง</span><span class="risk-chip g">✓ 1 จุดควบคุม</span></div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="proc-card" href="tab5_motorcycle.html">
+      <div class="proc-card-top">
+        <div class="proc-num">กระบวนการที่ 5</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#eef2f7;">🏍️</div>
+          <div>
+            <div class="proc-title">จัดเก็บรายได้ที่จอดรถจักรยานยนต์ (ลาน 2)</div>
+            <div class="proc-sub">Motorcycle Parking · ระบบ YC Parking + มิเตอร์นับรถ</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">เครื่องนับรถ</span>
+          <span class="proc-step-tag">เก็บเงิน 3 กรณี</span>
+          <span class="proc-step-tag">HR (ระบบล่ม)</span>
+          <span class="proc-step-tag">การเงินลงพื้นที่</span>
+          <span class="proc-step-tag">รับเงิน</span>
+          <span class="proc-step-tag">Audit</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges"><span class="risk-chip r">🔴 วิกฤต 1 + สูง 4</span><span class="risk-chip g">✓ 7 Lane</span></div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="proc-card" href="workflow_swimlane_tabs.html?tab=5">
+      <div class="proc-card-top">
+        <div class="proc-num">กระบวนการที่ 6</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:var(--teal-lt,#e0f2f9);">🅿️</div>
+          <div>
+            <div class="proc-title">จัดเก็บรายได้ที่จอดรถยนต์ ลาน 1</div>
+            <div class="proc-sub">Car Parking Lot 1 · ระบบบัตรอ่อน</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">สอบถามข้อมูล</span>
+          <span class="proc-step-tag">แจกบัตรอ่อน+แสตมป์</span>
+          <span class="proc-step-tag">เก็บเงิน+แสตมป์ออก</span>
+          <span class="proc-step-tag">ส่งการเงิน</span>
+          <span class="proc-step-tag">รายงานรายชั่วโมง</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges"><span class="risk-chip r">⚠ เสี่ยงสูง 2 จุด</span><span class="risk-chip g">✓ 2 จุดควบคุม</span></div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="proc-card" href="workflow_swimlane_tabs.html?tab=6">
+      <div class="proc-card-top">
+        <div class="proc-num">กระบวนการที่ 7</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#eef2f7;">🚗</div>
+          <div>
+            <div class="proc-title">จัดเก็บรายได้ที่จอดรถยนต์ ลาน 2, 3</div>
+            <div class="proc-sub">Car Parking Lot 2–3 · ระบบ CarPark ป้อมเข้า-ออก</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">ป้อมเข้า: คีย์ทะเบียน</span>
+          <span class="proc-step-tag">ตรวจบัตรสมาชิก</span>
+          <span class="proc-step-tag">ป้อมออก: รับบัตร</span>
+          <span class="proc-step-tag">ปรับเกินเวลา</span>
+          <span class="proc-step-tag">ปรับบัตรหาย</span>
+          <span class="proc-step-tag">ส่งการเงิน</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges"><span class="risk-chip r">⚠ เสี่ยงสูง 3 จุด</span><span class="risk-chip g">✓ 2 จุดควบคุม</span></div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="proc-card" href="workflow_swimlane_tabs.html?tab=7">
+      <div class="proc-card-top">
+        <div class="proc-num">กระบวนการที่ 8</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:var(--orange-lt);">💳</div>
+          <div>
+            <div class="proc-title">การคืนเงินค่าปรับบัตรหาย</div>
+            <div class="proc-sub">Lost Card Fine Refund · 3 ฝ่ายร่วม</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">ลูกค้าคืนบัตร+ใบเสร็จ</span>
+          <span class="proc-step-tag">บันทึก CarPark</span>
+          <span class="proc-step-tag">ตรวจ+อนุมัติเบิกคืน</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges"><span class="risk-chip r">⚠ เสี่ยงสูง</span><span class="risk-chip g">✓ 1 จุดควบคุม</span></div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+</div>
+
+
+</body>
+</html>

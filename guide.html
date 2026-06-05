@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คู่มือการใช้งาน — ผังขั้นตอนการจัดเก็บรายได้</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0d1b2a; --navy2:#1a3050; --gold:#c8952a; --gold-lt:#f0c96a;
+  --red:#b83232; --red-lt:#fde8e8; --green:#1a6b45; --green-lt:#e2f5ec;
+  --teal:#1779a0; --teal-lt:#e0f2f9; --orange:#c25c10; --orange-lt:#fdeee0;
+  --purple:#3a1a6e; --purple-lt:#f3eeff;
+  --gray50:#f8f9fb; --gray100:#eef0f4; --gray200:#dde1ea;
+  --gray400:#9aa3b2; --gray600:#5a6478; --gray800:#1e2433;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Sarabun',sans-serif;background:var(--gray50);color:var(--gray800);}
+
+.header{background:linear-gradient(120deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:28px 56px 24px;}
+.header-badge{display:inline-block;background:rgba(200,149,42,.18);border:1px solid rgba(200,149,42,.4);border-radius:20px;padding:3px 14px;font-size:11px;font-weight:700;color:var(--gold-lt);letter-spacing:.6px;margin-bottom:8px;}
+.header-title{font-size:22px;font-weight:800;color:#fff;}
+.header-title em{color:var(--gold-lt);font-style:normal;}
+
+.nav-bar{background:#fff;border-bottom:2px solid var(--gray200);padding:0 56px;display:flex;gap:0;box-shadow:0 2px 8px rgba(0,0,0,.05);position:sticky;top:0;z-index:100;}
+.nav-btn{padding:14px 20px;font-size:12.5px;font-weight:700;color:var(--gray600);border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;font-family:'Sarabun',sans-serif;transition:all .2s;white-space:nowrap;text-decoration:none;}
+.nav-btn:hover{color:var(--navy);background:var(--gray50);}
+.nav-btn.active{color:var(--navy);border-bottom-color:var(--gold);background:#fdf6e3;}
+
+.main{padding:40px 56px 80px;max-width:1100px;}
+
+/* Section */
+.sec{margin-bottom:48px;}
+.sec-title{font-size:17px;font-weight:800;color:var(--navy);margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid var(--gray200);display:flex;align-items:center;gap:10px;}
+.sec-icon{font-size:20px;}
+
+/* How-to cards */
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px;}
+.how-card{background:#fff;border-radius:12px;padding:18px;border:1px solid var(--gray200);box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.how-num{width:28px;height:28px;border-radius:8px;background:var(--navy);color:var(--gold-lt);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.how-title{font-size:13.5px;font-weight:800;color:var(--navy);margin-bottom:6px;}
+.how-text{font-size:12.5px;color:var(--gray600);line-height:1.7;font-weight:500;}
+
+/* Symbol table */
+.sym-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07);}
+.sym-table th{background:var(--navy);color:var(--gold-lt);padding:10px 16px;font-size:11.5px;font-weight:800;text-align:left;letter-spacing:.3px;}
+.sym-table td{background:#fff;padding:10px 16px;font-size:13px;border-bottom:1px solid var(--gray100);vertical-align:middle;}
+.sym-table tr:last-child td{border-bottom:none;}
+.sym-table tr:hover td{background:var(--gray50);}
+
+/* Badge demos */
+.badge-demo{display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;padding:2px 6px;border-radius:8px;white-space:nowrap;}
+.bd-r{background:var(--red);color:#fff;}
+.bd-c{background:var(--green);color:#fff;}
+.bd-o{background:var(--orange);color:#fff;}
+.bd-b{background:#1a4a8e;color:#fff;}
+
+/* Card color demos */
+.card-demo{display:inline-block;border-radius:6px;padding:4px 12px;font-size:12px;font-weight:700;border:1.5px solid;}
+.cd-ops{background:#eef2f7;border-color:#b8c8d9;color:var(--navy2);}
+.cd-risk{background:var(--red-lt);border-color:var(--red);color:var(--red);}
+.cd-ctrl{background:var(--green-lt);border-color:#78c8a0;color:var(--green);}
+.cd-fin{background:var(--purple-lt);border-color:#c0a0e0;color:var(--purple);}
+.cd-teal{background:var(--teal-lt);border-color:#68b8d8;color:var(--teal);}
+.cd-hr{background:var(--orange-lt);border-color:#e8a070;color:var(--orange);}
+.cd-night{background:#f1f5f9;border-color:#9ca3af;color:var(--gray600);}
+
+/* Glossary */
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.gloss-item{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid var(--gray200);}
+.gloss-term{font-size:14px;font-weight:800;color:var(--navy);margin-bottom:4px;}
+.gloss-abbr{display:inline-block;background:var(--navy);color:var(--gold-lt);font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-right:6px;vertical-align:middle;}
+.gloss-def{font-size:12.5px;color:var(--gray600);line-height:1.6;font-weight:500;}
+.gloss-ex{font-size:11.5px;color:var(--teal);font-weight:600;margin-top:4px;}
+
+/* Lane color legend */
+.lane-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+.lane-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:8px;padding:10px 14px;border:1px solid var(--gray200);}
+.lane-color{width:14px;height:40px;border-radius:4px;flex-shrink:0;}
+.lane-name{font-size:13px;font-weight:700;color:var(--gray800);}
+.lane-role{font-size:11.5px;color:var(--gray400);font-weight:500;margin-top:2px;}
+
+/* Step ID guide */
+.stepid-table{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);border:1px solid var(--gray200);}
+.stepid-row{display:grid;grid-template-columns:120px 1fr;border-bottom:1px solid var(--gray100);}
+.stepid-row:last-child{border-bottom:none;}
+.stepid-code{background:var(--gray50);padding:12px 16px;font-size:13px;font-weight:800;color:var(--navy);border-right:1px solid var(--gray200);display:flex;align-items:center;}
+.stepid-desc{padding:12px 16px;font-size:13px;color:var(--gray700);font-weight:500;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">คู่มือการใช้งาน · User Guide</div>
+  <div class="header-title">วิธีอ่าน Flow และ<em>นิยามคำศัพท์ทั้งหมด</em></div>
+</div>
+
+<div class="nav-bar">
+  <a class="nav-btn" href="index.html">🏠 หน้าหลัก</a>
+  <a class="nav-btn" href="workflow_swimlane_tabs.html">📊 ผังกระบวนการ 1–8</a>
+  <a class="nav-btn active" href="guide.html">📖 คู่มือการใช้งาน</a>
+</div>
+
+<div class="main">
+
+  <!-- ===== วิธีใช้งาน ===== -->
+  <div class="sec">
+    <div class="sec-title"><span class="sec-icon">🖱️</span> วิธีการใช้งานเอกสาร</div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">1</div>
+        <div class="how-title">ผังกระบวนการ 1–8 (Swimlane)</div>
+        <div class="how-text">เปิดไฟล์ <strong>workflow_swimlane_tabs.html</strong> แล้วคลิก Tab ด้านบนเพื่อเลือกกระบวนการที่ต้องการดู แต่ละ Tab แสดง Swimlane แบบแนวนอน แยกตามผู้รับผิดชอบ (Lane)</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">2</div>
+        <div class="how-title">กระบวนการ 5 — แบบ Interactive</div>
+        <div class="how-text">เปิดไฟล์ <strong>tab5_motorcycle.html</strong> แล้ว <strong>คลิกที่ขั้นตอนใดก็ได้</strong> ใน Swimlane — Panel รายละเอียดจะเลื่อนออกมาทางขวา แสดงงาน / เอกสาร / ผู้รับผิดชอบ / คำเตือน กด × เพื่อปิด</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">3</div>
+        <div class="how-title">สัญลักษณ์ที่ต้องรู้ก่อนอ่าน</div>
+        <div class="how-text"><strong>→ ลูกศร</strong> = ทิศทาง Flow<br><strong>⚠ Badge สีแดง</strong> = จุดเสี่ยงที่ต้องระวัง<br><strong>✓ Badge สีเขียว</strong> = จุดควบคุม<br><strong>คลิก Card</strong> = ดูรายละเอียด (เฉพาะไฟล์ 5)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== สีของ Card ===== -->
+  <div class="sec">
+    <div class="sec-title"><span class="sec-icon">🎨</span> ความหมายของสีการ์ดขั้นตอน</div>
+    <table class="sym-table">
+      <thead><tr><th>สี / รูปแบบการ์ด</th><th>ความหมาย</th><th>ใช้เมื่อ</th></tr></thead>
+      <tbody>
+        <tr><td><span class="card-demo cd-ops">ขั้นตอนปกติ</span></td><td>ขั้นตอนปฏิบัติงานทั่วไป ไม่มีความเสี่ยงพิเศษ</td><td>งานประจำที่ไม่มีจุดอ่อน</td></tr>
+        <tr><td><span class="card-demo cd-risk">⚠ จุดเสี่ยง</span></td><td>ขั้นตอนที่มีความเสี่ยงสูง ต้องตรวจสอบพิเศษ</td><td>เก็บเงินสด / บันทึกตัวเลขเอง / ไม่มีหลักฐาน</td></tr>
+        <tr><td><span class="card-demo cd-ctrl">✓ จุดควบคุม</span></td><td>ขั้นตอนที่มีกลไกตรวจสอบหรือลงนาม</td><td>มีลายเซ็น 2 ฝ่าย / ระบบบันทึก / ส่งเอกสารยืนยัน</td></tr>
+        <tr><td><span class="card-demo cd-fin">ฝ่ายการเงิน/บัญชี</span></td><td>ขั้นตอนที่ฝ่ายการเงินหรือการบัญชีรับผิดชอบ</td><td>รับเงิน / บันทึกบัญชี / ตรวจนับ</td></tr>
+        <tr><td><span class="card-demo cd-teal">ระบบอัตโนมัติ</span></td><td>ขั้นตอนที่ระบบทำงานอัตโนมัติโดยไม่มีคนกดหรือบันทึก</td><td>เครื่องนับรถ / YC Parking System Log</td></tr>
+        <tr><td><span class="card-demo cd-hr">HR / กรณีพิเศษ</span></td><td>ขั้นตอนสำรองที่ใช้เฉพาะกรณีผิดปกติ</td><td>ระบบล่ม / ข้อยกเว้น</td></tr>
+        <tr><td><span class="card-demo cd-night">กะกลางคืน / สิ้นเดือน</span></td><td>ขั้นตอนที่ทำเฉพาะรอบสิ้นเดือน</td><td>รีเซ็ตมิเตอร์ / บันทึกรถค้างจอด</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== Badge ===== -->
+  <div class="sec">
+    <div class="sec-title"><span class="sec-icon">🏷️</span> ความหมายของ Badge บนการ์ด</div>
+    <table class="sym-table">
+      <thead><tr><th>Badge</th><th>ความหมาย</th><th>การดำเนินการที่แนะนำ</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge-demo bd-r">⚠ เสี่ยง</span></td><td>จุดเสี่ยงที่ระบุแล้ว — อาจมีการทุจริตหรือข้อผิดพลาดโดยไม่ตั้งใจ</td><td>ควรมีการตรวจสอบอิสระ หรือมีพยานร่วม</td></tr>
+        <tr><td><span class="badge-demo bd-r">⚠ R1–R8</span></td><td>อ้างอิงรหัสความเสี่ยงในตารางวิเคราะห์ด้านล่าง Flow</td><td>ดูรายละเอียดในตาราง R ของกระบวนการนั้น</td></tr>
+        <tr><td><span class="badge-demo bd-c">✓ ควบคุม</span></td><td>มีกลไกควบคุมที่ออกแบบไว้ เช่น ระบบบันทึก หรือลายเซ็น</td><td>ตรวจสอบว่ากลไกนั้นยังทำงานอยู่จริง</td></tr>
+        <tr><td><span class="badge-demo bd-c">✓ ลายเซ็น</span></td><td>ขั้นตอนนี้ต้องมีลายเซ็นยืนยัน 2 ฝ่าย</td><td>ตรวจว่าเอกสารมีลายเซ็นครบก่อนผ่านขั้นต่อไป</td></tr>
+        <tr><td><span class="badge-demo bd-b">หักสิทธิ์ 1 ครั้ง</span></td><td>การสแกน QR บุคลากรจะหักโควต้า 1 ครั้งจาก 30 ครั้ง/เดือน</td><td>ตรวจ Log ใน YC Parking ว่าหักจริง</td></tr>
+        <tr><td><span class="badge-demo bd-c">✓ ปิด Loop</span></td><td>ขั้นตอนนี้เป็นตัวปิดช่องโหว่จากขั้นตอนก่อนหน้า</td><td>ตรวจสอบว่าดำเนินการจนครบทุกรายก่อนถือว่าปิด</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== Lane Colors ===== -->
+  <div class="sec">
+    <div class="sec-title"><span class="sec-icon">🏊</span> สีของ Lane (ช่องผู้รับผิดชอบ)</div>
+    <div class="lane-grid">
+      <div class="lane-item"><div class="lane-color" style="background:var(--teal);"></div><div><div class="lane-name">น้ำเงินเทา (Teal)</div><div class="lane-role">ระบบอัตโนมัติ — เครื่องนับรถ / YC Parking</div></div></div>
+      <div class="lane-item"><div class="lane-color" style="background:var(--navy2);"></div><div><div class="lane-name">น้ำเงินเข้ม</div><div class="lane-role">ผู้ปฏิบัติงาน / เจ้าหน้าที่เก็บเงิน</div></div></div>
+      <div class="lane-item"><div class="lane-color" style="background:var(--orange);"></div><div><div class="lane-name">ส้ม</div><div class="lane-role">เจ้าหน้าที่ฝ่ายบุคคล (HR) / ธุรการ</div></div></div>
+      <div class="lane-item"><div class="lane-color" style="background:#6b3a8e;"></div><div><div class="lane-name">ม่วงอมชมพู</div><div class="lane-role">เจ้าหน้าที่การเงินลงพื้นที่</div></div></div>
+      <div class="lane-item"><div class="lane-color" style="background:#4a2870;"></div><div><div class="lane-name">ม่วงเข้ม</div><div class="lane-role">เจ้าหน้าที่การเงินส่วนงานรับเงิน</div></div></div>
+      <div class="lane-item"><div class="lane-color" style="background:var(--night-bg,#374151);"></div><div><div class="lane-name">เทาเข้ม</div><div class="lane-role">หัวหน้างานกะกลางคืน</div></div></div>
+      <div class="lane-item"><div class="lane-color" style="background:var(--purple);"></div><div><div class="lane-name">ม่วงเข้ม</div><div class="lane-role">ผู้ตรวจสอบภายใน (อิสระจากสายงาน)</div></div></div>
+      <div class="lane-item"><div class="lane-color" style="background:var(--gray100);border:1px solid var(--gray200);"></div><div><div class="lane-name">เทาอ่อน</div><div class="lane-role">แถวหัวตาราง (Header)</div></div></div>
+    </div>
+  </div>
+
+  <!-- ===== Step ID System ===== -->
+  <div class="sec">
+    <div class="sec-title"><span class="sec-icon">🔢</span> ระบบรหัสขั้นตอน (Step ID)</div>
+    <div class="stepid-table">
+      <div class="stepid-row"><div class="stepid-code">C-1, C-2</div><div class="stepid-desc"><strong>C</strong> = Counter (เครื่องนับรถ) — ขั้นตอนของระบบนับรถอัตโนมัติ<br>C-1 = นับรถเข้า, C-2 = นับรถออก</div></div>
+      <div class="stepid-row"><div class="stepid-code">ก-1, ก-2...</div><div class="stepid-desc"><strong>ก</strong> = กรณี ก (บุคคลทั่วไป / บุคลากรสิทธิ์หมด) — เก็บเงินสด/โอน/QR ตามปกติ</div></div>
+      <div class="stepid-row"><div class="stepid-code">ข-1, ข-2...</div><div class="stepid-desc"><strong>ข</strong> = กรณี ข (บุคลากรตลาดมีสิทธิ์) — สแกน QR Code ผ่านแอป YC Parking ลาน 2 เท่านั้น</div></div>
+      <div class="stepid-row"><div class="stepid-code">ค-1</div><div class="stepid-desc"><strong>ค</strong> = กรณี ค (บัตรจอดรถฟรี) — ลูกค้าฟิตเนสใช้บัตรที่เจ้าหน้าที่ฟิตเนสเบิกจากแผนกขายพื้นที่เช่า</div></div>
+      <div class="stepid-row"><div class="stepid-code">HR-1, HR-2</div><div class="stepid-desc"><strong>HR</strong> = Human Resources — ใช้เฉพาะกรณีระบบ YC Parking ล่ม เพื่อปรับหักโควต้าย้อนหลัง</div></div>
+      <div class="stepid-row"><div class="stepid-code">กง-1 ถึง กง-4</div><div class="stepid-desc"><strong>กง</strong> = การเงิน (ลงพื้นที่) — เจ้าหน้าที่การเงินที่ลงพื้นที่ตรวจมิเตอร์และรับเงิน<br>กง-1 อ่านมิเตอร์เริ่ม / กง-2 รับเงิน / กง-3 ลงนาม / กง-4 ส่งส่วนงานรับเงิน</div></div>
+      <div class="stepid-row"><div class="stepid-code">รง-1 ถึง รง-3</div><div class="stepid-desc"><strong>รง</strong> = รับเงิน (ส่วนงานรับเงิน) — เจ้าหน้าที่การเงินส่วนงานรับเงิน ที่ตรวจนับและส่งบัญชี</div></div>
+      <div class="stepid-row"><div class="stepid-code">กค-1, กค-2</div><div class="stepid-desc"><strong>กค</strong> = กะกลางคืน — หัวหน้างานกะกลางคืน ทำเฉพาะรอบสิ้นเดือน<br>กค-1 บันทึกรถค้างจอด / กค-2 รีเซ็ตมิเตอร์</div></div>
+      <div class="stepid-row"><div class="stepid-code">ตว-1 ถึง ตว-4</div><div class="stepid-desc"><strong>ตว</strong> = ตรวจสอบรายวัน — ผู้ตรวจสอบภายในดำเนินการทุกวัน<br>ตว-1 ดึง YC Parking / ตว-2 ขอยอดการเงิน / ตว-3 คำนวณสูตร 3 ทาง / ตว-4 แจ้ง ผบห.</div></div>
+      <div class="stepid-row"><div class="stepid-code">สน-1 ถึง สน-4</div><div class="stepid-desc"><strong>สน</strong> = สุ่มนับ — ผู้ตรวจสอบภายในสุ่มลงพื้นที่นับเงินสดรายสัปดาห์ โดยไม่แจ้งล่วงหน้า</div></div>
+      <div class="stepid-row"><div class="stepid-code">ดน-1 ถึง ดน-3</div><div class="stepid-desc"><strong>ดน</strong> = ดำเนินการรายเดือน — ผู้ตรวจสอบภายในสรุปรายงานและส่งผู้บริหารโดยตรง</div></div>
+      <div class="stepid-row"><div class="stepid-code">R1–R8</div><div class="stepid-desc"><strong>R</strong> = Risk — รหัสความเสี่ยงในตารางวิเคราะห์ด้านล่าง Flow แต่ละ R มีระดับ (วิกฤต / สูง / กลาง) และแนวทางควบคุม</div></div>
+    </div>
+  </div>
+
+  <!-- ===== Glossary ===== -->
+  <div class="sec">
+    <div class="sec-title"><span class="sec-icon">📚</span> นิยามคำศัพท์และคำย่อ (Glossary)</div>
+    <div class="gloss-grid">
+      <div class="gloss-item">
+        <div class="gloss-term"><span class="gloss-abbr">YC Parking</span> ระบบ YC Parking</div>
+        <div class="gloss-def">แอปพลิเคชันและระบบหลังบ้านสำหรับจัดการสิทธิ์การจอดรถของบุคลากรตลาด บุคลากรมีสิทธิ์ใช้ลาน 2 ฟรี 30 ครั้ง/เดือน โดยการสแกน QR Code ที่ HR ออกให้ ระบบบันทึก Log การสแกนทุกครั้ง</div>
+        <div class="gloss-ex">ตัวอย่าง: เมื่อบุคลากรนำมอเตอร์ไซค์ออก เจ้าหน้าที่สแกน QR ของบุคลากรผ่านแอป ระบบหักสิทธิ์ 1 ครั้ง</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term"><span class="gloss-abbr">CarPark</span> ระบบ CarPark</div>
+        <div class="gloss-def">ระบบซอฟต์แวร์สำหรับจัดการสมาชิกรายเดือนของที่จอดรถยนต์ ใช้คีย์ข้อมูลรถ ออกบัตร และบันทึกประวัติการใช้งาน ใช้ในกระบวนการ 2, 7 และ 8</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term"><span class="gloss-abbr">QR</span> QR Code บุคลากร</div>
+        <div class="gloss-def">คิวอาร์โค้ดที่ฝ่าย HR ออกให้บุคลากรตลาดแต่ละคน ใช้แทนการชำระเงินที่ลาน 2 มอเตอร์ไซค์ โควต้า 30 ครั้ง/เดือน ไม่จำกัดครั้ง/วัน ห้ามแชร์ให้บุคคลอื่น</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term"><span class="gloss-abbr">มิเตอร์</span> ตัวนับรถ (Counter/Meter)</div>
+        <div class="gloss-def">เครื่องนับรถที่ประตูเข้า-ออก บันทึกจำนวนรถเข้าและออกสะสมตลอดทั้งเดือน มิเตอร์ไม่รีเซ็ตรายวัน รีเซ็ตเฉพาะเที่ยงคืนของวันสิ้นเดือนโดยหัวหน้างานกะกลางคืน</div>
+        <div class="gloss-ex">ตัวอย่าง: ณ วันที่ 15 มิเตอร์ออก = 523 หมายความว่ามีรถออกไปแล้ว 523 คันนับจากต้นเดือน</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term"><span class="gloss-abbr">มิเตอร์เริ่ม</span> เลขมิเตอร์เริ่มต้นรอบ</div>
+        <div class="gloss-def">เลขมิเตอร์ที่อ่าน ณ เวลาที่เริ่มรอบการตรวจสอบ ต้องเป็น "เลขลำดับถัดไป" จากเลขมิเตอร์สิ้นสุดรอบก่อน เสมอ ห้ามซ้ำกับเลขสิ้นสุดรอบก่อน</div>
+        <div class="gloss-ex">ตัวอย่าง: สิ้นรอบก่อน = 100 → ต้นรอบใหม่ = 101 (ไม่ใช่ 100)</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term"><span class="gloss-abbr">สูตร 3 ทาง</span> การตรวจสอบ 3 แหล่ง</div>
+        <div class="gloss-def">วิธีที่ผู้ตรวจสอบใช้คำนวณรายได้ที่ควรได้รับโดยอิสระ: (รถออกจากตัวนับ − สแกน QR บุคลากร − บัตรจอดรถฟรี − รถค้างจอดจากคืนก่อน) × อัตราค่าบริการ แล้วเทียบกับเงินที่รับมาจริง</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term"><span class="gloss-abbr">Swimlane</span> ผังแบบ Swimlane</div>
+        <div class="gloss-def">รูปแบบการแสดง Flow แบบแนวนอน แบ่งเป็นแถว (Lane) ตามผู้รับผิดชอบ ทำให้เห็นได้ชัดว่าแต่ละขั้นตอนเป็นความรับผิดชอบของใคร และส่งต่องานกันอย่างไร</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term"><span class="gloss-abbr">ผบห.</span> ผู้บริหาร</div>
+        <div class="gloss-def">ผู้บริหารระดับสูงที่ผู้ตรวจสอบภายในรายงานตรงโดยไม่ผ่านสายงานปฏิบัติ เพื่อป้องกันการกรองข้อมูล กรณีที่รายงานตรง ผบห. คือเมื่อพบยอดต่างเกิน ±2 คัน หรือพบความผิดปกติสำคัญ</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term"><span class="gloss-abbr">โควต้า</span> โควต้าสิทธิ์บุคลากร</div>
+        <div class="gloss-def">จำนวนครั้งสูงสุดที่บุคลากรแต่ละคนสามารถใช้สิทธิ์จอดรถฟรีที่ลาน 2 ได้ในหนึ่งเดือน ปัจจุบัน = 30 ครั้ง/เดือน ไม่จำกัดจำนวนครั้งต่อวัน (จุดเสี่ยง R5)</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term"><span class="gloss-abbr">บัตรฟรี</span> บัตรจอดรถฟรีฟิตเนส</div>
+        <div class="gloss-def">บัตรที่ลูกค้าฟิตเนสใช้แทนการชำระค่าจอดรถมอเตอร์ไซค์ เจ้าหน้าที่ฟิตเนสต้องไปเบิกบัตรจากแผนกขายพื้นที่เช่า เจ้าหน้าที่เก็บเงินรับบัตรคืน รวบรวมส่งพร้อมใบสรุปส่งเงิน</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term"><span class="gloss-abbr">ช่องโหว่</span> ช่องโหว่เชิงระบบ (Systemic Gap)</div>
+        <div class="gloss-def">จุดอ่อนในกระบวนการที่เกิดจากการออกแบบ ไม่ใช่การกระทำผิดของบุคคล เช่น กรณีที่คนคนเดียวทั้งบันทึกข้อมูลและสรุปยอด โดยไม่มีผู้ตรวจสอบอิสระ ทำให้ตรวจจับการทุจริตได้ยาก</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term"><span class="gloss-abbr">จุดเสี่ยง</span> Control Point / Risk Point</div>
+        <div class="gloss-def"><strong>จุดควบคุม (✓ สีเขียว)</strong> = ขั้นตอนที่มีกลไกป้องกันอยู่แล้ว<br><strong>จุดเสี่ยง (⚠ สีแดง)</strong> = ขั้นตอนที่ยังขาดกลไกควบคุมหรือมีช่องโหว่ที่ต้องแก้ไข</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -483,7 +483,7 @@ body{
               <div>
                 <div style="font-size:10.5px;font-weight:800;color:var(--purple);margin-bottom:6px;">🎲 สุ่มตรวจ (Random Audit)</div>
                 <div class="flow" style="gap:4px;flex-wrap:wrap;">
-                  <div class="flow-item"><div class="step fin" onclick="showPanel('aD1')"><div class="step-num">ตว-1</div><div class="step-text">ดึง YC Parking โดยตรง</div><span class="badge c">✓ อิสระ</span></div></div>
+                  <div class="flow-item"><div class="step fin" onclick="showPanel('aD1')"><div class="step-num">ตว-1</div><div class="step-text">ดึงข้อมูลจากมิเตอร์นับรถ</div><span class="badge c">✓ อิสระ</span></div></div>
                   <span class="arr">→</span>
                   <div class="flow-item"><div class="step fin" onclick="showPanel('aD2')"><div class="step-num">ตว-2</div><div class="step-text">ขอยอดรายได้จากการเงิน</div></div></div>
                   <span class="arr">→</span>
@@ -502,7 +502,7 @@ body{
                   <span class="arr">→</span>
                   <div class="flow-item"><div class="step ctrl" onclick="showPanel('aW3')"><div class="step-num">สน-3</div><div class="step-text">บันทึก ลงนาม 2 ฝ่าย</div><span class="badge c">✓</span></div></div>
                   <span class="arr">→</span>
-                  <div class="flow-item"><div class="step fin" onclick="showPanel('aW4')"><div class="step-num">สน-4</div><div class="step-text">ตรวจ QR รายบุคคล</div></div></div>
+                  <div class="flow-item"><div class="step fin" onclick="showPanel('aW4')"><div class="step-num">สน-4</div><div class="step-text">ตรวจสอบรถค้างจอด</div></div></div>
                 </div>
               </div>
 
@@ -511,7 +511,7 @@ body{
                 <div class="flow" style="gap:4px;flex-wrap:wrap;">
                   <div class="flow-item"><div class="step fin" onclick="showPanel('aM1')"><div class="step-num">ดน-1</div><div class="step-text">รวบรวมสรุปยอดต่าง</div></div></div>
                   <span class="arr">→</span>
-                  <div class="flow-item"><div class="step fin" onclick="showPanel('aM2')"><div class="step-num">ดน-2</div><div class="step-text">ตรวจโควต้าบุคลากร</div></div></div>
+                  <div class="flow-item"><div class="step fin" onclick="showPanel('aM2')"><div class="step-num">ดน-2</div><div class="step-text">สอบทานความสมบูรณ์เอกสาร</div></div></div>
                   <span class="arr">→</span>
                   <div class="flow-item"><div class="step ctrl" onclick="showPanel('aM3')"><div class="step-num">ดน-3</div><div class="step-text">รายงาน ผบห. โดยตรง</div><span class="badge c">✓</span></div></div>
                 </div>
@@ -590,9 +590,9 @@ body{
       <tr>
         <td style="font-weight:800;color:var(--red);">R2</td>
         <td><strong>ตรวจเงินสดจากสูตรมิเตอร์มีความคลาดเคลื่อน</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">กง-2 | Audit: สน-2</div></td>
-        <td>สูตร (มิเตอร์ออก − มิเตอร์เริ่ม − 200) × อัตรา ไม่รวมสแกน QR และที่เกิดขึ้นในช่วงนั้น ทำให้ตัวเลขไม่ตรงกัน</td>
+        <td>สูตร (มิเตอร์ออก − มิเตอร์เริ่ม − 200) × อัตรา ไม่รวมรถค้างจอดที่เกิดขึ้นในช่วงนั้น ทำให้ตัวเลขไม่ตรงกัน</td>
         <td><span class="rl h">สูง</span></td>
-        <td>• การเงินต้องหักจำนวนสแกน QR และในช่วงเวลานั้นออกด้วย<br>• ปรับสูตรให้ครบ: (มิเตอร์ออก − มิเตอร์เริ่ม − สแกน QR − เงินทอน 200) × อัตรา</td>
+        <td>• การเงินต้องหักจำนวนรถค้างจอดในช่วงเวลานั้นออกด้วย<br>• ปรับสูตรให้ครบ: (มิเตอร์ออก − มิเตอร์เริ่ม − เงินทอน 200) × อัตรา</td>
       </tr>
       <tr>
         <td style="font-weight:800;color:var(--red);">R3</td>

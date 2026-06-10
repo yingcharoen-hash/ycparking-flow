@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผังกระบวนการค้าส่งผู้ค้าและคู่ค้า 1-7</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f5f5f7;
+  --card-bg: #ffffff;
+  --text-main: #1d1d1f;
+  --text-muted: #86868b;
+  --accent-blue: #0071e3;
+  --gold: #d8a032; 
+  --gold-lt: #fdf6e3;
+  --red: #ff3b30;
+  --red-lt: #ffeceb;
+  --green: #34c759;
+  --green-lt: #ebf9ee;
+  --teal: #5ac8fa;
+  --teal-lt: #eaf8ff;
+  --purple: #af52de;
+  --purple-lt: #f4eafe;
+  --orange: #ff9500;
+  --orange-lt: #fff4e5;
+  --gray50: #f5f5f7;
+  --gray100: #e5e5ea;
+  --gray200: #d1d1d6;
+  --gray400: #8e8e93;
+  --gray600: #48484a;
+  --gray800: #1c1c1e;
+  
+  --mgr-color: #8b5cf6;
+  --mgr-bg: #ede9fe;
+  --admin-color: #06b6d4;
+  --admin-bg: #cffafe;
+  --night-color: #10b981;
+  --night-bg: #d1fae5;
+  
+  --shadow: 0 4px 24px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Sarabun", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  font-size: 13px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ======= HEADER ======= */
+.header {
+  background: #000000;
+  color: #f5f5f7;
+  padding: 48px 48px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 50% 0%, rgba(0,113,227,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+.header-inner { position: relative; z-index: 1; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.header-left { flex: 1; }
+.header-eyebrow {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a1a1a6;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.header-title { font-size: 32px; font-weight: 700; line-height: 1.25; color: #ffffff; letter-spacing: -0.5px; }
+.header-title em { color: var(--accent-blue); font-style: normal; }
+.header-meta { display: flex; gap: 32px; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; }
+.meta-item { display: flex; flex-direction: column; gap: 4px; }
+.meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #86868b; font-weight: 600; }
+.meta-value { font-size: 13px; color: #f5f5f7; font-weight: 500; }
+
+/* ======= TABS ======= */
+.tab-bar-wrap {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.tab-bar { display: flex; flex-wrap: wrap; padding: 10px 40px; gap: 8px; justify-content: flex-start; }
+.tab-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text-main); }
+.tab-btn.active { color: var(--text-main); border-bottom-color: var(--text-main); font-weight: 600; }
+.tab-num {
+  width: 20px; height: 20px; border-radius: 6px;
+  background: var(--gray200); color: var(--gray600);
+  font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.tab-btn.active .tab-num { background: var(--text-main); color: #fff; }
+
+/* ======= PANELS ======= */
+.tab-panel { display: none; padding: 48px 48px 80px; animation: fadein 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.tab-panel.active { display: block; }
+@keyframes fadein { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ======= SECTION HEADER ======= */
+.proc-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+.proc-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.04); background: #fff !important; }
+.proc-title { font-size: 20px; font-weight: 700; color: var(--text-main); letter-spacing: -0.3px; }
+.proc-sub { font-size: 13px; color: var(--text-muted); font-weight: 400; margin-top: 4px; }
+
+/* ======= SWIMLANE ======= */
+.swimlane-wrap { background: var(--card-bg); border-radius: 24px; box-shadow: var(--shadow-lg); overflow: hidden; border: 1px solid rgba(0,0,0,0.04); display: flex; }
+.sl-table { width: 100%; border-collapse: collapse; }
+
+.sl-lane-label { width: 160px; color: var(--text-main); vertical-align: middle; text-align: center; padding: 20px 16px; font-size: 12px; font-weight: 700; line-height: 1.5; border-right: 1px solid var(--gray200); border-bottom: 1px solid var(--gray200); position: relative; }
+.sl-lane-label::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+.sl-lane-label.mgr { background: var(--mgr-bg); color: var(--mgr-color); }
+.sl-lane-label.mgr::before { background: var(--mgr-color); }
+.sl-lane-label.admin { background: var(--admin-bg); color: var(--admin-color); }
+.sl-lane-label.admin::before { background: var(--admin-color); }
+.sl-lane-label.night { background: var(--night-bg); color: var(--night-color); }
+.sl-lane-label.night::before { background: var(--night-color); }
+
+.sl-steps { padding: 24px; vertical-align: top; border-bottom: 1px solid var(--gray200); }
+
+/* Flow */
+.hflow { display: flex; align-items: center; flex-wrap: wrap; gap: 0; position: relative; }
+.hflow-item { display: flex; align-items: center; }
+.arrow { color: var(--gray400); font-size: 18px; padding: 0 12px; flex-shrink: 0; line-height: 1; font-weight: 300; }
+
+.case-box { border: 1.5px dashed var(--gray200); border-radius: 12px; padding: 16px 12px 12px 12px; display: flex; gap: 12px; align-items: center; position: relative; margin-right: 8px; margin-top: 10px; background: #f8fafc; }
+.case-title { position: absolute; top: -10px; left: 12px; background: var(--card-bg); padding: 0 8px; font-size: 11px; font-weight: 700; color: var(--text-muted); border-radius: 10px; border: 1px solid var(--gray200); }
+
+/* Steps */
+.step { 
+  background: var(--card-bg); 
+  border: 1px solid var(--gray200); 
+  border-radius: 12px; 
+  padding: 12px 14px; 
+  width: 155px; 
+  cursor: pointer; 
+  transition: all 0.2s ease;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.step:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.08); border-color: var(--accent-blue); }
+.step.active { border: 2px solid var(--accent-blue); box-shadow: 0 0 0 3px var(--accent-blue-lt); }
+
+.step-num { font-size: 10px; font-weight: 800; color: var(--text-muted); background: var(--gray100); padding: 2px 6px; border-radius: 4px; align-self: flex-start; }
+.step-text { font-size: 12px; font-weight: 600; line-height: 1.4; color: var(--text-main); }
+
+.step.mgr { border-left: 3px solid var(--mgr-color); }
+.step.admin { border-left: 3px solid var(--admin-color); }
+.step.night { border-left: 3px solid var(--night-color); }
+
+.badge { position: absolute; top: -6px; right: -6px; font-size: 9px; padding: 2px 6px; border-radius: 10px; font-weight: 700; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.badge.time { background: var(--accent-blue); }
+
+/* Panel Sidebar */
+.side-panel { width: 380px; background: rgba(255,255,255,0.8); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border-left: 1px solid var(--gray200); padding: 32px 24px; box-shadow: -4px 0 24px rgba(0,0,0,0.05); overflow-y: auto; display: flex; flex-direction: column; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); flex-shrink: 0; }
+.side-panel.hidden { display: none; }
+.close-btn { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+.close-btn:hover { background: var(--gray100); color: var(--text-main); }
+.panel-header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--gray200); }
+.p-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; line-height: 1.3; }
+.p-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.tag { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+.tag.role { background: var(--gray100); color: var(--gray600); }
+.tag.time { background: var(--accent-blue-lt); color: var(--accent-blue); }
+.info-section { margin-bottom: 24px; }
+.info-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
+.task-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.task-item { background: #fff; padding: 12px; border-radius: 8px; font-size: 13px; display: flex; gap: 10px; align-items: flex-start; border: 1px solid var(--gray200); }
+.task-item::before { content: '•'; color: var(--accent-blue); font-size: 18px; line-height: 1; }
+.doc-list { display: flex; flex-direction: column; gap: 8px; }
+.doc-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gray600); background: #fff; padding: 8px 12px; border: 1px solid var(--gray200); border-radius: 6px; }
+
+.main-content { flex: 1; min-width: 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-eyebrow">เอกสารกระบวนการ · Standard Operating Procedure</div>
+      <div class="header-title">ผังขั้นตอนการทำงาน<br><em>การค้าส่งผู้ค้าและคู่ค้า — แผนกค้าส่งผู้ค้าและคู่ค้า</em></div>
+      <div class="header-meta">
+        <div class="meta-item"><span class="meta-label">หน่วยงาน</span><span class="meta-value">แผนกค้าส่งผู้ค้าและคู่ค้า</span></div>
+        <div class="meta-item"><span class="meta-label">อัปเดตล่าสุด</span><span class="meta-value">มิถุนายน 2568</span></div>
+        <div class="meta-item"><span class="meta-label">กระบวนการหลัก</span><span class="meta-value">7 กระบวนการ</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-bar-wrap">
+  <div class="tab-bar">
+    <a href="../../index.html" class="tab-btn">🏢 หน้าหลักบริษัท</a>
+    <a href="index.html" class="tab-btn">🏠 กลับหน้าแผนก</a>
+    <div style="width: 1px; height: 24px; background: #e5e5ea; margin: auto 8px;"></div>
+    <button class="tab-btn active" onclick="switchTab(0)"><span class="tab-num">1</span>จัดหาและต่อรองราคา</button>
+    <button class="tab-btn" onclick="switchTab(1)"><span class="tab-num">2</span>รับออเดอร์ร้านค้า</button>
+    <button class="tab-btn" onclick="switchTab(2)"><span class="tab-num">3</span>สั่งจอง สั่งซื้อ และ PO</button>
+    <button class="tab-btn" onclick="switchTab(3)"><span class="tab-num">4</span>จัดทำใบกระจายสินค้า</button>
+    <button class="tab-btn" onclick="switchTab(4)"><span class="tab-num">5</span>ตรวจรับและกระจาย (กลางคืน)</button>
+    <button class="tab-btn" onclick="switchTab(5)"><span class="tab-num">6</span>ตรวจสอบเอกสารส่งบัญชี</button>
+    <button class="tab-btn" onclick="switchTab(6)"><span class="tab-num">7</span>จัดส่งแจ้งหนี้และติดตามหนี้</button>
+  </div>
+</div>
+
+<div style="display: flex;">
+  <!-- Main -->
+  <div class="main-content">
+  
+    <!-- TAB 0: กระบวนการที่ 1 -->
+    <div id="tab-0" class="tab-panel active">
+      <div class="proc-header">
+        <div class="proc-icon" style="background:#ede9fe;">🤝</div>
+        <div>
+          <div class="proc-title">กระบวนการที่ 1: การจัดหาและต่อรองราคาสินค้า</div>
+          <div class="proc-sub">Sourcing & Negotiation</div>
+        </div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label mgr">ผจก.แผนก</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step mgr" onclick="showPanel('m1')">
+                  <div class="step-num">ผ-1</div>
+                  <div class="step-text">จัดหาสินค้าและวางแผนสินค้าขาด</div>
+                  <span class="badge time">1 ชม.</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step mgr" onclick="showPanel('m2')">
+                  <div class="step-num">ผ-2</div>
+                  <div class="step-text">ต่อรองราคาสินค้าให้ถูกที่สุด</div>
+                  <span class="badge time">1.5 ชม.</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 1: กระบวนการที่ 2 -->
+    <div id="tab-1" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-icon" style="background:#cffafe;">📝</div>
+        <div>
+          <div class="proc-title">กระบวนการที่ 2: การรับออเดอร์จากร้านค้า</div>
+          <div class="proc-sub">Order Receiving</div>
+        </div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label admin">แอดมิน (Admin)</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step admin" onclick="showPanel('a1')">
+                  <div class="step-num">A-1</div>
+                  <div class="step-text">รับออเดอร์ร้านค้า แจ้งปรับราคา</div>
+                  <span class="badge time">1.5 ชม.</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: กระบวนการที่ 3 -->
+    <div id="tab-2" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-icon" style="background:#eef2f7;">🛒</div>
+        <div>
+          <div class="proc-title">กระบวนการที่ 3: การสั่งจอง สั่งซื้อ และออกเอกสาร PO</div>
+          <div class="proc-sub">Purchasing & PO Issuance</div>
+        </div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label mgr">ผจก.แผนก</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="case-box">
+                  <div class="case-title">สั่งจอง & ตรวจสอบ</div>
+                  <div class="hflow">
+                    <div class="step mgr" onclick="showPanel('m3')">
+                      <div class="step-num">ผ-3</div>
+                      <div class="step-text">วางแผนสั่งจองล่วงหน้ากับ Sale</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="step mgr" onclick="showPanel('m4')">
+                      <div class="step-num">ผ-4</div>
+                      <div class="step-text">ตรวจสอบและเซ็นอนุมัติสั่งซื้อ</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label admin">แอดมิน (Admin)</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="case-box">
+                  <div class="case-title">ออกใบสั่งซื้อ</div>
+                  <div class="hflow">
+                    <div class="step admin" onclick="showPanel('a2')">
+                      <div class="step-num">A-2</div>
+                      <div class="step-text">คีย์ยอด Order และออกใบสั่งซื้อ</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="step admin" onclick="showPanel('a3')">
+                      <div class="step-num">A-3</div>
+                      <div class="step-text">คีย์ PR เข้าระบบ Kassone</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: กระบวนการที่ 4 -->
+    <div id="tab-3" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-icon" style="background:#fdeee0;">📋</div>
+        <div>
+          <div class="proc-title">กระบวนการที่ 4: การจัดทำใบกระจายสินค้า</div>
+          <div class="proc-sub">Distribution Planning</div>
+        </div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label admin">แอดมิน (Admin)</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step admin" onclick="showPanel('a4')">
+                  <div class="step-num">A-4</div>
+                  <div class="step-text">จัดทำและแยกใบกระจายสินค้า</div>
+                  <span class="badge time">2 ชม.</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 4: กระบวนการที่ 5 -->
+    <div id="tab-4" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-icon" style="background:#d1fae5;">🚚</div>
+        <div>
+          <div class="proc-title">กระบวนการที่ 5: การตรวจรับและกระจายสินค้ากะกลางคืน</div>
+          <div class="proc-sub">Night Receiving & Distribution</div>
+        </div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label night">พนง.กะกลางคืน</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step night" onclick="showPanel('n1')">
+                  <div class="step-num">N-1</div>
+                  <div class="step-text">ตรวจสอบยอดและคุณภาพสินค้าที่มาส่ง</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step night" onclick="showPanel('n2')">
+                  <div class="step-num">N-2</div>
+                  <div class="step-text">กระจายสินค้าลงรถเข็นแจกร้านค้า</div>
+                  <span class="badge time">3-4 ชม.</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step night" onclick="showPanel('n3')">
+                  <div class="step-num">N-3</div>
+                  <div class="step-text">ร้านค้าเช็คของ แจ้งปัญหาใน 30 นาที</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step night" onclick="showPanel('n4')">
+                  <div class="step-num">N-4</div>
+                  <div class="step-text">คีย์รับของจริงเข้า PR (Kassone)</div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 5: กระบวนการที่ 6 -->
+    <div id="tab-5" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-icon" style="background:#ede9fe;">🗂️</div>
+        <div>
+          <div class="proc-title">กระบวนการที่ 6: การตรวจสอบเอกสารส่งบัญชี</div>
+          <div class="proc-sub">Accounting Documents Verification</div>
+        </div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label mgr">ผจก.แผนก</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step mgr" onclick="showPanel('m5')">
+                  <div class="step-num">ผ-5</div>
+                  <div class="step-text">ตรวจใบ PO / ขอซื้อเทียบใบส่งสินค้า</div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label admin">แอดมิน (Admin)</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step admin" onclick="showPanel('a5')">
+                  <div class="step-num">A-5</div>
+                  <div class="step-text">ส่งเอกสาร PO/ใบส่งสินค้าให้บัญชี</div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 6: กระบวนการที่ 7 -->
+    <div id="tab-6" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-icon" style="background:#fde8e8;">💰</div>
+        <div>
+          <div class="proc-title">กระบวนการที่ 7: การจัดส่งใบแจ้งหนี้และติดตามหนี้</div>
+          <div class="proc-sub">Invoicing & Debt Collection</div>
+        </div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label mgr">ผจก.แผนก</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step mgr" onclick="showPanel('m6')">
+                  <div class="step-num">ผ-6</div>
+                  <div class="step-text">ควบคุมติดตามหนี้ที่ค้างชำระ</div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label admin">แอดมิน (Admin)</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step admin" onclick="showPanel('a6')">
+                  <div class="step-num">A-6</div>
+                  <div class="step-text">รวบรวมใบแจ้งหนี้ให้ร้านค้า</div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label night">พนง.กะกลางคืน</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step night" onclick="showPanel('n5')">
+                  <div class="step-num">N-5</div>
+                  <div class="step-text">นำใบแจ้งหนี้รายวันไปแจกร้านค้า</div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+  </div> <!-- End Main Content -->
+
+  <!-- Side Panel -->
+  <div id="sidePanel" class="side-panel hidden">
+    <button class="close-btn" onclick="closePanel()">×</button>
+    <div id="panelContent">
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Tab Switching Logic
+  function switchTab(index) {
+    document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + index).classList.add('active');
+    event.currentTarget.classList.add('active');
+    closePanel();
+    
+    // update URL
+    const url = new URL(window.location);
+    url.searchParams.set('tab', index);
+    window.history.pushState({}, '', url);
+  }
+
+  // Load correct tab on load
+  window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if(tab !== null) {
+      const btn = document.querySelectorAll('.tab-btn')[parseInt(tab) + 2]; // +2 because first 2 are links
+      if(btn) btn.click();
+    }
+  };
+
+  // Data Dictionary for steps
+  const stepsData = {
+    'm1': { title: 'จัดหาสินค้าและวางแผนสินค้าขาด', role: 'ผจก.แผนก', time: '1 ชั่วโมง', tasks: ['ตรวจสอบรายการสินค้าที่มีแนวโน้มขาดตลาด หรือมีปัญหากับบริษัท', 'วางแผนกับบริษัทเพื่อขอแบ่งสินค้า', 'แจ้งทีมงานให้ร้านค้ากระจายสั่งสินค้าหลายๆ บริษัทเพื่อลดความเสี่ยง'], docs: ['(ไม่มีเอกสารระบุชัดเจน)'] },
+    'm2': { title: 'ต่อรองราคาสินค้าให้ถูกที่สุด', role: 'ผจก.แผนก / Admin', time: '1 ชั่วโมง 30 นาที', tasks: ['หาข้อมูลราคาจากแหล่งต่างๆ เพื่อเปรียบเทียบ', 'วิเคราะห์แนวโน้มการปรับขึ้น-ลง ของราคาในสัปดาห์', 'ติดตามใบเสนอราคาประจำสัปดาห์ (ทุกวันศุกร์)', 'เจรจาต่อรองสินค้าที่มีราคาสูง ให้ได้ราคาที่เหมาะสมและแข่งขันได้'], docs: ['ใบเสนอราคา', 'ภาพถ่ายบิล/ข้อมูลทาง Line'] },
+    'm3': { title: 'วางแผนสั่งจองล่วงหน้ากับ Sale', role: 'ผจก.แผนก', time: '1 ชั่วโมง', tasks: ['วางแผนสั่งจองสินค้าที่ผลิตน้อยหรือสายการผลิตหยุดชั่วคราว', 'แจ้งยอดการใช้ประมาณ 80% ให้ Sale จองออเดอร์ให้โรงงานผลิตเก็บไว้ (ล่วงหน้า 3 วัน - 1 สัปดาห์)'], docs: ['ใบสั่งจองของ Sale'] },
+    'm4': { title: 'ตรวจสอบและเซ็นอนุมัติสั่งซื้อ', role: 'ผจก.แผนก', time: '15 นาที', tasks: ['ตรวจเช็คความถูกต้องของการคีย์สั่งซื้อในแต่ละร้านค้า', 'ตรวจสอบใบสั่งซื้อทั้งหมดและเซ็นอนุมัติเพื่อส่งให้ผู้จัดจำหน่าย', 'ติดตามยอด Confirm ว่าได้ของครบไหม เจรจาขอเพิ่มหากขาด'], docs: ['ใบรับ Order', 'ใบสั่งซื้อ', 'ใบ Confirm สินค้า'] },
+    'm5': { title: 'ตรวจใบ PO / ขอซื้อเทียบใบส่งสินค้า', role: 'ผจก.แผนก', time: '1 ชั่วโมง', tasks: ['ตรวจสอบความถูกต้องระหว่างใบ PO กับใบส่งสินค้าจาก Supplier (จำนวน/ราคา) ก่อนเซ็นอนุมัติ', 'ตรวจเช็คใบขอซื้อของทุกร้านค้า (กิโลกรัม/จำนวนเงิน/กำไร) ว่าถูกต้องหรือไม่'], docs: ['ใบ PO / ใบขอซื้อ', 'ใบส่งสินค้า'] },
+    'm6': { title: 'ควบคุมติดตามหนี้ที่ค้างชำระ', role: 'ผจก.แผนก', time: '1 ชั่วโมง', tasks: ['ตรวจเช็คยอดค้างชำระจากที่การเงินแจ้งมา', 'ตรวจสอบการโอนเงินรายวันของทุกร้านใน Line กลุ่ม', 'ส่งยอดค้างให้ใน Line และโทรติดตาม ทวงถามร้านค้าที่เกินกำหนด', 'พิจารณาระงับการส่งสินค้าในรอบถัดไป หากร้านค้ามีปัญหาการชำระเงิน'], docs: ['ใบลูกหนี้', 'Line กลุ่มการโอนเงิน'] },
+    'a1': { title: 'รับออเดอร์ร้านค้า แจ้งปรับราคา', role: 'ทั้งแผนก (หลัก Admin)', time: '1 ชั่วโมง 30 นาที', tasks: ['แจ้งปรับราคาขึ้น-ลง และแจ้งสเปคสินค้าที่มีปัญหาให้ร้านค้าทราบ', 'สอบถามและจดยอดออเดอร์ให้ร้านค้า (โทร/Line)', 'ส่งใบรับออเดอร์ให้ร้านค้ากรอกเอง'], docs: ['ใบรับ Order สินค้า', 'แชท Line'] },
+    'a2': { title: 'คีย์ยอด Order และออกใบสั่งซื้อ', role: 'Admin', time: '35 นาที', tasks: ['รวบรวมยอด Order จากร้านค้าทั้งหมดมาคีย์ในระบบ', 'ออกหมายเลขใบสั่งซื้อของทุกบริษัท (รันเลขเองหากมีปัญหา)'], docs: ['ใบรับ Order', 'ใบสั่งซื้อ'] },
+    'a3': { title: 'คีย์ PR เข้าระบบ Kassone', role: 'Admin', time: '20 นาที', tasks: ['นำใบสั่งซื้อของทุกบริษัทไปคีย์สร้าง PR (Purchase Request) ในระบบ Kassone'], docs: ['ใบขอซื้อ'] },
+    'a4': { title: 'จัดทำและแยกใบกระจายสินค้า', role: 'Admin', time: '2 ชั่วโมง 5 นาที', tasks: ['ทำใบกระจายสินค้าของทุกบริษัท ตามรายการที่สั่งในวันนั้นๆ', 'กระทบยอดระหว่างใบกระจายสินค้ากับใบสั่งซื้อให้ตรงกัน', 'แยกใบกระจายและไฮไลท์สีแยกร้านค้า เพื่อความสะดวกของกะกลางคืน', 'เขียนใบตรวจรับสินค้าให้ร้านค้าไว้เช็คตอนของไปส่ง'], docs: ['ใบกระจายสินค้า', 'ใบสั่งซื้อ', 'ใบตรวจรับสินค้า'] },
+    'a5': { title: 'ส่งเอกสาร PO/ใบส่งสินค้าให้บัญชี', role: 'Admin', time: '20 นาที', tasks: ['รวบรวมใบ PO, ใบส่งสินค้า และเอกสารลด/เพิ่มหนี้ ส่งให้แผนกบัญชีเพื่อทำจ่าย Supplier', 'ส่งใบขอซื้อให้บัญชี เพื่อทำใบแจ้งหนี้เก็บเงินร้านค้า'], docs: ['ใบ PO', 'ใบส่งสินค้า', 'ใบลด/เพิ่มหนี้', 'ใบขอซื้อ'] },
+    'a6': { title: 'รวบรวมใบแจ้งหนี้ให้ร้านค้า', role: 'Admin', time: '40 นาที', tasks: ['ติดตามใบแจ้งหนี้รายวันจากแผนกบัญชี', 'จัดเก็บเอกสารรายวันของแผนกเข้าแฟ้ม'], docs: ['ใบแจ้งหนี้', 'เอกสารทั้งหมด'] },
+    'n1': { title: 'ตรวจสอบยอดและคุณภาพสินค้าที่มาส่ง', role: 'พนง.กะกลางคืน', time: '30 นาที', tasks: ['รับใบส่งสินค้าจากผู้จัดจำหน่าย และตรวจเช็คยอด/ราคาสินค้าเมื่อรถมาถึง', 'หากสินค้าไม่ครบ ต้องปรับลดการกระจายสินค้าของร้านค้าตามสัดส่วน', 'ตรวจสอบคุณภาพสินค้าหลังรถ หากไม่ผ่านมาตรฐานให้ตีกลับ'], docs: ['ใบส่งสินค้า', 'ใบกระจายสินค้า'] },
+    'n2': { title: 'กระจายสินค้าลงรถเข็นแจกร้านค้า', role: 'พนง.กะกลางคืน', time: '3-4 ชั่วโมง', tasks: ['ตรวจนับสินค้าตามคิวรถ', 'จัดสินค้าลงรถเข็นตาม "ใบกระจายสินค้า"', 'ให้พนักงานรถเข็นเข็นไปส่งที่ร้านค้า'], docs: ['ใบกระจายสินค้า'] },
+    'n3': { title: 'ร้านค้าเช็คของ แจ้งปัญหาใน 30 นาที', role: 'พนง.กะกลางคืน', time: '50 นาที', tasks: ['ตัดยอดสินค้าที่ได้รับจริงในใบตรวจรับ แล้วแจกให้ร้านค้าเช็ค', 'ร้านค้ามีเวลาเช็คสินค้าและแจ้งปัญหาภายใน 30 นาที (เกินกว่านั้นไม่รับผิดชอบ)', 'ตามแก้ปัญหาสินค้าหรือกรณีส่งผิดร้านโดยด่วน'], docs: ['ใบตรวจรับสินค้า', 'ใบกระจายสินค้า'] },
+    'n4': { title: 'คีย์รับของจริงเข้า PR (Kassone)', role: 'พนง.กะกลางคืน', time: '30-40 นาที', tasks: ['คีย์ยอดที่รับจริงเข้าระบบ Kassone (PR)', 'แก้ไขตัวเลขในใบขอซื้อตามจำนวนจริง', 'ปริ้นเอกสาร 3 ส่วนเพื่อ: 1.ส่งบัญชี 2.ให้ร้านค้า 3.เก็บที่แผนก'], docs: ['PO / ใบขอซื้อ'] },
+    'n5': { title: 'นำใบแจ้งหนี้รายวันไปแจกร้านค้า', role: 'พนง.กะกลางคืน', time: '20 นาที', tasks: ['นำใบแจ้งหนี้และใบขอซื้อที่ Admin รวบรวมไว้ ไปแจกให้กับร้านค้าต่างๆ เพื่อรอรับชำระเงิน'], docs: ['ใบแจ้งหนี้'] }
+  };
+
+  let activeStepId = null;
+
+  function showPanel(stepId) {
+    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+    const clickedElement = event.currentTarget;
+    clickedElement.classList.add('active');
+    
+    const data = stepsData[stepId];
+    if (!data) return;
+
+    activeStepId = stepId;
+    const panel = document.getElementById('sidePanel');
+    const content = document.getElementById('panelContent');
+    
+    let html = `
+      <div class="panel-header">
+        <div class="p-title">${data.title}</div>
+        <div class="p-meta">
+          <span class="tag role">👤 ${data.role}</span>
+          ${data.time ? `<span class="tag time">⏱ ${data.time}</span>` : ''}
+        </div>
+      </div>
+      
+      <div class="info-section">
+        <div class="info-title">🛠️ ขั้นตอนการทำงาน</div>
+        <ul class="task-list">
+          ${data.tasks.map(t => `<li class="task-item">${t}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+
+    if (data.docs && data.docs.length > 0) {
+      html += `
+        <div class="info-section">
+          <div class="info-title">📄 เอกสารที่เกี่ยวข้อง</div>
+          <div class="doc-list">
+            ${data.docs.map(d => `<div class="doc-item">📑 ${d}</div>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    content.innerHTML = html;
+    panel.classList.remove('hidden');
+  }
+
+  function closePanel() {
+    document.getElementById('sidePanel').classList.add('hidden');
+    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+    activeStepId = null;
+  }
+</script>
+
+</body>
+</html>

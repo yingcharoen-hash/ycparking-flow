@@ -93,8 +93,7 @@ body{
   top: 0;
   z-index: 100;
 }
-.tab-bar { display: flex; overflow-x: auto; padding: 0 40px; gap: 8px; scrollbar-width: none; }
-.tab-bar::-webkit-scrollbar { display: none; }
+.tab-bar { display: flex; flex-wrap: wrap; padding: 10px 40px; gap: 8px; justify-content: flex-start; }
 .tab-btn {
   flex-shrink: 0;
   display: flex;
@@ -285,10 +284,11 @@ body{
     <button class="tab-btn" onclick="switchTab(1,this)"><span class="tab-num">2</span>รายเดือน (เปิดบัญชี)</button>
     <button class="tab-btn" onclick="switchTab(2,this)"><span class="tab-num">3</span>ส่งใบแจ้งหนี้</button>
     <button class="tab-btn" onclick="switchTab(3,this)"><span class="tab-num">4</span>ส่งใบทวงหนี้</button>
-    <button class="tab-btn" onclick="switchTab(4,this)"><span class="tab-num">5</span>ที่จอดรถจักรยานยนต์</button>
-    <button class="tab-btn" onclick="switchTab(5,this)"><span class="tab-num">6</span>ที่จอดรถยนต์ ลาน1</button>
-    <button class="tab-btn" onclick="switchTab(6,this)"><span class="tab-num">7</span>ที่จอดรถยนต์ ลาน2-3</button>
-    <button class="tab-btn" onclick="switchTab(7,this)"><span class="tab-num">8</span>คืนเงินค่าปรับบัตรหาย</button>
+    <button class="tab-btn" onclick="window.location.href='tab5_motorcycle.html'"><span class="tab-num">5</span>ที่จอดรถจักรยานยนต์ ลาน 2</button>
+    <button class="tab-btn" onclick="window.location.href='tab6_motorcycle_lot3.html'"><span class="tab-num">6</span>ที่จอดรถจักรยานยนต์ ลาน 3</button>
+    <button class="tab-btn" onclick="window.location.href='tab7_car_lot1.html'"><span class="tab-num">7</span>ที่จอดรถยนต์ ลาน 1</button>
+    <button class="tab-btn" onclick="window.location.href='tab3_car.html'"><span class="tab-num">8</span>ที่จอดรถยนต์ ลาน2-3</button>
+    <button class="tab-btn" onclick="switchTab(7,this)"><span class="tab-num">9</span>คืนเงินค่าปรับบัตรหาย</button>
   </div>
 </div>
 

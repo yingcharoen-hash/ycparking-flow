@@ -279,7 +279,7 @@ body{
   <div style="position:absolute; top:24px; right:40px; display:flex; gap:10px; z-index:10;" class="nav-links">
     <a href="../../../index.html" style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); color:#fff; text-decoration:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; transition:all .2s; display:flex; align-items:center; gap:6px;">🏢 หน้าหลักบริษัท</a>
     <a href="index.html" style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); color:#fff; text-decoration:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; transition:all .2s; display:flex; align-items:center; gap:6px;">🏠 กลับหน้าหลักแผนก</a>
-    <a href="workflow_swimlane_tabs.html" style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); color:#fff; text-decoration:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; transition:all .2s; display:flex; align-items:center; gap:6px;">📊 ผังกระบวนการ 1–8</a>
+    <a href="workflow_swimlane_tabs.html" style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); color:#fff; text-decoration:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; transition:all .2s; display:flex; align-items:center; gap:6px;">📊 ผังกระบวนการ 1–9</a>
     <button onclick="window.print()" style="background:#fff; color:#1d1d1f; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12px; display:flex; align-items:center; gap:6px;">🖨️ พิมพ์รายงาน</button>
   </div>
   <div class="header-inner">
@@ -478,45 +478,31 @@ body{
         <tr>
           <td class="lane-lbl audit">ผู้ตรวจสอบ<br>ภายใน<br><span style="font-size:9px;opacity:.7;font-weight:400;">อิสระ</span></td>
           <td class="sl-steps audit-bg">
-            <div style="display:flex;gap:12px;flex-wrap:wrap;">
-
-              <div>
-                <div style="font-size:10.5px;font-weight:800;color:var(--purple);margin-bottom:6px;">🎲 สุ่มตรวจ (Random Audit)</div>
-                <div class="flow" style="gap:4px;flex-wrap:wrap;">
-                  <div class="flow-item"><div class="step fin" onclick="showPanel('aD1')"><div class="step-num">ตว-1</div><div class="step-text">ข้อจำกัด: ไม่มีระบบรายงานออนไลน์</div><span class="badge c">✓ อิสระ</span></div></div>
-                  <span class="arr">→</span>
-                  <div class="flow-item"><div class="step fin" onclick="showPanel('aD2')"><div class="step-num">ตว-2</div><div class="step-text">ขอยอดรายได้จากการเงิน</div></div></div>
-                  <span class="arr">→</span>
-                  <div class="flow-item"><div class="step fin" onclick="showPanel('aD3')"><div class="step-num">ตว-3</div><div class="step-text">คำนวณสูตร 3 ทาง</div></div></div>
-                  <span class="arr">→</span>
-                  <div class="flow-item"><div class="step risk" onclick="showPanel('aD4')"><div class="step-num">ตว-4</div><div class="step-text">ทำรายงานแจ้ง ผบห. ทาง Mail</div><span class="badge r">⚠</span></div></div>
+            <div style="font-size:10.5px;font-weight:800;color:var(--purple);margin-bottom:6px;">🎲 การตรวจสอบระบบ </div>
+            <div class="flow" style="gap:4px;flex-wrap:wrap;">
+              <div class="flow-item">
+                <div class="step ctrl" onclick="showPanel('a1')">
+                  <div class="step-num">ออดิท-1</div>
+                  <div class="step-text">ดึงรายงานจากระบบ</div>
+                  <span class="badge c">✓</span>
                 </div>
               </div>
-
-              <div style="border-left:1.5px dashed #c0a0e0;padding-left:12px;">
-                <div style="font-size:10.5px;font-weight:800;color:var(--purple);margin-bottom:6px;">📆 รายสัปดาห์</div>
-                <div class="flow" style="gap:4px;flex-wrap:wrap;">
-                  <div class="flow-item"><div class="step fin" onclick="showPanel('aW1')"><div class="step-num">สน-1</div><div class="step-text">เตรียมตัวลงพื้นที่ (ไม่แจ้งล่วงหน้า)</div></div></div>
-                  <span class="arr">→</span>
-                  <div class="flow-item"><div class="step fin" onclick="showPanel('aW2')"><div class="step-num">สน-2</div><div class="step-text">ลงพื้นที่นับเงิน</div></div></div>
-                  <span class="arr">→</span>
-                  <div class="flow-item"><div class="step ctrl" onclick="showPanel('aW3')"><div class="step-num">สน-3</div><div class="step-text">บันทึก ลงนาม 2 ฝ่าย</div><span class="badge c">✓</span></div></div>
-                  <span class="arr">→</span>
-                  <div class="flow-item"><div class="step fin" onclick="showPanel('aW4')"><div class="step-num">สน-4</div><div class="step-text">ตรวจสอบรถค้างจอด</div></div></div>
+              <span class="arr">→</span>
+              <div class="flow-item">
+                <div class="step ctrl" onclick="showPanel('a2')">
+                  <div class="step-num">ออดิท-2</div>
+                  <div class="step-text">ทวนสอบเทียบหลักฐาน</div>
+                  <span class="badge c">✓</span>
                 </div>
               </div>
-
-              <div style="border-left:1.5px dashed #c0a0e0;padding-left:12px;">
-                <div style="font-size:10.5px;font-weight:800;color:var(--purple);margin-bottom:6px;">📊 รายเดือน</div>
-                <div class="flow" style="gap:4px;flex-wrap:wrap;">
-                  <div class="flow-item"><div class="step fin" onclick="showPanel('aM1')"><div class="step-num">ดน-1</div><div class="step-text">รวบรวมสรุปยอดต่าง</div></div></div>
-                  <span class="arr">→</span>
-                  <div class="flow-item"><div class="step fin" onclick="showPanel('aM2')"><div class="step-num">ดน-2</div><div class="step-text">สอบทานความสมบูรณ์เอกสาร</div></div></div>
-                  <span class="arr">→</span>
-                  <div class="flow-item"><div class="step ctrl" onclick="showPanel('aM3')"><div class="step-num">ดน-3</div><div class="step-text">รายงาน ผบห. โดยตรง</div><span class="badge c">✓</span></div></div>
+              <span class="arr">→</span>
+              <div class="flow-item">
+                <div class="step risk" onclick="showPanel('a3')">
+                  <div class="step-num">ออดิท-3</div>
+                  <div class="step-text">สรุปและทำรายงาน</div>
+                  <span class="badge r">⚠</span>
                 </div>
               </div>
-
             </div>
           </td>
         </tr>
@@ -558,7 +544,7 @@ body{
   <div class="critical">
     <div class="critical-title"><span style="font-size:18px;">🔴</span> จุดที่ควรเฝ้าระวังเชิงระบบ — ข้อจำกัดด้านการควบคุมภายใน</div>
     <div class="critical-text">
-      <strong>ไม่มีรายงานระบบ (System Report) จากตู้เครื่องนับรถ</strong> ข้อมูลตั้งต้นเพื่อใช้คำนวณรายได้ทั้งหมดจึงต้องพึ่งพา <strong>การจดบันทึกด้วยมือ (Manual) และการลงนามรับรองร่วมกัน</strong><br>
+      <strong>ไม่มีรายงานระบบ  จากตู้เครื่องนับรถ</strong> ข้อมูลตั้งต้นเพื่อใช้คำนวณรายได้ทั้งหมดจึงต้องพึ่งพา <strong>การจดบันทึกด้วยมือ (Manual) และการลงนามรับรองร่วมกัน</strong><br>
       <span style="color:var(--red);font-weight:800;">→ ความเสี่ยงที่อาจเกิดขึ้น: การคลาดเคลื่อนของข้อมูล และความเสี่ยงจากการสมรู้ร่วมคิด (Collusion Risk) เนื่องจากไม่มีหลักฐานเชิงประจักษ์จากระบบเพื่อใช้สอบทานความถูกต้องของเอกสาร</span><br>
       <span style="color:#0056b3;font-weight:700;">💡 มาตรการลดความเสี่ยง: เพิ่มการสุ่มตรวจโดย IA | 🚀 แผนยกระดับในอนาคต: ใช้ฟอร์มออนไลน์พร้อมแนบรูปถ่ายหน้าปัดมิเตอร์เพื่อใช้อ้างอิง</span>
     </div>
@@ -582,21 +568,21 @@ body{
     <tbody>
       <tr style="background:#fff8f8;">
         <td style="font-weight:800;color:var(--red);">R1</td>
-        <td><strong style="color:var(--red);">ข้อจำกัดด้านการสอบทานข้อมูล (Manual Record)</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">กง-1 | Audit: สน-1, สน-2</div></td>
+        <td><strong style="color:var(--red);">ข้อจำกัดด้านการสอบทานข้อมูล (Manual Record)</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">กง-1 | Control: กง-1, กง-2</div></td>
         <td>ตัวเลขตั้งต้นมาจากการจดบันทึกมือโดยไม่มี System Report ทำให้เกิดความเสี่ยงจากการสมรู้ร่วมคิด (Collusion Risk) ในการรับรองตัวเลขที่คลาดเคลื่อน</td>
         <td><span class="rl v">วิกฤต</span></td>
         <td>• (ปัจจุบัน) IA ลงพื้นที่สุ่มตรวจหน้าตู้จริง<br>• (แผนอนาคต) ใช้ Online Form บังคับแนบรูปถ่ายตู้</td>
       </tr>
       <tr>
         <td style="font-weight:800;color:var(--red);">R2</td>
-        <td><strong>ตรวจเงินสดจากสูตรมิเตอร์มีความคลาดเคลื่อน</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">กง-2 | Audit: สน-2</div></td>
+        <td><strong>ตรวจเงินสดจากสูตรมิเตอร์มีความคลาดเคลื่อน</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">กง-2 | Control: กง-2</div></td>
         <td>สูตร (มิเตอร์ออก − มิเตอร์เริ่ม − 200) × อัตรา ไม่รวมรถค้างจอดที่เกิดขึ้นในช่วงนั้น ทำให้ตัวเลขไม่ตรงกัน</td>
         <td><span class="rl h">สูง</span></td>
         <td>• การเงินต้องหักจำนวนรถค้างจอดในช่วงเวลานั้นออกด้วย<br>• ปรับสูตรให้ครบ: (มิเตอร์ออก − มิเตอร์เริ่ม − เงินทอน 200) × อัตรา</td>
       </tr>
       <tr>
         <td style="font-weight:800;color:var(--red);">R3</td>
-        <td><strong>เก็บเงินสดไม่มีใบเสร็จรายคัน</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">1 | Audit: สน-2, สน-3</div></td>
+        <td><strong>เก็บเงินสดไม่มีใบเสร็จรายคัน</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">1 | Control: กง-2, สน-3</div></td>
         <td>ไม่มีหลักฐานยืนยันการเก็บเงินรายคัน ตรวจสอบย้อนหลังได้ยาก เปิดช่องโหว่เก็บเงินไม่ครบ</td>
         <td><span class="rl h">สูง</span></td>
         <td>• สุ่มนับเงินสด ณ จุด (สน-2, สน-3) ช่วยตรวจกลางวัน<br>• พิจารณาออกสลิปหรือใบเสร็จย่อรายคัน<br>• ติดกล้องวงจรปิดบริเวณจุดรับเงิน</td>
@@ -611,7 +597,7 @@ body{
 
       <tr>
         <td style="font-weight:800;color:var(--orange);">R5</td>
-        <td><strong>เครื่องนับรถขัดข้องหรือนับผิด</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">C-1, C-2 | Audit: สน-2</div></td>
+        <td><strong>เครื่องนับรถขัดข้องหรือนับผิด</strong><div style="font-size:11px;color:var(--gray400);margin-top:2px;">C-1, C-2 | Control: กง-2</div></td>
         <td>ฐานข้อมูลสูตร 3 ทางทั้งหมดพึ่งพาความถูกต้องของตัวนับ หากนับผิด ยอดคำนวณทั้งหมดคลาดเคลื่อน</td>
         <td><span class="rl m">กลาง</span></td>
         <td>• ตรวจสอบเครื่องนับเป็นประจำ บันทึกประวัติการซ่อม<br>• ยอดต่างผิดปกติต้องตรวจสอบเครื่องก่อนสรุป<br>• ติดกล้องวงจรปิดบริเวณจุดเข้า-ออก</td>
@@ -643,7 +629,7 @@ const steps = {
   
   sB2: { id:'ข-2', title:'ระบบหักโควต้าและบันทึก Log', resp:['ระบบ YC Parking (อัตโนมัติ)'], freq:'ทันทีหลังสแกน',
          tasks:['ระบบหักสิทธิ์ 1 ครั้ง จากโควต้า 30 ครั้ง/เดือน','บันทึก Log วัน-เวลา รหัสบุคลากร ไว้ในระบบ','ข้อมูลนี้เป็นแหล่งอ้างอิงอิสระที่ผู้ตรวจสอบดึงได้โดยตรง'],
-         docs:['🖥️ YC Parking System Log'] },
+         docs:['🖥️ YC Parking ประวัติการใช้งานในระบบ'] },
   
   s3:  { id:'ขั้น 3', title:'บันทึกจำนวนรถเข้า-ออก รายชั่วโมง', resp:['เจ้าหน้าที่เก็บเงินมอเตอร์ไซค์'], freq:'ทุก 1 ชั่วโมง',
          tasks:['จดบันทึกค่ามิเตอร์รถเข้าและรถออกทุกชั่วโมง','ใช้เป็นเอกสารอ้างอิงสำหรับการตรวจสอบระหว่างวัน','รายงานนี้ส่งพร้อมใบสรุปส่งเงินรายวัน'],
@@ -708,46 +694,20 @@ const steps = {
          tasks:['จดเลขมิเตอร์รถเข้า-ออก ณ เวลาเที่ยงคืนตรง (ไม่ต้องเดินนับรถทีละคัน)','คำนวณรถค้างจอดด้วยสูตร: รถค้างจอดเมื่อวาน + รถเข้าวันนี้ - รถออกวันนี้','บันทึกในรายงานประจำวัน เพื่อเป็นฐานคำนวณรายได้วันถัดไป'],
          docs:['📋 รายงานรถค้างจอดประจำคืน'] },
   sN2: { id:'กค-2', title:'นับรถตั้งต้นและรีเซ็ตมิเตอร์', resp:['หัวหน้างานกะกลางคืน'], freq:'เที่ยงคืนของทุกวันสิ้นเดือน',
-         tasks:['เดินนับจำนวนรถจริงทั้งลาน 1 ครั้ง (Physical Count) เพื่อตั้งต้นยอดยกมาใหม่ให้แม่นยำ','รีเซ็ตตัวนับรถเข้าและรถออกกลับเป็นศูนย์','บันทึกวันที่และเวลาที่รีเซ็ตพร้อมยอดตั้งต้นใหม่'],
+         tasks:['เดินนับจำนวนรถจริงทั้งลาน 1 ครั้ง (การลงพื้นที่นับจำนวนจริง) เพื่อตั้งต้นยอดยกมาใหม่ให้แม่นยำ','รีเซ็ตตัวนับรถเข้าและรถออกกลับเป็นศูนย์','บันทึกวันที่และเวลาที่รีเซ็ตพร้อมยอดตั้งต้นใหม่'],
          docs:['📋 บันทึกการรีเซ็ตมิเตอร์'],
          warn:'หากรีเซ็ตโดยไม่บันทึกรถค้างจอดก่อน จะทำให้สูตรตรวจสอบรายได้วันถัดไปคลาดเคลื่อน' },
-  aD1: { id:'ตว-1', title:'ข้อจำกัดการดึงข้อมูลอิสระ', resp:['ผู้ตรวจสอบภายใน'], freq:'สุ่มตรวจ',
-         tasks:['ระบบมิเตอร์นับรถไม่มีรายงานแบบออนไลน์ (Dumb Counter)','ผู้ตรวจสอบไม่สามารถดึงข้อมูลจำนวนรถอิสระล่วงหน้าได้','ต้องอาศัยการลงพื้นที่สุ่มตรวจหน้าตู้ (สน-2) เป็นหลัก'],
-         docs:['❌ ไม่มีระบบ Dashboard'],
-         info:'ข้อจำกัดสำคัญ: ข้อมูลอิสระจะเกิดขึ้นเมื่อผู้ตรวจสอบลงพื้นที่ไปดูด้วยตาตัวเองเท่านั้น' },
-  aD2: { id:'ตว-2', title:'ขอสรุปยอดรายได้จากฝ่ายการเงิน', resp:['ผู้ตรวจสอบภายใน'], freq:'สุ่มตรวจ',
-         tasks:['ขอรับสรุปยอดเงินสดและยอดสแกน QR PromptPayที่รับจริงจากฝ่ายการเงิน','ส่งผ่านช่องทางที่บันทึกได้ เช่น อีเมลหรือระบบ','ข้อจำกัด: ยอดนี้ยังมาจากฝ่ายการเงิน ยังไม่ใช่ข้อมูลอิสระ ต้องพัฒนาสู่ Read-only access'],
-         docs:['📊 สรุปยอดรายได้ประจำวัน จากฝ่ายการเงิน'],
-         warn:'ข้อจำกัดปัจจุบัน: ยอดนี้ยังมาจากฝ่ายการเงิน หากต้องการอิสระสมบูรณ์ต้องให้ Audit เข้าถึง Bank Statement หรือระบบบัญชีโดยตรง' },
-  aD3: { id:'ตว-3', title:'คำนวณสูตร 3 ทาง', resp:['ผู้ตรวจสอบภายใน'], freq:'สุ่มตรวจ',
-         tasks:['รายได้ที่ควรได้รับ = (รถออกจากตัวนับ  − รถค้างจอดเมื่อวาน) × อัตราค่าบริการ','เทียบกับรายได้จริงที่ได้รับจากฝ่ายการเงิน','ยอดต่าง = รายได้ที่ควรได้รับ − รายได้จริง → ต้องเท่ากับศูนย์'] },
-  aD4: { id:'ตว-4', title:'แจ้งผู้บริหารเมื่อยอดต่างเกินเกณฑ์', resp:['ผู้ตรวจสอบภายใน'], freq:'เมื่อพบความผิดปกติจากการสุ่มตรวจ',
-         tasks:['ทำรายงานส่งผู้บริหารทาง mail เมื่อพบยอดผิดปกติ','ไม่ผ่านฝ่ายการเงินหรือหัวหน้าแผนก','บันทึกรายละเอียดและสาเหตุที่คาดว่าจะเกิด'],
-         docs:['📄 รายงานแจ้งเตือนผู้บริหาร'],
-         warn:'การรายงานตรงถึงผู้บริหารโดยไม่ผ่านสายงาน เป็นกลไกสำคัญที่ทำให้กระบวนการ Audit มีความน่าเชื่อถือ' },
-  aW1: { id:'สน-1', title:'เตรียมข้อมูลก่อนลงพื้นที่', resp:['ผู้ตรวจสอบภายใน'], freq:'รายสัปดาห์ ไม่แจ้งล่วงหน้า',
-         tasks:['เนื่องจากไม่มีระบบออนไลน์ จึงไม่สามารถรู้ยอดเงินล่วงหน้าได้','เตรียมฟอร์มจดบันทึกและกล้องถ่ายรูปเพื่อลงพื้นที่','ห้ามแจ้งเจ้าหน้าที่ล่วงหน้าเด็ดขาด'],
-         docs:['📋 แบบฟอร์มสุ่มตรวจ'],
-         info:'การรู้ยอดก่อนลงพื้นที่คือหัวใจของการสุ่มตรวจ — หากแจ้งล่วงหน้าจะไม่มีความหมาย' },
-  aW2: { id:'สน-2', title:'ลงพื้นที่ตรวจสอบมิเตอร์และเงินสด', resp:['ผู้ตรวจสอบภายใน'], freq:'รายสัปดาห์',
-         tasks:['สุ่มลงพื้นที่เพื่อตรวจสอบตัวเลขมิเตอร์หน้าตู้ของจริง (ป้องกันการทุจริตการจดบันทึก กง.)','นับเงินในกระเป๋าเจ้าหน้าที่ ณ ขณะนั้น','เทียบเลขมิเตอร์จริงกับบันทึก กง. และเทียบยอดเงินกับสูตร'],
-         docs:['📸 รูปถ่ายมิเตอร์','📋 แบบฟอร์มสุ่มตรวจ (ระบุ วัน เวลา ผู้ตรวจ)'] },
-  aW3: { id:'สน-3', title:'บันทึกผลและลงนาม 2 ฝ่าย', resp:['ผู้ตรวจสอบภายใน','เจ้าหน้าที่เก็บเงิน'], freq:'หลัง สน-2',
-         tasks:['บันทึกผลการนับเงิน: ตรงหรือต่างกันเท่าไร','ทั้งผู้ตรวจสอบและเจ้าหน้าที่เก็บเงินลงนามรับทราบ','ส่งรายงานตรงถึงผู้บริหาร ไม่ผ่านสายงาน'],
-         docs:['📄 รายงานสุ่มตรวจ (มีลายเซ็น 2 ฝ่าย) → ผู้บริหาร'] },
-  aW4: { id:'สน-4', title:'ตรวจสอบรถค้างจอด', resp:['ผู้ตรวจสอบภายใน'], freq:'รายสัปดาห์',
-         tasks:['ตรวจสอบความสอดคล้องของรถค้างจอดจากกะกลางคืน','เทียบกับรายงานรถค้างจอดประจำคืน (กค-1)','หาความผิดปกติของยอดรถค้างจอด'],
-         docs:['📋 รายงานรถค้างจอด'] },
-  aM1: { id:'ดน-1', title:'รวบรวมสรุปยอดต่างรายเดือน', resp:['ผู้ตรวจสอบภายใน'], freq:'สิ้นเดือน',
-         tasks:['รวบรวมรายงานสุ่มตรวจทุกครั้งของเดือน','วิเคราะห์แนวโน้ม: ยอดต่างเพิ่มขึ้นหรือลดลง','ระบุวัน/กะ/เจ้าหน้าที่ที่มียอดต่างสูงบ่อย'],
-         docs:['📊 รายงานสรุปยอดต่างรายเดือน'] },
-  aM2: { id:'ดน-2', title:'สอบทานความสมบูรณ์เอกสาร', resp:['ผู้ตรวจสอบภายใน'], freq:'สิ้นเดือน',
-         tasks:['สุ่มตรวจความสมบูรณ์ของเอกสารและลายเซ็น','ตรวจสอบว่าเอกสารมีการลงนามครบถ้วนทุกจุด','สรุปรายการเอกสารที่ไม่สมบูรณ์เพื่อปรับปรุง'],
-         docs:['📁 แฟ้มเอกสารรายเดือน'] },
-  aM3: { id:'ดน-3', title:'จัดทำรายงานสรุป ส่งผู้บริหาร', resp:['ผู้ตรวจสอบภายใน'], freq:'สิ้นเดือน',
-         tasks:['สรุปผลการตรวจสอบรายเดือนทั้งหมด','ระบุจุดเสี่ยงที่พบและข้อเสนอแนะ','ส่งตรงถึงผู้บริหาร ไม่ผ่านสายงานปฏิบัติ'],
-         docs:['📄 รายงานสรุปการตรวจสอบภายในประจำเดือน'] }
-};
+  a1: { id:'ออดิท-1', title:'ดึงรายงานจากระบบ ', resp:['ผู้ตรวจสอบภายใน'], freq:'ตามรอบการตรวจสอบ',
+         tasks:['ดึงข้อมูลยอดรถเข้า-ออกจากระบบ (หากเป็นลาน 2 ดึงจาก YC Parking, หากลาน 3 ยึดตามมิเตอร์ฮาร์ดแวร์)'],
+         docs:['📊 รายงานระบบคาร์ปาร์ค / มิเตอร์ฮาร์ดแวร์'] },
+  a2: { id:'ออดิท-2', title:'ทวนสอบและเทียบหลักฐาน ', resp:['ผู้ตรวจสอบภายใน'], freq:'ตามรอบการตรวจสอบ',
+         tasks:['ขอดูใบสรุปยอดรายวันจากพนักงานหน้าลาน','ขอรายงานการลงพื้นที่สุ่มตรวจจากส่วนงานรับเงิน (Finance)','นำข้อมูลมาเทียบเคียงกับระบบ (คำนวณด้วยสูตรรายได้ 3 ทาง) ว่ายอดตรงกันหรือไม่'],
+         docs:['📄 ใบสรุปยอดหน้าลาน', '📄 บันทึกการเงินลงพื้นที่สุ่มตรวจ'],
+         warn:'จุดควบคุม: เป็นการตรวจสอบ Third Line of Defense เพื่อป้องกันการบันทึกข้อมูลเท็จ' },
+  a3: { id:'ออดิท-3', title:'สรุปประเด็นและรายงาน ', resp:['ผู้ตรวจสอบภายใน'], freq:'ตามรอบการตรวจสอบ',
+         tasks:['รวบรวมข้อมูลและประเด็นความผิดปกติที่ตรวจพบ','จัดทำรายงานสรุปประจำเดือนส่งตรงถึงผู้บริหารระดับสูง','(หากพบยอดต่างผิดปกติขั้นวิกฤต หรือมีนัยสำคัญ ให้ทำรายงานแจ้งเตือนทาง Mail ทันที)'],
+         docs:['📋 รายงานผลการตรวจสอบประจำเดือน'] }
+                      };
 
 // ===== Color by role =====
 const roleColors = {
@@ -770,7 +730,7 @@ function showPanel(id) {
 
   // Active state
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  try { document.querySelector(`.step[onclick*='${id}']`).classList.add('active'); } catch(e) {}
   currentStep = id;
 
   // Update header

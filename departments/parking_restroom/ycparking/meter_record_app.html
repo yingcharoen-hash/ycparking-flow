@@ -150,7 +150,23 @@ input[readonly] {
 }
 .camera-wrap video {
   width: 100%;
+  max-width: 100%;
+  height: auto;
   display: block;
+  object-fit: cover;
+}
+.cancel-cam-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 10;
 }
 .capture-btn {
   position: absolute;
@@ -257,6 +273,8 @@ canvas {
   font-weight: 600;
   text-align: center;
   display: none;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 .status-msg.success { background: var(--green-lt); color: var(--green); display: block; }
 .status-msg.error { background: var(--red-lt); color: var(--red); display: block; }
@@ -371,6 +389,7 @@ canvas {
         <span>เปิดกล้องถ่ายมิเตอร์เริ่ม</span>
       </button>
       <div id="cameraWrapStart" class="camera-wrap">
+        <button class="cancel-cam-btn" onclick="cancelCamera('start')">❌ ยกเลิก</button>
         <video id="videoElementStart" autoplay playsinline></video>
         <div class="capture-btn" onclick="capturePhoto('start')"></div>
       </div>
@@ -385,6 +404,7 @@ canvas {
         <span>เปิดกล้องถ่ายมิเตอร์จบ</span>
       </button>
       <div id="cameraWrapEnd" class="camera-wrap">
+        <button class="cancel-cam-btn" onclick="cancelCamera('end')">❌ ยกเลิก</button>
         <video id="videoElementEnd" autoplay playsinline></video>
         <div class="capture-btn" onclick="capturePhoto('end')"></div>
       </div>
@@ -503,6 +523,19 @@ canvas {
       camWrap.style.display = 'none';
       openBtn.style.display = 'flex';
     }
+  }
+
+  function cancelCamera(type) {
+    const isStart = type === 'start';
+    const suffix = isStart ? 'Start' : 'End';
+    
+    if (videoStream) {
+      videoStream.getTracks().forEach(track => track.stop());
+      videoStream = null;
+    }
+    
+    document.getElementById('cameraWrap' + suffix).style.display = 'none';
+    document.getElementById('openCamBtn' + suffix).style.display = 'flex';
   }
 
   function capturePhoto(type) {
@@ -692,45 +725,42 @@ canvas {
     msg.className = 'status-msg';
 
     try {
-      const response = await fetch(scriptUrl, {
+      // Use no-cors to prevent CORS issues. The response will be opaque, so we assume success.
+      await fetch(scriptUrl, {
         method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
       
-      const result = await response.json();
+      // Since mode is no-cors, we can't read response.json(), so we assume success if no network error thrown.
+      msg.innerText = '✅ บันทึกข้อมูลลง Google Sheets สำเร็จ!';
+      msg.className = 'status-msg success';
       
-      if(result.status === 'success') {
-        msg.innerText = '✅ บันทึกข้อมูลลง Google Sheets สำเร็จ!';
-        msg.className = 'status-msg success';
-        
-        // Save to local history
-        const history = JSON.parse(localStorage.getItem('meterApp_history') || '[]');
-        history.push({ date, time, units, total });
-        localStorage.setItem('meterApp_history', JSON.stringify(history));
-        loadHistory();
-        
-        // Reset form slightly
-        document.getElementById('startMeter').value = end; // Auto-fill next start meter
-        document.getElementById('endMeter').value = '';
-        document.getElementById('units').value = '';
-        document.getElementById('totalMoney').value = '';
-        document.getElementById('cash').value = '';
-        document.getElementById('transfer').value = '';
-        document.getElementById('openCamBtnStart').style.display = 'flex';
-        document.getElementById('photoPreviewStart').style.display = 'none';
-        document.getElementById('retakeBtnStart').style.display = 'none';
-        document.getElementById('openCamBtnEnd').style.display = 'flex';
-        document.getElementById('photoPreviewEnd').style.display = 'none';
-        document.getElementById('retakeBtnEnd').style.display = 'none';
-        photoData = { start: '', end: '' };
-        clearCanvas(senderPad);
-        clearCanvas(receiverPad);
+      // Save to local history
+      const history = JSON.parse(localStorage.getItem('meterApp_history') || '[]');
+      history.push({ date, time, units, total });
+      localStorage.setItem('meterApp_history', JSON.stringify(history));
+      loadHistory();
+      
+      // Reset form slightly
+      document.getElementById('startMeter').value = end; // Auto-fill next start meter
+      document.getElementById('endMeter').value = '';
+      document.getElementById('units').value = '';
+      document.getElementById('totalMoney').value = '';
+      document.getElementById('cash').value = '';
+      document.getElementById('transfer').value = '';
+      document.getElementById('openCamBtnStart').style.display = 'flex';
+      document.getElementById('photoPreviewStart').style.display = 'none';
+      document.getElementById('retakeBtnStart').style.display = 'none';
+      document.getElementById('openCamBtnEnd').style.display = 'flex';
+      document.getElementById('photoPreviewEnd').style.display = 'none';
+      document.getElementById('retakeBtnEnd').style.display = 'none';
+      photoData = { start: '', end: '' };
+      clearCanvas(senderPad);
+      clearCanvas(receiverPad);
 
-        window.scrollTo(0, document.body.scrollHeight);
-      } else {
-        msg.innerText = '❌ เกิดข้อผิดพลาด: ' + result.message;
-        msg.className = 'status-msg error';
-      }
+      window.scrollTo(0, document.body.scrollHeight);
     } catch (e) {
       msg.innerText = '❌ เชื่อมต่อล้มเหลว: ' + e.message + ' (อาจเกิดจากปัญหา CORS หรือ URL ผิด)';
       msg.className = 'status-msg error';

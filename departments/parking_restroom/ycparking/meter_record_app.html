@@ -399,7 +399,7 @@ canvas {
   </div>
 
   <button class="submit-btn" id="submitBtn" onclick="submitData()">
-    <span class="btn-text">🚀 บันทึกข้อมูลส่งไปที่ Google Sheets</span>
+    <span class="btn-text">บันทึกข้อมูล</span>
     <div class="spinner" id="spinner"></div>
   </button>
   
@@ -437,7 +437,7 @@ canvas {
   document.getElementById('docTime').value = `${hours}:${minutes}`;
 
   // Hardcoded Script URL (Needs to be replaced with the actual /exec URL)
-  const scriptUrl = 'YOUR_WEB_APP_URL_HERE';
+  const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9VgBmGLjVAvDEBCK2ruTMnQswLtB1oZoiMzDlhwuRC9MI95GJoId_QTdQJE8kOw-XPw/exec';
 
   // Calculate Logic
   function calculate() {
@@ -621,7 +621,7 @@ canvas {
 
   // Submit Data
   async function submitData() {
-    if (scriptUrl === 'YOUR_WEB_APP_URL_HERE' || !scriptUrl) {
+    if (!scriptUrl) {
       alert('ยังไม่ได้ใส่ Web App URL ในโค้ดครับ กรุณาแก้ไขโค้ดเพื่อใส่ URL ที่ถูกต้อง');
       return;
     }
@@ -710,7 +710,7 @@ canvas {
     } finally {
       btn.disabled = false;
       spinner.style.display = 'none';
-      btnText.innerText = '🚀 บันทึกข้อมูลส่งไปที่ Google Sheets';
+      btnText.innerText = 'บันทึกข้อมูล';
     }
   }
 

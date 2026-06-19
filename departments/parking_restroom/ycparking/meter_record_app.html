@@ -766,6 +766,16 @@ canvas {
       alert('กรุณากรอกจำนวน "เงินสด" หรือ "เงินโอน" อย่างน้อย 1 ช่องครับ');
       return;
     }
+
+    const numTotal = parseFloat(total) || 0;
+    const numCash = parseFloat(cash) || 0;
+    const numTransfer = parseFloat(transfer) || 0;
+    
+    if (numCash + numTransfer !== numTotal) {
+      if (!confirm('⚠️ ยอดรวมเงินสดและเงินโอน (' + (numCash + numTransfer) + ' บาท) ไม่ตรงกับยอดรวมเงิน (' + numTotal + ' บาท)\n\nคุณต้องการยืนยันการบันทึกข้อมูลหรือไม่?')) {
+        return;
+      }
+    }
     
     let sSign = isCanvasBlank(senderPad.canvas) ? '' : senderPad.canvas.toDataURL('image/png');
     let rSign = isCanvasBlank(receiverPad.canvas) ? '' : receiverPad.canvas.toDataURL('image/png');

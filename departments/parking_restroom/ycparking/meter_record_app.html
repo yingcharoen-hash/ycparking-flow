@@ -379,17 +379,26 @@ canvas {
   <div class="card">
     <div class="card-title">📝 ข้อมูลมิเตอร์และรายได้</div>
     
+    <div class="form-group" style="margin-bottom: 16px;">
+      <label>ลานจอดรถจักรยานยนต์</label>
+      <select id="parkingLot" style="width: 100%; padding: 12px; border: 1px solid var(--gray200); border-radius: 8px; font-size: 16px; background: #fff;">
+        <option value="ลาน 2">ลาน 2</option>
+        <option value="ลาน 3">ลาน 3</option>
+        <option value="ลาน 4">ลาน 4</option>
+      </select>
+    </div>
+
     <div class="form-row">
       <div class="form-col">
         <div class="form-group">
           <label>วันที่</label>
-          <input type="date" id="docDate">
+          <input type="date" id="docDate" readonly style="pointer-events: none; background-color: #f5f5f7; color: #555; touch-action: none; -webkit-user-select: none;">
         </div>
       </div>
       <div class="form-col">
         <div class="form-group">
           <label>เวลา</label>
-          <input type="time" id="docTime">
+          <input type="time" id="docTime" readonly style="pointer-events: none; background-color: #f5f5f7; color: #555; touch-action: none; -webkit-user-select: none;">
         </div>
       </div>
     </div>
@@ -749,6 +758,7 @@ canvas {
       return;
     }
 
+    const parkingLot = document.getElementById('parkingLot').value;
     const date = document.getElementById('docDate').value;
     const time = document.getElementById('docTime').value;
     const start = document.getElementById('startMeter').value;

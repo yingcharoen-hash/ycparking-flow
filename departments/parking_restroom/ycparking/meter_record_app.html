@@ -325,6 +325,46 @@ canvas {
     font-size: 14px; /* Slightly smaller font to fit long Thai dates */
   }
 }
+
+@media print {
+  body {
+    background: #fff;
+    padding: 0;
+  }
+  .header, .card, .history-card {
+    box-shadow: none;
+    border: none;
+    margin: 0;
+    padding: 12px 0;
+  }
+  .card-title {
+    margin-bottom: 8px;
+    font-size: 16px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 4px;
+  }
+  /* Hide interactive/unnecessary elements */
+  .submit-btn, .print-btn, .open-cam-btn, .retake-btn, .clear-btn, .capture-btn, .cancel-cam-btn, .status-msg, .camera-wrap {
+    display: none !important;
+  }
+  /* Show only what is useful for the paper */
+  input, select {
+    border: none !important;
+    background: transparent !important;
+    padding: 4px !important;
+    font-size: 14px !important;
+  }
+  /* Reformat form to save space */
+  .form-row {
+    margin-bottom: 4px;
+  }
+  .card {
+    page-break-inside: avoid;
+  }
+  .history-card {
+    display: none !important; /* Hide history table on print */
+  }
+}
 </style>
 </head>
 <body>
@@ -453,10 +493,15 @@ canvas {
     </div>
   </div>
 
-  <button class="submit-btn" id="submitBtn" onclick="submitData()">
-    <span class="btn-text">บันทึกข้อมูล</span>
-    <div class="spinner" id="spinner"></div>
-  </button>
+  <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+    <button class="submit-btn" id="submitBtn" onclick="submitData()" style="flex: 2;">
+      <span class="btn-text">บันทึกข้อมูล</span>
+      <div class="spinner" id="spinner"></div>
+    </button>
+    <button class="submit-btn print-btn" onclick="window.print()" style="flex: 1; background: var(--gray600);">
+      🖨️ พิมพ์
+    </button>
+  </div>
   <div style="text-align: center; font-size: 12px; color: var(--red); margin-top: 12px;">* กรณีบันทึกผิดพลาด ระบบไม่เปิดให้แก้ไขเอง กรุณาแจ้งฝ่ายตรวจสอบเพื่อแก้ไขในระบบหลังบ้าน</div>
   
   <div id="statusMsg" class="status-msg"></div>
@@ -725,7 +770,9 @@ canvas {
     let sSign = isCanvasBlank(senderPad.canvas) ? '' : senderPad.canvas.toDataURL('image/png');
     let rSign = isCanvasBlank(receiverPad.canvas) ? '' : receiverPad.canvas.toDataURL('image/png');
 
+    const parkingLot = document.getElementById('parkingLot').value;
     const payload = {
+      parkingLot: parkingLot,
       date: date,
       time: time,
       startMeter: start,

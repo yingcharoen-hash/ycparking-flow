@@ -309,16 +309,14 @@ canvas {
 .history-table th { color: var(--text-muted); font-weight: 600; }
 @media (max-width: 480px) {
   .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
   .form-col {
-    min-width: 0;
+    width: 100%;
   }
   input[type="date"], input[type="time"], input[type="number"] {
-    padding: 10px 8px;
-    font-size: 14px;
     width: 100%;
     box-sizing: border-box;
   }
@@ -412,7 +410,7 @@ canvas {
         <video id="videoElementStart" autoplay playsinline></video>
         <div class="capture-btn" onclick="capturePhoto('start')"></div>
       </div>
-      <img id="photoPreviewStart" class="preview-img">
+      <img id="photoPreviewStart" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
       <button id="retakeBtnStart" class="retake-btn" onclick="startCamera('start')">🔄 ถ่ายใหม่</button>
     </div>
     
@@ -427,7 +425,7 @@ canvas {
         <video id="videoElementEnd" autoplay playsinline></video>
         <div class="capture-btn" onclick="capturePhoto('end')"></div>
       </div>
-      <img id="photoPreviewEnd" class="preview-img">
+      <img id="photoPreviewEnd" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
       <button id="retakeBtnEnd" class="retake-btn" onclick="startCamera('end')">🔄 ถ่ายใหม่</button>
     </div>
   </div>
@@ -455,7 +453,7 @@ canvas {
     <span class="btn-text">บันทึกข้อมูล</span>
     <div class="spinner" id="spinner"></div>
   </button>
-  <div style="text-align: center; font-size: 12px; color: var(--red); margin-top: 12px;">* กรณีบันทึกผิดพลาด ระบบไม่เปิดให้แก้ไขเอง กรุณาแจ้งฝ่ายการเงินเพื่อแก้ไขในระบบหลังบ้าน (Google Sheets)</div>
+  <div style="text-align: center; font-size: 12px; color: var(--red); margin-top: 12px;">* กรณีบันทึกผิดพลาด ระบบไม่เปิดให้แก้ไขเอง กรุณาแจ้งฝ่ายตรวจสอบเพื่อแก้ไขในระบบหลังบ้าน</div>
   
   <div id="statusMsg" class="status-msg"></div>
 

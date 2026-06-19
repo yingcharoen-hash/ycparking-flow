@@ -363,19 +363,33 @@ canvas {
 
   <div class="card">
     <div class="card-title">📸 ภาพถ่ายมิเตอร์</div>
-    <div class="form-group">
-      <button id="openCamBtn" class="open-cam-btn" onclick="startCamera()">
+    
+    <div class="form-group" style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px dashed var(--gray200);">
+      <label>1. มิเตอร์เริ่มต้น</label>
+      <button id="openCamBtnStart" class="open-cam-btn" onclick="startCamera('start')">
         <span style="font-size: 32px;">📷</span>
-        <span>เปิดกล้องเพื่อถ่ายภาพ</span>
+        <span>เปิดกล้องถ่ายมิเตอร์เริ่ม</span>
       </button>
-      
-      <div id="cameraWrap" class="camera-wrap">
-        <video id="videoElement" autoplay playsinline></video>
-        <div class="capture-btn" onclick="capturePhoto()"></div>
+      <div id="cameraWrapStart" class="camera-wrap">
+        <video id="videoElementStart" autoplay playsinline></video>
+        <div class="capture-btn" onclick="capturePhoto('start')"></div>
       </div>
-      
-      <img id="photoPreview" class="preview-img">
-      <button id="retakeBtn" class="retake-btn" onclick="startCamera()">🔄 ถ่ายใหม่</button>
+      <img id="photoPreviewStart" class="preview-img">
+      <button id="retakeBtnStart" class="retake-btn" onclick="startCamera('start')">🔄 ถ่ายใหม่</button>
+    </div>
+    
+    <div class="form-group">
+      <label>2. มิเตอร์สุดท้าย</label>
+      <button id="openCamBtnEnd" class="open-cam-btn" onclick="startCamera('end')">
+        <span style="font-size: 32px;">📷</span>
+        <span>เปิดกล้องถ่ายมิเตอร์จบ</span>
+      </button>
+      <div id="cameraWrapEnd" class="camera-wrap">
+        <video id="videoElementEnd" autoplay playsinline></video>
+        <div class="capture-btn" onclick="capturePhoto('end')"></div>
+      </div>
+      <img id="photoPreviewEnd" class="preview-img">
+      <button id="retakeBtnEnd" class="retake-btn" onclick="startCamera('end')">🔄 ถ่ายใหม่</button>
     </div>
   </div>
 
@@ -456,15 +470,20 @@ canvas {
   }
 
   // Camera Implementation (WebRTC)
-  let compressedPhotoBase64 = '';
+  let photoData = { start: '', end: '' };
   let videoStream = null;
+  let currentCamType = '';
 
-  async function startCamera() {
-    const video = document.getElementById('videoElement');
-    const camWrap = document.getElementById('cameraWrap');
-    const openBtn = document.getElementById('openCamBtn');
-    const preview = document.getElementById('photoPreview');
-    const retakeBtn = document.getElementById('retakeBtn');
+  async function startCamera(type) {
+    currentCamType = type;
+    const isStart = type === 'start';
+    const suffix = isStart ? 'Start' : 'End';
+    
+    const video = document.getElementById('videoElement' + suffix);
+    const camWrap = document.getElementById('cameraWrap' + suffix);
+    const openBtn = document.getElementById('openCamBtn' + suffix);
+    const preview = document.getElementById('photoPreview' + suffix);
+    const retakeBtn = document.getElementById('retakeBtn' + suffix);
 
     openBtn.style.display = 'none';
     preview.style.display = 'none';
@@ -472,6 +491,9 @@ canvas {
     camWrap.style.display = 'block';
 
     try {
+      if(videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+      }
       videoStream = await navigator.mediaDevices.getUserMedia({ 
         video: { facingMode: "environment" } 
       });
@@ -483,11 +505,13 @@ canvas {
     }
   }
 
-  function capturePhoto() {
-    const video = document.getElementById('videoElement');
+  function capturePhoto(type) {
+    const isStart = type === 'start';
+    const suffix = isStart ? 'Start' : 'End';
+    
+    const video = document.getElementById('videoElement' + suffix);
     const canvas = document.createElement('canvas');
     
-    // Scale down if resolution is too high
     const MAX_WIDTH = 800;
     let width = video.videoWidth;
     let height = video.videoHeight;
@@ -501,19 +525,18 @@ canvas {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, width, height);
     
-    compressedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.6);
+    photoData[type] = canvas.toDataURL('image/jpeg', 0.6);
     
-    // Stop camera
     if (videoStream) {
       videoStream.getTracks().forEach(track => track.stop());
+      videoStream = null;
     }
     
-    document.getElementById('cameraWrap').style.display = 'none';
-    const preview = document.getElementById('photoPreview');
-    preview.src = compressedPhotoBase64;
+    document.getElementById('cameraWrap' + suffix).style.display = 'none';
+    const preview = document.getElementById('photoPreview' + suffix);
+    preview.src = photoData[type];
     preview.style.display = 'block';
-    
-    document.getElementById('retakeBtn').style.display = 'inline-block';
+    document.getElementById('retakeBtn' + suffix).style.display = 'inline-block';
   }
 
   // Signature Pad Implementation
@@ -652,7 +675,8 @@ canvas {
       totalMoney: total,
       cash: cash || '0',
       transfer: transfer || '0',
-      photo: compressedPhotoBase64,
+      photoStart: photoData['start'],
+      photoEnd: photoData['end'],
       senderSign: sSign,
       receiverSign: rSign
     };
@@ -692,10 +716,13 @@ canvas {
         document.getElementById('totalMoney').value = '';
         document.getElementById('cash').value = '';
         document.getElementById('transfer').value = '';
-        document.getElementById('openCamBtn').style.display = 'flex';
-        document.getElementById('photoPreview').style.display = 'none';
-        document.getElementById('retakeBtn').style.display = 'none';
-        compressedPhotoBase64 = '';
+        document.getElementById('openCamBtnStart').style.display = 'flex';
+        document.getElementById('photoPreviewStart').style.display = 'none';
+        document.getElementById('retakeBtnStart').style.display = 'none';
+        document.getElementById('openCamBtnEnd').style.display = 'flex';
+        document.getElementById('photoPreviewEnd').style.display = 'none';
+        document.getElementById('retakeBtnEnd').style.display = 'none';
+        photoData = { start: '', end: '' };
         clearCanvas(senderPad);
         clearCanvas(receiverPad);
 

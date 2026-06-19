@@ -304,6 +304,12 @@ canvas {
   text-align: left;
 }
 .history-table th { color: var(--text-muted); font-weight: 600; }
+@media (max-width: 480px) {
+  .form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
 </style>
 </head>
 <body>
@@ -446,9 +452,9 @@ canvas {
         <thead>
           <tr>
             <th>เวลา</th>
+            <th>เริ่ม-จบ</th>
             <th>หน่วย</th>
             <th>รวมเงิน</th>
-            <th>สถานะ</th>
           </tr>
         </thead>
         <tbody>
@@ -665,10 +671,10 @@ canvas {
     history.slice().reverse().forEach(h => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${h.date} ${h.time}</td>
+        <td>${h.time}</td>
+        <td>${h.start}-${h.end}</td>
         <td>${h.units}</td>
         <td>${h.total} ฿</td>
-        <td style="color:var(--green)">✅ ส่งแล้ว</td>
       `;
       tbody.appendChild(tr);
     });
@@ -693,6 +699,10 @@ canvas {
 
     if(!start || !end || !units || !total) {
       alert('กรุณากรอกเลขมิเตอร์ให้ครบถ้วน');
+      return;
+    }
+    if(!cash && !transfer) {
+      alert('กรุณากรอกจำนวน "เงินสด" หรือ "เงินโอน" อย่างน้อย 1 ช่องครับ');
       return;
     }
     
@@ -739,7 +749,7 @@ canvas {
       
       // Save to local history
       const history = JSON.parse(localStorage.getItem('meterApp_history') || '[]');
-      history.push({ date, time, units, total });
+      history.push({ date, time, start, end, units, total });
       localStorage.setItem('meterApp_history', JSON.stringify(history));
       loadHistory();
       

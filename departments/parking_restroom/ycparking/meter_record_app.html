@@ -81,6 +81,9 @@ body {
   box-shadow: 0 4px 24px rgba(0,0,0,0.04);
   margin-bottom: 24px;
   border: 1px solid rgba(0,0,0,0.04);
+  overflow: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .card-title {
   font-size: 18px;
@@ -306,12 +309,18 @@ canvas {
 .history-table th { color: var(--text-muted); font-weight: 600; }
 @media (max-width: 480px) {
   .form-row {
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
+  }
+  .form-col {
+    min-width: 0;
   }
   input[type="date"], input[type="time"], input[type="number"] {
     padding: 10px 8px;
     font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 </style>
@@ -676,10 +685,10 @@ canvas {
     history.slice().reverse().forEach(h => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${h.date}<br><span style="font-size: 10px; color: #888;">${h.time}</span></td>
-        <td>${h.start}-${h.end}</td>
-        <td>${h.units}</td>
-        <td>${h.total} ฿</td>
+        <td>${h.date || '-'}<br><span style="font-size: 10px; color: #888;">${h.time || '-'}</span></td>
+        <td>${h.start || '?'}-${h.end || '?'}</td>
+        <td>${h.units || '-'}</td>
+        <td>${h.total || '-'} ฿</td>
       `;
       tbody.appendChild(tr);
     });
@@ -759,7 +768,7 @@ canvas {
       loadHistory();
       
       // Reset form slightly
-      document.getElementById('startMeter').value = end; // Auto-fill next start meter
+      document.getElementById('startMeter').value = ''; // Auto-fill next start meter
       document.getElementById('endMeter').value = '';
       document.getElementById('units').value = '';
       document.getElementById('totalMoney').value = '';

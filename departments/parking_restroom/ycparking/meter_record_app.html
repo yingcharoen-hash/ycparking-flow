@@ -370,8 +370,8 @@ canvas {
 <body>
 
 <div class="header">
-  <div class="header-title">บันทึกหน่วยมิเตอร์ลานจักรยานยนต์ ลาน 2</div>
-  <div class="header-sub">แอปพลิเคชันสำหรับแผนกการเงิน (Paperless System)</div>
+  <div class="header-title">บันทึกหน่วยมิเตอร์ลานจักรยานยนต์</div>
+  <div class="header-sub">แอปพลิเคชันสำหรับแผนกการเงิน</div>
 </div>
 
 <div class="container">
@@ -790,7 +790,6 @@ canvas {
     let sSign = isCanvasBlank(senderPad.canvas) ? '' : senderPad.canvas.toDataURL('image/png');
     let rSign = isCanvasBlank(receiverPad.canvas) ? '' : receiverPad.canvas.toDataURL('image/png');
 
-    const parkingLot = document.getElementById('parkingLot').value;
     const payload = {
       parkingLot: parkingLot,
       date: date,

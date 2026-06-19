@@ -310,15 +310,19 @@ canvas {
 @media (max-width: 480px) {
   .form-row {
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+    flex-direction: row;
+    gap: 8px;
   }
   .form-col {
-    width: 100%;
+    flex: 1;
+    min-width: 0; /* Prevents flex items from overflowing their container */
+    width: 50%;
   }
-  input[type="date"], input[type="time"], input[type="number"] {
+  input[type="date"], input[type="time"], input[type="number"], input[type="text"] {
     width: 100%;
     box-sizing: border-box;
+    padding: 10px 8px; /* Slightly smaller padding to fit text */
+    font-size: 14px; /* Slightly smaller font to fit long Thai dates */
   }
 }
 </style>

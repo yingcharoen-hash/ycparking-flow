@@ -6,19 +6,19 @@
 <title>บันทึกหน่วยมิเตอร์ลานจักรยานยนต์</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap');
 
   :root {
-    --text-main: #1c1c1e;
-    --text-muted: #8e8e93;
-    --bg-base: #f4f5f9;
-    --card-bg: rgba(255, 255, 255, 0.85);
-    --primary: #1c1c1e;
-    --primary-hover: #3a3a3c;
-    --success: #34c759;
-    --danger: #ff3b30;
-    --border: rgba(0, 0, 0, 0.12);
-    --input-bg: rgba(255, 255, 255, 0.6);
+    --bg-base: #F0F6F4;
+    --card-bg: #FFFFFF;
+    --text-main: #1C2321;
+    --text-muted: #7E8C88;
+    --primary: #34C759;
+    --primary-light: #E0F5E9;
+    --primary-dark: #248A3D;
+    --border: #E8ECEB;
+    --danger: #FF3B30;
+    --input-bg: #F9FBFB;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Sarabun', sans-serif; }
@@ -26,100 +26,69 @@
   body {
     background-color: var(--bg-base);
     color: var(--text-main);
-    padding-bottom: 80px;
+    padding-bottom: 100px;
     -webkit-font-smoothing: antialiased;
-    position: relative;
-    overflow-x: hidden;
   }
 
-  /* Soft Gradient Background Orbs */
-  body::before {
-    content: "";
-    position: fixed;
-    top: -100px;
-    left: -100px;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255, 204, 153, 0.8) 0%, rgba(255, 204, 153, 0) 70%);
-    border-radius: 50%;
-    z-index: -1;
-    filter: blur(60px);
-  }
-  body::after {
-    content: "";
-    position: fixed;
-    top: 20%;
-    right: -150px;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(200, 210, 255, 0.6) 0%, rgba(200, 210, 255, 0) 70%);
-    border-radius: 50%;
-    z-index: -1;
-    filter: blur(80px);
-  }
-
-  /* Header (Integrated nicely into the background) */
+  /* Header */
   .header {
-    padding: 60px 24px 24px;
+    padding: 48px 24px 16px;
     position: relative;
-    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
   }
+  .header-left { flex: 1; }
   .header-title { 
     font-size: 32px; 
     font-weight: 700; 
     letter-spacing: -0.5px;
-    line-height: 1.2;
+    line-height: 1.1;
     color: var(--text-main);
   }
   .header-sub { 
-    font-size: 16px; 
+    font-size: 15px; 
     font-weight: 500;
     color: var(--text-muted); 
-    margin-top: 6px; 
+    margin-top: 8px; 
   }
 
   /* Settings Toggle */
   .settings-toggle {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.6);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    color: var(--text-main);
+    background: var(--card-bg);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    color: var(--primary-dark);
+    font-weight: 600;
+    font-size: 14px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-    transition: all 0.2s;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    transition: background 0.2s;
   }
-  .settings-toggle:hover { background: rgba(255, 255, 255, 0.8); }
+  .settings-toggle:active { background: #f0f0f0; }
 
   /* Settings Panel */
   .settings-bar {
-    background: rgba(255,255,255,0.7);
-    backdrop-filter: blur(16px);
-    margin: 0 16px 24px;
-    padding: 16px;
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.8);
+    background: var(--card-bg);
+    margin: 0 16px 20px;
+    padding: 20px;
+    border-radius: 24px;
     display: none;
     flex-direction: column;
     gap: 12px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
     animation: fadeIn 0.3s ease;
   }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
   
-  .settings-bar label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+  .settings-bar label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
   .settings-bar input {
-    width: 100%; padding: 12px; border: 1px solid rgba(0,0,0,0.05); border-radius: 12px;
-    font-size: 14px; background: rgba(255,255,255,0.8);
+    width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px;
+    font-size: 15px; background: var(--input-bg);
   }
 
   /* Layout */
@@ -127,35 +96,39 @@
     max-width: 640px;
     margin: 0 auto;
     padding: 0 16px;
-    position: relative;
-    z-index: 10;
   }
 
-  /* Glassmorphism Cards */
+  /* Cards */
   .card {
     background: var(--card-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border-radius: 28px;
     padding: 24px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.03);
-    margin-bottom: 24px;
-    border: 1px solid rgba(255,255,255,1);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.03);
+    margin-bottom: 20px;
   }
 
   .card-title {
     font-size: 18px;
     font-weight: 700;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     color: var(--text-main);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+  }
+  .card-title-badge {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
   }
 
   /* Form Elements */
   .form-group { margin-bottom: 20px; }
-  .form-row { display: flex; gap: 16px; }
+  .form-row { display: flex; gap: 12px; }
   .form-col { flex: 1; }
 
   label {
@@ -168,51 +141,55 @@
 
   input[type="text"], input[type="number"], input[type="date"], input[type="time"], select {
     width: 100%;
-    padding: 14px 16px;
+    padding: 16px;
     border: 1px solid var(--border);
     border-radius: 16px;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
     background-color: var(--input-bg);
     color: var(--text-main);
     transition: all 0.2s ease;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.01);
   }
   input:focus, select:focus {
     outline: none;
-    border-color: rgba(0,0,0,0.1);
+    border-color: var(--primary);
     background-color: #fff;
-    box-shadow: 0 0 0 4px rgba(0,0,0,0.02);
+    box-shadow: 0 0 0 4px var(--primary-light);
   }
   input[readonly] {
-    background-color: rgba(0,0,0,0.02);
+    background-color: #f5f7f6;
     color: var(--text-muted);
     border-color: transparent;
   }
 
   /* Value Highlight */
   .highlight-val {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     color: var(--text-main);
-    background: #fff !important;
-    text-align: right;
+    background: transparent !important;
+    border: none;
+    padding: 0;
+    text-align: left;
   }
 
   .net-val {
-    font-size: 26px;
+    font-size: 32px;
     font-weight: 800;
     color: var(--text-main);
-    background: #fff !important;
-    text-align: right;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    background: transparent !important;
+    border: none;
+    padding: 0;
+    text-align: left;
   }
-  .cash-input { font-size: 18px; font-weight: 600; text-align: right; }
+  
+  .value-label-sm { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 4px; }
+  .cash-input { font-size: 20px; font-weight: 600; }
 
   /* Buttons */
   .btn-fetch {
-    background: #fff;
-    color: var(--text-main);
+    background: var(--card-bg);
+    color: var(--primary-dark);
     border: 1px solid var(--border);
     width: 100%;
     padding: 16px;
@@ -224,29 +201,29 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.02);
     display: flex; justify-content: center; align-items: center; gap: 8px;
   }
-  .btn-fetch:active { transform: scale(0.97); }
+  .btn-fetch:active { background: var(--bg-base); }
 
   .btn-submit {
-    background: var(--primary);
+    background: var(--text-main);
     color: #fff;
     border: none;
     width: 100%;
-    padding: 18px;
-    border-radius: 20px;
+    padding: 20px;
+    border-radius: 24px;
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
     display: flex; justify-content: center; align-items: center; gap: 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
   }
   .btn-submit:active { transform: scale(0.97); }
-  .print-btn { background: #e5e5ea; color: var(--text-main); box-shadow: none; }
+  .print-btn { background: #E8ECEB; color: var(--text-main); box-shadow: none; }
 
   .btn-cam {
-    background: rgba(255,255,255,0.6);
+    background: var(--input-bg);
     color: var(--text-main);
-    border: 1px solid var(--border);
+    border: none;
     width: 100%;
     padding: 16px;
     border-radius: 16px;
@@ -254,66 +231,64 @@
     font-weight: 600;
     cursor: pointer;
     display: flex; justify-content: center; align-items: center; gap: 8px;
-    transition: all 0.2s;
   }
-  .btn-cam:active { background: #fff; transform: scale(0.98); }
+  .btn-cam:active { background: #e5e5ea; }
 
   .btn-retake {
-    background: #fff;
+    background: var(--bg-base);
     color: var(--text-main);
-    border: 1px solid var(--border);
-    padding: 10px 16px;
+    border: none;
+    padding: 8px 14px;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     display: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
   }
 
   .btn-clear {
-    background: rgba(0,0,0,0.04);
+    background: transparent;
     color: var(--text-muted);
     border: none;
-    padding: 6px 12px;
-    border-radius: 10px;
+    padding: 6px;
     font-size: 13px;
     font-weight: 600;
     position: absolute;
     top: 12px;
-    right: 12px;
+    right: 16px;
     cursor: pointer;
+    text-decoration: underline;
   }
   .btn-cancel-cam {
     position: absolute; top: 12px; right: 12px;
-    background: rgba(255,255,255,0.9); color: var(--danger);
-    border: none; padding: 8px 14px; border-radius: 12px;
-    font-size: 13px; font-weight: 600; cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: #fff; color: var(--danger);
+    border: none; padding: 8px 14px; border-radius: 16px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
 
   /* Status Messages */
   .status-msg {
-    padding: 16px 20px;
+    padding: 16px;
     border-radius: 16px;
     font-size: 14px;
     font-weight: 500;
     margin-top: 16px;
     display: none;
-    line-height: 1.5;
+    text-align: center;
   }
-  .status-msg.success { background: rgba(52, 199, 89, 0.1); color: #248a3d; }
-  .status-msg.error { background: rgba(255, 59, 48, 0.1); color: #c92a20; }
-  .status-msg.info { background: rgba(0, 122, 255, 0.1); color: #0056b3; }
+  .status-msg.success { background: var(--primary-light); color: var(--primary-dark); }
+  .status-msg.error { background: #FEE2E2; color: #991B1B; }
+  .status-msg.info { background: #E0E7FF; color: #3730A3; }
 
   /* Signatures */
   .signature-box {
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    background: rgba(255,255,255,0.7);
+    border: none;
+    border-radius: 20px;
+    background: var(--input-bg);
     position: relative;
     overflow: hidden;
-    margin-top: 12px;
+    margin-top: 8px;
   }
   canvas {
     width: 100%;
@@ -323,7 +298,7 @@
   }
   .sig-line {
     position: absolute; bottom: 40px; left: 24px; right: 24px;
-    border-bottom: 2px dashed rgba(0,0,0,0.08);
+    border-bottom: 2px dashed rgba(0,0,0,0.1);
     pointer-events: none;
   }
 
@@ -331,32 +306,24 @@
   .video-container {
     width: 100%; max-width: 100%;
     background: #000;
-    border-radius: 16px;
+    border-radius: 20px;
     overflow: hidden;
     display: none;
     margin-top: 12px;
     position: relative;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
   }
-  video { width: 100%; display: block; border-radius: 16px; }
+  video { width: 100%; display: block; border-radius: 20px; }
   .capture-btn {
     position: absolute;
     bottom: 20px; left: 50%; transform: translateX(-50%);
     background: #fff; color: var(--text-main);
     border: none; border-radius: 30px;
-    padding: 14px 36px; font-weight: 700; font-size: 16px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    padding: 14px 32px; font-weight: 700; font-size: 15px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
   }
   .photo-preview {
-    width: 100%; border-radius: 16px; display: none; margin-top: 12px;
-    border: 4px solid #fff; box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    width: 100%; border-radius: 20px; display: none; margin-top: 12px;
   }
-
-  /* History */
-  .history-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 12px; }
-  .history-table th { color: var(--text-muted); font-weight: 500; padding: 12px 8px; text-align: left; }
-  .history-table td { padding: 16px 8px; border-bottom: 1px solid var(--border); font-weight: 500; }
-  .history-table tr:last-child td { border-bottom: none; }
 
   /* Spinner */
   .spinner {
@@ -368,22 +335,22 @@
   /* Custom Modal */
   .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(255, 255, 255, 0.4); display: none; align-items: center; justify-content: center; z-index: 1000;
-    padding: 24px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    background: rgba(28, 35, 33, 0.4); display: none; align-items: center; justify-content: center; z-index: 1000;
+    padding: 24px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
   }
   .modal-content {
-    background: rgba(255,255,255,0.9); padding: 40px 32px; border-radius: 32px; width: 100%; max-width: 320px;
-    text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,1);
-    animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    background: #fff; padding: 40px 32px; border-radius: 32px; width: 100%; max-width: 320px;
+    text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+    animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  @keyframes modalPop { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
-  .modal-icon { font-size: 48px; margin-bottom: 20px; }
-  .modal-text { font-size: 16px; font-weight: 500; color: var(--text-main); margin-bottom: 32px; line-height: 1.6; white-space: pre-line; }
+  @keyframes modalPop { from { transform: scale(0.95) translateY(10px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+  .modal-icon { font-size: 48px; margin-bottom: 24px; }
+  .modal-text { font-size: 16px; font-weight: 500; color: var(--text-main); margin-bottom: 32px; line-height: 1.5; }
   .modal-btn {
-    background: var(--text-main); color: #fff; width: 100%; padding: 16px; border: none; border-radius: 20px;
+    background: var(--text-main); color: #fff; width: 100%; padding: 18px; border: none; border-radius: 24px;
     font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s;
   }
-  .modal-btn:active { transform: scale(0.96); }
+  .modal-btn:active { transform: scale(0.97); }
 </style>
 
 </head>
@@ -478,7 +445,7 @@
       </div>
       <div class="form-col">
         <div class="form-group">
-          <label>รวมเงินมิเตอร์ (บาท)</label>
+          <div class="value-label-sm">รวมเงินมิเตอร์ (บาท)</div>
           <input type="number" id="totalMoney" readonly class="highlight-input">
         </div>
       </div>

@@ -615,7 +615,63 @@ canvas {
   const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9VgBmGLjVAvDEBCK2ruTMnQswLtB1oZoiMzDlhwuRC9MI95GJoId_QTdQJE8kOw-XPw/exec';
 
   // Fetch Latest Meter Data
-  async function fetchLatestMeter() {
+  // JSONP callback function
+  window.handleMeterResponse = function(data) {
+    const fetchBtn = document.getElementById('fetchBtn');
+    const fetchSpinner = document.getElementById('fetchSpinner');
+    const fetchText = document.getElementById('fetchBtnText');
+    const msg = document.getElementById('fetchMsg');
+
+    if (data.status === 'success') {
+      document.getElementById('inStartMeter').value = data.inEndMeter || '';
+      document.getElementById('outStartMeter').value = data.outEndMeter || '';
+      
+      if (!data.inEndMeter && !data.outEndMeter) {
+        msg.innerText = 'ℹ️ ยังไม่มีประวัติของลานจอดนี้ (ปลดล็อกให้กรอกเลขตั้งต้นเอง)';
+        msg.classList.add('info');
+        msg.style.display = 'block';
+        document.getElementById('inStartMeter').removeAttribute('readonly');
+        document.getElementById('outStartMeter').removeAttribute('readonly');
+      } else {
+        msg.innerText = '✅ ดึงข้อมูลสำเร็จ! ล็อกเลขมิเตอร์เริ่มให้แล้ว';
+        msg.classList.add('success');
+        msg.style.display = 'block';
+        document.getElementById('inStartMeter').setAttribute('readonly', 'readonly');
+        document.getElementById('outStartMeter').setAttribute('readonly', 'readonly');
+      }
+      calculate();
+    } else {
+      msg.innerText = '⚠️ Error: ' + (data.message || 'Unknown error');
+      msg.classList.add('error');
+      msg.style.display = 'block';
+      document.getElementById('inStartMeter').removeAttribute('readonly');
+      document.getElementById('outStartMeter').removeAttribute('readonly');
+    }
+    
+    fetchBtn.disabled = false;
+    fetchSpinner.style.display = 'none';
+    fetchText.style.display = 'block';
+  };
+
+  window.handleMeterError = function() {
+    const fetchBtn = document.getElementById('fetchBtn');
+    const fetchSpinner = document.getElementById('fetchSpinner');
+    const fetchText = document.getElementById('fetchBtnText');
+    const msg = document.getElementById('fetchMsg');
+    
+    msg.innerText = '⚠️ Error: Failed to load script (ปลดล็อกช่องให้กรอกเองได้ชั่วคราว)';
+    msg.classList.add('error');
+    msg.style.display = 'block';
+    
+    document.getElementById('inStartMeter').removeAttribute('readonly');
+    document.getElementById('outStartMeter').removeAttribute('readonly');
+    
+    fetchBtn.disabled = false;
+    fetchSpinner.style.display = 'none';
+    fetchText.style.display = 'block';
+  };
+
+  function fetchLatestMeter() {
     const lot = document.getElementById('parkingLot').value;
     const fetchBtn = document.getElementById('fetchBtn');
     const fetchSpinner = document.getElementById('fetchSpinner');
@@ -628,51 +684,20 @@ canvas {
     msg.style.display = 'none';
     msg.className = 'status-msg';
 
-    try {
-      // Use GET parameter to fetch data
-      const url = `${scriptUrl}?action=getLast&lot=${encodeURIComponent(lot)}`;
-      const response = await fetch(url);
-      const data = await response.json();
-
-      if (data.status === 'success') {
-        document.getElementById('inStartMeter').value = data.inEndMeter || '';
-        document.getElementById('outStartMeter').value = data.outEndMeter || '';
-        
-        if (!data.inEndMeter && !data.outEndMeter) {
-          msg.innerText = 'ℹ️ ยังไม่มีประวัติของลานจอดนี้ (ปลดล็อกให้กรอกเลขตั้งต้นเอง)';
-          msg.classList.add('info');
-          msg.style.display = 'block';
-          document.getElementById('inStartMeter').removeAttribute('readonly');
-          document.getElementById('outStartMeter').removeAttribute('readonly');
-        } else {
-          msg.innerText = '✅ ดึงข้อมูลสำเร็จ! ล็อกเลขมิเตอร์เริ่มให้แล้ว';
-          msg.classList.add('success');
-        msg.style.display = 'block';
-          // Re-apply readonly just in case it was removed previously
-          document.getElementById('inStartMeter').setAttribute('readonly', 'readonly');
-          document.getElementById('outStartMeter').setAttribute('readonly', 'readonly');
-        }
-        calculate();
-      } else {
-        throw new Error(data.message || 'ดึงข้อมูลไม่สำเร็จ');
-      }
-    } catch (error) {
-      msg.innerText = '⚠️ Error: ' + error.message;
-      msg.classList.add('error');
-      msg.style.display = 'block';
-      // If error, unlock the fields temporarily so they can input manually if needed?
-      // Actually, keeping them locked prevents bypass. But if it's the very first time, they need to unlock.
-      document.getElementById('inStartMeter').removeAttribute('readonly');
-      document.getElementById('outStartMeter').removeAttribute('readonly');
-      msg.innerText += ' (ปลดล็อกช่องให้กรอกเองได้ชั่วคราว)';
-    } finally {
-      fetchBtn.disabled = false;
-      fetchSpinner.style.display = 'none';
-      fetchText.style.display = 'block';
+    // Create script tag for JSONP
+    const script = document.createElement('script');
+    script.src = `${scriptUrl}?action=getLast&lot=${encodeURIComponent(lot)}&callback=handleMeterResponse`;
+    script.onerror = handleMeterError;
+    
+    // Remove old script tag if exists
+    const oldScript = document.getElementById('jsonp-script');
+    if (oldScript) {
+      oldScript.remove();
     }
+    script.id = 'jsonp-script';
+    document.body.appendChild(script);
   }
 
-  // Calculate Logic (+1 Car)
   function calculate() {
     const start = parseFloat(document.getElementById('outStartMeter').value) || 0;
     const end = parseFloat(document.getElementById('outEndMeter').value) || 0;

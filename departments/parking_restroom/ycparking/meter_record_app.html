@@ -44,7 +44,7 @@
   .header-sub { display: none; } /* Removed as requested */
 
   /* Settings Toggle */
-  .settings-toggle {
+  .settings-toggle { display: none !important; 
     position: absolute;
     top: 16px;
     right: 16px;
@@ -378,13 +378,13 @@
       <div class="form-col">
         <div class="form-group">
           <label>วันที่</label>
-          <input type="date" id="docDate" readonly style="pointer-events: none; background-color: #f5f5f7; color: #555; touch-action: none; -webkit-user-select: none;">
+          <input type="text" id="docDate" readonly style="pointer-events: none; background-color: #f5f5f7; color: #555; touch-action: none; -webkit-user-select: none;">
         </div>
       </div>
       <div class="form-col">
         <div class="form-group">
           <label>เวลา</label>
-          <input type="time" id="docTime" readonly style="pointer-events: none; background-color: #f5f5f7; color: #555; touch-action: none; -webkit-user-select: none;">
+          <input type="text" id="docTime" readonly style="pointer-events: none; background-color: #f5f5f7; color: #555; touch-action: none; -webkit-user-select: none;">
         </div>
       </div>
     </div>
@@ -582,7 +582,11 @@
   }
 
   // Setup Defaults
-  document.getElementById('docDate').valueAsDate = new Date();
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  document.getElementById('docDate').value = `${dd}/${mm}/${yyyy}`;
   
   const now = new Date();
   const hours = String(now.getHours()).padStart(2, '0');

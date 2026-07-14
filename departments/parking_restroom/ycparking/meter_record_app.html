@@ -17,7 +17,7 @@
     --primary-hover: #3a3a3c;
     --success: #34c759;
     --danger: #ff3b30;
-    --border: rgba(0, 0, 0, 0.05);
+    --border: rgba(0, 0, 0, 0.12);
     --input-bg: rgba(255, 255, 255, 0.6);
   }
 
@@ -525,7 +525,7 @@
       <div id="cameraWrapIn" class="camera-wrap">
         <button class="btn-cancel-cam" onclick="cancelCamera('in')">❌ ยกเลิก</button>
         <video id="videoElementIn" autoplay playsinline></video>
-        <div class="capture-btn" onclick="capturePhoto('in')"></div>
+        <div class="capture-btn" onclick="capturePhoto('in')">📸 ถ่ายรูป</div>
       </div>
       <img id="photoPreviewIn" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
       <button id="retakeBtnIn" class="btn-retake" onclick="startCamera('in')">🔄 ถ่ายใหม่</button>
@@ -540,7 +540,7 @@
       <div id="cameraWrapOut" class="camera-wrap">
         <button class="btn-cancel-cam" onclick="cancelCamera('out')">❌ ยกเลิก</button>
         <video id="videoElementOut" autoplay playsinline></video>
-        <div class="capture-btn" onclick="capturePhoto('out')"></div>
+        <div class="capture-btn" onclick="capturePhoto('out')">📸 ถ่ายรูป</div>
       </div>
       <img id="photoPreviewOut" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
       <button id="retakeBtnOut" class="btn-retake" onclick="startCamera('out')">🔄 ถ่ายใหม่</button>

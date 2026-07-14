@@ -370,6 +370,15 @@
     font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s;
   }
   .modal-btn:hover { background: #000; }
+
+  .btn-cancel-cam {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(0,0,0,0.6); color: #fff;
+    border: none; padding: 6px 12px; border-radius: 6px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .print-btn { background: #4b5563; }
+  .print-btn:hover { background: #374151; }
 </style>
 
 </head>
@@ -382,7 +391,7 @@
 
 <div class="container">
 
-  <button class="fetch-btn" id="fetchBtn" onclick="fetchLatestMeter()">
+  <button class="btn-fetch" id="fetchBtn" onclick="fetchLatestMeter()">
     <span class="btn-text" id="fetchBtnText">📥 ดึงข้อมูลเลขมิเตอร์จากกะที่แล้ว</span>
     <div class="spinner" id="fetchSpinner"></div>
   </button>
@@ -504,32 +513,32 @@
     
     <div class="form-group" style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px dashed var(--gray200);">
       <label>1. มิเตอร์ขาเข้า (IN)</label>
-      <button id="openCamBtnIn" class="open-cam-btn" onclick="startCamera('in')">
+      <button id="openCamBtnIn" class="btn-cam" onclick="startCamera('in')">
         <span style="font-size: 32px;">📷</span>
         <span>เปิดกล้องถ่ายขาเข้า</span>
       </button>
       <div id="cameraWrapIn" class="camera-wrap">
-        <button class="cancel-cam-btn" onclick="cancelCamera('in')">❌ ยกเลิก</button>
+        <button class="btn-cancel-cam" onclick="cancelCamera('in')">❌ ยกเลิก</button>
         <video id="videoElementIn" autoplay playsinline></video>
         <div class="capture-btn" onclick="capturePhoto('in')"></div>
       </div>
       <img id="photoPreviewIn" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
-      <button id="retakeBtnIn" class="retake-btn" onclick="startCamera('in')">🔄 ถ่ายใหม่</button>
+      <button id="retakeBtnIn" class="btn-retake" onclick="startCamera('in')">🔄 ถ่ายใหม่</button>
     </div>
     
     <div class="form-group">
       <label>2. มิเตอร์ขาออก (OUT)</label>
-      <button id="openCamBtnOut" class="open-cam-btn" onclick="startCamera('out')">
+      <button id="openCamBtnOut" class="btn-cam" onclick="startCamera('out')">
         <span style="font-size: 32px;">📷</span>
         <span>เปิดกล้องถ่ายขาออก</span>
       </button>
       <div id="cameraWrapOut" class="camera-wrap">
-        <button class="cancel-cam-btn" onclick="cancelCamera('out')">❌ ยกเลิก</button>
+        <button class="btn-cancel-cam" onclick="cancelCamera('out')">❌ ยกเลิก</button>
         <video id="videoElementOut" autoplay playsinline></video>
         <div class="capture-btn" onclick="capturePhoto('out')"></div>
       </div>
       <img id="photoPreviewOut" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
-      <button id="retakeBtnOut" class="retake-btn" onclick="startCamera('out')">🔄 ถ่ายใหม่</button>
+      <button id="retakeBtnOut" class="btn-retake" onclick="startCamera('out')">🔄 ถ่ายใหม่</button>
     </div>
   </div>
 
@@ -537,27 +546,27 @@
     <div class="card-title">✍️ ลายเซ็นรับรอง</div>
     <div class="form-group">
       <label>ผู้ส่งเงิน (ผู้จดมิเตอร์)</label>
-      <div class="signature-wrap">
+      <div class="signature-box">
         <canvas id="senderCanvas"></canvas>
-        <button class="clear-btn" onclick="clearCanvas(senderPad)">ล้าง</button>
+        <button class="btn-clear" onclick="clearCanvas(senderPad)">ล้าง</button>
       </div>
     </div>
     
     <div class="form-group">
       <label>ผู้รับเงิน (การเงิน)</label>
-      <div class="signature-wrap">
+      <div class="signature-box">
         <canvas id="receiverCanvas"></canvas>
-        <button class="clear-btn" onclick="clearCanvas(receiverPad)">ล้าง</button>
+        <button class="btn-clear" onclick="clearCanvas(receiverPad)">ล้าง</button>
       </div>
     </div>
   </div>
 
   <div style="display: flex; gap: 12px; margin-bottom: 12px;">
-    <button class="submit-btn" id="submitBtn" onclick="submitData()" style="flex: 2;">
+    <button class="btn-submit" id="submitBtn" onclick="submitData()" style="flex: 2;">
       <span class="btn-text">บันทึกข้อมูล</span>
       <div class="spinner" id="spinner"></div>
     </button>
-    <button class="submit-btn print-btn" onclick="window.print()" style="flex: 1; background: var(--gray600);">
+    <button class="btn-submit print-btn" onclick="window.print()" style="flex: 1; background: var(--gray600);">
       🖨️ พิมพ์
     </button>
   </div>

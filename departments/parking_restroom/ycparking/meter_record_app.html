@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>บันทึกหน่วยมิเตอร์ลานจักรยานยนต์ ลาน 2</title>
+<title>บันทึกหน่วยมิเตอร์ลานจักรยานยนต์</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -115,7 +115,8 @@ label {
 input[type="text"],
 input[type="number"],
 input[type="date"],
-input[type="time"] {
+input[type="time"],
+select {
   width: 100%;
   padding: 14px 16px;
   font-size: 16px;
@@ -125,7 +126,7 @@ input[type="time"] {
   font-family: inherit;
   transition: all 0.2s;
 }
-input:focus {
+input:focus, select:focus {
   outline: none;
   border-color: var(--accent-blue);
   box-shadow: 0 0 0 4px var(--accent-blue-lt);
@@ -267,6 +268,25 @@ canvas {
 .submit-btn:hover { background: #0056b3; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,113,227,0.3); }
 .submit-btn:disabled { background: var(--gray400); cursor: not-allowed; transform: none; box-shadow: none; }
 
+.fetch-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.fetch-btn:hover { filter: brightness(0.9); }
+
 /* Status message */
 .status-msg {
   padding: 16px;
@@ -281,6 +301,7 @@ canvas {
 }
 .status-msg.success { background: var(--green-lt); color: var(--green); display: block; }
 .status-msg.error { background: var(--red-lt); color: var(--red); display: block; }
+.status-msg.info { background: var(--accent-blue-lt); color: var(--accent-blue); display: block; }
 
 /* Loading spinner */
 .spinner {
@@ -315,14 +336,14 @@ canvas {
   }
   .form-col {
     flex: 1;
-    min-width: 0; /* Prevents flex items from overflowing their container */
+    min-width: 0;
     width: 50%;
   }
-  input[type="date"], input[type="time"], input[type="number"], input[type="text"] {
+  input[type="date"], input[type="time"], input[type="number"], input[type="text"], select {
     width: 100%;
     box-sizing: border-box;
-    padding: 10px 8px; /* Slightly smaller padding to fit text */
-    font-size: 14px; /* Slightly smaller font to fit long Thai dates */
+    padding: 10px 8px;
+    font-size: 14px;
   }
 }
 
@@ -344,7 +365,7 @@ canvas {
     padding-bottom: 4px;
   }
   /* Hide interactive/unnecessary elements */
-  .submit-btn, .print-btn, .open-cam-btn, .retake-btn, .clear-btn, .capture-btn, .cancel-cam-btn, .status-msg, .camera-wrap {
+  .submit-btn, .fetch-btn, .print-btn, .open-cam-btn, .retake-btn, .clear-btn, .capture-btn, .cancel-cam-btn, .status-msg, .camera-wrap {
     display: none !important;
   }
   /* Show only what is useful for the paper */
@@ -362,7 +383,7 @@ canvas {
     page-break-inside: avoid;
   }
   .history-card {
-    display: none !important; /* Hide history table on print */
+    display: none !important;
   }
 }
 </style>
@@ -375,13 +396,19 @@ canvas {
 </div>
 
 <div class="container">
+
+  <button class="fetch-btn" id="fetchBtn" onclick="fetchLatestMeter()">
+    <span class="btn-text" id="fetchBtnText">📥 ดึงข้อมูลเลขมิเตอร์จากกะที่แล้ว</span>
+    <div class="spinner" id="fetchSpinner"></div>
+  </button>
+  <div id="fetchMsg" class="status-msg" style="margin-top: -12px; margin-bottom: 24px;"></div>
   
   <div class="card">
     <div class="card-title">📝 ข้อมูลมิเตอร์และรายได้</div>
     
     <div class="form-group" style="margin-bottom: 16px;">
       <label>ลานจอดรถจักรยานยนต์</label>
-      <select id="parkingLot" style="width: 100%; padding: 12px; border: 1px solid var(--gray200); border-radius: 8px; font-size: 16px; background: #fff;">
+      <select id="parkingLot">
         <option value="ลาน 2">ลาน 2</option>
         <option value="ลาน 3">ลาน 3</option>
         <option value="ลาน 4">ลาน 4</option>
@@ -403,17 +430,42 @@ canvas {
       </div>
     </div>
 
+    <hr style="border: none; border-top: 1px dashed var(--gray200); margin: 24px 0;">
+    <div style="font-weight: 700; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+      <span>📥</span> ฝั่งขาเข้า (IN) - ไม่คิดเงิน
+    </div>
+
     <div class="form-row">
       <div class="form-col">
         <div class="form-group">
-          <label>มิเตอร์เริ่มต้น</label>
-          <input type="number" id="startMeter" oninput="calculate()">
+          <label>มิเตอร์ขาเข้า (เริ่ม)</label>
+          <input type="number" id="inStartMeter" readonly placeholder="กดปุ่มดึงข้อมูล">
         </div>
       </div>
       <div class="form-col">
         <div class="form-group">
-          <label>มิเตอร์สุดท้าย</label>
-          <input type="number" id="endMeter" oninput="calculate()">
+          <label>มิเตอร์ขาเข้า (จบ)</label>
+          <input type="number" id="inEndMeter">
+        </div>
+      </div>
+    </div>
+
+    <hr style="border: none; border-top: 1px dashed var(--gray200); margin: 24px 0;">
+    <div style="font-weight: 700; color: var(--accent-blue); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+      <span>📤</span> ฝั่งขาออก (OUT) - ใช้คำนวณรายได้
+    </div>
+
+    <div class="form-row">
+      <div class="form-col">
+        <div class="form-group">
+          <label>มิเตอร์ขาออก (เริ่ม)</label>
+          <input type="number" id="outStartMeter" readonly placeholder="กดปุ่มดึงข้อมูล" oninput="calculate()">
+        </div>
+      </div>
+      <div class="form-col">
+        <div class="form-group">
+          <label>มิเตอร์ขาออก (จบ)</label>
+          <input type="number" id="outEndMeter" oninput="calculate()">
         </div>
       </div>
     </div>
@@ -421,17 +473,30 @@ canvas {
     <div class="form-row">
       <div class="form-col">
         <div class="form-group">
-          <label>จำนวนหน่วย</label>
+          <label>จำนวนหน่วย (+1)</label>
           <input type="number" id="units" readonly>
         </div>
       </div>
       <div class="form-col">
         <div class="form-group">
-          <label>รวมเงิน (บาท)</label>
+          <label>รวมเงินมิเตอร์ (บาท)</label>
           <input type="number" id="totalMoney" readonly class="highlight-input">
         </div>
       </div>
     </div>
+
+    <div class="form-group">
+      <label style="color: var(--red);">หักเป็นเงินทอนตั้งต้น (บาท)</label>
+      <input type="number" id="deductFloat" oninput="calculate()" value="200">
+    </div>
+
+    <div class="form-group">
+      <label>ยอดเงินสุทธิที่ต้องส่งการเงิน (บาท)</label>
+      <input type="number" id="netCash" readonly class="highlight-input" style="color: var(--green) !important; background: var(--green-lt); font-size: 20px !important;">
+    </div>
+
+    <hr style="border: none; border-top: 1px dashed var(--gray200); margin: 24px 0;">
+    <div style="font-weight: 700; color: var(--text-main); margin-bottom: 12px;">แจกแจงเงินที่ส่ง</div>
 
     <div class="form-row">
       <div class="form-col">
@@ -450,36 +515,36 @@ canvas {
   </div>
 
   <div class="card">
-    <div class="card-title">📸 ภาพถ่ายมิเตอร์</div>
+    <div class="card-title">📸 ภาพถ่ายมิเตอร์ (จบกะ)</div>
     
     <div class="form-group" style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px dashed var(--gray200);">
-      <label>1. มิเตอร์เริ่มต้น</label>
-      <button id="openCamBtnStart" class="open-cam-btn" onclick="startCamera('start')">
+      <label>1. มิเตอร์ขาเข้า (IN)</label>
+      <button id="openCamBtnIn" class="open-cam-btn" onclick="startCamera('in')">
         <span style="font-size: 32px;">📷</span>
-        <span>เปิดกล้องถ่ายมิเตอร์เริ่ม</span>
+        <span>เปิดกล้องถ่ายขาเข้า</span>
       </button>
-      <div id="cameraWrapStart" class="camera-wrap">
-        <button class="cancel-cam-btn" onclick="cancelCamera('start')">❌ ยกเลิก</button>
-        <video id="videoElementStart" autoplay playsinline></video>
-        <div class="capture-btn" onclick="capturePhoto('start')"></div>
+      <div id="cameraWrapIn" class="camera-wrap">
+        <button class="cancel-cam-btn" onclick="cancelCamera('in')">❌ ยกเลิก</button>
+        <video id="videoElementIn" autoplay playsinline></video>
+        <div class="capture-btn" onclick="capturePhoto('in')"></div>
       </div>
-      <img id="photoPreviewStart" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
-      <button id="retakeBtnStart" class="retake-btn" onclick="startCamera('start')">🔄 ถ่ายใหม่</button>
+      <img id="photoPreviewIn" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
+      <button id="retakeBtnIn" class="retake-btn" onclick="startCamera('in')">🔄 ถ่ายใหม่</button>
     </div>
     
     <div class="form-group">
-      <label>2. มิเตอร์สุดท้าย</label>
-      <button id="openCamBtnEnd" class="open-cam-btn" onclick="startCamera('end')">
+      <label>2. มิเตอร์ขาออก (OUT)</label>
+      <button id="openCamBtnOut" class="open-cam-btn" onclick="startCamera('out')">
         <span style="font-size: 32px;">📷</span>
-        <span>เปิดกล้องถ่ายมิเตอร์จบ</span>
+        <span>เปิดกล้องถ่ายขาออก</span>
       </button>
-      <div id="cameraWrapEnd" class="camera-wrap">
-        <button class="cancel-cam-btn" onclick="cancelCamera('end')">❌ ยกเลิก</button>
-        <video id="videoElementEnd" autoplay playsinline></video>
-        <div class="capture-btn" onclick="capturePhoto('end')"></div>
+      <div id="cameraWrapOut" class="camera-wrap">
+        <button class="cancel-cam-btn" onclick="cancelCamera('out')">❌ ยกเลิก</button>
+        <video id="videoElementOut" autoplay playsinline></video>
+        <div class="capture-btn" onclick="capturePhoto('out')"></div>
       </div>
-      <img id="photoPreviewEnd" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
-      <button id="retakeBtnEnd" class="retake-btn" onclick="startCamera('end')">🔄 ถ่ายใหม่</button>
+      <img id="photoPreviewOut" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
+      <button id="retakeBtnOut" class="retake-btn" onclick="startCamera('out')">🔄 ถ่ายใหม่</button>
     </div>
   </div>
 
@@ -522,9 +587,9 @@ canvas {
         <thead>
           <tr>
             <th>เวลา</th>
-            <th>เริ่ม-จบ</th>
+            <th>ออก เริ่ม-จบ</th>
             <th>หน่วย</th>
-            <th>รวมเงิน</th>
+            <th>ยอดส่ง</th>
           </tr>
         </thead>
         <tbody>
@@ -536,7 +601,7 @@ canvas {
 
 </div>
 
-<!-- Simple Signature Pad Script -->
+<!-- Scripts -->
 <script>
   // Setup Defaults
   document.getElementById('docDate').valueAsDate = new Date();
@@ -546,34 +611,83 @@ canvas {
   const minutes = String(now.getMinutes()).padStart(2, '0');
   document.getElementById('docTime').value = `${hours}:${minutes}`;
 
-  // Hardcoded Script URL (Needs to be replaced with the actual /exec URL)
+  // URL of Google Apps Script
   const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9VgBmGLjVAvDEBCK2ruTMnQswLtB1oZoiMzDlhwuRC9MI95GJoId_QTdQJE8kOw-XPw/exec';
 
-  // Calculate Logic
+  // Fetch Latest Meter Data
+  async function fetchLatestMeter() {
+    const lot = document.getElementById('parkingLot').value;
+    const fetchBtn = document.getElementById('fetchBtn');
+    const fetchSpinner = document.getElementById('fetchSpinner');
+    const fetchText = document.getElementById('fetchBtnText');
+    const msg = document.getElementById('fetchMsg');
+
+    fetchBtn.disabled = true;
+    fetchSpinner.style.display = 'block';
+    fetchText.style.display = 'none';
+    msg.style.display = 'none';
+    msg.className = 'status-msg';
+
+    try {
+      // Use GET parameter to fetch data
+      const url = `${scriptUrl}?action=getLast&lot=${encodeURIComponent(lot)}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.status === 'success') {
+        document.getElementById('inStartMeter').value = data.inEndMeter || '';
+        document.getElementById('outStartMeter').value = data.outEndMeter || '';
+        msg.innerText = '✅ ดึงข้อมูลสำเร็จ! ล็อกเลขมิเตอร์เริ่มให้แล้ว';
+        msg.classList.add('success');
+        calculate();
+      } else {
+        throw new Error(data.message || 'ดึงข้อมูลไม่สำเร็จ');
+      }
+    } catch (error) {
+      msg.innerText = '⚠️ ไม่สามารถดึงข้อมูลได้: อาจเป็นข้อมูลแรกสุดของลาน หรือระบบขัดข้อง';
+      msg.classList.add('info');
+      // If error, unlock the fields temporarily so they can input manually if needed?
+      // Actually, keeping them locked prevents bypass. But if it's the very first time, they need to unlock.
+      document.getElementById('inStartMeter').removeAttribute('readonly');
+      document.getElementById('outStartMeter').removeAttribute('readonly');
+      msg.innerText += ' (ปลดล็อกช่องให้กรอกเองได้ชั่วคราว)';
+    } finally {
+      fetchBtn.disabled = false;
+      fetchSpinner.style.display = 'none';
+      fetchText.style.display = 'block';
+    }
+  }
+
+  // Calculate Logic (+1 Car)
   function calculate() {
-    const start = parseFloat(document.getElementById('startMeter').value) || 0;
-    const end = parseFloat(document.getElementById('endMeter').value) || 0;
+    const start = parseFloat(document.getElementById('outStartMeter').value) || 0;
+    const end = parseFloat(document.getElementById('outEndMeter').value) || 0;
+    const deductFloat = parseFloat(document.getElementById('deductFloat').value) || 0;
     
     if (end > 0 && end >= start) {
-      const units = end - start;
+      const units = (end - start) + 1; // CASE 2 Logic: +1 Car
       const total = units * 5; // 1 unit = 5 baht
+      const netCash = total - deductFloat;
+      
       document.getElementById('units').value = units;
       document.getElementById('totalMoney').value = total;
+      document.getElementById('netCash').value = netCash;
     } else {
       document.getElementById('units').value = '';
       document.getElementById('totalMoney').value = '';
+      document.getElementById('netCash').value = '';
     }
   }
 
   // Camera Implementation (WebRTC)
-  let photoData = { start: '', end: '' };
+  let photoData = { in: '', out: '' };
   let videoStream = null;
   let currentCamType = '';
 
   async function startCamera(type) {
     currentCamType = type;
-    const isStart = type === 'start';
-    const suffix = isStart ? 'Start' : 'End';
+    const isIN = type === 'in';
+    const suffix = isIN ? 'In' : 'Out';
     
     const video = document.getElementById('videoElement' + suffix);
     const camWrap = document.getElementById('cameraWrap' + suffix);
@@ -602,8 +716,8 @@ canvas {
   }
 
   function cancelCamera(type) {
-    const isStart = type === 'start';
-    const suffix = isStart ? 'Start' : 'End';
+    const isIN = type === 'in';
+    const suffix = isIN ? 'In' : 'Out';
     
     if (videoStream) {
       videoStream.getTracks().forEach(track => track.stop());
@@ -615,8 +729,8 @@ canvas {
   }
 
   function capturePhoto(type) {
-    const isStart = type === 'start';
-    const suffix = isStart ? 'Start' : 'End';
+    const isIN = type === 'in';
+    const suffix = isIN ? 'In' : 'Out';
     
     const video = document.getElementById('videoElement' + suffix);
     const canvas = document.createElement('canvas');
@@ -656,12 +770,10 @@ canvas {
     let lastX = 0;
     let lastY = 0;
 
-    // Resize canvas correctly for CSS scaling
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width;
     canvas.height = rect.height;
 
-    // Set style
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
     ctx.strokeStyle = '#000';
@@ -742,9 +854,9 @@ canvas {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${h.date || '-'}<br><span style="font-size: 10px; color: #888;">${h.time || '-'}</span></td>
-        <td>${h.start || '?'}-${h.end || '?'}</td>
+        <td>${h.outStart || '?'}-${h.outEnd || '?'}</td>
         <td>${h.units || '-'}</td>
-        <td>${h.total || '-'} ฿</td>
+        <td>${h.netCash || '-'} ฿</td>
       `;
       tbody.appendChild(tr);
     });
@@ -754,22 +866,28 @@ canvas {
   // Submit Data
   async function submitData() {
     if (!scriptUrl) {
-      alert('ยังไม่ได้ใส่ Web App URL ในโค้ดครับ กรุณาแก้ไขโค้ดเพื่อใส่ URL ที่ถูกต้อง');
+      alert('ยังไม่ได้ใส่ Web App URL ในโค้ดครับ');
       return;
     }
 
     const parkingLot = document.getElementById('parkingLot').value;
     const date = document.getElementById('docDate').value;
     const time = document.getElementById('docTime').value;
-    const start = document.getElementById('startMeter').value;
-    const end = document.getElementById('endMeter').value;
+    const inStartMeter = document.getElementById('inStartMeter').value;
+    const inEndMeter = document.getElementById('inEndMeter').value;
+    const outStartMeter = document.getElementById('outStartMeter').value;
+    const outEndMeter = document.getElementById('outEndMeter').value;
+    
     const units = document.getElementById('units').value;
-    const total = document.getElementById('totalMoney').value;
+    const totalMoney = document.getElementById('totalMoney').value;
+    const deductFloat = document.getElementById('deductFloat').value;
+    const netCash = document.getElementById('netCash').value;
+    
     const cash = document.getElementById('cash').value;
     const transfer = document.getElementById('transfer').value;
 
-    if(!start || !end || !units || !total) {
-      alert('กรุณากรอกเลขมิเตอร์ให้ครบถ้วน');
+    if(!outStartMeter || !outEndMeter || !units || !netCash) {
+      alert('กรุณากรอกเลขมิเตอร์ขาออกให้ครบถ้วน');
       return;
     }
     if(!cash && !transfer) {
@@ -777,12 +895,12 @@ canvas {
       return;
     }
 
-    const numTotal = parseFloat(total) || 0;
+    const numNetCash = parseFloat(netCash) || 0;
     const numCash = parseFloat(cash) || 0;
     const numTransfer = parseFloat(transfer) || 0;
     
-    if (numCash + numTransfer !== numTotal) {
-      if (!confirm('⚠️ ยอดรวมเงินสดและเงินโอน (' + (numCash + numTransfer) + ' บาท) ไม่ตรงกับยอดรวมเงิน (' + numTotal + ' บาท)\n\nคุณต้องการยืนยันการบันทึกข้อมูลหรือไม่?')) {
+    if (numCash + numTransfer !== numNetCash) {
+      if (!confirm('⚠️ ยอดรวมเงินส่ง (' + (numCash + numTransfer) + ' บาท) ไม่ตรงกับ ยอดสุทธิที่ต้องส่ง (' + numNetCash + ' บาท)\n\nคุณต้องการยืนยันการบันทึกข้อมูลหรือไม่?')) {
         return;
       }
     }
@@ -794,75 +912,85 @@ canvas {
       parkingLot: parkingLot,
       date: date,
       time: time,
-      startMeter: start,
-      endMeter: end,
+      inStartMeter: inStartMeter,
+      inEndMeter: inEndMeter,
+      outStartMeter: outStartMeter,
+      outEndMeter: outEndMeter,
       units: units,
-      totalMoney: total,
-      cash: cash || '0',
-      transfer: transfer || '0',
-      photoStart: photoData['start'],
-      photoEnd: photoData['end'],
+      totalMoney: totalMoney,
+      deductFloat: deductFloat,
+      netCash: netCash,
+      cash: cash,
+      transfer: transfer,
       senderSign: sSign,
-      receiverSign: rSign
+      receiverSign: rSign,
+      photoIn: photoData.in,
+      photoOut: photoData.out
     };
 
     const btn = document.getElementById('submitBtn');
     const spinner = document.getElementById('spinner');
-    const btnText = document.querySelector('.btn-text');
+    const btnText = btn.querySelector('.btn-text');
     const msg = document.getElementById('statusMsg');
 
     btn.disabled = true;
     spinner.style.display = 'block';
-    btnText.innerText = 'กำลังส่งข้อมูล...';
+    btnText.style.display = 'none';
+    msg.style.display = 'none';
     msg.className = 'status-msg';
 
     try {
-      // Use no-cors to prevent CORS issues. The response will be opaque, so we assume success.
-      await fetch(scriptUrl, {
+      const response = await fetch(scriptUrl, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
       
-      // Since mode is no-cors, we can't read response.json(), so we assume success if no network error thrown.
-      msg.innerText = '✅ บันทึกข้อมูลลง Google Sheets สำเร็จ!';
-      msg.className = 'status-msg success';
-      
-      // Save to local history
+      // Save local history
       const history = JSON.parse(localStorage.getItem('meterApp_history') || '[]');
-      history.push({ date, time, start, end, units, total });
+      history.push({ date: date, time: time, outStart: outStartMeter, outEnd: outEndMeter, units: units, netCash: netCash });
+      if (history.length > 10) history.shift();
       localStorage.setItem('meterApp_history', JSON.stringify(history));
+      
+      msg.innerText = '✅ บันทึกข้อมูลและสร้างใบเสร็จ PDF สำเร็จ!';
+      msg.classList.add('success');
       loadHistory();
       
-      // Reset form slightly
-      document.getElementById('startMeter').value = ''; // Auto-fill next start meter
-      document.getElementById('endMeter').value = '';
-      document.getElementById('units').value = '';
-      document.getElementById('totalMoney').value = '';
+      // Clear forms
+      document.getElementById('inEndMeter').value = '';
+      document.getElementById('outEndMeter').value = '';
       document.getElementById('cash').value = '';
       document.getElementById('transfer').value = '';
-      document.getElementById('openCamBtnStart').style.display = 'flex';
-      document.getElementById('photoPreviewStart').style.display = 'none';
-      document.getElementById('retakeBtnStart').style.display = 'none';
-      document.getElementById('openCamBtnEnd').style.display = 'flex';
-      document.getElementById('photoPreviewEnd').style.display = 'none';
-      document.getElementById('retakeBtnEnd').style.display = 'none';
-      photoData = { start: '', end: '' };
       clearCanvas(senderPad);
       clearCanvas(receiverPad);
+      
+      // Clear photos
+      photoData = { in: '', out: '' };
+      document.getElementById('photoPreviewIn').style.display = 'none';
+      document.getElementById('openCamBtnIn').style.display = 'flex';
+      document.getElementById('retakeBtnIn').style.display = 'none';
+      
+      document.getElementById('photoPreviewOut').style.display = 'none';
+      document.getElementById('openCamBtnOut').style.display = 'flex';
+      document.getElementById('retakeBtnOut').style.display = 'none';
+      
+      // Automatically run fetch for next round? No, they usually refresh. But we can unlock the inputs.
+      document.getElementById('inStartMeter').value = '';
+      document.getElementById('outStartMeter').value = '';
+      document.getElementById('fetchMsg').style.display = 'none';
+      
+      calculate();
 
-      window.scrollTo(0, document.body.scrollHeight);
-    } catch (e) {
-      msg.innerText = '❌ เชื่อมต่อล้มเหลว: ' + e.message + ' (อาจเกิดจากปัญหา CORS หรือ URL ผิด)';
-      msg.className = 'status-msg error';
+    } catch (error) {
+      msg.innerText = '❌ เกิดข้อผิดพลาด: ' + error.message;
+      msg.classList.add('error');
     } finally {
       btn.disabled = false;
       spinner.style.display = 'none';
-      btnText.innerText = 'บันทึกข้อมูล';
+      btnText.style.display = 'block';
     }
   }
-
 </script>
 </body>
 </html>

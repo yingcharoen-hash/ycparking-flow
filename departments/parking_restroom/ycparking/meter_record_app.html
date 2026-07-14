@@ -964,6 +964,16 @@ canvas {
       showAlert('กรุณากรอกจำนวน "เงินสด" หรือ "เงินโอน" อย่างน้อย 1 ช่องครับ');
       return;
     }
+    
+    if (!photoData.in || !photoData.out) {
+      showAlert('กรุณาถ่ายรูปมิเตอร์ทั้งฝั่งขาเข้าและขาออกให้ครบถ้วนครับ');
+      return;
+    }
+    
+    if (isCanvasBlank(senderPad.canvas) || isCanvasBlank(receiverPad.canvas)) {
+      showAlert('กรุณาให้ผู้ส่งเงิน และ ผู้จดมิเตอร์ เซ็นชื่อให้ครบถ้วนครับ');
+      return;
+    }
 
     const numNetCash = parseFloat(netCash) || 0;
     const numCash = parseFloat(cash) || 0;

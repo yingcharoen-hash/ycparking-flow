@@ -936,7 +936,7 @@ canvas {
   // Submit Data
   async function submitData() {
     if (!scriptUrl) {
-      alert('ยังไม่ได้ใส่ Web App URL ในโค้ดครับ');
+      showAlert('ยังไม่ได้ใส่ Web App URL ในโค้ดครับ');
       return;
     }
 
@@ -957,11 +957,11 @@ canvas {
     const transfer = document.getElementById('transfer').value;
 
     if(!outStartMeter || !outEndMeter || !units || !netCash) {
-      alert('กรุณากรอกเลขมิเตอร์ขาออกให้ครบถ้วน');
+      showAlert('กรุณากรอกเลขมิเตอร์ขาออกให้ครบถ้วน');
       return;
     }
     if(!cash && !transfer) {
-      alert('กรุณากรอกจำนวน "เงินสด" หรือ "เงินโอน" อย่างน้อย 1 ช่องครับ');
+      showAlert('กรุณากรอกจำนวน "เงินสด" หรือ "เงินโอน" อย่างน้อย 1 ช่องครับ');
       return;
     }
 
@@ -970,9 +970,8 @@ canvas {
     const numTransfer = parseFloat(transfer) || 0;
     
     if (numCash + numTransfer !== numNetCash) {
-      if (!confirm('⚠️ ยอดรวมเงินส่ง (' + (numCash + numTransfer) + ' บาท) ไม่ตรงกับ ยอดสุทธิที่ต้องส่ง (' + numNetCash + ' บาท)\n\nคุณต้องการยืนยันการบันทึกข้อมูลหรือไม่?')) {
-        return;
-      }
+      showAlert('ยอดรวมเงินส่ง (' + (numCash + numTransfer) + ' บาท)\nไม่ตรงกับยอดสุทธิที่ต้องส่ง (' + numNetCash + ' บาท)\n\nกรุณาตรวจสอบและแก้ไขให้ถูกต้องก่อนบันทึกครับ');
+      return;
     }
     
     let sSign = isCanvasBlank(senderPad.canvas) ? '' : senderPad.canvas.toDataURL('image/png');

@@ -655,8 +655,8 @@ canvas {
         throw new Error(data.message || 'ดึงข้อมูลไม่สำเร็จ');
       }
     } catch (error) {
-      msg.innerText = '⚠️ ไม่สามารถดึงข้อมูลได้: อาจเป็นข้อมูลแรกสุดของลาน หรือระบบขัดข้อง';
-      msg.classList.add('info');
+      msg.innerText = '⚠️ Error: ' + error.message;
+      msg.classList.add('error');
       // If error, unlock the fields temporarily so they can input manually if needed?
       // Actually, keeping them locked prevents bypass. But if it's the very first time, they need to unlock.
       document.getElementById('inStartMeter').removeAttribute('readonly');

@@ -32,29 +32,22 @@
 
   /* Header */
   .header {
-    padding: 48px 24px 16px;
+    padding: 40px 16px 16px;
     position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+    text-align: center;
   }
-  .header-left { flex: 1; }
   .header-title { 
-    font-size: 32px; 
+    font-size: 24px; 
     font-weight: 700; 
-    letter-spacing: -0.5px;
-    line-height: 1.1;
     color: var(--text-main);
   }
-  .header-sub { 
-    font-size: 15px; 
-    font-weight: 500;
-    color: var(--text-muted); 
-    margin-top: 8px; 
-  }
+  .header-sub { display: none; } /* Removed as requested */
 
   /* Settings Toggle */
   .settings-toggle {
+    position: absolute;
+    top: 16px;
+    right: 16px;
     background: var(--card-bg);
     border: none;
     border-radius: 20px;
@@ -102,15 +95,15 @@
   .card {
     background: var(--card-bg);
     border-radius: 28px;
-    padding: 24px;
+    padding: 12px;
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.03);
-    margin-bottom: 20px;
+    margin-bottom: 12px;
   }
 
   .card-title {
     font-size: 18px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     color: var(--text-main);
     display: flex;
     align-items: center;
@@ -127,7 +120,7 @@
   }
 
   /* Form Elements */
-  .form-group { margin-bottom: 20px; }
+  .form-group { margin-bottom: 12px; }
   .form-row { display: flex; gap: 12px; }
   .form-col { flex: 1; }
 
@@ -141,7 +134,7 @@
 
   input[type="text"], input[type="number"], input[type="date"], input[type="time"], select {
     width: 100%;
-    padding: 16px;
+    padding: 12px;
     border: 1px solid var(--border);
     border-radius: 16px;
     font-size: 16px;
@@ -192,7 +185,7 @@
     color: var(--primary-dark);
     border: 1px solid var(--border);
     width: 100%;
-    padding: 16px;
+    padding: 12px;
     border-radius: 20px;
     font-size: 16px;
     font-weight: 600;
@@ -225,7 +218,7 @@
     color: var(--text-main);
     border: none;
     width: 100%;
-    padding: 16px;
+    padding: 12px;
     border-radius: 16px;
     font-size: 15px;
     font-weight: 600;
@@ -269,7 +262,7 @@
 
   /* Status Messages */
   .status-msg {
-    padding: 16px;
+    padding: 12px;
     border-radius: 16px;
     font-size: 14px;
     font-weight: 500;
@@ -336,7 +329,7 @@
   .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(28, 35, 33, 0.4); display: none; align-items: center; justify-content: center; z-index: 1000;
-    padding: 24px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    padding: 12px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
   }
   .modal-content {
     background: #fff; padding: 40px 32px; border-radius: 32px; width: 100%; max-width: 320px;
@@ -358,7 +351,7 @@
 
 <div class="header">
   <div class="header-title">บันทึกหน่วยมิเตอร์ลานจักรยานยนต์</div>
-  <div class="header-sub">แอปพลิเคชันสำหรับแผนกการเงิน</div>
+  <button class="settings-toggle" onclick="toggleSettings()" title="ตั้งค่าระบบ">⚙️ ตั้งค่า</button>
 </div>
 
 <div class="container">
@@ -396,7 +389,7 @@
       </div>
     </div>
 
-    <hr style="border: none; border-top: 1px dashed var(--gray200); margin: 24px 0;">
+    <hr style="border: none; border-top: 1px dashed var(--border); margin: 16px 0;">
     <div style="font-weight: 700; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
       <span>📥</span> ฝั่งขาเข้า (IN) - ไม่คิดเงิน
     </div>
@@ -416,7 +409,7 @@
       </div>
     </div>
 
-    <hr style="border: none; border-top: 1px dashed var(--gray200); margin: 24px 0;">
+    <hr style="border: none; border-top: 1px dashed var(--border); margin: 16px 0;">
     <div style="font-weight: 700; color: var(--accent-blue); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
       <span>📤</span> ฝั่งขาออก (OUT) - ใช้คำนวณรายได้
     </div>
@@ -461,7 +454,7 @@
       <input type="number" id="netCash" readonly class="highlight-input" style="color: var(--green) !important; background: var(--green-lt); font-size: 20px !important;">
     </div>
 
-    <hr style="border: none; border-top: 1px dashed var(--gray200); margin: 24px 0;">
+    <hr style="border: none; border-top: 1px dashed var(--border); margin: 16px 0;">
     <div style="font-weight: 700; color: var(--text-main); margin-bottom: 12px;">แจกแจงเงินที่ส่ง</div>
 
     <div class="form-row">
@@ -489,7 +482,7 @@
         <span style="font-size: 32px;">📷</span>
         <span>เปิดกล้องถ่ายขาเข้า</span>
       </button>
-      <div id="cameraWrapIn" class="camera-wrap">
+      <div id="cameraWrapIn" class="video-container">
         <button class="btn-cancel-cam" onclick="cancelCamera('in')">❌ ยกเลิก</button>
         <video id="videoElementIn" autoplay playsinline></video>
         <div class="capture-btn" onclick="capturePhoto('in')">📸 ถ่ายรูป</div>
@@ -504,7 +497,7 @@
         <span style="font-size: 32px;">📷</span>
         <span>เปิดกล้องถ่ายขาออก</span>
       </button>
-      <div id="cameraWrapOut" class="camera-wrap">
+      <div id="cameraWrapOut" class="video-container">
         <button class="btn-cancel-cam" onclick="cancelCamera('out')">❌ ยกเลิก</button>
         <video id="videoElementOut" autoplay playsinline></video>
         <div class="capture-btn" onclick="capturePhoto('out')">📸 ถ่ายรูป</div>

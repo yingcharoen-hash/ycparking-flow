@@ -637,8 +637,19 @@ canvas {
       if (data.status === 'success') {
         document.getElementById('inStartMeter').value = data.inEndMeter || '';
         document.getElementById('outStartMeter').value = data.outEndMeter || '';
-        msg.innerText = '✅ ดึงข้อมูลสำเร็จ! ล็อกเลขมิเตอร์เริ่มให้แล้ว';
-        msg.classList.add('success');
+        
+        if (!data.inEndMeter && !data.outEndMeter) {
+          msg.innerText = 'ℹ️ ยังไม่มีประวัติของลานจอดนี้ (ปลดล็อกให้กรอกเลขตั้งต้นเอง)';
+          msg.classList.add('info');
+          document.getElementById('inStartMeter').removeAttribute('readonly');
+          document.getElementById('outStartMeter').removeAttribute('readonly');
+        } else {
+          msg.innerText = '✅ ดึงข้อมูลสำเร็จ! ล็อกเลขมิเตอร์เริ่มให้แล้ว';
+          msg.classList.add('success');
+          // Re-apply readonly just in case it was removed previously
+          document.getElementById('inStartMeter').setAttribute('readonly', 'readonly');
+          document.getElementById('outStartMeter').setAttribute('readonly', 'readonly');
+        }
         calculate();
       } else {
         throw new Error(data.message || 'ดึงข้อมูลไม่สำเร็จ');

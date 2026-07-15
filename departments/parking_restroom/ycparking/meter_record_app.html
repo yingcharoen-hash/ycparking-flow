@@ -894,7 +894,7 @@
   // Submit Data
   async function submitData() {
     if (!scriptUrl) {
-      showAlert('ยังไม่ได้ใส่ Web App URL ในโค้ดครับ');
+      showAlert('ยังไม่ได้ใส่ Web App URL ในโค้ด');
       return;
     }
 
@@ -919,17 +919,17 @@
       return;
     }
     if(!cash && !transfer) {
-      showAlert('กรุณากรอกจำนวน "เงินสด" หรือ "เงินโอน" อย่างน้อย 1 ช่องครับ');
+      showAlert('กรุณากรอกจำนวน "เงินสด" หรือ "เงินโอน" อย่างน้อย 1 ช่อง');
       return;
     }
     
     if (!photoData.in || !photoData.out) {
-      showAlert('กรุณาถ่ายรูปมิเตอร์ทั้งฝั่งขาเข้าและขาออกให้ครบถ้วนครับ');
+      showAlert('กรุณาถ่ายรูปมิเตอร์ทั้งฝั่งขาเข้าและขาออกให้ครบถ้วน');
       return;
     }
     
     if (isCanvasBlank(senderPad.canvas) || isCanvasBlank(receiverPad.canvas)) {
-      showAlert('กรุณาให้เจ้าหน้าที่ฯ และ ผู้จดมิเตอร์ เซ็นชื่อให้ครบถ้วนครับ');
+      showAlert('กรุณาให้เจ้าหน้าที่ฯ และ ผู้จดมิเตอร์ เซ็นชื่อให้ครบถ้วน');
       return;
     }
 
@@ -938,7 +938,7 @@
     const numTransfer = parseFloat(transfer) || 0;
     
     if (numCash + numTransfer !== numNetCash) {
-      showAlert('ยอดรวมเงินส่ง (' + (numCash + numTransfer) + ' บาท)\nไม่ตรงกับยอดสุทธิที่ต้องส่ง (' + numNetCash + ' บาท)\n\nกรุณาตรวจสอบและแก้ไขให้ถูกต้องก่อนบันทึกครับ');
+      showAlert('ยอดรวมเงินส่ง (' + (numCash + numTransfer) + ' บาท)\nไม่ตรงกับยอดสุทธิที่ต้องส่ง (' + numNetCash + ' บาท)\n\nกรุณาตรวจสอบและแก้ไขให้ถูกต้องก่อนบันทึก');
       return;
     }
     

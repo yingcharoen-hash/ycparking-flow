@@ -374,7 +374,7 @@
     
     <div class="form-group" style="margin-bottom: 16px;">
       <label>ลานจอดรถจักรยานยนต์</label>
-      <select id="parkingLot">
+      <select id="parkingLot" onchange="calculate()">
         <option value="ลาน 2">ลาน 2</option>
         <option value="ลาน 3">ลาน 3</option>
         <option value="ลาน 4">ลาน 4</option>
@@ -661,7 +661,7 @@
   };
 
   function fetchLatestMeter() {
-    const lot = document.getElementById('parkingLot').value;
+    const lot = document.getElementById('parkingLot').value.trim();
     const fetchBtn = document.getElementById('fetchBtn');
     const fetchSpinner = document.getElementById('fetchSpinner');
     const fetchText = document.getElementById('fetchBtnText');
@@ -693,8 +693,10 @@
     const deductFloat = parseFloat(document.getElementById('deductFloat').value) || 0;
     
     if (end > 0 && end >= start) {
+      const lot = document.getElementById('parkingLot').value.trim();
+      const rate = lot.includes('3') ? 10 : 5;
       const units = (end - start) + 1; // CASE 2 Logic: +1 Car
-      const total = units * 5; // 1 unit = 5 baht
+      const total = units * rate; // Dynamic rate based on lot
       const netCash = total - deductFloat;
       
       document.getElementById('units').value = units;

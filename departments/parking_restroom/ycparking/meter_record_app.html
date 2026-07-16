@@ -548,14 +548,14 @@
     
     <div class="form-group">
       <label>ถ่ายรูปยืนยันตัวตน ณ จุดรับฝาก (ต้องมี 2 คนในภาพ)</label>
-      <button id="openCamBtnSelfie" class="btn-cam" onclick="startCamera('selfie')" style="background: var(--accent-blue);">
+      <button id="openCamBtnSelfie" class="btn-cam" onclick="startCamera('selfie')" style="background: #007AFF;">
         <span style="font-size: 32px;">📷</span>
         <span style="color:white;">เปิดกล้องถ่ายเซลฟี่</span>
       </button>
       <div id="cameraWrapSelfie" class="video-container">
         <button class="btn-cancel-cam" onclick="cancelCamera('selfie')">❌ ยกเลิก</button>
         <video id="videoElementSelfie" autoplay playsinline></video>
-        <div class="capture-btn" onclick="capturePhoto('selfie')" style="background: var(--accent-blue);">📸 ถ่ายเซลฟี่</div>
+        <div class="capture-btn" onclick="capturePhoto('selfie')" style="background: #007AFF; color: white;">📸 ถ่ายเซลฟี่</div>
       </div>
       <img id="photoPreviewSelfie" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
       <button id="retakeBtnSelfie" class="btn-retake" onclick="startCamera('selfie')">🔄 ถ่ายใหม่</button>

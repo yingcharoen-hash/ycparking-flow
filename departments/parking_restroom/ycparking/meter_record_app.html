@@ -1086,7 +1086,7 @@
   function fetchInitialData() {
     if (!scriptUrl) return;
     const script = document.createElement('script');
-    script.src = `${scriptUrl}?action=getInitialData&callback=handleInitialDataResponse`;
+    script.src = `${scriptUrl}?action=getInitialData&callback=handleInitialDataResponse&_t=${new Date().getTime()}`;
     script.onerror = function() { console.error("Error loading initial data"); };
     document.body.appendChild(script);
   }
@@ -1150,7 +1150,7 @@
   function fetchInitialData() {
     if (!scriptUrl) return;
     const script = document.createElement('script');
-    script.src = `${scriptUrl}?action=getInitialData&callback=handleInitialDataResponse`;
+    script.src = `${scriptUrl}?action=getInitialData&callback=handleInitialDataResponse&_t=${new Date().getTime()}`;
     script.onerror = function() { console.error("Error loading initial data"); };
     document.body.appendChild(script);
   }

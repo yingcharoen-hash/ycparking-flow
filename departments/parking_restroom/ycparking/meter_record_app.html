@@ -531,33 +531,34 @@
   </div>
 
   <div class="card">
-    <div class="card-title">✍️ ลายเซ็นรับรอง</div>
-    <div class="form-group">
+    <div class="card-title">📸 ถ่ายรูปเซลฟี่ยืนยันตัวตนคู่กัน</div>
+    
+    <div class="form-group" style="margin-bottom: 16px;">
       <label>ชื่อเจ้าหน้าที่จุดรับฝากรถมอเตอร์ไซค์</label>
       <select id="senderNameDropdown">
         <option value="">-- กำลังโหลดรายชื่อ... --</option>
       </select>
     </div>
-    <div class="form-group">
-      <label>ลายเซ็นเจ้าหน้าที่จุดรับฝากรถมอเตอร์ไซค์</label>
-      <div class="signature-box">
-        <canvas id="senderCanvas"></canvas>
-        <button class="btn-clear" onclick="clearCanvas(senderPad)">ล้าง</button>
-      </div>
-    </div>
-    
-    <div class="form-group">
-      <label>ชื่อผู้บันทึก+ผู้รับเงิน(การเงิน)</label>
+    <div class="form-group" style="margin-bottom: 24px;">
+      <label>ชื่อผู้บันทึก+ผู้รับเงิน (การเงิน)</label>
       <select id="receiverNameDropdown">
         <option value="">-- กำลังโหลดรายชื่อ... --</option>
       </select>
     </div>
+    
     <div class="form-group">
-      <label>ลายเซ็นผู้บันทึก+ผู้รับเงิน(การเงิน)</label>
-      <div class="signature-box">
-        <canvas id="receiverCanvas"></canvas>
-        <button class="btn-clear" onclick="clearCanvas(receiverPad)">ล้าง</button>
+      <label>ถ่ายรูปยืนยันตัวตน ณ จุดรับฝาก (ต้องมี 2 คนในภาพ)</label>
+      <button id="openCamBtnSelfie" class="btn-cam" onclick="startCamera('selfie')" style="background: var(--accent-blue);">
+        <span style="font-size: 32px;">📷</span>
+        <span style="color:white;">เปิดกล้องถ่ายเซลฟี่</span>
+      </button>
+      <div id="cameraWrapSelfie" class="video-container">
+        <button class="btn-cancel-cam" onclick="cancelCamera('selfie')">❌ ยกเลิก</button>
+        <video id="videoElementSelfie" autoplay playsinline></video>
+        <div class="capture-btn" onclick="capturePhoto('selfie')" style="background: var(--accent-blue);">📸 ถ่ายเซลฟี่</div>
       </div>
+      <img id="photoPreviewSelfie" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
+      <button id="retakeBtnSelfie" class="btn-retake" onclick="startCamera('selfie')">🔄 ถ่ายใหม่</button>
     </div>
   </div>
 
@@ -739,14 +740,15 @@
   }
 
   // Camera Implementation (WebRTC)
-  let photoData = { in: '', out: '' };
+  let photoData = { in: '', out: '', selfie: '' };
   let videoStream = null;
   let currentCamType = '';
 
   async function startCamera(type) {
     currentCamType = type;
-    const isIN = type === 'in';
-    const suffix = isIN ? 'In' : 'Out';
+    let suffix = 'Out';
+    if(type === 'in') suffix = 'In';
+    if(type === 'selfie') suffix = 'Selfie';
     
     const video = document.getElementById('videoElement' + suffix);
     const camWrap = document.getElementById('cameraWrap' + suffix);
@@ -763,8 +765,9 @@
       if(videoStream) {
         videoStream.getTracks().forEach(track => track.stop());
       }
+      let fMode = type === 'selfie' ? "user" : "environment";
       videoStream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: "environment" } 
+        video: { facingMode: fMode } 
       });
       video.srcObject = videoStream;
     } catch (err) {
@@ -775,8 +778,9 @@
   }
 
   function cancelCamera(type) {
-    const isIN = type === 'in';
-    const suffix = isIN ? 'In' : 'Out';
+    let suffix = 'Out';
+    if(type === 'in') suffix = 'In';
+    if(type === 'selfie') suffix = 'Selfie';
     
     if (videoStream) {
       videoStream.getTracks().forEach(track => track.stop());
@@ -788,13 +792,14 @@
   }
 
   function capturePhoto(type) {
-    const isIN = type === 'in';
-    const suffix = isIN ? 'In' : 'Out';
+    let suffix = 'Out';
+    if(type === 'in') suffix = 'In';
+    if(type === 'selfie') suffix = 'Selfie';
     
     const video = document.getElementById('videoElement' + suffix);
     const canvas = document.createElement('canvas');
     
-    const MAX_WIDTH = 800;
+    const MAX_WIDTH = 640;
     let width = video.videoWidth;
     let height = video.videoHeight;
     if (width > MAX_WIDTH) {
@@ -893,16 +898,9 @@
   const senderPad = setupCanvas('senderCanvas');
   const receiverPad = setupCanvas('receiverCanvas');
 
-  function clearCanvas(pad) {
-    pad.ctx.clearRect(0, 0, pad.canvas.width, pad.canvas.height);
-  }
   
-  function isCanvasBlank(canvas) {
-    const blank = document.createElement('canvas');
-    blank.width = canvas.width;
-    blank.height = canvas.height;
-    return canvas.toDataURL() === blank.toDataURL();
-  }
+  
+  
 
   // Load History
   function clearHistory() {
@@ -1013,8 +1011,8 @@
       freeCoupon: freeCoupon,
       senderName: senderName,
       receiverName: receiverName,
-      senderSign: sSign,
-      receiverSign: rSign,
+      photoSelfie: photoData.selfie,
+      
       photoIn: photoData.in,
       photoOut: photoData.out
     };

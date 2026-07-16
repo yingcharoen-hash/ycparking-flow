@@ -1092,7 +1092,8 @@
   }
 
   window.handleInitialDataResponse = function(data) {
-    if (data.status !== 'success') {
+    try {
+      if (data.status !== 'success') {
       alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + data.message);
       return;
     }
@@ -1141,73 +1142,15 @@
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">ยังไม่มีประวัติในระบบ</td></tr>';
       }
     }
-  };
-  
-  // Call on load
-  setTimeout(fetchInitialData, 500);
-
-
-  function fetchInitialData() {
-    if (!scriptUrl) return;
-    const script = document.createElement('script');
-    script.src = `${scriptUrl}?action=getInitialData&callback=handleInitialDataResponse&_t=${new Date().getTime()}`;
-    script.onerror = function() { console.error("Error loading initial data"); };
-    document.body.appendChild(script);
-  }
-
-  window.handleInitialDataResponse = function(data) {
-    if (data.status !== 'success') {
-      alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + data.message);
-      return;
-    }
-    if (data.status === 'success') {
-      const senderSelect = document.getElementById('senderNameDropdown');
-      const receiverSelect = document.getElementById('receiverNameDropdown');
-      
-      // We only want to populate if it is currently empty to avoid losing selection on refresh,
-      // but to be safe we can just repopulate.
-      const currentSender = senderSelect.value;
-      const currentReceiver = receiverSelect.value;
-      
-      senderSelect.innerHTML = '<option value="">-- เลือกชื่อ --</option>';
-      data.senders.forEach(name => {
-        let opt = document.createElement('option');
-        opt.value = name;
-        opt.text = name;
-        if(name === currentSender) opt.selected = true;
-        senderSelect.add(opt);
-      });
-      
-      receiverSelect.innerHTML = '<option value="">-- เลือกชื่อ --</option>';
-      data.receivers.forEach(name => {
-        let opt = document.createElement('option');
-        opt.value = name;
-        opt.text = name;
-        if(name === currentReceiver) opt.selected = true;
-        receiverSelect.add(opt);
-      });
-      
-      // Update History Table
-      const tbody = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
-      tbody.innerHTML = '';
-      if(data.history && data.history.length > 0) {
-        data.history.forEach(h => {
-          let tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${h.parkingLot}<br>${h.date}<br>${h.time}</td>
-            <td>${h.outStart} - ${h.outEnd}</td>
-            <td>${h.units}</td>
-            <td>${h.netCash}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-      } else {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">ยังไม่มีประวัติในระบบ</td></tr>';
-      }
+    } catch(err) {
+      alert("JS Error: " + err.message);
     }
   };
   
   // Call on load
   setTimeout(fetchInitialData, 500);
+
+
+  
 
 </script>

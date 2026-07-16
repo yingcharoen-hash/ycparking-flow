@@ -370,7 +370,7 @@
   <div id="fetchMsg" class="status-msg" style="margin-top: -12px; margin-bottom: 24px;"></div>
   
   <div class="card">
-    <div class="card-title">📝 ข้อมูลมิเตอร์และรายได้</div>
+    <div class="card-title">📌 ข้อมูลทั่วไป</div>
     
     <div class="form-group" style="margin-bottom: 16px;">
       <label>ลานจอดรถจักรยานยนต์</label>
@@ -396,8 +396,45 @@
       </div>
     </div>
 
-    <hr style="border: none; border-top: 1px dashed var(--border); margin: 16px 0;">
-    <div style="font-weight: 700; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+    </div>
+
+<div class="card">
+    <div class="card-title">📸 ภาพถ่ายมิเตอร์</div>
+    
+    <div class="form-group" style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px dashed var(--gray200);">
+      <label>1. มิเตอร์ขาเข้า (IN)</label>
+      <button id="openCamBtnIn" class="btn-cam" onclick="startCamera('in')">
+        <span style="font-size: 32px;">📷</span>
+        <span>เปิดกล้องถ่ายขาเข้า</span>
+      </button>
+      <div id="cameraWrapIn" class="video-container">
+        <button class="btn-cancel-cam" onclick="cancelCamera('in')">❌ ยกเลิก</button>
+        <video id="videoElementIn" autoplay playsinline></video>
+        <div class="capture-btn" onclick="capturePhoto('in')">📸 ถ่ายรูป</div>
+      </div>
+      <img id="photoPreviewIn" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
+      <button id="retakeBtnIn" class="btn-retake" onclick="startCamera('in')">🔄 ถ่ายใหม่</button>
+    </div>
+    
+    <div class="form-group">
+      <label>2. มิเตอร์ขาออก (OUT)</label>
+      <button id="openCamBtnOut" class="btn-cam" onclick="startCamera('out')">
+        <span style="font-size: 32px;">📷</span>
+        <span>เปิดกล้องถ่ายขาออก</span>
+      </button>
+      <div id="cameraWrapOut" class="video-container">
+        <button class="btn-cancel-cam" onclick="cancelCamera('out')">❌ ยกเลิก</button>
+        <video id="videoElementOut" autoplay playsinline></video>
+        <div class="capture-btn" onclick="capturePhoto('out')">📸 ถ่ายรูป</div>
+      </div>
+      <img id="photoPreviewOut" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
+      <button id="retakeBtnOut" class="btn-retake" onclick="startCamera('out')">🔄 ถ่ายใหม่</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📝 บันทึกมิเตอร์</div>
+        <div style="font-weight: 700; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
       <span>📥</span> ฝั่งขาเข้า (IN) - ไม่คิดเงิน
     </div>
 
@@ -458,9 +495,11 @@
       <input type="number" id="netCash" readonly class="highlight-input" style="color: var(--green) !important; background: var(--green-lt); font-size: 20px !important;">
     </div>
 
-    <hr style="border: none; border-top: 1px dashed var(--border); margin: 16px 0;">
-    <div style="font-weight: 700; color: var(--text-main); margin-bottom: 12px;">แจกแจงเงินที่ส่ง</div>
+    </div>
 
+<div class="card">
+    <div class="card-title">💰 แจกแจงเงินที่ต้องส่ง</div>
+    
     <div class="form-row">
       <div class="form-col">
         <div class="form-group">
@@ -488,40 +527,6 @@
           <input type="number" id="freeCoupon">
         </div>
       </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">📸 ภาพถ่ายมิเตอร์</div>
-    
-    <div class="form-group" style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px dashed var(--gray200);">
-      <label>1. มิเตอร์ขาเข้า (IN)</label>
-      <button id="openCamBtnIn" class="btn-cam" onclick="startCamera('in')">
-        <span style="font-size: 32px;">📷</span>
-        <span>เปิดกล้องถ่ายขาเข้า</span>
-      </button>
-      <div id="cameraWrapIn" class="video-container">
-        <button class="btn-cancel-cam" onclick="cancelCamera('in')">❌ ยกเลิก</button>
-        <video id="videoElementIn" autoplay playsinline></video>
-        <div class="capture-btn" onclick="capturePhoto('in')">📸 ถ่ายรูป</div>
-      </div>
-      <img id="photoPreviewIn" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
-      <button id="retakeBtnIn" class="btn-retake" onclick="startCamera('in')">🔄 ถ่ายใหม่</button>
-    </div>
-    
-    <div class="form-group">
-      <label>2. มิเตอร์ขาออก (OUT)</label>
-      <button id="openCamBtnOut" class="btn-cam" onclick="startCamera('out')">
-        <span style="font-size: 32px;">📷</span>
-        <span>เปิดกล้องถ่ายขาออก</span>
-      </button>
-      <div id="cameraWrapOut" class="video-container">
-        <button class="btn-cancel-cam" onclick="cancelCamera('out')">❌ ยกเลิก</button>
-        <video id="videoElementOut" autoplay playsinline></video>
-        <div class="capture-btn" onclick="capturePhoto('out')">📸 ถ่ายรูป</div>
-      </div>
-      <img id="photoPreviewOut" class="preview-img" style="width: 100% !important; height: auto !important; max-width: 100% !important; display: none;">
-      <button id="retakeBtnOut" class="btn-retake" onclick="startCamera('out')">🔄 ถ่ายใหม่</button>
     </div>
   </div>
 

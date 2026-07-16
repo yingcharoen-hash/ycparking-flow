@@ -451,10 +451,7 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <label style="color: var(--danger);">หักเป็นเงินทอน (บาท)</label>
-      <input type="number" id="deductFloat" oninput="calculate()" value="200">
-    </div>
+    <!-- deductFloat removed -->
 
     <div class="form-group">
       <label>ยอดเงินสุทธิที่ต้องส่งการเงิน (บาท)</label>
@@ -475,6 +472,20 @@
         <div class="form-group">
           <label>เงินโอน</label>
           <input type="number" id="transfer">
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-col">
+        <div class="form-group">
+          <label>ยอดพนักงาน(บาท)</label>
+          <input type="number" id="empAmount">
+        </div>
+      </div>
+      <div class="form-col">
+        <div class="form-group">
+          <label>คูปองจอดรถฟรี</label>
+          <input type="number" id="freeCoupon">
         </div>
       </div>
     </div>
@@ -690,14 +701,12 @@
   function calculate() {
     const start = parseFloat(document.getElementById('outStartMeter').value) || 0;
     const end = parseFloat(document.getElementById('outEndMeter').value) || 0;
-    const deductFloat = parseFloat(document.getElementById('deductFloat').value) || 0;
-    
     if (end > 0 && end >= start) {
       const lot = document.getElementById('parkingLot').value.trim();
       const rate = lot.includes('3') ? 10 : 5;
       const units = (end - start) + 1; // CASE 2 Logic: +1 Car
       const total = units * rate; // Dynamic rate based on lot
-      const netCash = total - deductFloat;
+      const netCash = total;
       
       document.getElementById('units').value = units;
       document.getElementById('totalMoney').value = total;
@@ -910,11 +919,13 @@
     
     const units = document.getElementById('units').value;
     const totalMoney = document.getElementById('totalMoney').value;
-    const deductFloat = document.getElementById('deductFloat').value;
+    const deductFloat = 0;
     const netCash = document.getElementById('netCash').value;
     
     const cash = document.getElementById('cash').value;
     const transfer = document.getElementById('transfer').value;
+    const empAmount = document.getElementById('empAmount').value;
+    const freeCoupon = document.getElementById('freeCoupon').value;
 
     if(!outStartMeter || !outEndMeter || !units || !netCash) {
       showAlert('กรุณากรอกเลขมิเตอร์ขาออกให้ครบถ้วน');
@@ -938,9 +949,12 @@
     const numNetCash = parseFloat(netCash) || 0;
     const numCash = parseFloat(cash) || 0;
     const numTransfer = parseFloat(transfer) || 0;
+    const numEmpAmount = parseFloat(empAmount) || 0;
+    const numFreeCoupon = parseFloat(freeCoupon) || 0;
     
-    if (numCash + numTransfer !== numNetCash) {
-      showAlert('ยอดรวมเงินส่ง (' + (numCash + numTransfer) + ' บาท)\nไม่ตรงกับยอดสุทธิที่ต้องส่ง (' + numNetCash + ' บาท)\n\nกรุณาตรวจสอบและแก้ไขให้ถูกต้องก่อนบันทึก');
+    const sumSubmitted = numCash + numTransfer + numEmpAmount + numFreeCoupon;
+    if (sumSubmitted !== numNetCash) {
+      showAlert('ยอดรวมแจกแจงเงินที่ส่ง (' + sumSubmitted + ' บาท)\nไม่ตรงกับยอดสุทธิที่ต้องส่ง (' + numNetCash + ' บาท)\n\nกรุณาตรวจสอบและแก้ไขให้ถูกต้องก่อนบันทึก');
       return;
     }
     
@@ -961,6 +975,8 @@
       netCash: netCash,
       cash: cash,
       transfer: transfer,
+      empAmount: empAmount,
+      freeCoupon: freeCoupon,
       senderSign: sSign,
       receiverSign: rSign,
       photoIn: photoData.in,

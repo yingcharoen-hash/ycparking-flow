@@ -575,7 +575,10 @@
   <div id="statusMsg" class="status-msg"></div>
 
   <div class="card" style="margin-top: 24px;">
-    <div class="card-title">🕰️ ประวัติการบันทึก</div>
+    <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
+      <span>🕰️ ประวัติการบันทึก (บนเครื่องนี้)</span>
+      <button onclick="clearHistory()" style="font-size: 12px; padding: 4px 8px; background: #eee; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">ล้างประวัติ</button>
+    </div>
     <div style="overflow-x: auto;">
       <table class="history-table" id="historyTable">
         <thead>
@@ -902,6 +905,13 @@
   }
 
   // Load History
+  function clearHistory() {
+    if(confirm("ต้องการล้างประวัติการบันทึกบนเครื่องนี้ใช่หรือไม่?")) {
+      localStorage.removeItem('meterApp_history');
+      loadHistory();
+    }
+  }
+
   function loadHistory() {
     const history = JSON.parse(localStorage.getItem('meterApp_history') || '[]');
     const tbody = document.querySelector('#historyTable tbody');

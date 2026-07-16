@@ -528,7 +528,13 @@
   <div class="card">
     <div class="card-title">✍️ ลายเซ็นรับรอง</div>
     <div class="form-group">
-      <label>เจ้าหน้าที่จุดรับฝากรถมอเตอร์ไซค์</label>
+      <label>ชื่อเจ้าหน้าที่จุดรับฝากรถมอเตอร์ไซค์</label>
+      <select id="senderNameDropdown">
+        <option value="">-- กำลังโหลดรายชื่อ... --</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>ลายเซ็นเจ้าหน้าที่จุดรับฝากรถมอเตอร์ไซค์</label>
       <div class="signature-box">
         <canvas id="senderCanvas"></canvas>
         <button class="btn-clear" onclick="clearCanvas(senderPad)">ล้าง</button>
@@ -536,7 +542,13 @@
     </div>
     
     <div class="form-group">
-      <label>ผู้บันทึก+ผู้รับเงิน(การเงิน)</label>
+      <label>ชื่อผู้บันทึก+ผู้รับเงิน(การเงิน)</label>
+      <select id="receiverNameDropdown">
+        <option value="">-- กำลังโหลดรายชื่อ... --</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>ลายเซ็นผู้บันทึก+ผู้รับเงิน(การเงิน)</label>
       <div class="signature-box">
         <canvas id="receiverCanvas"></canvas>
         <button class="btn-clear" onclick="clearCanvas(receiverPad)">ล้าง</button>
@@ -927,6 +939,13 @@
     const empAmount = document.getElementById('empAmount').value;
     const freeCoupon = document.getElementById('freeCoupon').value;
 
+    const senderName = document.getElementById('senderNameDropdown').value;
+    const receiverName = document.getElementById('receiverNameDropdown').value;
+    if (!senderName || !receiverName) {
+      showAlert('กรุณาเลือกชื่อเจ้าหน้าที่จุดรับฝาก และ ผู้บันทึก(การเงิน)');
+      return;
+    }
+
     if(!outStartMeter || !outEndMeter || !units || !netCash) {
       showAlert('กรุณากรอกเลขมิเตอร์ขาออกให้ครบถ้วน');
       return;
@@ -977,6 +996,8 @@
       transfer: transfer,
       empAmount: empAmount,
       freeCoupon: freeCoupon,
+      senderName: senderName,
+      receiverName: receiverName,
       senderSign: sSign,
       receiverSign: rSign,
       photoIn: photoData.in,
@@ -1020,6 +1041,8 @@
       document.getElementById('transfer').value = '';
       document.getElementById('empAmount').value = '';
       document.getElementById('freeCoupon').value = '';
+      document.getElementById('senderNameDropdown').value = '';
+      document.getElementById('receiverNameDropdown').value = '';
       clearCanvas(senderPad);
       clearCanvas(receiverPad);
       
@@ -1050,6 +1073,74 @@
       btnText.style.display = 'block';
     }
   }
+
+  function fetchNames() {
+    if (!scriptUrl) return;
+    const script = document.createElement('script');
+    script.src = `${scriptUrl}?action=getNames&callback=handleNamesResponse`;
+    script.onerror = function() { console.error("Error loading names"); };
+    document.body.appendChild(script);
+  }
+
+  window.handleNamesResponse = function(data) {
+    if (data.status === 'success') {
+      const senderSelect = document.getElementById('senderNameDropdown');
+      const receiverSelect = document.getElementById('receiverNameDropdown');
+      
+      senderSelect.innerHTML = '<option value="">-- เลือกชื่อ --</option>';
+      data.senders.forEach(name => {
+        let opt = document.createElement('option');
+        opt.value = name;
+        opt.text = name;
+        senderSelect.add(opt);
+      });
+      
+      receiverSelect.innerHTML = '<option value="">-- เลือกชื่อ --</option>';
+      data.receivers.forEach(name => {
+        let opt = document.createElement('option');
+        opt.value = name;
+        opt.text = name;
+        receiverSelect.add(opt);
+      });
+    }
+  };
+  
+  // Call on load
+  setTimeout(fetchNames, 500);
+
+
+  function fetchNames() {
+    if (!scriptUrl) return;
+    const script = document.createElement('script');
+    script.src = `${scriptUrl}?action=getNames&callback=handleNamesResponse`;
+    script.onerror = function() { console.error("Error loading names"); };
+    document.body.appendChild(script);
+  }
+
+  window.handleNamesResponse = function(data) {
+    if (data.status === 'success') {
+      const senderSelect = document.getElementById('senderNameDropdown');
+      const receiverSelect = document.getElementById('receiverNameDropdown');
+      
+      senderSelect.innerHTML = '<option value="">-- เลือกชื่อ --</option>';
+      data.senders.forEach(name => {
+        let opt = document.createElement('option');
+        opt.value = name;
+        opt.text = name;
+        senderSelect.add(opt);
+      });
+      
+      receiverSelect.innerHTML = '<option value="">-- เลือกชื่อ --</option>';
+      data.receivers.forEach(name => {
+        let opt = document.createElement('option');
+        opt.value = name;
+        opt.text = name;
+        receiverSelect.add(opt);
+      });
+    }
+  };
+  
+  // Call on load
+  setTimeout(fetchNames, 500);
+
 </script>
-</body>
-</html>

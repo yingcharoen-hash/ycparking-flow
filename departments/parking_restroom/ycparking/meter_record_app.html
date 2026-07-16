@@ -1092,6 +1092,10 @@
   }
 
   window.handleInitialDataResponse = function(data) {
+    if (data.status !== 'success') {
+      alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + data.message);
+      return;
+    }
     if (data.status === 'success') {
       const senderSelect = document.getElementById('senderNameDropdown');
       const receiverSelect = document.getElementById('receiverNameDropdown');
@@ -1152,6 +1156,10 @@
   }
 
   window.handleInitialDataResponse = function(data) {
+    if (data.status !== 'success') {
+      alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + data.message);
+      return;
+    }
     if (data.status === 'success') {
       const senderSelect = document.getElementById('senderNameDropdown');
       const receiverSelect = document.getElementById('receiverNameDropdown');

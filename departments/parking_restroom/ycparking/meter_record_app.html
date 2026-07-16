@@ -576,14 +576,14 @@
 
   <div class="card" style="margin-top: 24px;">
     <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
-      <span>🕰️ ประวัติการบันทึก (บนเครื่องนี้)</span>
-      <button onclick="clearHistory()" style="font-size: 12px; padding: 4px 8px; background: #eee; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">ล้างประวัติ</button>
+      <span>🕰️ ประวัติการบันทึก 10 รายการล่าสุด (จากระบบ)</span>
+      <button onclick="fetchInitialData()" style="font-size: 12px; padding: 4px 8px; background: #eee; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">🔄 รีเฟรช</button>
     </div>
     <div style="overflow-x: auto;">
       <table class="history-table" id="historyTable">
         <thead>
           <tr>
-            <th>เวลา</th>
+            <th>ลาน/เวลา</th>
             <th>ออก เริ่ม-จบ</th>
             <th>หน่วย</th>
             <th>ยอดส่ง</th>
@@ -1038,16 +1038,12 @@
         body: JSON.stringify(payload)
       });
       
-      // Save local history
-      const history = JSON.parse(localStorage.getItem('meterApp_history') || '[]');
-      history.push({ date: date, time: time, outStart: outStartMeter, outEnd: outEndMeter, units: units, netCash: netCash });
-      if (history.length > 10) history.shift();
-      localStorage.setItem('meterApp_history', JSON.stringify(history));
-      
       msg.innerText = '✅ บันทึกข้อมูลและสร้างใบเสร็จ PDF สำเร็จ!';
       msg.classList.add('success');
-        msg.style.display = 'block';
-      loadHistory();
+      msg.style.display = 'block';
+      
+      // Refresh history from server after 2 seconds to allow sheet to save
+      setTimeout(fetchInitialData, 2000);
       
       // Clear forms
       document.getElementById('inEndMeter').value = '';
@@ -1089,24 +1085,30 @@
     }
   }
 
-  function fetchNames() {
+  function fetchInitialData() {
     if (!scriptUrl) return;
     const script = document.createElement('script');
-    script.src = `${scriptUrl}?action=getNames&callback=handleNamesResponse`;
-    script.onerror = function() { console.error("Error loading names"); };
+    script.src = `${scriptUrl}?action=getInitialData&callback=handleInitialDataResponse`;
+    script.onerror = function() { console.error("Error loading initial data"); };
     document.body.appendChild(script);
   }
 
-  window.handleNamesResponse = function(data) {
+  window.handleInitialDataResponse = function(data) {
     if (data.status === 'success') {
       const senderSelect = document.getElementById('senderNameDropdown');
       const receiverSelect = document.getElementById('receiverNameDropdown');
+      
+      // We only want to populate if it is currently empty to avoid losing selection on refresh,
+      // but to be safe we can just repopulate.
+      const currentSender = senderSelect.value;
+      const currentReceiver = receiverSelect.value;
       
       senderSelect.innerHTML = '<option value="">-- เลือกชื่อ --</option>';
       data.senders.forEach(name => {
         let opt = document.createElement('option');
         opt.value = name;
         opt.text = name;
+        if(name === currentSender) opt.selected = true;
         senderSelect.add(opt);
       });
       
@@ -1115,33 +1117,58 @@
         let opt = document.createElement('option');
         opt.value = name;
         opt.text = name;
+        if(name === currentReceiver) opt.selected = true;
         receiverSelect.add(opt);
       });
+      
+      // Update History Table
+      const tbody = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
+      tbody.innerHTML = '';
+      if(data.history && data.history.length > 0) {
+        data.history.forEach(h => {
+          let tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${h.parkingLot}<br>${h.date}<br>${h.time}</td>
+            <td>${h.outStart} - ${h.outEnd}</td>
+            <td>${h.units}</td>
+            <td>${h.netCash}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } else {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">ยังไม่มีประวัติในระบบ</td></tr>';
+      }
     }
   };
   
   // Call on load
-  setTimeout(fetchNames, 500);
+  setTimeout(fetchInitialData, 500);
 
 
-  function fetchNames() {
+  function fetchInitialData() {
     if (!scriptUrl) return;
     const script = document.createElement('script');
-    script.src = `${scriptUrl}?action=getNames&callback=handleNamesResponse`;
-    script.onerror = function() { console.error("Error loading names"); };
+    script.src = `${scriptUrl}?action=getInitialData&callback=handleInitialDataResponse`;
+    script.onerror = function() { console.error("Error loading initial data"); };
     document.body.appendChild(script);
   }
 
-  window.handleNamesResponse = function(data) {
+  window.handleInitialDataResponse = function(data) {
     if (data.status === 'success') {
       const senderSelect = document.getElementById('senderNameDropdown');
       const receiverSelect = document.getElementById('receiverNameDropdown');
+      
+      // We only want to populate if it is currently empty to avoid losing selection on refresh,
+      // but to be safe we can just repopulate.
+      const currentSender = senderSelect.value;
+      const currentReceiver = receiverSelect.value;
       
       senderSelect.innerHTML = '<option value="">-- เลือกชื่อ --</option>';
       data.senders.forEach(name => {
         let opt = document.createElement('option');
         opt.value = name;
         opt.text = name;
+        if(name === currentSender) opt.selected = true;
         senderSelect.add(opt);
       });
       
@@ -1150,12 +1177,31 @@
         let opt = document.createElement('option');
         opt.value = name;
         opt.text = name;
+        if(name === currentReceiver) opt.selected = true;
         receiverSelect.add(opt);
       });
+      
+      // Update History Table
+      const tbody = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
+      tbody.innerHTML = '';
+      if(data.history && data.history.length > 0) {
+        data.history.forEach(h => {
+          let tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${h.parkingLot}<br>${h.date}<br>${h.time}</td>
+            <td>${h.outStart} - ${h.outEnd}</td>
+            <td>${h.units}</td>
+            <td>${h.netCash}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } else {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">ยังไม่มีประวัติในระบบ</td></tr>';
+      }
     }
   };
   
   // Call on load
-  setTimeout(fetchNames, 500);
+  setTimeout(fetchInitialData, 500);
 
 </script>

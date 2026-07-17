@@ -355,6 +355,7 @@
 
 </head>
 <body>
+  <div id="debugLog" style="background: #333; color: #0f0; padding: 10px; font-size: 12px; word-wrap: break-word;">DEBUG MODE V2:<br></div>
 
 <div class="header">
   <div class="header-title">บันทึกหน่วยมิเตอร์ลานจักรยานยนต์</div>
@@ -741,6 +742,12 @@
 
   // Camera Implementation (WebRTC)
   let photoData = { in: '', out: '', selfie: '' };
+  
+  function logDebug(msg) {
+    const el = document.getElementById('debugLog');
+    if (el) el.innerHTML += msg + '<br>';
+  }
+
   let videoStream = null;
   let currentCamType = '';
 
@@ -1084,14 +1091,19 @@
   }
 
   function fetchInitialData() {
-    if (!scriptUrl) return;
+    logDebug("fetchInitialData called");
+    if (!scriptUrl) { logDebug("No scriptUrl"); return; }
     const script = document.createElement('script');
     script.src = `${scriptUrl}?action=getInitialData&callback=handleInitialDataResponse&_t=${new Date().getTime()}`;
-    script.onerror = function() { console.error("Error loading initial data"); };
+    logDebug("Script src: " + script.src);
+    script.onload = function() { logDebug("Script onload fired"); };
+    script.onerror = function(e) { logDebug("Script onerror fired!"); };
     document.body.appendChild(script);
+    logDebug("Script appended to body");
   }
 
   window.handleInitialDataResponse = function(data) {
+    logDebug("handleInitialDataResponse called. status: " + data.status);
     try {
       if (data.status !== 'success') {
       alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + data.message);
@@ -1143,6 +1155,7 @@
       }
     }
     } catch(err) {
+      logDebug("JS Error: " + err.message);
       alert("JS Error: " + err.message);
     }
   };

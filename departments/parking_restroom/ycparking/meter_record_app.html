@@ -833,77 +833,7 @@
     document.getElementById('retakeBtn' + suffix).style.display = 'inline-block';
   }
 
-  // Signature Pad Implementation
-  function setupCanvas(canvasId) {
-    const canvas = document.getElementById(canvasId);
-    const ctx = canvas.getContext('2d');
-    let isDrawing = false;
-    let lastX = 0;
-    let lastY = 0;
 
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = '#000';
-
-    function getMousePos(evt) {
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      if(evt.touches) {
-        return {
-          x: (evt.touches[0].clientX - rect.left) * scaleX,
-          y: (evt.touches[0].clientY - rect.top) * scaleY
-        };
-      }
-      return {
-        x: (evt.clientX - rect.left) * scaleX,
-        y: (evt.clientY - rect.top) * scaleY
-      };
-    }
-
-    function startDraw(e) {
-      e.preventDefault();
-      isDrawing = true;
-      const pos = getMousePos(e);
-      lastX = pos.x;
-      lastY = pos.y;
-    }
-
-    function draw(e) {
-      if (!isDrawing) return;
-      e.preventDefault();
-      const pos = getMousePos(e);
-      ctx.beginPath();
-      ctx.moveTo(lastX, lastY);
-      ctx.lineTo(pos.x, pos.y);
-      ctx.stroke();
-      lastX = pos.x;
-      lastY = pos.y;
-    }
-
-    function endDraw(e) {
-      e.preventDefault();
-      isDrawing = false;
-    }
-
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', endDraw);
-    canvas.addEventListener('mouseout', endDraw);
-
-    canvas.addEventListener('touchstart', startDraw, {passive: false});
-    canvas.addEventListener('touchmove', draw, {passive: false});
-    canvas.addEventListener('touchend', endDraw, {passive: false});
-
-    return { canvas, ctx };
-  }
-
-  const senderPad = setupCanvas('senderCanvas');
-  const receiverPad = setupCanvas('receiverCanvas');
 
   
   
@@ -980,10 +910,7 @@
       return;
     }
     
-    if (isCanvasBlank(senderPad.canvas) || isCanvasBlank(receiverPad.canvas)) {
-      showAlert('กรุณาให้เจ้าหน้าที่ฯ และ ผู้จดมิเตอร์ เซ็นชื่อให้ครบถ้วน');
-      return;
-    }
+
 
     const numNetCash = parseFloat(netCash) || 0;
     const numCash = parseFloat(cash) || 0;
@@ -997,8 +924,7 @@
       return;
     }
     
-    let sSign = isCanvasBlank(senderPad.canvas) ? '' : senderPad.canvas.toDataURL('image/png');
-    let rSign = isCanvasBlank(receiverPad.canvas) ? '' : receiverPad.canvas.toDataURL('image/png');
+
 
     const payload = {
       parkingLot: parkingLot,
@@ -1059,8 +985,7 @@
       document.getElementById('freeCoupon').value = '';
       document.getElementById('senderNameDropdown').value = '';
       document.getElementById('receiverNameDropdown').value = '';
-      clearCanvas(senderPad);
-      clearCanvas(receiverPad);
+
       
       // Clear photos
       photoData = { in: '', out: '' };

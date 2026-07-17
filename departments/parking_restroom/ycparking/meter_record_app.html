@@ -1057,9 +1057,20 @@
       tbody.innerHTML = '';
       if(data.history && data.history.length > 0) {
         data.history.forEach(h => {
+          let fDate = h.date || '';
+          if (fDate.includes('T')) {
+            let d = new Date(fDate);
+            if(!isNaN(d)) fDate = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth()+1).padStart(2, '0') + '/' + d.getFullYear();
+          }
+          let fTime = h.time || '';
+          if (fTime.includes('T')) {
+            let d = new Date(fTime);
+            if(!isNaN(d)) fTime = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+          }
+          
           let tr = document.createElement('tr');
           tr.innerHTML = `
-            <td>${h.parkingLot}<br>${h.date}<br>${h.time}</td>
+            <td>${h.parkingLot}<br><span style="font-size: 11px; color: #555;">${fDate} ${fTime}</span></td>
             <td>${h.outStart} - ${h.outEnd}</td>
             <td>${h.units}</td>
             <td>${h.netCash}</td>

@@ -412,16 +412,11 @@
                 let match = true;
                 if (lot && row.parkingLot !== lot) match = false;
                 
-                if (row.date) {
-                    let parts = row.date.split('/');
+                let fDate = formatDate(row.date);
+                if (fDate && fDate.includes('/')) {
+                    let parts = fDate.split('/');
                     if (parts.length === 3) { // DD/MM/YYYY
                         let rowDateStr = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
-                        if (row.date.includes('T')) rowDateStr = row.date.split('T')[0]; // Handle raw ISO strings
-                        
-                        if (start && rowDateStr < start) match = false;
-                        if (end && rowDateStr > end) match = false;
-                    } else if (row.date.includes('-')) {
-                        let rowDateStr = row.date.split('T')[0];
                         if (start && rowDateStr < start) match = false;
                         if (end && rowDateStr > end) match = false;
                     }
@@ -658,9 +653,14 @@
                 let inE = parseFloat(String(row.inEnd).replace(/,/g, '')) || 0;
                 let entered = inE > inS ? inE - inS : 0;
                 let exited = parseFloat(String(row.units).replace(/,/g, '')) || 0;
-                let netCars = entered - exited;
-                let netCarColor = netCars > 0 ? 'var(--warning)' : (netCars < 0 ? 'var(--success)' : '#7f8c8d');
-                let netCarSign = netCars > 0 ? '+' : '';
+                
+                let netCarBadge = '-';
+                if (inS > 0 && inE > 0) {
+                    let netCars = entered - exited;
+                    let netCarColor = netCars > 0 ? 'var(--warning)' : (netCars < 0 ? 'var(--success)' : '#7f8c8d');
+                    let netCarSign = netCars > 0 ? '+' : '';
+                    netCarBadge = `<span class="badge" style="background:${netCarColor};">${netCarSign}${netCars} คัน</span>`;
+                }
 
                 tr.innerHTML = `
                     <td>${fDate} ${fTime}</td>
@@ -668,7 +668,7 @@
                     <td><span class="badge" style="background:#7f8c8d;">${row.inStart || '?'}</span> - <span class="badge" style="background:#95a5a6;">${row.inEnd || '?'}</span></td>
                     <td><span class="badge" style="background:#d35400;">${row.outStart || '?'}</span> - <span class="badge" style="background:#e67e22;">${row.outEnd || '?'}</span></td>
                     <td>${exited}</td>
-                    <td><span class="badge" style="background:${netCarColor};">${netCarSign}${netCars} คัน</span></td>
+                    <td>${netCarBadge}</td>
                     <td><strong>${parseFloat(row.netCash||0).toLocaleString()} ฿</strong></td>
                     <td style="font-size:12px;">ส่ง: ${row.senderName||'-'}<br>รับ: ${row.receiverName||'-'}</td>
                     <td>

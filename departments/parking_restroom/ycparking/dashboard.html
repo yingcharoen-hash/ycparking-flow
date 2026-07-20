@@ -233,6 +233,12 @@
     <div class="container" style="display:none;" id="mainContent">
         
         <!-- KPI Cards -->
+        <!-- Live Status -->
+        <div class="chart-card" style="margin-bottom: 20px;">
+            <h3 style="margin: 0 0 15px 0;"><i class="fa-solid fa-car"></i> จำนวนรถค้างลานปัจจุบัน (Estimated Currently Parked)</h3>
+            <div id="parkedStatus" style="display: flex; gap: 15px; flex-wrap: wrap;"></div>
+        </div>
+        
         <div class="kpi-grid">
             <div class="kpi-card">
                 <div class="kpi-icon bg-blue"><i class="fa-solid fa-coins"></i></div>
@@ -401,21 +407,56 @@
                     frauds.push(`[${formatDate(row.date)}] ${row.parkingLot}: ยอดหักพนักงานสูงผิดปกติ (${emp} บาท) ผู้ส่ง: ${row.senderName}`);
                 }
 
-                // Fraud Check 2: Meter Gaps
+                // Fraud Check 2: Meter Gaps & Calculate Parked Cars
                 let lot = row.parkingLot;
                 if (!lotsData[lot]) {
-                    lotsData[lot] = row;
-                } else {
-                    let prev = lotsData[lot];
-                    let prevOutEnd = parseFloat(prev.outEnd) || 0;
-                    let currOutStart = parseFloat(row.outStart) || 0;
-                    
-                    if (prevOutEnd > 0 && currOutStart > 0 && currOutStart !== prevOutEnd) {
-                        frauds.push(`[${formatDate(row.date)}] ${lot}: มิเตอร์ขาออกไม่ต่อเนื่อง! รอบก่อนจบที่ ${prevOutEnd} แต่รอบนี้เริ่มที่ ${currOutStart} (ผู้ส่ง: ${row.senderName})`);
-                    }
-                    lotsData[lot] = row; // update to latest
+                    lotsData[lot] = {
+                        lastRow: row,
+                        totalIn: 0,
+                        totalOut: 0
+                    };
                 }
+                
+                let prev = lotsData[lot].lastRow;
+                let prevOutEnd = parseFloat(prev.outEnd) || 0;
+                let currOutStart = parseFloat(row.outStart) || 0;
+                
+                // Track meter gap
+                if (lotsData[lot].totalOut > 0 && prevOutEnd > 0 && currOutStart > 0 && currOutStart !== prevOutEnd) {
+                    frauds.push(`[${formatDate(row.date)}] ${lot}: มิเตอร์ขาออกไม่ต่อเนื่อง! รอบก่อนจบที่ ${prevOutEnd} แต่รอบนี้เริ่มที่ ${currOutStart} (ผู้ส่ง: ${row.senderName})`);
+                }
+                lotsData[lot].lastRow = row; // update to latest
+                
+                // Calculate In and Out for this shift
+                let inS = parseFloat(String(row.inStart).replace(/,/g, '')) || 0;
+                let inE = parseFloat(String(row.inEnd).replace(/,/g, '')) || 0;
+                let entered = inE - inS;
+                if (entered < 0) entered = 0; // Prevent negative if meter resets
+                
+                let exited = parseFloat(String(row.units).replace(/,/g, '')) || 0;
+                
+                lotsData[lot].totalIn += entered;
+                lotsData[lot].totalOut += exited;
+                
             });
+            
+            // Render Parked Cars Status
+            const parkedContainer = document.getElementById('parkedStatus');
+            parkedContainer.innerHTML = '';
+            for (let lot in lotsData) {
+                let diff = lotsData[lot].totalIn - lotsData[lot].totalOut;
+                if (diff < 0) diff = 0;
+                
+                let badgeColor = diff > 50 ? 'var(--warning)' : 'var(--success)';
+                if (diff > 100) badgeColor = 'var(--danger)';
+                
+                parkedContainer.innerHTML += `
+                    <div style="background: #f8f9fa; padding: 10px 20px; border-radius: 8px; border: 1px solid #ddd; display: flex; align-items: center; gap: 10px;">
+                        <span style="font-weight: bold; color: var(--primary);">${lot}</span>
+                        <span style="background: ${badgeColor}; color: white; padding: 4px 10px; border-radius: 20px; font-weight: bold;">${diff} คัน</span>
+                    </div>
+                `;
+            }
 
             // Update KPIs
             document.getElementById('kpiNetCash').innerText = totalNet.toLocaleString() + ' ฿';

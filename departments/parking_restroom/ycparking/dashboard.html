@@ -73,7 +73,7 @@
         /* KPI Cards */
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
@@ -188,6 +188,9 @@
         }
         .gallery-item img {
             flex-grow: 1;
+            object-fit: cover;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
         }
 
         /* Table Section */
@@ -244,24 +247,28 @@
 
         
                 <!-- Filters -->
-        <div class="chart-card" style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-            <h3 style="margin: 0;"><i class="fa-solid fa-filter"></i> ตัวกรองข้อมูล (Filters):</h3>
-            <div>
-                <label for="startDate">ตั้งแต่:</label>
-                <input type="date" id="startDate" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+        <div class="chart-card" style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h3 style="margin: 0; margin-right: 15px;"><i class="fa-solid fa-filter"></i> ตัวกรองข้อมูล</h3>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <label for="startDate">ตั้งแต่:</label>
+                    <input type="date" id="startDate" style="padding: 6px; border-radius: 4px; border: 1px solid #ccc;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <label for="endDate">ถึง:</label>
+                    <input type="date" id="endDate" style="padding: 6px; border-radius: 4px; border: 1px solid #ccc;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <label for="lotFilter">ลานจอด:</label>
+                    <select id="lotFilter" style="padding: 6px; border-radius: 4px; border: 1px solid #ccc; min-width: 120px;">
+                        <option value="">-- ทุกลาน --</option>
+                    </select>
+                </div>
             </div>
-            <div>
-                <label for="endDate">ถึง:</label>
-                <input type="date" id="endDate" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+            <div style="display: flex; gap: 10px;">
+                <button onclick="applyFilters()" style="padding:8px 20px; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;"><i class="fa-solid fa-search"></i> กรองข้อมูล</button>
+                <button onclick="clearFilters()" style="padding:8px 20px; background:#7f8c8d; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;"><i class="fa-solid fa-times"></i> ล้าง</button>
             </div>
-            <div>
-                <label for="lotFilter">ลานจอด:</label>
-                <select id="lotFilter" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
-                    <option value="">-- ทุกลาน --</option>
-                </select>
-            </div>
-            <button onclick="applyFilters()" style="padding:6px 15px; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer;"><i class="fa-solid fa-search"></i> กรองข้อมูล</button>
-            <button onclick="clearFilters()" style="padding:6px 15px; background:#7f8c8d; color:white; border:none; border-radius:5px; cursor:pointer;"><i class="fa-solid fa-times"></i> ล้าง</button>
         </div>
         <div class="kpi-grid">
             <div class="kpi-card">
@@ -334,14 +341,14 @@
             <table>
                 <thead>
                     <tr>
-                        <th>วันที่-เวลา</th>
+                        <th style="min-width: 130px;">วันที่-เวลา</th>
                         <th>ลานจอด</th>
-                        <th>มิเตอร์ขาเข้า</th>
-                        <th>มิเตอร์ขาออก</th>
+                        <th style="min-width: 140px;">มิเตอร์ขาเข้า</th>
+                        <th style="min-width: 140px;">มิเตอร์ขาออก</th>
                         <th>จำนวนรถออก</th>
                         <th>ส่วนต่างรถ (เข้า-ออก)</th>
                         <th>ยอดสุทธิ</th>
-                        <th>ผู้ส่ง-ผู้รับ</th>
+                        <th style="min-width: 120px;">ผู้ส่ง-ผู้รับ</th>
                         <th>หลักฐาน</th>
                     </tr>
                 </thead>
@@ -377,6 +384,15 @@
             rawData = response.records || [];
             document.getElementById('lastUpdated').innerText = 'อัปเดตล่าสุด: ' + new Date().toLocaleString('th-TH');
             
+            // Set Default Dates to Today
+            if (!document.getElementById('startDate').value) {
+                let today = new Date();
+                // Adjust to local timezone
+                let localDate = new Date(today.getTime() - (today.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+                document.getElementById('startDate').value = localDate;
+                document.getElementById('endDate').value = localDate;
+            }
+
             // Populate Lot Filter
             const lotFilter = document.getElementById('lotFilter');
             let lots = [...new Set(rawData.map(r => r.parkingLot))].filter(l => l);
@@ -387,8 +403,7 @@
                 lotFilter.appendChild(opt);
             });
 
-            filteredData = [...rawData];
-            updateDashboard();
+            applyFilters();
         };
 
         function applyFilters() {
@@ -420,11 +435,11 @@
         }
 
         function clearFilters() {
-            document.getElementById('startDate').value = '';
-            document.getElementById('endDate').value = '';
+            let localDate = new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+            document.getElementById('startDate').value = localDate;
+            document.getElementById('endDate').value = localDate;
             document.getElementById('lotFilter').value = '';
-            filteredData = [...rawData];
-            updateDashboard();
+            applyFilters();
         }
 
         function updateDashboard() {
@@ -620,8 +635,8 @@
                         </a>
                         <div class="gallery-caption">
                             <strong><i class="fa-regular fa-clock"></i> ${formatDate(row.date)} ${formatTime(row.time)}</strong><br>
-                            <span style="color:var(--text-muted)">ส่ง: ${row.senderName || '-'}</span><br>
-                            <span style="color:var(--text-muted)">รับ: ${row.receiverName || '-'}</span>
+                            <span style="color:var(--text-muted); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${row.senderName}">ส่ง: ${String(row.senderName).includes('http') ? 'ข้อมูลเก่า' : (row.senderName || '-')}</span>
+                            <span style="color:var(--text-muted); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${row.receiverName}">รับ: ${String(row.receiverName).includes('http') ? 'ข้อมูลเก่า' : (row.receiverName || '-')}</span>
                         </div>
                     `;
                     gal.appendChild(div);

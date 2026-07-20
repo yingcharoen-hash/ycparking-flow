@@ -233,12 +233,28 @@
     <div class="container" style="display:none;" id="mainContent">
         
         <!-- KPI Cards -->
-        <!-- Live Status -->
-        <div class="chart-card" style="margin-bottom: 20px;">
-            <h3 style="margin: 0 0 15px 0;"><i class="fa-solid fa-car"></i> จำนวนรถค้างลานปัจจุบัน (Estimated Currently Parked)</h3>
-            <div id="parkedStatus" style="display: flex; gap: 15px; flex-wrap: wrap;"></div>
-        </div>
+
         
+                <!-- Filters -->
+        <div class="chart-card" style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+            <h3 style="margin: 0;"><i class="fa-solid fa-filter"></i> ตัวกรองข้อมูล (Filters):</h3>
+            <div>
+                <label for="startDate">ตั้งแต่:</label>
+                <input type="date" id="startDate" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+            </div>
+            <div>
+                <label for="endDate">ถึง:</label>
+                <input type="date" id="endDate" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+            </div>
+            <div>
+                <label for="lotFilter">ลานจอด:</label>
+                <select id="lotFilter" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+                    <option value="">-- ทุกลาน --</option>
+                </select>
+            </div>
+            <button onclick="applyFilters()" style="padding:6px 15px; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer;"><i class="fa-solid fa-search"></i> กรองข้อมูล</button>
+            <button onclick="clearFilters()" style="padding:6px 15px; background:#7f8c8d; color:white; border:none; border-radius:5px; cursor:pointer;"><i class="fa-solid fa-times"></i> ล้าง</button>
+        </div>
         <div class="kpi-grid">
             <div class="kpi-card">
                 <div class="kpi-icon bg-blue"><i class="fa-solid fa-coins"></i></div>
@@ -322,6 +338,7 @@
     <script>
         const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9VgBmGLjVAvDEBCK2ruTMnQswLtB1oZoiMzDlhwuRC9MI95GJoId_QTdQJE8kOw-XPw/exec';
         let rawData = [];
+        let filteredData = [];
 
         function fetchData() {
             document.getElementById('loading').style.display = 'flex';
@@ -344,11 +361,62 @@
             rawData = response.records || [];
             document.getElementById('lastUpdated').innerText = 'อัปเดตล่าสุด: ' + new Date().toLocaleString('th-TH');
             
+            // Populate Lot Filter
+            const lotFilter = document.getElementById('lotFilter');
+            let lots = [...new Set(rawData.map(r => r.parkingLot))].filter(l => l);
+            lots.forEach(l => {
+                let opt = document.createElement('option');
+                opt.value = l;
+                opt.innerText = l;
+                lotFilter.appendChild(opt);
+            });
+
+            filteredData = [...rawData];
+            updateDashboard();
+        };
+
+        function applyFilters() {
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            const lot = document.getElementById('lotFilter').value;
+
+            filteredData = rawData.filter(row => {
+                let match = true;
+                if (lot && row.parkingLot !== lot) match = false;
+                
+                if (row.date) {
+                    let parts = row.date.split('/');
+                    if (parts.length === 3) { // DD/MM/YYYY
+                        let rowDateStr = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+                        if (row.date.includes('T')) rowDateStr = row.date.split('T')[0]; // Handle raw ISO strings
+                        
+                        if (start && rowDateStr < start) match = false;
+                        if (end && rowDateStr > end) match = false;
+                    } else if (row.date.includes('-')) {
+                        let rowDateStr = row.date.split('T')[0];
+                        if (start && rowDateStr < start) match = false;
+                        if (end && rowDateStr > end) match = false;
+                    }
+                }
+                return match;
+            });
+            updateDashboard();
+        }
+
+        function clearFilters() {
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('lotFilter').value = '';
+            filteredData = [...rawData];
+            updateDashboard();
+        }
+
+        function updateDashboard() {
             analyzeData();
             renderCharts();
             renderTable();
             renderGallery();
-        };
+        }
 
         function formatDate(dStr) {
             if(!dStr) return '';
@@ -385,7 +453,7 @@
 
             // Group by lot for meter tracking
             // Since data is reverse chronological (newest first), we reverse it back to chronological for analysis
-            let chronoData = [...rawData].reverse();
+            let chronoData = [...filteredData].reverse();
 
             chronoData.forEach((row, index) => {
                 let net = parseFloat(row.netCash) || 0;
@@ -407,56 +475,23 @@
                     frauds.push(`[${formatDate(row.date)}] ${row.parkingLot}: ยอดหักพนักงานสูงผิดปกติ (${emp} บาท) ผู้ส่ง: ${row.senderName}`);
                 }
 
-                // Fraud Check 2: Meter Gaps & Calculate Parked Cars
+                // Fraud Check 2: Meter Gaps
                 let lot = row.parkingLot;
                 if (!lotsData[lot]) {
-                    lotsData[lot] = {
-                        lastRow: row,
-                        totalIn: 0,
-                        totalOut: 0
-                    };
+                    lotsData[lot] = { lastRow: row, count: 1 };
+                } else {
+                    let prev = lotsData[lot].lastRow;
+                    let prevOutEnd = parseFloat(String(prev.outEnd).replace(/,/g, '')) || 0;
+                    let currOutStart = parseFloat(String(row.outStart).replace(/,/g, '')) || 0;
+                    
+                    // Allow exact match OR +1 difference
+                    if (lotsData[lot].count > 0 && prevOutEnd > 0 && currOutStart > 0 && currOutStart !== prevOutEnd && currOutStart !== (prevOutEnd + 1)) {
+                        frauds.push(`[${formatDate(row.date)}] ${lot}: มิเตอร์ขาออกไม่ต่อเนื่อง! รอบก่อนจบที่ ${prevOutEnd} แต่รอบนี้เริ่มที่ ${currOutStart} (ผู้ส่ง: ${row.senderName})`);
+                    }
+                    lotsData[lot].lastRow = row;
+                    lotsData[lot].count++;
                 }
-                
-                let prev = lotsData[lot].lastRow;
-                let prevOutEnd = parseFloat(prev.outEnd) || 0;
-                let currOutStart = parseFloat(row.outStart) || 0;
-                
-                // Track meter gap
-                if (lotsData[lot].totalOut > 0 && prevOutEnd > 0 && currOutStart > 0 && currOutStart !== prevOutEnd) {
-                    frauds.push(`[${formatDate(row.date)}] ${lot}: มิเตอร์ขาออกไม่ต่อเนื่อง! รอบก่อนจบที่ ${prevOutEnd} แต่รอบนี้เริ่มที่ ${currOutStart} (ผู้ส่ง: ${row.senderName})`);
-                }
-                lotsData[lot].lastRow = row; // update to latest
-                
-                // Calculate In and Out for this shift
-                let inS = parseFloat(String(row.inStart).replace(/,/g, '')) || 0;
-                let inE = parseFloat(String(row.inEnd).replace(/,/g, '')) || 0;
-                let entered = inE - inS;
-                if (entered < 0) entered = 0; // Prevent negative if meter resets
-                
-                let exited = parseFloat(String(row.units).replace(/,/g, '')) || 0;
-                
-                lotsData[lot].totalIn += entered;
-                lotsData[lot].totalOut += exited;
-                
             });
-            
-            // Render Parked Cars Status
-            const parkedContainer = document.getElementById('parkedStatus');
-            parkedContainer.innerHTML = '';
-            for (let lot in lotsData) {
-                let diff = lotsData[lot].totalIn - lotsData[lot].totalOut;
-                if (diff < 0) diff = 0;
-                
-                let badgeColor = diff > 50 ? 'var(--warning)' : 'var(--success)';
-                if (diff > 100) badgeColor = 'var(--danger)';
-                
-                parkedContainer.innerHTML += `
-                    <div style="background: #f8f9fa; padding: 10px 20px; border-radius: 8px; border: 1px solid #ddd; display: flex; align-items: center; gap: 10px;">
-                        <span style="font-weight: bold; color: var(--primary);">${lot}</span>
-                        <span style="background: ${badgeColor}; color: white; padding: 4px 10px; border-radius: 20px; font-weight: bold;">${diff} คัน</span>
-                    </div>
-                `;
-            }
 
             // Update KPIs
             document.getElementById('kpiNetCash').innerText = totalNet.toLocaleString() + ' ฿';
@@ -491,7 +526,7 @@
             let dates = {};
             let lotTotals = {};
 
-            rawData.forEach(row => {
+            filteredData.forEach(row => {
                 let d = formatDate(row.date);
                 if(d) {
                     dates[d] = (dates[d] || 0) + (parseFloat(row.netCash) || 0);
@@ -554,9 +589,9 @@
             gal.innerHTML = '';
             
             let count = 0;
-            for(let i = 0; i < rawData.length; i++) {
+            for(let i = 0; i < filteredData.length; i++) {
                 if(count >= 12) break; // show last 12
-                let row = rawData[i];
+                let row = filteredData[i];
                 if(row.photoSelfie && row.photoSelfie.startsWith('http')) {
                     let div = document.createElement('div');
                     div.className = 'gallery-item';
@@ -582,7 +617,7 @@
             const tbody = document.getElementById('dataTableBody');
             tbody.innerHTML = '';
             
-            rawData.slice(0, 50).forEach(row => {
+            filteredData.slice(0, 50).forEach(row => {
                 let fDate = formatDate(row.date);
                 let fTime = formatTime(row.time);
                 

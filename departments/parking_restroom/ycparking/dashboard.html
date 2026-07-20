@@ -173,13 +173,21 @@
         }
         .gallery-item:hover img { opacity: 1; }
         .gallery-caption {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 5px;
+            background: #fff;
+            color: var(--text-main);
+            padding: 10px;
             font-size: 11px;
-            text-align: center;
+            text-align: left;
+            border-top: 1px solid #eee;
+            line-height: 1.4;
+        }
+        .gallery-item {
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        .gallery-item img {
+            flex-grow: 1;
         }
 
         /* Table Section */
@@ -323,7 +331,8 @@
                         <th>ลานจอด</th>
                         <th>มิเตอร์ขาเข้า</th>
                         <th>มิเตอร์ขาออก</th>
-                        <th>จำนวนรถ</th>
+                        <th>จำนวนรถออก</th>
+                        <th>ส่วนต่างรถ (เข้า-ออก)</th>
                         <th>ยอดสุทธิ</th>
                         <th>ผู้ส่ง-ผู้รับ</th>
                         <th>หลักฐาน</th>
@@ -597,11 +606,13 @@
                     div.className = 'gallery-item';
                     let directUrl = getDriveDirectUrl(row.photoSelfie);
                     div.innerHTML = `
-                        <a href="${row.photoSelfie}" target="_blank">
-                            <img src="${directUrl}" alt="Selfie" onerror="this.src='https://placehold.co/400x400?text=Image+Error'">
+                        <a href="${row.photoSelfie}" target="_blank" style="display:block; height:150px;">
+                            <img src="${directUrl}" alt="Selfie" style="height:100%; width:100%; object-fit:cover;" onerror="this.src='https://placehold.co/400x400?text=Image+Error'">
                         </a>
                         <div class="gallery-caption">
-                            ${formatDate(row.date)}<br>${row.senderName}
+                            <strong><i class="fa-regular fa-clock"></i> ${formatDate(row.date)} ${formatTime(row.time)}</strong><br>
+                            <span style="color:var(--text-muted)">ส่ง: ${row.senderName || '-'}</span><br>
+                            <span style="color:var(--text-muted)">รับ: ${row.receiverName || '-'}</span>
                         </div>
                     `;
                     gal.appendChild(div);
@@ -622,12 +633,22 @@
                 let fTime = formatTime(row.time);
                 
                 let tr = document.createElement('tr');
+                
+                let inS = parseFloat(String(row.inStart).replace(/,/g, '')) || 0;
+                let inE = parseFloat(String(row.inEnd).replace(/,/g, '')) || 0;
+                let entered = inE > inS ? inE - inS : 0;
+                let exited = parseFloat(String(row.units).replace(/,/g, '')) || 0;
+                let netCars = entered - exited;
+                let netCarColor = netCars > 0 ? 'var(--warning)' : (netCars < 0 ? 'var(--success)' : '#7f8c8d');
+                let netCarSign = netCars > 0 ? '+' : '';
+
                 tr.innerHTML = `
                     <td>${fDate} ${fTime}</td>
                     <td><strong>${row.parkingLot}</strong></td>
                     <td><span class="badge" style="background:#7f8c8d;">${row.inStart || '?'}</span> - <span class="badge" style="background:#95a5a6;">${row.inEnd || '?'}</span></td>
                     <td><span class="badge" style="background:#d35400;">${row.outStart || '?'}</span> - <span class="badge" style="background:#e67e22;">${row.outEnd || '?'}</span></td>
-                    <td>${row.units || 0}</td>
+                    <td>${exited}</td>
+                    <td><span class="badge" style="background:${netCarColor};">${netCarSign}${netCars} คัน</span></td>
                     <td><strong>${parseFloat(row.netCash||0).toLocaleString()} ฿</strong></td>
                     <td style="font-size:12px;">ส่ง: ${row.senderName||'-'}<br>รับ: ${row.receiverName||'-'}</td>
                     <td>

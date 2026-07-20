@@ -172,25 +172,31 @@
             transition: opacity 0.2s;
         }
         .gallery-item:hover img { opacity: 1; }
-        .gallery-caption {
-            background: #fff;
-            color: var(--text-main);
-            padding: 10px;
-            font-size: 11px;
-            text-align: left;
-            border-top: 1px solid #eee;
-            line-height: 1.4;
-        }
         .gallery-item {
-            background: #fff;
-            display: flex;
-            flex-direction: column;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: #000;
         }
         .gallery-item img {
-            flex-grow: 1;
+            width: 100%;
+            height: 150px;
             object-fit: cover;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
+            display: block;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+        .gallery-item:hover img { opacity: 1; }
+        .gallery-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px;
+            font-size: 11px;
+            text-align: left;
+            line-height: 1.4;
         }
 
         /* Table Section */
@@ -384,15 +390,6 @@
             rawData = response.records || [];
             document.getElementById('lastUpdated').innerText = 'อัปเดตล่าสุด: ' + new Date().toLocaleString('th-TH');
             
-            // Set Default Dates to Today
-            if (!document.getElementById('startDate').value) {
-                let today = new Date();
-                // Adjust to local timezone
-                let localDate = new Date(today.getTime() - (today.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-                document.getElementById('startDate').value = localDate;
-                document.getElementById('endDate').value = localDate;
-            }
-
             // Populate Lot Filter
             const lotFilter = document.getElementById('lotFilter');
             let lots = [...new Set(rawData.map(r => r.parkingLot))].filter(l => l);
@@ -435,9 +432,8 @@
         }
 
         function clearFilters() {
-            let localDate = new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-            document.getElementById('startDate').value = localDate;
-            document.getElementById('endDate').value = localDate;
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
             document.getElementById('lotFilter').value = '';
             applyFilters();
         }
@@ -630,13 +626,13 @@
                     div.className = 'gallery-item';
                     let directUrl = getDriveDirectUrl(row.photoSelfie);
                     div.innerHTML = `
-                        <a href="${row.photoSelfie}" target="_blank" style="display:block; height:150px;">
-                            <img src="${directUrl}" alt="Selfie" style="height:100%; width:100%; object-fit:cover;" onerror="this.src='https://placehold.co/400x400?text=Image+Error'">
+                        <a href="${row.photoSelfie}" target="_blank">
+                            <img src="${directUrl}" alt="Selfie" onerror="this.src='https://placehold.co/400x400?text=Image+Error'">
                         </a>
                         <div class="gallery-caption">
-                            <strong><i class="fa-regular fa-clock"></i> ${formatDate(row.date)} ${formatTime(row.time)}</strong><br>
-                            <span style="color:var(--text-muted); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${row.senderName}">ส่ง: ${String(row.senderName).includes('http') ? 'ข้อมูลเก่า' : (row.senderName || '-')}</span>
-                            <span style="color:var(--text-muted); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${row.receiverName}">รับ: ${String(row.receiverName).includes('http') ? 'ข้อมูลเก่า' : (row.receiverName || '-')}</span>
+                            <strong>${formatDate(row.date)} ${formatTime(row.time)}</strong><br>
+                            <span style="display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${row.senderName}">ส่ง: ${String(row.senderName).includes('http') ? 'ข้อมูลเก่า' : (row.senderName || '-')}</span>
+                            <span style="display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${row.receiverName}">รับ: ${String(row.receiverName).includes('http') ? 'ข้อมูลเก่า' : (row.receiverName || '-')}</span>
                         </div>
                     `;
                     gal.appendChild(div);
@@ -676,7 +672,7 @@
                     <td><strong>${parseFloat(row.netCash||0).toLocaleString()} ฿</strong></td>
                     <td style="font-size:12px;">ส่ง: ${row.senderName||'-'}<br>รับ: ${row.receiverName||'-'}</td>
                     <td>
-                        ${row.photoSelfie ? `<a href="${row.photoSelfie}" target="_blank" style="color:var(--primary);"><i class="fa-solid fa-image"></i></a>` : ''}
+                        ${row.photoSelfie ? `<a href="${row.photoSelfie}" target="_blank" style="color:var(--primary);" title="เซลฟี่"><i class="fa-solid fa-image"></i></a>` : (row.pdfUrl ? `<a href="${row.pdfUrl}" target="_blank" style="color:#e74c3c;" title="ใบเสร็จ"><i class="fa-solid fa-file-pdf"></i></a>` : '-')}
                     </td>
                 `;
                 tbody.appendChild(tr);

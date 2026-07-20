@@ -361,6 +361,16 @@
             return tStr;
         }
 
+
+        function getDriveDirectUrl(url) {
+            if (!url) return '';
+            let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`;
+            }
+            return url;
+        }
+
         function analyzeData() {
             let totalNet = 0, totalUnits = 0, totalTransfer = 0, totalDeducts = 0;
             
@@ -509,9 +519,10 @@
                 if(row.photoSelfie && row.photoSelfie.startsWith('http')) {
                     let div = document.createElement('div');
                     div.className = 'gallery-item';
+                    let directUrl = getDriveDirectUrl(row.photoSelfie);
                     div.innerHTML = `
                         <a href="${row.photoSelfie}" target="_blank">
-                            <img src="${row.photoSelfie}" alt="Selfie">
+                            <img src="${directUrl}" alt="Selfie" onerror="this.src='https://placehold.co/400x400?text=Image+Error'">
                         </a>
                         <div class="gallery-caption">
                             ${formatDate(row.date)}<br>${row.senderName}

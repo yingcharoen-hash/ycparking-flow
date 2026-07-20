@@ -288,8 +288,15 @@
             <div class="kpi-card">
                 <div class="kpi-icon bg-purple"><i class="fa-solid fa-ticket"></i></div>
                 <div class="kpi-info">
-                    <h3>ยอดคูปอง/พนักงาน</h3>
-                    <h2 id="kpiDeducts">0 ฿</h2>
+                    <h3>ยอดคูปองจอดฟรี</h3>
+                    <h2 id="kpiCoupon">0 ฿</h2>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon bg-orange" style="background: linear-gradient(135deg, #e67e22, #d35400);"><i class="fa-solid fa-user-tie"></i></div>
+                <div class="kpi-info">
+                    <h3>ยอดพนักงาน</h3>
+                    <h2 id="kpiEmp">0 ฿</h2>
                 </div>
             </div>
         </div>
@@ -455,7 +462,7 @@
         }
 
         function analyzeData() {
-            let totalNet = 0, totalUnits = 0, totalTransfer = 0, totalDeducts = 0;
+            let totalNet = 0, totalUnits = 0, totalTransfer = 0, totalCoupon = 0, totalEmp = 0;
             
             let lotsData = {}; // For meter gap checking
             let frauds = [];
@@ -474,7 +481,8 @@
                 totalNet += net;
                 totalUnits += units;
                 totalTransfer += trans;
-                totalDeducts += (emp + coup);
+                totalCoupon += coup;
+                totalEmp += emp;
 
                 // Fraud Check 1: High Deductions
                 if (coup > 150) {
@@ -506,7 +514,8 @@
             document.getElementById('kpiNetCash').innerText = totalNet.toLocaleString() + ' ฿';
             document.getElementById('kpiUnits').innerText = totalUnits.toLocaleString() + ' คัน';
             document.getElementById('kpiTransfer').innerText = totalTransfer.toLocaleString() + ' ฿';
-            document.getElementById('kpiDeducts').innerText = totalDeducts.toLocaleString() + ' ฿';
+            document.getElementById('kpiCoupon').innerText = totalCoupon.toLocaleString() + ' ฿';
+            document.getElementById('kpiEmp').innerText = totalEmp.toLocaleString() + ' ฿';
 
             // Show Fraud Alerts
             const fraudSec = document.getElementById('fraudSection');

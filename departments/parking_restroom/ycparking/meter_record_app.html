@@ -984,7 +984,10 @@
 
       
       // Clear photos
-      photoData = { in: '', out: '' };
+      photoData = { in: '', out: '', selfie: '' };
+        document.getElementById('photoPreviewSelfie').style.display = 'none';
+        document.getElementById('openCamBtnSelfie').style.display = 'flex';
+        document.getElementById('retakeBtnSelfie').style.display = 'none';
       document.getElementById('photoPreviewIn').style.display = 'none';
       document.getElementById('openCamBtnIn').style.display = 'flex';
       document.getElementById('retakeBtnIn').style.display = 'none';

@@ -312,7 +312,7 @@
                 <canvas id="trendChart" height="100"></canvas>
             </div>
             <div class="chart-card">
-                <h3>สัดส่วนรายได้ตามลานจอด (By Lot)</h3>
+                <h3>สัดส่วนปริมาณรถตามลานจอด (Cars by Lot)</h3>
                 <canvas id="lotChart" height="200"></canvas>
             </div>
         </div>
@@ -542,7 +542,7 @@
                 }
                 let lot = row.parkingLot;
                 if(lot) {
-                    lotTotals[lot] = (lotTotals[lot] || 0) + (parseFloat(String(row.netCash).replace(/,/g, '')) || 0);
+                    lotTotals[lot] = (lotTotals[lot] || 0) + (parseFloat(String(row.units).replace(/,/g, '')) || 0);
                 }
             });
 
@@ -588,7 +588,16 @@
                     }]
                 },
                 options: {
-                    cutout: '60%'
+                    cutout: '60%',
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.parsed.toLocaleString() + ' คัน';
+                                }
+                            }
+                        }
+                    }
                 }
             });
         }

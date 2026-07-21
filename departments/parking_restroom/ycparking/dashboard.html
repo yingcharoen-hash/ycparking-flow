@@ -463,11 +463,11 @@
             let chronoData = [...filteredData].reverse();
 
             chronoData.forEach((row, index) => {
-                let net = parseFloat(row.netCash) || 0;
-                let units = parseFloat(row.units) || 0;
-                let trans = parseFloat(row.transfer) || 0;
-                let emp = parseFloat(row.empAmount) || 0;
-                let coup = parseFloat(row.freeCoupon) || 0;
+                let net = parseFloat(String(row.netCash).replace(/,/g, '')) || 0;
+                let units = parseFloat(String(row.units).replace(/,/g, '')) || 0;
+                let trans = parseFloat(String(row.transfer).replace(/,/g, '')) || 0;
+                let emp = parseFloat(String(row.empAmount).replace(/,/g, '')) || 0;
+                let coup = parseFloat(String(row.freeCoupon).replace(/,/g, '')) || 0;
 
                 totalNet += net;
                 totalUnits += units;
@@ -538,11 +538,11 @@
             filteredData.forEach(row => {
                 let d = formatDate(row.date);
                 if(d) {
-                    dates[d] = (dates[d] || 0) + (parseFloat(row.netCash) || 0);
+                    dates[d] = (dates[d] || 0) + (parseFloat(String(row.netCash).replace(/,/g, '')) || 0);
                 }
                 let lot = row.parkingLot;
                 if(lot) {
-                    lotTotals[lot] = (lotTotals[lot] || 0) + (parseFloat(row.netCash) || 0);
+                    lotTotals[lot] = (lotTotals[lot] || 0) + (parseFloat(String(row.netCash).replace(/,/g, '')) || 0);
                 }
             });
 

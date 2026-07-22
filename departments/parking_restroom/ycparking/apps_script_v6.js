@@ -223,11 +223,29 @@ function doGet(e) {
         }
       }
       
+      let historySheet = ss.getSheetByName("บันทึกข้อมูล") || ss.getSheetByName("Sheet1") || ss.getSheets()[0];
+      let historyData = historySheet.getDataRange().getValues();
+      let historyList = [];
+      let startIdx = Math.max(1, historyData.length - 10);
+      for (let i = historyData.length - 1; i >= startIdx; i--) {
+        if (!historyData[i][0]) continue;
+        historyList.push({
+          parkingLot: historyData[i][0].toString(),
+          date: historyData[i][1].toString(),
+          time: historyData[i][2].toString(),
+          outStart: historyData[i][5].toString(),
+          outEnd: historyData[i][6].toString(),
+          units: historyData[i][7].toString(),
+          netCash: historyData[i][10].toString()
+        });
+      }
+
       let result = { 
         status: "success", 
         senders: senders, 
         receivers: receivers, 
-        parkingLots: parkingLots 
+        parkingLots: parkingLots,
+        history: historyList
       };
       
       if (e.parameter.callback) {

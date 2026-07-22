@@ -372,7 +372,7 @@
                 return;
             }
 
-            rawData = response.records || [];
+            rawData = (response.records || []).reverse();
             document.getElementById('lastUpdated').innerText = 'อัปเดตล่าสุด: ' + new Date().toLocaleString('th-TH');
             
             // Populate Lot Filter

@@ -905,7 +905,11 @@
       showAlert('กรุณาถ่ายรูปมิเตอร์ทั้งฝั่งขาเข้าและขาออกให้ครบถ้วน');
       return;
     }
-    
+
+    if (!photoData.selfie) {
+      showAlert('กรุณาถ่ายรูปเซลฟี่ยืนยันตัวตนเจ้าหน้าที่ก่อนบันทึกข้อมูล');
+      return;
+    }
 
 
     const numNetCash = parseFloat(netCash) || 0;

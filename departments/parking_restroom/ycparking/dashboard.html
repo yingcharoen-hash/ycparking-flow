@@ -316,6 +316,12 @@
                 <canvas id="lotChart" height="200"></canvas>
             </div>
         </div>
+        
+        <!-- New Traffic Chart -->
+        <div class="chart-card" style="margin-bottom: 20px;">
+            <h3><i class="fa-solid fa-chart-column"></i> ความหนาแน่นของรถตามช่วงเวลา (Traffic Volume by Hour)</h3>
+            <canvas id="trafficChart" height="80"></canvas>
+        </div>
 
         <!-- Selfie Gallery -->
         <div class="chart-card" style="margin-bottom: 30px;">
@@ -483,14 +489,23 @@
                     frauds.push(`[${formatDate(row.date)}] ${row.parkingLot}: ยอดหักพนักงานสูงผิดปกติ (${emp} บาท) ผู้ส่ง: ${row.senderName}`);
                 }
 
+                // Fraud Check: Low Revenue Alert
+                let expectedRate = String(row.parkingLot).includes('3') ? 10 : 5;
+                if (units > 0) {
+                    let revenuePerCar = net / units;
+                    if (revenuePerCar < expectedRate) {
+                        frauds.push(`[${formatDate(row.date)}] ${row.parkingLot}: รายได้ต่อคันต่ำผิดปกติ (${revenuePerCar.toFixed(2)} บาท/คัน, ปกติ ${expectedRate} บาท) ผู้ส่ง: ${row.senderName}`);
+                    }
+                }
+
                 // Fraud Check 2: Meter Gaps
                 let lot = row.parkingLot;
                 if (!lotsData[lot]) {
                     lotsData[lot] = { lastRow: row, count: 1 };
                 } else {
                     let prev = lotsData[lot].lastRow;
-                    let prevOutEnd = parseFloat(String(prev.outEnd).replace(/,/g, '')) || 0;
-                    let currOutStart = parseFloat(String(row.outStart).replace(/,/g, '')) || 0;
+                    let prevOutEnd = parseFloat(String(prev.outEndMeter).replace(/,/g, '')) || 0;
+                    let currOutStart = parseFloat(String(row.outStartMeter).replace(/,/g, '')) || 0;
                     
                     // Allow exact match OR +1 difference
                     if (lotsData[lot].count > 0 && prevOutEnd > 0 && currOutStart > 0 && currOutStart !== prevOutEnd && currOutStart !== (prevOutEnd + 1)) {
@@ -529,6 +544,7 @@
         // Chart Instances
         let trendChartObj = null;
         let lotChartObj = null;
+        let trafficChartObj = null;
 
         function renderCharts() {
             // Prepare Trend Data (group by date)
@@ -597,6 +613,54 @@
                                 }
                             }
                         }
+                    }
+                }
+            });
+
+            // Traffic Chart Logic
+            let hoursData = {};
+            filteredData.forEach(row => {
+                let timeStr = formatTime(row.time);
+                if (timeStr) {
+                    let hour = timeStr.split(':')[0] + ':00'; // Group by hour
+                    let inS = parseFloat(String(row.inStartMeter).replace(/,/g, '')) || 0;
+                    let inE = parseFloat(String(row.inEndMeter).replace(/,/g, '')) || 0;
+                    let entered = inE > inS ? (inE - inS) : 0;
+                    let exited = parseFloat(String(row.units).replace(/,/g, '')) || 0;
+                    
+                    if (!hoursData[hour]) hoursData[hour] = { entered: 0, exited: 0 };
+                    hoursData[hour].entered += entered;
+                    hoursData[hour].exited += exited;
+                }
+            });
+            
+            let sortedHours = Object.keys(hoursData).sort();
+            let enteredVals = sortedHours.map(h => hoursData[h].entered);
+            let exitedVals = sortedHours.map(h => hoursData[h].exited);
+            
+            const ctx3 = document.getElementById('trafficChart').getContext('2d');
+            if(trafficChartObj) trafficChartObj.destroy();
+            trafficChartObj = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: sortedHours,
+                    datasets: [
+                        {
+                            label: 'รถเข้า (Entered)',
+                            data: enteredVals,
+                            backgroundColor: '#3498db'
+                        },
+                        {
+                            label: 'รถออก (Exited)',
+                            data: exitedVals,
+                            backgroundColor: '#e74c3c'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
                     }
                 }
             });

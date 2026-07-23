@@ -317,11 +317,7 @@
             </div>
         </div>
         
-        <!-- New Traffic Chart -->
-        <div class="chart-card" style="margin-bottom: 20px;">
-            <h3><i class="fa-solid fa-chart-column"></i> ความหนาแน่นของรถเฉลี่ย (คัน/ชั่วโมง) ประจำกะ</h3>
-            <canvas id="trafficChart" height="80"></canvas>
-        </div>
+
 
         <!-- Selfie Gallery -->
         <div class="chart-card" style="margin-bottom: 30px;">
@@ -544,7 +540,6 @@
         // Chart Instances
         let trendChartObj = null;
         let lotChartObj = null;
-        let trafficChartObj = null;
 
         function renderCharts() {
             // Prepare Trend Data (group by date)
@@ -617,93 +612,7 @@
                 }
             });
 
-            // Traffic Chart Logic - Approach 2 (Average Density per Hour by Shift)
-            let shiftData = {};
-            let lotLastTime = {};
-            
-            // Iterate chronologically to find gap between shifts
-            let chronoData = [...filteredData].reverse();
-            
-            chronoData.forEach(row => {
-                let lot = row.parkingLot;
-                let dStr = formatDate(row.date); 
-                let tStr = formatTime(row.time);
-                
-                if (dStr && tStr) {
-                    let parts = dStr.split('/');
-                    let currDate = new Date(`${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}T${tStr}:00`);
-                    
-                    let durationHours = 8; // Default assumption if no prev record
-                    if (lotLastTime[lot]) {
-                        let diffMs = currDate - lotLastTime[lot];
-                        if (diffMs > 0 && diffMs < (24 * 60 * 60 * 1000)) {
-                            durationHours = diffMs / (1000 * 60 * 60);
-                        }
-                    }
-                    lotLastTime[lot] = currDate;
-                    
-                    // Group by Shift (e.g., "รอบ 14:00")
-                    let shiftLabel = `รอบ ${tStr}`;
-                    
-                    let inS = parseFloat(String(row.inStartMeter).replace(/,/g, '')) || 0;
-                    let inE = parseFloat(String(row.inEndMeter).replace(/,/g, '')) || 0;
-                    let entered = inE > inS ? (inE - inS) : 0;
-                    let exited = parseFloat(String(row.units).replace(/,/g, '')) || 0;
-                    
-                    // Density (cars per hour)
-                    let densityIn = entered / durationHours;
-                    let densityOut = exited / durationHours;
-                    
-                    if (!shiftData[shiftLabel]) shiftData[shiftLabel] = { inTotal: 0, outTotal: 0, count: 0 };
-                    shiftData[shiftLabel].inTotal += densityIn;
-                    shiftData[shiftLabel].outTotal += densityOut;
-                    shiftData[shiftLabel].count += 1;
-                }
-            });
-            
-            // Calculate averages for chart
-            let sortedShifts = Object.keys(shiftData).sort();
-            let enteredVals = sortedShifts.map(s => (shiftData[s].inTotal / shiftData[s].count).toFixed(0));
-            let exitedVals = sortedShifts.map(s => (shiftData[s].outTotal / shiftData[s].count).toFixed(0));
-            
-            const ctx3 = document.getElementById('trafficChart').getContext('2d');
-            if(trafficChartObj) trafficChartObj.destroy();
-            trafficChartObj = new Chart(ctx3, {
-                type: 'bar',
-                data: {
-                    labels: sortedShifts,
-                    datasets: [
-                        {
-                            label: 'ความหนาแน่นรถเข้าเฉลี่ย (คัน/ชม.)',
-                            data: enteredVals,
-                            backgroundColor: '#3498db'
-                        },
-                        {
-                            label: 'ความหนาแน่นรถออกเฉลี่ย (คัน/ชม.)',
-                            data: exitedVals,
-                            backgroundColor: '#e74c3c'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ' ' + context.dataset.label + ': ' + context.parsed.y + ' คัน/ชม.';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: { 
-                            beginAtZero: true,
-                            title: { display: true, text: 'จำนวนรถเฉลี่ย (คัน/ชั่วโมง)' }
-                        }
-                    }
-                }
-            });
+
         }
 
         function renderGallery() {

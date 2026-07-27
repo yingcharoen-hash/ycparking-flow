@@ -297,6 +297,13 @@
                     <h2 id="kpiEmp">0 ฿</h2>
                 </div>
             </div>
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: linear-gradient(135deg, #e74c3c, #c0392b);"><i class="fa-solid fa-car-side"></i></div>
+                <div class="kpi-info">
+                    <h3>รถค้างสะสม (Ghost Inventory)</h3>
+                    <h2 id="kpiGhost">0 คัน</h2>
+                </div>
+            </div>
         </div>
 
         <!-- Fraud Alert Section -->
@@ -455,7 +462,7 @@
         }
 
         function analyzeData() {
-            let totalNet = 0, totalUnits = 0, totalTransfer = 0, totalCoupon = 0, totalEmp = 0;
+            let totalNet = 0, totalUnits = 0, totalTransfer = 0, totalCoupon = 0, totalEmp = 0, totalGhost = 0;
             
             let lotsData = {}; // For meter gap checking
             let frauds = [];
@@ -476,6 +483,13 @@
                 totalTransfer += trans;
                 totalCoupon += coup;
                 totalEmp += emp;
+                
+                let inS = parseFloat(String(row.inStartMeter).replace(/,/g, '')) || 0;
+                let inE = parseFloat(String(row.inEndMeter).replace(/,/g, '')) || 0;
+                if (inE >= inS && inE > 0) {
+                    let entered = inE - inS;
+                    totalGhost += (entered - units);
+                }
 
                 // Fraud Check 1: High Deductions
                 if (coup > 150) {
@@ -518,6 +532,10 @@
             document.getElementById('kpiTransfer').innerText = totalTransfer.toLocaleString() + ' ฿';
             document.getElementById('kpiCoupon').innerText = totalCoupon.toLocaleString() + ' ฿';
             document.getElementById('kpiEmp').innerText = totalEmp.toLocaleString() + ' ฿';
+            
+            let ghostEl = document.getElementById('kpiGhost');
+            ghostEl.innerText = (totalGhost > 0 ? '+' : '') + totalGhost.toLocaleString() + ' คัน';
+            ghostEl.style.color = totalGhost > 50 ? '#e74c3c' : (totalGhost < 0 ? '#f39c12' : '#27ae60');
 
             // Show Fraud Alerts
             const fraudSec = document.getElementById('fraudSection');

@@ -221,8 +221,13 @@
     
         @media print {
             @page { margin: 1.5cm; } /* Explicit margin to prevent cutoff and extra blank pages */
-            body, html { margin: 0; padding: 0; height: auto !important; overflow: visible !important; }
+            body, html { margin: 0; padding: 0; height: auto !important; overflow: visible !important; font-size: 13px; }
             body * { visibility: hidden; }
+            
+            h2 { font-size: 18px !important; }
+            h3 { font-size: 14px !important; }
+            h4 { font-size: 13px !important; }
+            p, li, td, th, span { font-size: 12px !important; }
             
             .container, .navbar, #loading { display: none !important; }
             
@@ -238,8 +243,8 @@
                 box-sizing: border-box;
             }
             
-            .print-table { width: 100%; border-collapse: collapse; margin-top: 15px; table-layout: fixed; word-wrap: break-word; }
-            .print-table th, .print-table td { border: 1px solid #ddd; padding: 8px; font-size: 14px; text-align: left; }
+            .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 15px; table-layout: fixed; word-wrap: break-word; }
+            .print-table th, .print-table td { border: 1px solid #ddd; padding: 6px; font-size: 12px; text-align: left; }
             .print-table th { background-color: #f4f4f4; }
             
             /* Prevent orphan elements causing blank pages */
@@ -436,7 +441,7 @@
             <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #333; margin-bottom: 10px;">2. สภาพที่เป็นอยู่ / ข้อตรวจพบ (Condition & Observation)</h3>
             <p>จากการตรวจสอบข้อมูลในระบบ Dashboard ตามขอบเขตเวลาข้างต้น พบข้อสังเกตดังนี้:</p>
             <ul style="line-height: 1.6;">
-                <li><b>ยอดรายได้สุทธิ:</b> <span id="printTotalRevenue">0 ฿</span> (รวมเงินสดและเงินโอน) จากจำนวนรถออกทั้งหมด <span id="printUnits">0 คัน</span></li>
+                <li><b>ยอดรายได้ทั้งหมด:</b> <span id="printTotalRevenue">0 ฿</span> (ยอดเงินสด <span id="printNetCash">0 ฿</span> + เงินโอน <span id="printTransfer">0 ฿</span>) จากปริมาณรถออก <span id="printUnits">0 คัน</span></li>
                 <li><b>รายการหักออก:</b> คูปองจอดฟรี <span id="printCoupon">0 ฿</span> | ยอดหักพนักงาน <span id="printEmp">0 ฿</span></li>
                 <li><b style="color: #e74c3c;">ยอดรถค้างสะสม (Ghost Inventory): <span id="printGhost">0 คัน</span></b></li>
             </ul>
@@ -500,6 +505,10 @@
             const lotSelect = document.getElementById('lotFilter');
             const selectedLot = lotSelect.options[lotSelect.selectedIndex].text;
             document.getElementById('printLotName').innerText = `ลานจอด: ${selectedLot}`;
+            
+            // Populate KPIs from existing elements
+            document.getElementById('printNetCash').innerText = document.getElementById('kpiNetCash').innerText;
+            document.getElementById('printTransfer').innerText = document.getElementById('kpiTransfer').innerText;
             
             // Calculate Total Revenue (Net Cash + Transfer)
             let net = parseFloat(document.getElementById('kpiNetCash').innerText.replace(/[^0-9.-]+/g,""));

@@ -508,13 +508,12 @@
             document.getElementById('printLotName').innerText = `ลานจอด: ${selectedLot}`;
             
             // Populate KPIs from existing elements
-            let totalNet = parseFloat(document.getElementById('kpiNetCash').innerText.replace(/[^0-9.-]+/g,"")) || 0;
+            let grossRevenue = parseFloat(document.getElementById('kpiNetCash').innerText.replace(/[^0-9.-]+/g,"")) || 0; // In raw data, netCash = Gross Revenue
             let transfer = parseFloat(document.getElementById('kpiTransfer').innerText.replace(/[^0-9.-]+/g,"")) || 0;
             let coupon = parseFloat(document.getElementById('kpiCoupon').innerText.replace(/[^0-9.-]+/g,"")) || 0;
             let emp = parseFloat(document.getElementById('kpiEmp').innerText.replace(/[^0-9.-]+/g,"")) || 0;
             
-            let realCash = totalNet - transfer;
-            let grossRevenue = totalNet + coupon + emp; // Total value including deductions
+            let realCash = grossRevenue - transfer - coupon - emp;
 
             document.getElementById('printTotalRevenue').innerText = grossRevenue.toLocaleString() + ' ฿';
             document.getElementById('printRealCash').innerText = realCash.toLocaleString() + ' ฿';

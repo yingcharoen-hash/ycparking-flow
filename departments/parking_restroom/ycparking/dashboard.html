@@ -297,7 +297,7 @@
                     </div>
                     
                     <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-                        <button onclick="applyFilters()" style="padding:10px; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold; font-size:14px;"><i class="fa-solid fa-search"></i> กรองข้อมูล</button>
+                        
                         <button onclick="clearFilters()" style="padding:10px; background:#7f8c8d; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold; font-size:14px;"><i class="fa-solid fa-times"></i> ล้างตัวกรอง</button>
                         <hr style="border: 0; border-top: 1px dashed #ccc; margin: 5px 0;">
                         <button onclick="generatePDFReport()" style="padding:12px; background:#e74c3c; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold; font-size:15px; display:flex; justify-content:center; align-items:center; gap:8px;"><i class="fa-solid fa-file-pdf"></i> พิมพ์รายงาน PDF</button>
@@ -494,10 +494,6 @@
             const lotSelect = document.getElementById('lotFilter');
             const selectedLot = lotSelect.options[lotSelect.selectedIndex].text;
             document.getElementById('printLotName').innerText = `ลานจอด: ${selectedLot}`;
-            
-            // Populate KPIs from existing elements
-            document.getElementById('printNetCash').innerText = document.getElementById('kpiNetCash').innerText;
-            document.getElementById('printTransfer').innerText = document.getElementById('kpiTransfer').innerText;
             
             // Calculate Total Revenue (Net Cash + Transfer)
             let net = parseFloat(document.getElementById('kpiNetCash').innerText.replace(/[^0-9.-]+/g,""));

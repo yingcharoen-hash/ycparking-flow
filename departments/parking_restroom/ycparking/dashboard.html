@@ -510,14 +510,17 @@
             // Populate KPIs from existing elements
             let totalNet = parseFloat(document.getElementById('kpiNetCash').innerText.replace(/[^0-9.-]+/g,"")) || 0;
             let transfer = parseFloat(document.getElementById('kpiTransfer').innerText.replace(/[^0-9.-]+/g,"")) || 0;
+            let coupon = parseFloat(document.getElementById('kpiCoupon').innerText.replace(/[^0-9.-]+/g,"")) || 0;
+            let emp = parseFloat(document.getElementById('kpiEmp').innerText.replace(/[^0-9.-]+/g,"")) || 0;
+            
             let realCash = totalNet - transfer;
+            let grossRevenue = totalNet + coupon + emp; // Total value including deductions
 
-            document.getElementById('printTotalRevenue').innerText = totalNet.toLocaleString() + ' ฿';
+            document.getElementById('printTotalRevenue').innerText = grossRevenue.toLocaleString() + ' ฿';
             document.getElementById('printRealCash').innerText = realCash.toLocaleString() + ' ฿';
             document.getElementById('printTransfer').innerText = transfer.toLocaleString() + ' ฿';
-            
-            document.getElementById('printCoupon').innerText = document.getElementById('kpiCoupon').innerText;
-            document.getElementById('printEmp').innerText = document.getElementById('kpiEmp').innerText;
+            document.getElementById('printCoupon').innerText = coupon.toLocaleString() + ' ฿';
+            document.getElementById('printEmp').innerText = emp.toLocaleString() + ' ฿';
             document.getElementById('printUnits').innerText = document.getElementById('kpiUnits').innerText;
             
             let ghostEl = document.getElementById('kpiGhost');

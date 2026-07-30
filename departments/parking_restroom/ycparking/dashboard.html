@@ -218,6 +218,38 @@
         @media (max-width: 768px) {
             .chart-grid { grid-template-columns: 1fr; }
         }
+    
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #pdfReportView, #pdfReportView * {
+                visibility: visible;
+            }
+            #pdfReportView {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+                background: white;
+            }
+            /* Make print look like a formal A4 */
+            .print-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+            .print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+            .print-box { border: 1px solid #ccc; padding: 15px; border-radius: 8px; }
+            .print-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+            .print-table th, .print-table td { border: 1px solid #ddd; padding: 8px; font-size: 14px; text-align: left; }
+            .print-table th { background-color: #f4f4f4; }
+            .page-break { page-break-before: always; }
+        }
+        
+        #pdfReportView { display: none; }
+        @media print {
+            .container, .navbar, #loading { display: none !important; }
+            #pdfReportView { display: block !important; }
+        }
+
     </style>
 </head>
 <body>
@@ -256,9 +288,10 @@
                     </select>
                 </div>
             </div>
-            <div style="display: flex; gap: 10px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <button onclick="applyFilters()" style="padding:8px 20px; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;"><i class="fa-solid fa-search"></i> กรองข้อมูล</button>
                 <button onclick="clearFilters()" style="padding:8px 20px; background:#7f8c8d; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;"><i class="fa-solid fa-times"></i> ล้าง</button>
+                <button onclick="generatePDFReport()" style="padding:8px 20px; background:#e74c3c; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold; margin-left: auto;"><i class="fa-solid fa-file-pdf"></i> พิมพ์รายงาน PDF</button>
             </div>
         </div>
         <div class="kpi-grid">
@@ -358,7 +391,105 @@
 
     </div>
 
+
+    <div id="pdfReportView">
+        <div class="print-header">
+            <h2><i class="fa-solid fa-square-parking"></i> รายงานสรุปผลประกอบการลานจอดรถ</h2>
+            <p id="printDateRange">ประจำวันที่: -</p>
+        </div>
+        
+        <div class="print-grid">
+            <div class="print-box">
+                <h3 style="margin-top:0;">สรุปรายได้ (Total Revenue)</h3>
+                <table class="print-table">
+                    <tr><td><b>ยอดเงินสด:</b></td><td id="printNetCash" style="text-align:right;">0 ฿</td></tr>
+                    <tr><td><b>ยอดเงินโอน:</b></td><td id="printTransfer" style="text-align:right;">0 ฿</td></tr>
+                    <tr><td><b>รวมรายได้ทั้งหมด:</b></td><td id="printTotalRevenue" style="text-align:right; font-weight:bold; color:green;">0 ฿</td></tr>
+                </table>
+            </div>
+            
+            <div class="print-box">
+                <h3 style="margin-top:0;">สรุปรายการอื่นๆ (Other Metrics)</h3>
+                <table class="print-table">
+                    <tr><td><b>ยอดคูปองจอดฟรี:</b></td><td id="printCoupon" style="text-align:right;">0 ฿</td></tr>
+                    <tr><td><b>ยอดหักพนักงาน:</b></td><td id="printEmp" style="text-align:right;">0 ฿</td></tr>
+                    <tr><td><b>ปริมาณรถออกทั้งหมด:</b></td><td id="printUnits" style="text-align:right; font-weight:bold;">0 คัน</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="print-box" style="margin-bottom: 30px;">
+            <h3 style="margin-top:0;">ตัวชี้วัดความเสี่ยง (Risk Indicators)</h3>
+            <p><b>รถค้างสะสม (Ghost Inventory):</b> <span id="printGhost" style="font-size:1.2em; font-weight:bold;">0 คัน</span></p>
+            <p style="font-size:0.9em; color:#555;"><i>*หมายเหตุ: หากยอดรถค้างสะสมสูงเกินปกติ อาจเกิดจากการลักลอบปล่อยรถออกทางช่องทางอื่น หรือเซ็นเซอร์ขาเข้านับผิดพลาด</i></p>
+        </div>
+        
+        <h3 style="margin-top:30px;">รายการเฝ้าระวังความผิดปกติ (Watchlist Anomalies)</h3>
+        <table class="print-table" id="printAnomaliesTable">
+            <thead>
+                <tr>
+                    <th>วันที่-เวลา</th>
+                    <th>ลานจอด</th>
+                    <th>รายละเอียดความผิดปกติ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Populated by JS -->
+            </tbody>
+        </table>
+    </div>
+
     <script>
+        function generatePDFReport() {
+            // Populate dates
+            const startD = document.getElementById('startDate').value;
+            const endD = document.getElementById('endDate').value;
+            document.getElementById('printDateRange').innerText = `ประจำวันที่: ${startD || '-'} ถึง ${endD || '-'}`;
+            
+            // Populate KPIs from existing elements
+            document.getElementById('printNetCash').innerText = document.getElementById('kpiNetCash').innerText;
+            document.getElementById('printTransfer').innerText = document.getElementById('kpiTransfer').innerText;
+            
+            // Calculate Total Revenue (Net Cash + Transfer)
+            let net = parseFloat(document.getElementById('kpiNetCash').innerText.replace(/[^0-9.-]+/g,""));
+            let trans = parseFloat(document.getElementById('kpiTransfer').innerText.replace(/[^0-9.-]+/g,""));
+            document.getElementById('printTotalRevenue').innerText = (net + trans).toLocaleString() + ' ฿';
+            
+            document.getElementById('printCoupon').innerText = document.getElementById('kpiCoupon').innerText;
+            document.getElementById('printEmp').innerText = document.getElementById('kpiEmp').innerText;
+            document.getElementById('printUnits').innerText = document.getElementById('kpiUnits').innerText;
+            
+            let ghostEl = document.getElementById('kpiGhost');
+            document.getElementById('printGhost').innerText = ghostEl.innerText;
+            document.getElementById('printGhost').style.color = ghostEl.style.color;
+
+            // Populate Anomalies Table
+            const printTbody = document.querySelector('#printAnomaliesTable tbody');
+            printTbody.innerHTML = '';
+            
+            // We can grab the anomalies from the filteredData array by running the same rules again,
+            // or just copy the list items from the fraud alerts box.
+            const alertsList = document.getElementById('fraudAlertsList');
+            if (alertsList.children.length === 0) {
+                printTbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">ไม่พบรายการผิดปกติในช่วงเวลานี้</td></tr>';
+            } else {
+                // Since the original alerts are just string messages, we'll parse them roughly.
+                // Format was: [DD/MM/YYYY] ลาน X: ...
+                for (let li of alertsList.children) {
+                    let text = li.innerText;
+                    let match = text.match(/\[(.*?)\] (ลาน.*?): (.*)/);
+                    if (match) {
+                        printTbody.innerHTML += `<tr><td>${match[1]}</td><td>${match[2]}</td><td>${match[3]}</td></tr>`;
+                    } else {
+                        printTbody.innerHTML += `<tr><td colspan="2">-</td><td>${text}</td></tr>`;
+                    }
+                }
+            }
+
+            // Print
+            window.print();
+        }
+
         const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9VgBmGLjVAvDEBCK2ruTMnQswLtB1oZoiMzDlhwuRC9MI95GJoId_QTdQJE8kOw-XPw/exec';
         let rawData = [];
         let filteredData = [];
@@ -465,7 +596,7 @@
             let totalNet = 0, totalUnits = 0, totalTransfer = 0, totalCoupon = 0, totalEmp = 0, totalGhost = 0;
             
             let lotsData = {}; // For meter gap checking
-            let frauds = [];
+            let anomalies = [];
 
             // Group by lot for meter tracking
             // Since data is reverse chronological (newest first), we reverse it back to chronological for analysis
@@ -491,24 +622,24 @@
                     totalGhost += (entered - units);
                 }
 
-                // Fraud Check 1: High Deductions
+                // Anomaly Check 1: High Deductions
                 if (coup > 150) {
-                    frauds.push(`[${formatDate(row.date)}] ${row.parkingLot}: ยอดคูปองจอดฟรีสูงผิดปกติ (${coup} บาท) ผู้ส่ง: ${row.senderName}`);
+                    anomalies.push(`[${formatDate(row.date)}] ${row.parkingLot}: ยอดคูปองจอดฟรีสูงผิดปกติ (${coup} บาท) ผู้ส่ง: ${row.senderName}`);
                 }
                 if (emp > 500) {
-                    frauds.push(`[${formatDate(row.date)}] ${row.parkingLot}: ยอดหักพนักงานสูงผิดปกติ (${emp} บาท) ผู้ส่ง: ${row.senderName}`);
+                    anomalies.push(`[${formatDate(row.date)}] ${row.parkingLot}: ยอดหักพนักงานสูงผิดปกติ (${emp} บาท) ผู้ส่ง: ${row.senderName}`);
                 }
 
-                // Fraud Check: Low Revenue Alert
+                // Anomaly Check: Low Revenue Alert
                 let expectedRate = String(row.parkingLot).includes('3') ? 10 : 5;
                 if (units > 0) {
                     let revenuePerCar = net / units;
                     if (revenuePerCar < expectedRate) {
-                        frauds.push(`[${formatDate(row.date)}] ${row.parkingLot}: รายได้ต่อคันต่ำผิดปกติ (${revenuePerCar.toFixed(2)} บาท/คัน, ปกติ ${expectedRate} บาท) ผู้ส่ง: ${row.senderName}`);
+                        anomalies.push(`[${formatDate(row.date)}] ${row.parkingLot}: รายได้ต่อคันต่ำผิดปกติ (${revenuePerCar.toFixed(2)} บาท/คัน, ปกติ ${expectedRate} บาท) ผู้ส่ง: ${row.senderName}`);
                     }
                 }
 
-                // Fraud Check 2: Meter Gaps
+                // Anomaly Check 2: Meter Gaps
                 let lot = row.parkingLot;
                 if (!lotsData[lot]) {
                     lotsData[lot] = { lastRow: row, count: 1 };
@@ -519,7 +650,7 @@
                     
                     // Allow exact match OR +1 difference
                     if (lotsData[lot].count > 0 && prevOutEnd > 0 && currOutStart > 0 && currOutStart !== prevOutEnd && currOutStart !== (prevOutEnd + 1)) {
-                        frauds.push(`[${formatDate(row.date)}] ${lot}: มิเตอร์ขาออกไม่ต่อเนื่อง! รอบก่อนจบที่ ${prevOutEnd} แต่รอบนี้เริ่มที่ ${currOutStart} (ผู้ส่ง: ${row.senderName})`);
+                        anomalies.push(`[${formatDate(row.date)}] ${lot}: มิเตอร์ขาออกไม่ต่อเนื่อง! รอบก่อนจบที่ ${prevOutEnd} แต่รอบนี้เริ่มที่ ${currOutStart} (ผู้ส่ง: ${row.senderName})`);
                     }
                     lotsData[lot].lastRow = row;
                     lotsData[lot].count++;
@@ -542,7 +673,7 @@
             const fraudList = document.getElementById('fraudList');
             fraudList.innerHTML = '';
             
-            if (frauds.length > 0) {
+            if (anomalies.length > 0) {
                 fraudSec.style.display = 'block';
                 // Show max 10 alerts
                 frauds.reverse().slice(0, 10).forEach(msg => {

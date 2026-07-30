@@ -443,7 +443,7 @@
             <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #333; margin-bottom: 10px;">2. สภาพที่เป็นอยู่ / ข้อตรวจพบ (Condition & Observation)</h3>
             <p>จากการตรวจสอบข้อมูลในระบบ Dashboard ตามขอบเขตเวลาข้างต้น พบข้อสังเกตดังนี้:</p>
             <ul style="line-height: 1.6;">
-                <li><b>ยอดเงินสุทธิที่เก็บได้ (Total):</b> <span id="printNetCash" style="font-weight:bold; color:green;">0 ฿</span> | ยอดเงินโอน: <span id="printTransfer">0 ฿</span> | จำนวนรถออกทั้งหมด: <span id="printUnits">0 คัน</span></li>
+                <li><b>ยอดรายได้สุทธิ:</b> <span id="printTotalRevenue" style="font-weight:bold; color:green;">0 ฿</span> (ยอดเงินสด <span id="printRealCash">0 ฿</span> + เงินโอน <span id="printTransfer">0 ฿</span>) | จำนวนรถออกทั้งหมด: <span id="printUnits">0 คัน</span></li>
                 <li><b>รายการหักออก:</b> คูปองจอดฟรี <span id="printCoupon">0 ฿</span> | ยอดหักพนักงาน <span id="printEmp">0 ฿</span></li>
                 <li><b style="color: #e74c3c;">ยอดรถค้างสะสม (Ghost Inventory): <span id="printGhost">0 คัน</span></b></li>
             </ul>
@@ -509,8 +509,13 @@
             document.getElementById('printLotName').innerText = `ลานจอด: ${selectedLot}`;
             
             // Populate KPIs from existing elements
-            document.getElementById('printNetCash').innerText = document.getElementById('kpiNetCash').innerText;
-            document.getElementById('printTransfer').innerText = document.getElementById('kpiTransfer').innerText;
+            let totalNet = parseFloat(document.getElementById('kpiNetCash').innerText.replace(/[^0-9.-]+/g,"")) || 0;
+            let transfer = parseFloat(document.getElementById('kpiTransfer').innerText.replace(/[^0-9.-]+/g,"")) || 0;
+            let realCash = totalNet - transfer;
+
+            document.getElementById('printTotalRevenue').innerText = totalNet.toLocaleString() + ' ฿';
+            document.getElementById('printRealCash').innerText = realCash.toLocaleString() + ' ฿';
+            document.getElementById('printTransfer').innerText = transfer.toLocaleString() + ' ฿';
             
             document.getElementById('printCoupon').innerText = document.getElementById('kpiCoupon').innerText;
             document.getElementById('printEmp').innerText = document.getElementById('kpiEmp').innerText;

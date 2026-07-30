@@ -464,17 +464,13 @@
 
         <div class="ia-section" style="margin-bottom: 20px; background-color: #fff3f3; padding: 15px; border-left: 5px solid #e74c3c;">
             <h3 style="margin-top: 0; margin-bottom: 10px; color: #c0392b;">3. ผลกระทบและความเสี่ยง (Impact & Risk)</h3>
-            <p style="margin: 0;">หากยอดรถค้างสะสม (<span id="printGhostImpact">0</span> คัน) เกิดจากการสูญหายหรือออกนอกระบบโดยไม่ชำระเงินจริง จะคิดเป็น<b>มูลค่าความเสียหายแฝงประมาณ <span id="printLossAmount" style="color: #c0392b; font-weight: bold; font-size: 1.2em;">0 ฿</span></b></p>
-            <p style="margin: 5px 0 0 0; font-size: 0.85em; color: #555;"><i>*หมายเหตุ: คำนวณจากอัตราค่าจอดรถขั้นต่ำ (5 บาท หรือ 10 บาท ขึ้นอยู่กับลานจอด) คูณด้วยยอดรถค้างสะสมที่เป็นบวก</i></p>
+            <div id="printSection3"></div>
+            <p style="margin: 5px 0 0 0; font-size: 0.85em; color: #555;"><i>*หมายเหตุ: คำนวณจากอัตราค่าจอดรถขั้นต่ำ (5 บาท หรือ 10 บาท) คูณด้วยยอดสะสมที่เป็นบวก</i></p>
         </div>
 
         <div class="ia-section" style="margin-bottom: 30px;">
             <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #333; margin-bottom: 10px;">4. ข้อเสนอแนะเพื่อการปรับปรุง (Recommendation)</h3>
-            <ol style="line-height: 1.6;">
-                <li><b>ตรวจสอบความแม่นยำของเซ็นเซอร์:</b> จัดระเบียบช่องทางเข้าเพื่อป้องกันมิให้บุคคล รถเข็น หรือวัตถุอื่นๆ เดินตัดผ่านเซ็นเซอร์นับจำนวนรถ</li>
-                <li><b>ตรวจสอบกายภาพ (Physical Count):</b> ลงพื้นที่สุ่มตรวจจำนวนรถที่จอดข้ามคืนจริงว่าสอดคล้องกับตัวเลขสะสมในระบบหรือไม่</li>
-                <li><b>ตรวจสอบวงจรปิด (CCTV):</b> หากตัวเลขยังคงผิดปกติ ให้สุ่มตรวจกล้องวงจรปิดในช่วงกะเวลาที่มีรายการเฝ้าระวัง (Watchlist) ด้านบน</li>
-            </ol>
+            <div id="printSection4"></div>
         </div>
 
         <div class="ia-section print-signatures" style="margin-top: 50px; display: flex; justify-content: space-around; text-align: center;">
@@ -532,9 +528,12 @@
             document.getElementById('printGhost').innerText = ghostText;
             document.getElementById('printGhost').style.color = ghostEl.style.color;
             
-            // Calculate Impact Loss and Descriptive Sentence
+            // Calculate Impact Loss and Dynamic Recommendations
             let ghostNum = parseInt(ghostText.replace(/[^0-9-]/g, '')) || 0;
             let capacityMsg = '';
+            let impactHtml = '';
+            let recHtml = '';
+            
             if (ghostNum > 0) {
                 let capacity = 0;
                 if (selectedLot.includes('ลาน 2')) capacity = 200;
@@ -549,16 +548,32 @@
                     capacityMsg = `(พบยอดรถค้างสะสมจำนวน +${ghostNum} คัน)`;
                 }
                 
-                document.getElementById('printGhostImpact').innerText = ghostNum.toLocaleString();
-                // If it's lot 3, rate is 10, else 5
                 let rate = selectedLot.includes('ลาน 3') ? 10 : 5;
                 let loss = ghostNum * rate;
-                document.getElementById('printLossAmount').innerText = loss.toLocaleString() + ' ฿';
+                
+                if (ghostNum < 50) {
+                    impactHtml = `<p style="margin: 0;">ยอดรถค้างสะสมอยู่ในระดับต่ำ (< 50 คัน) อาจเกิดจากความคลาดเคลื่อนของเซ็นเซอร์ (มีคนหรือสิ่งของเดินผ่าน) <br>หากเกิดจากการสูญหายหรือออกนอกระบบโดยไม่ชำระเงินจริง จะคิดเป็น<b>มูลค่าความเสียหายแฝงประมาณ <span style="color: #c0392b; font-weight: bold; font-size: 1.2em;">${loss.toLocaleString()} ฿</span></b></p>`;
+                    recHtml = `<ul style="line-height: 1.6;">
+                        <li><b>ตรวจสอบความแม่นยำของเซ็นเซอร์:</b> กำชับพนักงานหน้างานให้จัดระเบียบช่องทางเข้าออก ไม่ให้มีบุคคลหรือสิ่งของเดินตัดผ่านเซ็นเซอร์</li>
+                        <li><b>การเฝ้าระวัง:</b> ติดตามข้อมูลผ่าน Dashboard อย่างต่อเนื่อง หากตัวเลขเพิ่มสูงขึ้นผิดปกติจึงพิจารณาสุ่มตรวจ CCTV ต่อไป</li>
+                    </ul>`;
+                } else {
+                    impactHtml = `<p style="margin: 0;">ยอดรถค้างสะสมอยู่ในระดับสูง มีความเสี่ยงต่อการรั่วไหลของรายได้ค่อนข้างมาก <br>หากเกิดจากการสูญหายหรือออกนอกระบบโดยไม่ชำระเงินจริง จะคิดเป็น<b>มูลค่าความเสียหายแฝงประมาณ <span style="color: #c0392b; font-weight: bold; font-size: 1.2em;">${loss.toLocaleString()} ฿</span></b></p>`;
+                    recHtml = `<ol style="line-height: 1.6;">
+                        <li><b>ตรวจสอบกายภาพ (Physical Count) ทันที:</b> ลงพื้นที่ตรวจนับจำนวนรถที่จอดข้ามคืนจริง ว่าสอดคล้องกับตัวเลขสะสมในระบบหรือไม่</li>
+                        <li><b>ตรวจสอบวงจรปิด (CCTV):</b> สุ่มตรวจกล้องวงจรปิดในช่วงกะเวลาที่มีรายการเฝ้าระวัง (Watchlist) อย่างเร่งด่วน</li>
+                        <li><b>ตรวจสอบระบบเซ็นเซอร์:</b> แจ้งทีมช่างเข้าตรวจสอบความผิดปกติของอุปกรณ์ฮาร์ดแวร์ เพื่อป้องกันความคลาดเคลื่อนในอนาคต</li>
+                    </ol>`;
+                }
             } else {
-                document.getElementById('printGhostImpact').innerText = '0';
-                document.getElementById('printLossAmount').innerText = '0 ฿';
+                capacityMsg = `(ไม่พบยอดสะสมตกค้างผิดปกติ)`;
+                impactHtml = `<p style="margin: 0; color: #27ae60; font-weight: bold;">ไม่พบความเสี่ยงที่มีนัยสำคัญ</p>`;
+                recHtml = `<p style="margin: 0;">เฝ้าระวังและติดตามข้อมูลผ่าน Dashboard ตามปกติ</p>`;
             }
+            
             document.getElementById('printGhostSentence').innerText = capacityMsg;
+            document.getElementById('printSection3').innerHTML = impactHtml;
+            document.getElementById('printSection4').innerHTML = recHtml;
 
             // Populate Anomalies Table
             const printTbody = document.querySelector('#printAnomaliesTable tbody');

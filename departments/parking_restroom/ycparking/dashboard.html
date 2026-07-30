@@ -445,7 +445,7 @@
             <ul style="line-height: 1.6;">
                 <li><b>ยอดรายได้สุทธิ:</b> <span id="printTotalRevenue" style="font-weight:bold; color:green;">0 ฿</span> (ยอดเงินสด <span id="printRealCash">0 ฿</span> + เงินโอน <span id="printTransfer">0 ฿</span>) | จำนวนรถออกทั้งหมด: <span id="printUnits">0 คัน</span></li>
                 <li><b>รายการหักออก:</b> คูปองจอดฟรี <span id="printCoupon">0 ฿</span> | ยอดหักพนักงาน <span id="printEmp">0 ฿</span></li>
-                <li><b style="color: #e74c3c;">ยอดรถค้างสะสม (Ghost Inventory): <span id="printGhost">0 คัน</span></b></li>
+                <li><b style="color: #e74c3c;">ยอดรถค้างสะสม (Ghost Inventory): <span id="printGhost">0 คัน</span></b> <span id="printGhostSentence" style="color: #e74c3c;"></span></li>
             </ul>
             
             <h4 style="margin-bottom: 5px;">ตารางรายการเฝ้าระวังความผิดปกติ (Watchlist)</h4>
@@ -526,9 +526,23 @@
             document.getElementById('printGhost').innerText = ghostText;
             document.getElementById('printGhost').style.color = ghostEl.style.color;
             
-            // Calculate Impact Loss
+            // Calculate Impact Loss and Descriptive Sentence
             let ghostNum = parseInt(ghostText.replace(/[^0-9-]/g, '')) || 0;
+            let capacityMsg = '';
             if (ghostNum > 0) {
+                let capacity = 0;
+                if (selectedLot.includes('ลาน 2')) capacity = 200;
+                else if (selectedLot.includes('ลาน 3')) capacity = 112;
+                else if (selectedLot.includes('ลาน 4')) capacity = 101;
+                else if (selectedLot.includes('ลาน 1')) capacity = 100;
+                
+                if (capacity > 0) {
+                    let pct = Math.round((ghostNum / capacity) * 100);
+                    capacityMsg = `(พบยอดรถค้างสะสมจำนวน +${ghostNum} คัน ซึ่งคิดเป็น ${pct}% ของความจุลาน)`;
+                } else {
+                    capacityMsg = `(พบยอดรถค้างสะสมจำนวน +${ghostNum} คัน)`;
+                }
+                
                 document.getElementById('printGhostImpact').innerText = ghostNum.toLocaleString();
                 // If it's lot 3, rate is 10, else 5
                 let rate = selectedLot.includes('ลาน 3') ? 10 : 5;
@@ -538,6 +552,7 @@
                 document.getElementById('printGhostImpact').innerText = '0';
                 document.getElementById('printLossAmount').innerText = '0 ฿';
             }
+            document.getElementById('printGhostSentence').innerText = capacityMsg;
 
             // Populate Anomalies Table
             const printTbody = document.querySelector('#printAnomaliesTable tbody');

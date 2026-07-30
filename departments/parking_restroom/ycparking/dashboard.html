@@ -512,11 +512,6 @@
             document.getElementById('printNetCash').innerText = document.getElementById('kpiNetCash').innerText;
             document.getElementById('printTransfer').innerText = document.getElementById('kpiTransfer').innerText;
             
-            // Calculate Total Revenue (Net Cash + Transfer)
-            let net = parseFloat(document.getElementById('kpiNetCash').innerText.replace(/[^0-9.-]+/g,""));
-            let trans = parseFloat(document.getElementById('kpiTransfer').innerText.replace(/[^0-9.-]+/g,""));
-            document.getElementById('printTotalRevenue').innerText = (net + trans).toLocaleString() + ' ฿';
-            
             document.getElementById('printCoupon').innerText = document.getElementById('kpiCoupon').innerText;
             document.getElementById('printEmp').innerText = document.getElementById('kpiEmp').innerText;
             document.getElementById('printUnits').innerText = document.getElementById('kpiUnits').innerText;

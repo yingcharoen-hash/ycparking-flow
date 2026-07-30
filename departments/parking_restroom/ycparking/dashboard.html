@@ -505,7 +505,12 @@
             
             const lotSelect = document.getElementById('lotFilter');
             const selectedLot = lotSelect.options[lotSelect.selectedIndex].text;
-            document.getElementById('printLotName').innerText = `ลานจอด: ${selectedLot}`;
+            let capacityStr = '';
+            if (selectedLot.includes('ลาน 2')) capacityStr = ' (ความจุ 200 คัน)';
+            else if (selectedLot.includes('ลาน 3')) capacityStr = ' (ความจุ 112 คัน)';
+            else if (selectedLot.includes('ลาน 4')) capacityStr = ' (ความจุ 101 คัน)';
+            else if (selectedLot.includes('ลาน 1')) capacityStr = ' (ความจุ 100 คัน)';
+            document.getElementById('printLotName').innerText = `${selectedLot}${capacityStr}`;
             
             // Populate KPIs from existing elements
             let grossRevenue = parseFloat(document.getElementById('kpiNetCash').innerText.replace(/[^0-9.-]+/g,"")) || 0; // In raw data, netCash = Gross Revenue

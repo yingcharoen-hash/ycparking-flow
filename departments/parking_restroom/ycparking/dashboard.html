@@ -414,6 +414,7 @@
         <div class="print-header">
             <h2><i class="fa-solid fa-square-parking"></i> รายงานสรุปผลประกอบการลานจอดรถ</h2>
             <p id="printDateRange">ประจำวันที่: -</p>
+            <p id="printLotName" style="font-weight:bold; color:var(--primary);">ลานจอด: รวมทุกลาน</p>
         </div>
         
         <div class="print-grid">
@@ -439,7 +440,7 @@
         <div class="print-box" style="margin-bottom: 30px;">
             <h3 style="margin-top:0;">ตัวชี้วัดความเสี่ยง (Risk Indicators)</h3>
             <p><b>รถค้างสะสม (Ghost Inventory):</b> <span id="printGhost" style="font-size:1.2em; font-weight:bold;">0 คัน</span></p>
-            <p style="font-size:0.9em; color:#555;"><i>*หมายเหตุ: หากยอดรถค้างสะสมสูงเกินปกติ อาจเกิดจากการลักลอบปล่อยรถออกทางช่องทางอื่น หรือเซ็นเซอร์ขาเข้านับผิดพลาด</i></p>
+            <p style="font-size:0.9em; color:#555;"><i>*หมายเหตุ: หากยอดรถค้างสะสมสูงผิดปกติ อาจเกิดจากความคลาดเคลื่อนของเซ็นเซอร์ขาเข้า หรือมีปัจจัยแวดล้อมอื่นๆ หน้างานที่ควรลงพื้นที่ตรวจสอบเพิ่มเติม</i></p>
         </div>
         
         <h3 style="margin-top:30px;">รายการเฝ้าระวังความผิดปกติ (Watchlist Anomalies)</h3>
@@ -459,10 +460,14 @@
 
     <script>
         function generatePDFReport() {
-            // Populate dates
+            // Populate dates and lot
             const startD = document.getElementById('startDate').value;
             const endD = document.getElementById('endDate').value;
             document.getElementById('printDateRange').innerText = `ประจำวันที่: ${startD || '-'} ถึง ${endD || '-'}`;
+            
+            const lotSelect = document.getElementById('lotFilter');
+            const selectedLot = lotSelect.options[lotSelect.selectedIndex].text;
+            document.getElementById('printLotName').innerText = `ลานจอด: ${selectedLot}`;
             
             // Populate KPIs from existing elements
             document.getElementById('printNetCash').innerText = document.getElementById('kpiNetCash').innerText;

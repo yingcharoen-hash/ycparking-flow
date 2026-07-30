@@ -411,51 +411,77 @@
 
 
     <div id="pdfReportView">
-        <div class="print-header">
-            <h2><i class="fa-solid fa-square-parking"></i> รายงานสรุปผลประกอบการลานจอดรถ</h2>
-            <p id="printDateRange">ประจำวันที่: -</p>
-            <p id="printLotName" style="font-weight:bold; color:var(--primary);">ลานจอด: รวมทุกลาน</p>
+        <div class="print-header" style="text-align: center; border-bottom: 2px solid #333; margin-bottom: 20px; padding-bottom: 10px;">
+            <h2 style="margin: 0; font-size: 22px;">รายงานแจ้งเตือนข้อตรวจพบความผิดปกติ (Exception Report)</h2>
+            <h3 style="margin: 5px 0 0 0; font-size: 16px; font-weight: normal; color: #555;">ฝ่ายตรวจสอบภายใน (Internal Audit) - ระบบลานจอดรถ</h3>
         </div>
         
-        <div class="print-grid">
-            <div class="print-box">
-                <h3 style="margin-top:0;">สรุปรายได้ (Total Revenue)</h3>
-                <table class="print-table">
-                    <tr><td><b>ยอดเงินสด:</b></td><td id="printNetCash" style="text-align:right;">0 ฿</td></tr>
-                    <tr><td><b>ยอดเงินโอน:</b></td><td id="printTransfer" style="text-align:right;">0 ฿</td></tr>
-                    <tr><td><b>รวมรายได้ทั้งหมด:</b></td><td id="printTotalRevenue" style="text-align:right; font-weight:bold; color:green;">0 ฿</td></tr>
-                </table>
-            </div>
-            
-            <div class="print-box">
-                <h3 style="margin-top:0;">สรุปรายการอื่นๆ (Other Metrics)</h3>
-                <table class="print-table">
-                    <tr><td><b>ยอดคูปองจอดฟรี:</b></td><td id="printCoupon" style="text-align:right;">0 ฿</td></tr>
-                    <tr><td><b>ยอดหักพนักงาน:</b></td><td id="printEmp" style="text-align:right;">0 ฿</td></tr>
-                    <tr><td><b>ปริมาณรถออกทั้งหมด:</b></td><td id="printUnits" style="text-align:right; font-weight:bold;">0 คัน</td></tr>
-                </table>
-            </div>
+        <div class="ia-section" style="margin-bottom: 20px;">
+            <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #333; margin-bottom: 10px;">ส่วนที่ 1: ข้อมูลการตรวจสอบ (Audit Scope)</h3>
+            <table class="print-table" style="border: none;">
+                <tr>
+                    <td style="border: none; width: 150px;"><b>วันที่ทำการตรวจสอบ:</b></td><td style="border: none;" id="printDateRange">-</td>
+                </tr>
+                <tr>
+                    <td style="border: none;"><b>ขอบเขตลานจอด:</b></td><td style="border: none;" id="printLotName">-</td>
+                </tr>
+                <tr>
+                    <td style="border: none;"><b>วัตถุประสงค์:</b></td><td style="border: none;">เพื่อรายงานข้อตรวจพบความผิดปกติของรายได้และยอดรถค้างสะสมที่อาจส่งผลต่อรายได้ของบริษัท</td>
+                </tr>
+            </table>
         </div>
 
-        <div class="print-box" style="margin-bottom: 30px;">
-            <h3 style="margin-top:0;">ตัวชี้วัดความเสี่ยง (Risk Indicators)</h3>
-            <p><b>รถค้างสะสม (Ghost Inventory):</b> <span id="printGhost" style="font-size:1.2em; font-weight:bold;">0 คัน</span></p>
-            <p style="font-size:0.9em; color:#555;"><i>*หมายเหตุ: หากยอดรถค้างสะสมสูงผิดปกติ อาจเกิดจากความคลาดเคลื่อนของเซ็นเซอร์ขาเข้า หรือมีปัจจัยแวดล้อมอื่นๆ หน้างานที่ควรลงพื้นที่ตรวจสอบเพิ่มเติม</i></p>
+        <div class="ia-section" style="margin-bottom: 20px;">
+            <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #333; margin-bottom: 10px;">ส่วนที่ 2: สภาพที่เป็นอยู่ / ข้อตรวจพบ (Condition & Observation)</h3>
+            <p>จากการตรวจสอบข้อมูลในระบบ Dashboard ตามขอบเขตเวลาข้างต้น พบข้อสังเกตดังนี้:</p>
+            <ul style="line-height: 1.6;">
+                <li><b>ยอดรายได้สุทธิ:</b> <span id="printTotalRevenue">0 ฿</span> (รวมเงินสดและเงินโอน) จากจำนวนรถออกทั้งหมด <span id="printUnits">0 คัน</span></li>
+                <li><b>รายการหักออก:</b> คูปองจอดฟรี <span id="printCoupon">0 ฿</span> | ยอดหักพนักงาน <span id="printEmp">0 ฿</span></li>
+                <li><b style="color: #e74c3c;">ยอดรถค้างสะสม (Ghost Inventory): <span id="printGhost">0 คัน</span></b></li>
+            </ul>
+            
+            <h4 style="margin-bottom: 5px;">ตารางรายการเฝ้าระวังความผิดปกติ (Watchlist)</h4>
+            <table class="print-table" id="printAnomaliesTable">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">วันที่-เวลา</th>
+                        <th style="width: 15%;">ลานจอด</th>
+                        <th style="width: 60%;">รายละเอียดข้อตรวจพบ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
         </div>
-        
-        <h3 style="margin-top:30px;">รายการเฝ้าระวังความผิดปกติ (Watchlist Anomalies)</h3>
-        <table class="print-table" id="printAnomaliesTable">
-            <thead>
-                <tr>
-                    <th>วันที่-เวลา</th>
-                    <th>ลานจอด</th>
-                    <th>รายละเอียดความผิดปกติ</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Populated by JS -->
-            </tbody>
-        </table>
+
+        <div class="ia-section" style="margin-bottom: 20px; background-color: #fff3f3; padding: 15px; border-left: 5px solid #e74c3c;">
+            <h3 style="margin-top: 0; margin-bottom: 10px; color: #c0392b;">ส่วนที่ 3: ผลกระทบและความเสี่ยง (Impact & Risk)</h3>
+            <p style="margin: 0;">หากยอดรถค้างสะสม (<span id="printGhostImpact">0</span> คัน) เกิดจากการสูญหายหรือออกนอกระบบโดยไม่ชำระเงินจริง จะคิดเป็น<b>มูลค่าความเสียหายแฝงประมาณ <span id="printLossAmount" style="color: #c0392b; font-weight: bold; font-size: 1.2em;">0 ฿</span></b></p>
+            <p style="margin: 5px 0 0 0; font-size: 0.85em; color: #555;"><i>*หมายเหตุ: คำนวณจากอัตราค่าจอดรถขั้นต่ำ (5 บาท หรือ 10 บาท ขึ้นอยู่กับลานจอด) คูณด้วยยอดรถค้างสะสมที่เป็นบวก</i></p>
+        </div>
+
+        <div class="ia-section" style="margin-bottom: 30px;">
+            <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #333; margin-bottom: 10px;">ส่วนที่ 4: ข้อเสนอแนะเพื่อการปรับปรุง (Recommendation)</h3>
+            <ol style="line-height: 1.6;">
+                <li><b>ตรวจสอบความแม่นยำของเซ็นเซอร์:</b> จัดระเบียบช่องทางเข้าเพื่อป้องกันมิให้บุคคล รถเข็น หรือวัตถุอื่นๆ เดินตัดผ่านเซ็นเซอร์นับจำนวนรถ</li>
+                <li><b>ตรวจสอบกายภาพ (Physical Count):</b> ลงพื้นที่สุ่มตรวจจำนวนรถที่จอดข้ามคืนจริงว่าสอดคล้องกับตัวเลขสะสมในระบบหรือไม่</li>
+                <li><b>ตรวจสอบวงจรปิด (CCTV):</b> หากตัวเลขยังคงผิดปกติ ให้สุ่มตรวจกล้องวงจรปิดในช่วงกะเวลาที่มีรายการเฝ้าระวัง (Watchlist) ด้านบน</li>
+            </ol>
+        </div>
+
+        <div class="ia-section print-signatures" style="margin-top: 50px; display: flex; justify-content: space-around; text-align: center;">
+            <div>
+                <p>ลงชื่อ................................................................</p>
+                <p>(................................................................)</p>
+                <p><b>ผู้จัดทำรายงาน / ผู้ตรวจสอบ</b></p>
+            </div>
+            <div>
+                <p>ลงชื่อ................................................................</p>
+                <p>(................................................................)</p>
+                <p><b>ผู้บริหารรับทราบ / สั่งการ</b></p>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -483,8 +509,22 @@
             document.getElementById('printUnits').innerText = document.getElementById('kpiUnits').innerText;
             
             let ghostEl = document.getElementById('kpiGhost');
-            document.getElementById('printGhost').innerText = ghostEl.innerText;
+            let ghostText = ghostEl.innerText;
+            document.getElementById('printGhost').innerText = ghostText;
             document.getElementById('printGhost').style.color = ghostEl.style.color;
+            
+            // Calculate Impact Loss
+            let ghostNum = parseInt(ghostText.replace(/[^0-9-]/g, '')) || 0;
+            if (ghostNum > 0) {
+                document.getElementById('printGhostImpact').innerText = ghostNum.toLocaleString();
+                // If it's lot 3, rate is 10, else 5
+                let rate = selectedLot.includes('ลาน 3') ? 10 : 5;
+                let loss = ghostNum * rate;
+                document.getElementById('printLossAmount').innerText = loss.toLocaleString() + ' ฿';
+            } else {
+                document.getElementById('printGhostImpact').innerText = '0';
+                document.getElementById('printLossAmount').innerText = '0 ฿';
+            }
 
             // Populate Anomalies Table
             const printTbody = document.querySelector('#printAnomaliesTable tbody');

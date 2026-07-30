@@ -221,13 +221,13 @@
     
         @media print {
             @page { margin: 1.5cm; } /* Explicit margin to prevent cutoff and extra blank pages */
-            body, html { margin: 0; padding: 0; height: auto !important; overflow: visible !important; font-size: 13px; }
+            body, html { margin: 0; padding: 0; height: auto !important; overflow: visible !important; font-size: 14px; }
             body * { visibility: hidden; }
             
-            h2 { font-size: 18px !important; }
-            h3 { font-size: 14px !important; }
-            h4 { font-size: 13px !important; }
-            p, li, td, th, span { font-size: 12px !important; }
+            h2 { font-size: 21px !important; }
+            h3 { font-size: 15px !important; }
+            h4 { font-size: 14px !important; }
+            p, li, td, th, span { font-size: 13px !important; }
             
             .container, .navbar, #loading { display: none !important; }
             
@@ -416,9 +416,11 @@
 
 
     <div id="pdfReportView">
-        <div class="print-header" style="position: relative; text-align: center; border-bottom: 2px solid #333; margin-bottom: 20px; padding-bottom: 10px;">
-            <p id="printDocNo" style="position: absolute; top: 0; right: 0; font-size: 12px; color: #555; margin: 0;">เลขที่เอกสาร: -</p>
-            <h2 style="margin: 0; font-size: 22px;">รายงานแจ้งเตือนข้อตรวจพบความผิดปกติ (Exception Report)</h2>
+        <div class="print-header" style="text-align: center; border-bottom: 2px solid #333; margin-bottom: 20px; padding-bottom: 10px;">
+            <div style="text-align: right; margin-bottom: 5px;">
+                <span id="printDocNo" style="font-size: 13px; color: #555;">เลขที่เอกสาร: -</span>
+            </div>
+            <h2 style="margin: 0; font-size: 21px;">รายงานแจ้งเตือนข้อตรวจพบความผิดปกติ (Exception Report)</h2>
             <h3 style="margin: 5px 0 0 0; font-size: 16px; font-weight: normal; color: #555;">ฝ่ายตรวจสอบภายใน (Internal Audit) - ระบบลานจอดรถ</h3>
         </div>
         
@@ -441,7 +443,7 @@
             <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #333; margin-bottom: 10px;">2. สภาพที่เป็นอยู่ / ข้อตรวจพบ (Condition & Observation)</h3>
             <p>จากการตรวจสอบข้อมูลในระบบ Dashboard ตามขอบเขตเวลาข้างต้น พบข้อสังเกตดังนี้:</p>
             <ul style="line-height: 1.6;">
-                <li><b>ยอดรายได้ทั้งหมด:</b> <span id="printTotalRevenue">0 ฿</span> (ยอดเงินสด <span id="printNetCash">0 ฿</span> + เงินโอน <span id="printTransfer">0 ฿</span>) จากปริมาณรถออก <span id="printUnits">0 คัน</span></li>
+                <li><b>ยอดเงินสุทธิที่เก็บได้ (Total):</b> <span id="printNetCash" style="font-weight:bold; color:green;">0 ฿</span> | ยอดเงินโอน: <span id="printTransfer">0 ฿</span> | จำนวนรถออกทั้งหมด: <span id="printUnits">0 คัน</span></li>
                 <li><b>รายการหักออก:</b> คูปองจอดฟรี <span id="printCoupon">0 ฿</span> | ยอดหักพนักงาน <span id="printEmp">0 ฿</span></li>
                 <li><b style="color: #e74c3c;">ยอดรถค้างสะสม (Ghost Inventory): <span id="printGhost">0 คัน</span></b></li>
             </ul>

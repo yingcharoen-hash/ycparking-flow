@@ -495,9 +495,24 @@
             document.getElementById('printDocNo').innerText = `เลขที่เอกสาร: YCP-IA-${dateStr}-${randNum}`;
 
             // Populate dates and lot
+            function formatThaiDate(dStr) {
+                if(!dStr) return '';
+                let d;
+                if (dStr.includes('/')) {
+                    let parts = dStr.split('/');
+                    d = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+                } else {
+                    d = new Date(dStr);
+                }
+                if(!isNaN(d)) {
+                    const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+                    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+                }
+                return dStr;
+            }
             const startD = document.getElementById('startDate').value;
             const endD = document.getElementById('endDate').value;
-            document.getElementById('printDateRange').innerText = `ประจำวันที่: ${startD || '-'} ถึง ${endD || '-'}`;
+            document.getElementById('printDateRange').innerText = `ประจำวันที่: ${startD ? formatThaiDate(startD) : '-'} ถึง ${endD ? formatThaiDate(endD) : '-'}`;
             
             const lotSelect = document.getElementById('lotFilter');
             const selectedLot = lotSelect.options[lotSelect.selectedIndex].text;
@@ -573,6 +588,7 @@
                     recHtml = `<ol style="line-height: 1.6;">
                         <li><b>ตรวจสอบกายภาพ (Physical Count):</b> ลงพื้นที่ตรวจนับจำนวนรถที่จอดข้ามคืนจริง ว่ามีจำนวนรถมากถึง ${ghostNum} คันจริงหรือไม่</li>
                         <li><b>ตรวจสอบวงจรปิด (CCTV):</b> สุ่มตรวจกล้องวงจรปิดในช่วงกะเวลาที่มีรายการเฝ้าระวัง (Watchlist)</li>
+                        <li><b>ตรวจสอบความแม่นยำของเซ็นเซอร์:</b> กำชับพนักงานให้จัดระเบียบช่องทางเข้าออก ไม่ให้บุคคลหรือสิ่งของเดินตัดผ่านเซ็นเซอร์</li>
                     </ol>`;
                 }
             } else {
@@ -943,8 +959,18 @@
                 tr.innerHTML = `
                     <td>${fDate} ${fTime}</td>
                     <td><strong>${row.parkingLot}</strong></td>
-                    <td><span class="badge" style="background:#7f8c8d;">${row.inStartMeter || '?'}</span> - <span class="badge" style="background:#95a5a6;">${row.inEndMeter || '?'}</span></td>
-                    <td><span class="badge" style="background:#d35400;">${row.outStartMeter || '?'}</span> - <span class="badge" style="background:#e67e22;">${row.outEndMeter || '?'}</span></td>
+                    <td>
+                        <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
+                            <span class="badge" style="background:#7f8c8d;">${row.inStartMeter || '?'}</span>
+                            <span class="badge" style="background:#95a5a6;">${row.inEndMeter || '?'}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
+                            <span class="badge" style="background:#d35400;">${row.outStartMeter || '?'}</span>
+                            <span class="badge" style="background:#e67e22;">${row.outEndMeter || '?'}</span>
+                        </div>
+                    </td>
                     <td>${exited}</td>
                     <td>${netCarBadge}</td>
                     <td><strong>${parseFloat(row.netCash||0).toLocaleString()} ฿</strong></td>

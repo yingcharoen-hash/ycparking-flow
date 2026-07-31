@@ -473,6 +473,42 @@
       </div>
     </div>
 
+    <!-- Meter Reset Section -->
+    <div style="margin: 16px 0; padding: 12px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px;">
+      <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #856404; font-weight: bold;">
+        <input type="checkbox" id="isMeterReset" onchange="toggleMeterReset()" style="width: 18px; height: 18px;">
+        กะนี้มีการรีเซ็ตมิเตอร์ (ตั้งค่าเป็น 0)
+      </label>
+      <div id="resetFields" style="display: none; margin-top: 12px; border-top: 1px dashed #ffeeba; padding-top: 12px;">
+        <p style="font-size: 12px; color: #856404; margin-bottom: 8px;">* ให้กรอกตัวเลขมิเตอร์ ณ วินาทีก่อนที่จะกดปุ่มรีเซ็ตตู้</p>
+        <div class="form-row">
+          <div class="form-col">
+            <div class="form-group">
+              <label>มิเตอร์ขาเข้า (ก่อนรีเซ็ต)</label>
+              <input type="number" id="inResetMeter" placeholder="ระบุเลขก่อนรีเซ็ต">
+            </div>
+          </div>
+          <div class="form-col">
+            <div class="form-group">
+              <label>มิเตอร์ขาออก (ก่อนรีเซ็ต)</label>
+              <input type="number" id="outResetMeter" placeholder="ระบุเลขก่อนรีเซ็ต">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function toggleMeterReset() {
+        const isChecked = document.getElementById('isMeterReset').checked;
+        document.getElementById('resetFields').style.display = isChecked ? 'block' : 'none';
+        if (!isChecked) {
+          document.getElementById('inResetMeter').value = '';
+          document.getElementById('outResetMeter').value = '';
+        }
+      }
+    </script>
+
     <div class="form-row">
       <div class="form-col">
         <div class="form-group">
@@ -934,6 +970,8 @@
       inEndMeter: inEndMeter,
       outStartMeter: outStartMeter,
       outEndMeter: outEndMeter,
+      inResetMeter: inResetMeter,
+      outResetMeter: outResetMeter,
       units: units,
       totalMoney: totalMoney,
       deductFloat: deductFloat,
@@ -990,6 +1028,10 @@
       // Clear forms
       document.getElementById('inEndMeter').value = '';
       document.getElementById('outEndMeter').value = '';
+      document.getElementById('isMeterReset').checked = false;
+      document.getElementById('inResetMeter').value = '';
+      document.getElementById('outResetMeter').value = '';
+      document.getElementById('resetFields').style.display = 'none';
       document.getElementById('cash').value = '';
       document.getElementById('transfer').value = '';
       document.getElementById('empAmount').value = '';

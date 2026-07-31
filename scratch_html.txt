@@ -1,0 +1,27 @@
+<div class="flow-item">
+                    <div class="step risk" onclick="showPanel('o1')">
+                      <div class="step-num">อ-1</div>
+                      <div class="step-text">คิดเงินรถทั่วไป/สมาชิก<br>(เงินสด / สแกน QR)</div>
+                      <span class="badge r">⚠ R5</span>
+                    </div>
+                  </div>
+                  <div class="flow-item" style="margin-top:6px;">
+                    <div class="step hr-card" onclick="showPanel('o2')">
+                      <div class="step-num">อ-2</div>
+                      <div class="step-text">กรณีทำบัตรหาย</div>
+                      <span class="badge r">⚠ R6</span>
+                    </div>
+                      <div class="step-text">ปล่อยรถรัฐ / รถเร่ ออก</div>
+                    </div>
+                  </div>
+
+<div class="flow-item" style="margin-top:6px;">
+                    <div class="step ctrl" onclick="showPanel('o3')">
+                      <div class="step-num">อ-3</div>
+                      <div class="step-text">รถสมาชิกออก (ไม่คิดเงิน)</div>
+                      <span class="badge c">✓</span>
+                    </div>
+                      <div class="step-text">บัตรหาย<br>(บัตรแข็ง 300 / สีเขียว 100)</div>
+                    </div>
+                  </div>
+

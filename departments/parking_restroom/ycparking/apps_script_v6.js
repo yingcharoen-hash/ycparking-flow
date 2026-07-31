@@ -132,7 +132,9 @@ function doPost(e) {
       photoOutUrl,           // T
       pdfUrl,                // U
       new Date(),            // V
-      data.deductFloat       // W (หักเงินทอน)
+      data.deductFloat,      // W (หักเงินทอน)
+      data.inResetMeter,     // X
+      data.outResetMeter     // Y
     ]);
 
     let message = `📝 <b>บันทึกข้อมูลใหม่</b>\n`
@@ -312,7 +314,9 @@ function doGet(e) {
           senderName: isNewFormat ? (senderName || "-") : "-",
           receiverName: isNewFormat ? (receiverName || "-") : "-",
           photoSelfie: photoSelfie,
-          pdfUrl: pdfUrl
+          pdfUrl: pdfUrl,
+          inResetMeter: data[i][23] || "", // X column
+          outResetMeter: data[i][24] || "" // Y column
         };
         allRecords.push(record);
       }

@@ -301,6 +301,11 @@
                         </select>
                     </div>
                     
+                    <div style="display: flex; flex-direction: column; gap: 5px; background: #fff3cd; padding: 10px; border-radius: 8px; border: 1px solid #ffeeba;">
+                        <label for="initialStock" style="font-size:13px; font-weight:bold; color: #856404;">ยอดยกมา (Initial Stock):</label>
+                        <input type="number" id="initialStock" value="0" style="padding: 6px; border-radius: 4px; border: 1px solid #ccc;" onchange="applyFilters()">
+                    </div>
+                    
                     <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
                         
                         <button onclick="clearFilters()" style="padding:10px; background:#7f8c8d; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold; font-size:14px;"><i class="fa-solid fa-times"></i> ล้างตัวกรอง</button>
@@ -731,7 +736,8 @@
         }
 
         function analyzeData() {
-            let totalNet = 0, totalUnits = 0, totalTransfer = 0, totalCoupon = 0, totalEmp = 0, totalGhost = 0;
+            let initialStock = parseInt(document.getElementById('initialStock').value) || 0;
+            let totalNet = 0, totalUnits = 0, totalTransfer = 0, totalCoupon = 0, totalEmp = 0, totalGhost = initialStock;
             
             let lotsData = {}; // For meter gap checking
             let anomalies = [];
@@ -755,8 +761,16 @@
                 
                 let inS = parseFloat(String(row.inStartMeter).replace(/,/g, '')) || 0;
                 let inE = parseFloat(String(row.inEndMeter).replace(/,/g, '')) || 0;
-                if (inE >= inS && inE > 0) {
-                    let entered = inE - inS;
+                let inR = parseFloat(String(row.inResetMeter).replace(/,/g, '')) || 0;
+                let entered = 0;
+                
+                if (inR > 0) {
+                    // Meter Reset Case
+                    entered = (inR - inS) + inE;
+                    totalGhost += (entered - units);
+                } else if (inE >= inS && inE > 0) {
+                    // Normal Case
+                    entered = inE - inS;
                     totalGhost += (entered - units);
                 }
 
@@ -945,26 +959,38 @@
                 
                 let inS = parseFloat(String(row.inStartMeter).replace(/,/g, '')) || 0;
                 let inE = parseFloat(String(row.inEndMeter).replace(/,/g, '')) || 0;
-                let entered = inE > inS ? inE - inS : 0;
+                let inR = parseFloat(String(row.inResetMeter).replace(/,/g, '')) || 0;
+                
+                let entered = 0;
+                if (inR > 0) {
+                    entered = (inR - inS) + inE;
+                } else if (inE > inS) {
+                    entered = inE - inS;
+                }
+                
                 let exited = parseFloat(String(row.units).replace(/,/g, '')) || 0;
                 
                 let netCarBadge = '-';
-                if (inS > 0 && inE > 0) {
+                if (inR > 0 || (inS > 0 && inE > 0)) {
                     let netCars = entered - exited;
                     let netCarColor = netCars > 0 ? 'var(--warning)' : (netCars < 0 ? 'var(--success)' : '#7f8c8d');
                     let netCarSign = netCars > 0 ? '+' : '';
                     netCarBadge = `<span class="badge" style="background:${netCarColor};">${netCarSign}${netCars} คัน</span>`;
+                    if(inR > 0) netCarBadge += `<br><span style="font-size:10px; color:#e67e22; font-weight:bold;">(รีเซ็ตมิเตอร์)</span>`;
                 }
+
+                let inMeterHTML = `
+                    <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
+                        <span class="badge" style="background:#7f8c8d;">${row.inStartMeter || '?'}</span>
+                        ${inR > 0 ? `<span class="badge" style="background:#e67e22;" title="ก่อนรีเซ็ต">R: ${row.inResetMeter}</span>` : ''}
+                        <span class="badge" style="background:#95a5a6;">${row.inEndMeter || '?'}</span>
+                    </div>
+                `;
 
                 tr.innerHTML = `
                     <td>${fDate} ${fTime}</td>
                     <td><strong>${row.parkingLot}</strong></td>
-                    <td>
-                        <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
-                            <span class="badge" style="background:#7f8c8d;">${row.inStartMeter || '?'}</span>
-                            <span class="badge" style="background:#95a5a6;">${row.inEndMeter || '?'}</span>
-                        </div>
-                    </td>
+                    <td>${inMeterHTML}</td>
                     <td>
                         <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
                             <span class="badge" style="background:#d35400;">${row.outStartMeter || '?'}</span>

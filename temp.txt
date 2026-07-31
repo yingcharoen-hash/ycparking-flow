@@ -1,0 +1,481 @@
+
+  function toggleSettings() {
+    const bar = document.getElementById('settingsBar');
+    bar.style.display = bar.style.display === 'flex' ? 'none' : 'flex';
+  }
+
+  function showAlert(msg) {
+    document.getElementById('modalText').innerText = msg;
+    document.getElementById('customModal').style.display = 'flex';
+  }
+
+  // Setup Defaults
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  document.getElementById('docDate').value = `${dd}/${mm}/${yyyy}`;
+  
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  document.getElementById('docTime').value = `${hours}:${minutes}`;
+
+  // URL of Google Apps Script
+  const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9VgBmGLjVAvDEBCK2ruTMnQswLtB1oZoiMzDlhwuRC9MI95GJoId_QTdQJE8kOw-XPw/exec';
+
+  // Fetch Latest Meter Data
+  // JSONP callback function
+  window.handleMeterResponse = function(data) {
+    const fetchBtn = document.getElementById('fetchBtn');
+    const fetchSpinner = document.getElementById('fetchSpinner');
+    const fetchText = document.getElementById('fetchBtnText');
+    const msg = document.getElementById('fetchMsg');
+
+    if (data.status === 'success') {
+      document.getElementById('inStartMeter').value = data.inEndMeter ? (parseInt(data.inEndMeter) + 1) : '';
+      document.getElementById('outStartMeter').value = data.outEndMeter ? (parseInt(data.outEndMeter) + 1) : '';
+      
+      if (!data.inEndMeter && !data.outEndMeter) {
+        msg.innerText = 'ℹ️ ยังไม่มีประวัติของลานจอดนี้ (ปลดล็อกให้กรอกเลขตั้งต้นเอง)';
+        msg.classList.add('info');
+        msg.style.display = 'block';
+        document.getElementById('inStartMeter').removeAttribute('readonly');
+        document.getElementById('outStartMeter').removeAttribute('readonly');
+      } else {
+        msg.innerText = '✅ ดึงข้อมูลสำเร็จ! ล็อกเลขมิเตอร์เริ่มให้แล้ว';
+        msg.classList.add('success');
+        msg.style.display = 'block';
+        document.getElementById('inStartMeter').setAttribute('readonly', 'readonly');
+        document.getElementById('outStartMeter').setAttribute('readonly', 'readonly');
+      }
+      calculate();
+    } else {
+      msg.innerText = '⚠️ Error: ' + (data.message || 'Unknown error');
+      msg.classList.add('error');
+      msg.style.display = 'block';
+      document.getElementById('inStartMeter').removeAttribute('readonly');
+      document.getElementById('outStartMeter').removeAttribute('readonly');
+    }
+    
+    fetchBtn.disabled = false;
+    fetchSpinner.style.display = 'none';
+    fetchText.style.display = 'block';
+  };
+
+  window.handleMeterError = function() {
+    const fetchBtn = document.getElementById('fetchBtn');
+    const fetchSpinner = document.getElementById('fetchSpinner');
+    const fetchText = document.getElementById('fetchBtnText');
+    const msg = document.getElementById('fetchMsg');
+    
+    msg.innerText = '⚠️ Error: Failed to load script (ปลดล็อกช่องให้กรอกเองได้ชั่วคราว)';
+    msg.classList.add('error');
+    msg.style.display = 'block';
+    
+    document.getElementById('inStartMeter').removeAttribute('readonly');
+    document.getElementById('outStartMeter').removeAttribute('readonly');
+    
+    fetchBtn.disabled = false;
+    fetchSpinner.style.display = 'none';
+    fetchText.style.display = 'block';
+  };
+
+  function fetchLatestMeter() {
+    const lot = document.getElementById('parkingLot').value.trim();
+    const fetchBtn = document.getElementById('fetchBtn');
+    const fetchSpinner = document.getElementById('fetchSpinner');
+    const fetchText = document.getElementById('fetchBtnText');
+    const msg = document.getElementById('fetchMsg');
+
+    fetchBtn.disabled = true;
+    fetchSpinner.style.display = 'block';
+    fetchText.style.display = 'none';
+    msg.style.display = 'none';
+    msg.className = 'status-msg';
+
+    // Create script tag for JSONP
+    const script = document.createElement('script');
+    script.src = `${scriptUrl}?action=getLast&lot=${encodeURIComponent(lot)}&callback=handleMeterResponse`;
+    script.onerror = handleMeterError;
+    
+    // Remove old script tag if exists
+    const oldScript = document.getElementById('jsonp-script');
+    if (oldScript) {
+      oldScript.remove();
+    }
+    script.id = 'jsonp-script';
+    document.body.appendChild(script);
+  }
+
+  function calculate() {
+    const start = parseFloat(document.getElementById('outStartMeter').value) || 0;
+    const end = parseFloat(document.getElementById('outEndMeter').value) || 0;
+    if (end > 0 && end >= start) {
+      const lot = document.getElementById('parkingLot').value.trim();
+      const rate = lot.includes('3') ? 10 : 5;
+      const units = (end - start) + 1; // CASE 2 Logic: +1 Car
+      const total = units * rate; // Dynamic rate based on lot
+      const netCash = total;
+      
+      document.getElementById('units').value = units;
+      document.getElementById('totalMoney').value = total;
+      document.getElementById('netCash').value = netCash;
+    } else {
+      document.getElementById('units').value = '';
+      document.getElementById('totalMoney').value = '';
+      document.getElementById('netCash').value = '';
+    }
+  }
+
+  // Camera Implementation (WebRTC)
+  let photoData = { in: '', out: '', selfie: '' };
+  
+  function logDebug(msg) {
+    const el = document.getElementById('debugLog');
+    if (el) el.innerHTML += msg + '<br>';
+  }
+
+  let videoStream = null;
+  let currentCamType = '';
+
+  async function startCamera(type) {
+    currentCamType = type;
+    let suffix = 'Out';
+    if(type === 'in') suffix = 'In';
+    if(type === 'selfie') suffix = 'Selfie';
+    
+    const video = document.getElementById('videoElement' + suffix);
+    const camWrap = document.getElementById('cameraWrap' + suffix);
+    const openBtn = document.getElementById('openCamBtn' + suffix);
+    const preview = document.getElementById('photoPreview' + suffix);
+    const retakeBtn = document.getElementById('retakeBtn' + suffix);
+
+    openBtn.style.display = 'none';
+    preview.style.display = 'none';
+    retakeBtn.style.display = 'none';
+    camWrap.style.display = 'block';
+
+    try {
+      if(videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+      }
+      let fMode = type === 'selfie' ? "user" : "environment";
+      videoStream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: fMode } 
+      });
+      video.srcObject = videoStream;
+    } catch (err) {
+      alert("ไม่สามารถเข้าถึงกล้องได้: " + err.message + "\n\nหมายเหตุ: ฟังก์ชันกล้องต้องใช้งานผ่านลิงก์ https:// เท่านั้น");
+      camWrap.style.display = 'none';
+      openBtn.style.display = 'flex';
+    }
+  }
+
+  function cancelCamera(type) {
+    let suffix = 'Out';
+    if(type === 'in') suffix = 'In';
+    if(type === 'selfie') suffix = 'Selfie';
+    
+    if (videoStream) {
+      videoStream.getTracks().forEach(track => track.stop());
+      videoStream = null;
+    }
+    
+    document.getElementById('cameraWrap' + suffix).style.display = 'none';
+    document.getElementById('openCamBtn' + suffix).style.display = 'flex';
+  }
+
+  function capturePhoto(type) {
+    let suffix = 'Out';
+    if(type === 'in') suffix = 'In';
+    if(type === 'selfie') suffix = 'Selfie';
+    
+    const video = document.getElementById('videoElement' + suffix);
+    const canvas = document.createElement('canvas');
+    
+    const MAX_WIDTH = 640;
+    let width = video.videoWidth;
+    let height = video.videoHeight;
+    if (width > MAX_WIDTH) {
+      height *= MAX_WIDTH / width;
+      width = MAX_WIDTH;
+    }
+    
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, width, height);
+    
+    photoData[type] = canvas.toDataURL('image/jpeg', 0.6);
+    
+    if (videoStream) {
+      videoStream.getTracks().forEach(track => track.stop());
+      videoStream = null;
+    }
+    
+    document.getElementById('cameraWrap' + suffix).style.display = 'none';
+    const preview = document.getElementById('photoPreview' + suffix);
+    preview.src = photoData[type];
+    preview.style.display = 'block';
+    document.getElementById('retakeBtn' + suffix).style.display = 'inline-block';
+  }
+
+  // Signature Pad Implementation
+  function setupCanvas(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#000';
+
+    function getMousePos(evt) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      if(evt.touches) {
+        return {
+          x: (evt.touches[0].clientX - rect.left) * scaleX,
+          y: (evt.touches[0].clientY - rect.top) * scaleY
+        };
+      }
+      return {
+        x: (evt.clientX - rect.left) * scaleX,
+        y: (evt.clientY - rect.top) * scaleY
+      };
+    }
+
+    function startDraw(e) {
+      e.preventDefault();
+      isDrawing = true;
+      const pos = getMousePos(e);
+      lastX = pos.x;
+      lastY = pos.y;
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const pos = getMousePos(e);
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+      lastX = pos.x;
+      lastY = pos.y;
+    }
+
+    function endDraw(e) {
+      e.preventDefault();
+      isDrawing = false;
+    }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', endDraw);
+    canvas.addEventListener('mouseout', endDraw);
+
+    canvas.addEventListener('touchstart', startDraw, {passive: false});
+    canvas.addEventListener('touchmove', draw, {passive: false});
+    canvas.addEventListener('touchend', endDraw, {passive: false});
+
+    return { canvas, ctx };
+  }
+
+  const senderPad = setupCanvas('senderCanvas');
+  const receiverPad = setupCanvas('receiverCanvas');
+
+  
+  
+  
+
+  // Load History
+  function clearHistory() {
+    if(confirm("ต้องการล้างประวัติการบันทึกบนเครื่องนี้ใช่หรือไม่?")) {
+      localStorage.removeItem('meterApp_history');
+      loadHistory();
+    }
+  }
+
+  function loadHistory() {
+    const history = JSON.parse(localStorage.getItem('meterApp_history') || '[]');
+    const tbody = document.querySelector('#historyTable tbody');
+    tbody.innerHTML = '';
+    history.slice().reverse().forEach(h => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${h.date || '-'}<br><span style="font-size: 10px; color: #888;">${h.time || '-'}</span></td>
+        <td>${h.outStart || '?'}-${h.outEnd || '?'}</td>
+        <td>${h.units || '-'}</td>
+        <td>${h.netCash || '-'} ฿</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+  loadHistory();
+
+  // Submit Data
+  async function submitData() {
+    if (!scriptUrl) {
+      showAlert('ยังไม่ได้ใส่ Web App URL ในโค้ด');
+      return;
+    }
+
+    const parkingLot = document.getElementById('parkingLot').value;
+    const date = document.getElementById('docDate').value;
+    const time = document.getElementById('docTime').value;
+    const inStartMeter = document.getElementById('inStartMeter').value;
+    const inEndMeter = document.getElementById('inEndMeter').value;
+    const outStartMeter = document.getElementById('outStartMeter').value;
+    const outEndMeter = document.getElementById('outEndMeter').value;
+    
+    const units = document.getElementById('units').value;
+    const totalMoney = document.getElementById('totalMoney').value;
+    const deductFloat = 0;
+    const netCash = document.getElementById('netCash').value;
+    
+    const cash = document.getElementById('cash').value;
+    const transfer = document.getElementById('transfer').value;
+    const empAmount = document.getElementById('empAmount').value;
+    const freeCoupon = document.getElementById('freeCoupon').value;
+
+    const senderName = document.getElementById('senderNameDropdown').value;
+    const receiverName = document.getElementById('receiverNameDropdown').value;
+    if (!senderName || !receiverName) {
+      showAlert('กรุณาเลือกชื่อเจ้าหน้าที่จุดรับฝาก และ ผู้บันทึก(การเงิน)');
+      return;
+    }
+
+    if(!outStartMeter || !outEndMeter || !units || !netCash) {
+      showAlert('กรุณากรอกเลขมิเตอร์ขาออกให้ครบถ้วน');
+      return;
+    }
+    if(!cash && !transfer) {
+      showAlert('กรุณากรอกจำนวน "เงินสด" หรือ "เงินโอน" อย่างน้อย 1 ช่อง');
+      return;
+    }
+    
+    if (!photoData.in || !photoData.out) {
+      showAlert('กรุณาถ่ายรูปมิเตอร์ทั้งฝั่งขาเข้าและขาออกให้ครบถ้วน');
+      return;
+    }
+    
+    if (isCanvasBlank(senderPad.canvas) || isCanvasBlank(receiverPad.canvas)) {
+      showAlert('กรุณาให้เจ้าหน้าที่ฯ และ ผู้จดมิเตอร์ เซ็นชื่อให้ครบถ้วน');
+      return;
+    }
+
+    const numNetCash = parseFloat(netCash) || 0;
+    const numCash = parseFloat(cash) || 0;
+    const numTransfer = parseFloat(transfer) || 0;
+    const numEmpAmount = parseFloat(empAmount) || 0;
+    const numFreeCoupon = parseFloat(freeCoupon) || 0;
+    
+    const sumSubmitted = numCash + numTransfer + numEmpAmount + numFreeCoupon;
+    if (sumSubmitted !== numNetCash) {
+      showAlert('ยอดรวมแจกแจงเงินที่ส่ง (' + sumSubmitted + ' บาท)\nไม่ตรงกับยอดสุทธิที่ต้องส่ง (' + numNetCash + ' บาท)\n\nกรุณาตรวจสอบและแก้ไขให้ถูกต้องก่อนบันทึก');
+      return;
+    }
+    
+    let sSign = isCanvasBlank(senderPad.canvas) ? '' : senderPad.canvas.toDataURL('image/png');
+    let rSign = isCanvasBlank(receiverPad.canvas) ? '' : receiverPad.canvas.toDataURL('image/png');
+
+    const payload = {
+      parkingLot: parkingLot,
+      date: date,
+      time: time,
+      inStartMeter: inStartMeter,
+      inEndMeter: inEndMeter,
+      outStartMeter: outStartMeter,
+      outEndMeter: outEndMeter,
+      units: units,
+      totalMoney: totalMoney,
+      deductFloat: deductFloat,
+      netCash: netCash,
+      cash: cash,
+      transfer: transfer,
+      empAmount: empAmount,
+      freeCoupon: freeCoupon,
+      senderName: senderName,
+      receiverName: receiverName,
+      photoSelfie: photoData.selfie,
+      
+      photoIn: photoData.in,
+      photoOut: photoData.out
+    };
+
+    const btn = document.getElementById('submitBtn');
+    const spinner = document.getElementById('spinner');
+    const btnText = btn.querySelector('.btn-text');
+    const msg = document.getElementById('statusMsg');
+
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    btnText.style.display = 'none';
+    msg.style.display = 'none';
+    msg.className = 'status-msg';
+
+    try {
+      const response = await fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      msg.innerText = '✅ บันทึกข้อมูลและสร้างใบเสร็จ PDF สำเร็จ!';
+      msg.classList.add('success');
+      msg.style.display = 'block';
+      
+      // Refresh history from server after 2 seconds to allow sheet to save
+      setTimeout(fetchInitialData, 2000);
+      
+      // Clear forms
+      document.getElementById('inEndMeter').value = '';
+      document.getElementById('outEndMeter').value = '';
+      document.getElementById('cash').value = '';
+      document.getElementById('transfer').value = '';
+      document.getElementById('empAmount').value = '';
+      document.getElementById('freeCoupon').value = '';
+      document.getElementById('senderNameDropdown').value = '';
+      document.getElementById('receiverNameDropdown').value = '';
+      clearCanvas(senderPad);
+      clearCanvas(receiverPad);
+      
+      // Clear photos
+      photoData = { in: '', out: '' };
+      document.getElementById('photoPreviewIn').style.display = 'none';
+      document.getElementById('openCamBtnIn').style.display = 'flex';
+      document.getElementById('retakeBtnIn').style.display = 'none';
+      
+      document.getElementById('photoPreviewOut').style.display = 'none';
+      document.getElementById('openCamBtnOut').style.display = 'flex';
+      document.getElementById('retakeBtnOut').style.display = 'none';
+      
+      // Automatically run fetch for next round? No, they usually refresh. But we can unlock the inputs.
+      document.getElementById('inStartMeter').value = '';
+      document.getElementById('outStartMeter').value = '';
+      document.getElementById('fetchMsg').style.display = 'none';
+      
+      calculate();
+
+    } catch (error) {
+      msg.innerText = '❌ เกิดข้อผิดพลาด: ' + error.message;
+      msg.classList.add('error');
+      msg.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      spinner.style.display = 'none';
+      btnText.style.display = 'block';
+    }
+  }
+
+  

@@ -491,7 +491,7 @@
           <div class="form-col">
             <div class="form-group">
               <label>มิเตอร์ขาออก (ก่อนรีเซ็ต)</label>
-              <input type="number" id="outResetMeter" placeholder="ระบุเลขก่อนรีเซ็ต">
+              <input type="number" id="outResetMeter" placeholder="ระบุเลขก่อนรีเซ็ต" oninput="calculate()">
             </div>
           </div>
         </div>
@@ -506,6 +506,7 @@
           document.getElementById('inResetMeter').value = '';
           document.getElementById('outResetMeter').value = '';
         }
+        if(typeof calculate === 'function') calculate();
       }
     </script>
 
@@ -758,10 +759,27 @@
   function calculate() {
     const start = parseFloat(document.getElementById('outStartMeter').value) || 0;
     const end = parseFloat(document.getElementById('outEndMeter').value) || 0;
-    if (end > 0 && end >= start) {
+    const isReset = document.getElementById('isMeterReset').checked;
+    const resetOut = parseFloat(document.getElementById('outResetMeter').value) || 0;
+    
+    let units = 0;
+    let isValid = false;
+
+    if (isReset && resetOut > 0) {
+      if (resetOut >= start) {
+        units = (resetOut - start) + end + 1;
+        isValid = true;
+      }
+    } else {
+      if (end > 0 && end >= start) {
+        units = (end - start) + 1;
+        isValid = true;
+      }
+    }
+
+    if (isValid) {
       const lot = document.getElementById('parkingLot').value.trim();
       const rate = lot.includes('3') ? 10 : 5;
-      const units = (end - start) + 1; // CASE 2 Logic: +1 Car
       const total = units * rate; // Dynamic rate based on lot
       const netCash = total;
       

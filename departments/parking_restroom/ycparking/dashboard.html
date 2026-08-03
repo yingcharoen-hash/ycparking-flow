@@ -963,9 +963,9 @@
                 
                 let entered = 0;
                 if (inR > 0) {
-                    entered = (inR - inS) + inE;
-                } else if (inE > inS) {
-                    entered = inE - inS;
+                    entered = (inR - inS) + inE + 1;
+                } else if (inE >= inS && inE > 0) {
+                    entered = (inE - inS) + 1;
                 }
                 
                 let exited = parseFloat(String(row.units).replace(/,/g, '')) || 0;

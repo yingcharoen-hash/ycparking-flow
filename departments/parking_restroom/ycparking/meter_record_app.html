@@ -929,6 +929,10 @@
     const outStartMeter = document.getElementById('outStartMeter').value;
     const outEndMeter = document.getElementById('outEndMeter').value;
     
+    const isResetChecked = document.getElementById('isMeterReset') ? document.getElementById('isMeterReset').checked : false;
+    const inResetMeter = (isResetChecked && document.getElementById('inResetMeter')) ? document.getElementById('inResetMeter').value : '';
+    const outResetMeter = (isResetChecked && document.getElementById('outResetMeter')) ? document.getElementById('outResetMeter').value : '';
+    
     const units = document.getElementById('units').value;
     const totalMoney = document.getElementById('totalMoney').value;
     const deductFloat = 0;

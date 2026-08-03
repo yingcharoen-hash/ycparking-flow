@@ -766,11 +766,11 @@
                 
                 if (inR > 0) {
                     // Meter Reset Case
-                    entered = (inR - inS) + inE;
+                    entered = (inR - inS) + inE + 1;
                     totalGhost += (entered - units);
                 } else if (inE >= inS && inE > 0) {
                     // Normal Case
-                    entered = inE - inS;
+                    entered = (inE - inS) + 1;
                     totalGhost += (entered - units);
                 }
 

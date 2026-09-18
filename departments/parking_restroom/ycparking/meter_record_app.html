@@ -856,7 +856,7 @@
     const video = document.getElementById('videoElement' + suffix);
     const canvas = document.createElement('canvas');
     
-    const MAX_WIDTH = 640;
+    const MAX_WIDTH = 480;
     let width = video.videoWidth;
     let height = video.videoHeight;
     if (width > MAX_WIDTH) {
@@ -869,7 +869,7 @@
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, width, height);
     
-    photoData[type] = canvas.toDataURL('image/jpeg', 0.6);
+    photoData[type] = canvas.toDataURL('image/jpeg', 0.5);
     
     if (videoStream) {
       videoStream.getTracks().forEach(track => track.stop());
@@ -1022,12 +1022,17 @@
     msg.className = 'status-msg';
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 seconds timeout
+
       const response = await fetch(scriptUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: controller.signal
       });
       
+      clearTimeout(timeoutId);
       const resultText = await response.text();
       let result;
       try {
@@ -1082,23 +1087,51 @@
       
       calculate();
 
+      btn.disabled = false;
+      spinner.style.display = 'none';
+      btnText.style.display = 'block';
+
     } catch (error) {
-      msg.innerText = '❌ เกิดข้อผิดพลาด: ' + error.message;
+      if (error.name === 'AbortError' || error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+         msg.innerHTML = '❌ <b>การเชื่อมต่อใช้เวลานานเกินไป!</b><br>ข้อมูลของคุณ<b>อาจจะถูกส่งไปแล้ว</b><br>กรุณา <u>กดรีเฟรชตารางประวัติ</u> ด้านล่างเพื่อตรวจสอบ ก่อนกดบันทึกใหม่';
+      } else {
+         msg.innerHTML = '❌ เกิดข้อผิดพลาด: ' + error.message;
+      }
       msg.classList.add('error');
       msg.style.display = 'block';
-    } finally {
-      btn.disabled = false;
+      
+      if (error.name === 'AbortError' || error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+        btn.disabled = true; // ล็อคปุ่มกันกดซ้ำ
+      } else {
+        btn.disabled = false;
+      }
+      
       spinner.style.display = 'none';
       btnText.style.display = 'block';
     }
   }
 
-  function fetchInitialData() {
+  async function fetchInitialData() {
     if (!scriptUrl) return;
-    const script = document.createElement('script');
-    script.src = `${scriptUrl}?action=getInitialData&callback=handleInitialDataResponse&_t=${new Date().getTime()}`;
-    script.onerror = function(e) { console.error("Error loading data"); };
-    document.body.appendChild(script);
+    
+    // Add a loading indicator on the dropdowns or form if needed
+    try {
+      const response = await fetch(`${scriptUrl}?action=getInitialData&_t=${new Date().getTime()}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      window.handleInitialDataResponse(data);
+    } catch (error) {
+      console.error("Error loading data:", error);
+      // Fallback: unlock fields so user can enter manually if it fails
+      document.getElementById('senderNameText').style.display = 'block';
+      document.getElementById('senderNameDropdown').style.display = 'none';
+      document.getElementById('receiverNameText').style.display = 'block';
+      document.getElementById('receiverNameDropdown').style.display = 'none';
+      
+      const errEl = document.getElementById('initErrorMsg');
+      errEl.innerHTML = '⚠️ Error: Failed to load script (ปลดล็อกช่องให้กรอกเองได้ชั่วคราว)';
+      errEl.style.display = 'block';
+    }
   }
 
   window.handleInitialDataResponse = function(data) {

@@ -673,7 +673,6 @@
   const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9VgBmGLjVAvDEBCK2ruTMnQswLtB1oZoiMzDlhwuRC9MI95GJoId_QTdQJE8kOw-XPw/exec';
 
   // Fetch Latest Meter Data
-  // JSONP callback function
   window.handleMeterResponse = function(data) {
     const fetchBtn = document.getElementById('fetchBtn');
     const fetchSpinner = document.getElementById('fetchSpinner');
@@ -729,7 +728,7 @@
     fetchText.style.display = 'block';
   };
 
-  function fetchLatestMeter() {
+  async function fetchLatestMeter() {
     const lot = document.getElementById('parkingLot').value.trim();
     const fetchBtn = document.getElementById('fetchBtn');
     const fetchSpinner = document.getElementById('fetchSpinner');
@@ -742,18 +741,27 @@
     msg.style.display = 'none';
     msg.className = 'status-msg';
 
-    // Create script tag for JSONP
-    const script = document.createElement('script');
-    script.src = `${scriptUrl}?action=getLast&lot=${encodeURIComponent(lot)}&callback=handleMeterResponse`;
-    script.onerror = handleMeterError;
-    
-    // Remove old script tag if exists
-    const oldScript = document.getElementById('jsonp-script');
-    if (oldScript) {
-      oldScript.remove();
+    if (!lot) {
+      msg.innerText = '⚠️ กรุณาเลือกลานจอดรถก่อน';
+      msg.classList.add('error');
+      msg.style.display = 'block';
+      fetchBtn.disabled = false;
+      fetchSpinner.style.display = 'none';
+      fetchText.style.display = 'block';
+      return;
     }
-    script.id = 'jsonp-script';
-    document.body.appendChild(script);
+
+    if (!scriptUrl) return;
+
+    try {
+      const response = await fetch(`${scriptUrl}?action=getLast&lot=${encodeURIComponent(lot)}&_t=${new Date().getTime()}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      window.handleMeterResponse(data);
+    } catch (error) {
+      console.error("Error fetching latest meter:", error);
+      window.handleMeterError();
+    }
   }
 
   function calculate() {

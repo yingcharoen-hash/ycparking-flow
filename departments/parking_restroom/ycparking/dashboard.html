@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
@@ -828,7 +828,7 @@
             if (anomalies.length > 0) {
                 fraudSec.style.display = 'block';
                 // Show max 10 alerts
-                frauds.reverse().slice(0, 10).forEach(msg => {
+                anomalies.reverse().slice(0, 10).forEach(msg => {
                     let li = document.createElement('li');
                     li.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${msg}`;
                     fraudList.appendChild(li);
@@ -1014,3 +1014,4 @@
     </script>
 </body>
 </html>
+

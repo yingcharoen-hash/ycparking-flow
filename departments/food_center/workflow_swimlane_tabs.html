@@ -1,0 +1,2648 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผังขั้นตอนการทำงาน — แผนกบริหารกิจการศูนย์อาหาร (ตลาดยิ่งเจริญ)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f5f5f7;
+  --card-bg: #ffffff;
+  --text-main: #1d1d1f;
+  --text-muted: #86868b;
+  --accent-orange: #ff9500;
+  --accent-orange-dark: #cc7700;
+  --accent-blue: #0071e3;
+  --accent-green: #34c759;
+  --accent-purple: #af52de;
+  --accent-red: #ff3b30;
+  --gray50: #f8fafc;
+  --gray100: #f1f5f9;
+  --gray200: #e2e8f0;
+  --gray400: #94a3b8;
+  --gray600: #475569;
+  --gray800: #1e293b;
+
+  --lane-mgmt: #fef3c7;
+  --lane-mgmt-c: #b45309;
+  --lane-admin: #e0f2fe;
+  --lane-admin-c: #0369a1;
+  --lane-bar: #dbeafe;
+  --lane-bar-c: #1d4ed8;
+  --lane-box: #dcfce7;
+  --lane-box-c: #15803d;
+  --lane-fin: #fdf4ff;
+  --lane-fin-c: #a21caf;
+  --lane-acct: #f1f5f9;
+  --lane-acct-c: #334155;
+  --lane-tenant: #fee2e2;
+  --lane-tenant-c: #b91c1c;
+
+  --shadow: 0 4px 20px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Sarabun", sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.top-header {
+  background: radial-gradient(circle at 50% 25%, #291c14 0%, #0d0907 100%);
+  color: #fff;
+  padding: 44px 24px 36px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 149, 0, 0.18);
+  border: 1px solid rgba(255, 149, 0, 0.45);
+  color: #ff9500;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.header-title {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.header-sub {
+  font-size: 14px;
+  color: #d1d5db;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* Nav */
+.top-nav {
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--gray200);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  padding: 12px 24px;
+}
+.nav-wrap {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.nav-btn {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.15s;
+}
+.nav-btn:hover { color: var(--accent-orange); }
+.print-btn {
+  background: var(--text-main);
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.print-btn:hover { background: #334155; }
+
+/* Tabs Bar */
+.tabs-outer {
+  background: #ffffff;
+  border-bottom: 1px solid var(--gray200);
+  padding: 12px 24px 0;
+  position: sticky;
+  top: 53px;
+  z-index: 35;
+}
+.tabs-scroll {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+}
+.tab-btn {
+  background: var(--gray50);
+  border: 1px solid var(--gray200);
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray600);
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.tab-btn:hover {
+  background: #e2e8f0;
+  color: var(--text-main);
+}
+.tab-btn.active {
+  background: var(--text-main);
+  color: #ffffff;
+  border-color: var(--text-main);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.tab-badge {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.06);
+  font-weight: 700;
+}
+.tab-btn.active .tab-badge {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+}
+
+/* Layout with Sliding Glassmorphism Side Panel */
+.main-wrapper {
+  max-width: 1440px;
+  margin: 24px auto 60px;
+  padding: 0 24px;
+  display: flex;
+  gap: 24px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.content-col {
+  flex: 1;
+  min-width: 0;
+  transition: all 0.3s ease;
+}
+.content-col.shrunk {
+  margin-right: 440px;
+}
+
+/* Tab Content */
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+/* Process Intro Header */
+.proc-intro {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px 28px;
+  border: 1px solid var(--gray200);
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.proc-title-box h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.proc-title-box p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.proc-meta-badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.pm-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--gray100);
+  color: var(--gray800);
+  border: 1px solid var(--gray200);
+}
+
+/* Swimlane Table Container */
+.swimlane-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid var(--gray200);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.swimlane-header {
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--gray200);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.swimlane-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.swimlane-table-wrap {
+  overflow-x: auto;
+}
+.swimlane-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+.swimlane-table th, .swimlane-table td {
+  border: 1px solid var(--gray200);
+  padding: 14px 16px;
+  vertical-align: top;
+}
+.swimlane-table th {
+  background: #f1f5f9;
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
+  text-align: left;
+}
+.lane-col-role {
+  width: 200px;
+  background: #fafafa;
+}
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.role-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Step Node inside Swimlane */
+.steps-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.step-node {
+  background: #ffffff;
+  border: 1px solid var(--gray200);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.step-node:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-orange);
+  box-shadow: 0 6px 16px rgba(255, 149, 0, 0.12);
+}
+.step-node.active {
+  border-color: var(--accent-orange);
+  background: #fffaf0;
+  box-shadow: 0 0 0 2px var(--accent-orange);
+}
+.step-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.step-code {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.step-sla {
+  font-size: 11px;
+  color: #ea580c;
+  font-weight: 600;
+}
+.step-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+.step-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.step-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #e2e8f0;
+  color: #475569;
+}
+.tag-control {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+.tag-doc {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+/* Glassmorphism Side Detail Panel */
+.side-panel {
+  position: fixed;
+  top: 60px;
+  right: -450px;
+  width: 420px;
+  height: calc(100vh - 80px);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border-left: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 24px 0 0 24px;
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.12);
+  z-index: 60;
+  overflow-y: auto;
+  transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+.side-panel.open {
+  right: 0;
+}
+.panel-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 55;
+  backdrop-filter: blur(2px);
+}
+.panel-backdrop.open { display: block; }
+
+.panel-close {
+  align-self: flex-end;
+  background: #e2e8f0;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  transition: background 0.2s;
+}
+.panel-close:hover { background: #cbd5e1; }
+
+.panel-code {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--accent-orange);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.panel-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.35;
+  margin-bottom: 14px;
+}
+.panel-badge-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+
+.panel-section {
+  margin-bottom: 18px;
+}
+.panel-sec-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray600);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.panel-sec-body {
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.6;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+.panel-list {
+  list-style: none;
+}
+.panel-list li {
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.5;
+}
+.panel-list li::before {
+  content: "•";
+  position: absolute;
+  left: 4px;
+  color: var(--accent-orange);
+  font-weight: bold;
+}
+
+.panel-alert {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 8px;
+}
+.panel-alert-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #b91c1c;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.panel-alert-text {
+  font-size: 12px;
+  color: #7f1d1d;
+  line-height: 1.5;
+}
+
+/* Print CSS for A4 Landscape */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
+  body { background: #fff; color: #000; font-size: 10pt; }
+  .top-header, .top-nav, .tabs-outer, .side-panel, .panel-backdrop, .print-btn { display: none !important; }
+  .main-wrapper { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+  .content-col { margin-right: 0 !important; }
+  .tab-content { display: block !important; page-break-after: always; }
+  .swimlane-card { border: 1px solid #999; box-shadow: none; break-inside: avoid; }
+  .step-node { border: 1px solid #aaa; break-inside: avoid; }
+}
+
+@media (max-width: 900px) {
+  .content-col.shrunk { margin-right: 0; }
+  .side-panel { width: 100%; right: -100%; border-radius: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="top-header">
+  <div class="header-badge">🍜 FOOD CENTER MANAGEMENT</div>
+  <h1 class="header-title">ผังขั้นตอนการปฏิบัติงาน — แผนกบริหารกิจการศูนย์อาหาร</h1>
+  <p class="header-sub">ครอบคลุม 4 หมวดงานหลัก: จัดหาร้านค้าใหม่, บาร์น้ำ & ภาชนะชีวะ ฟู้ดพลาซ่า, งานปฏิบัติการ Neighborfood และกิจกรรมส่งเสริมการขายร่วมกับการตลาด</p>
+</div>
+
+<!-- Navigation -->
+<div class="top-nav">
+  <div class="nav-wrap">
+    <div class="nav-left">
+      <a class="nav-btn" href="index.html">← แดชบอร์ดศูนย์อาหาร</a>
+      <a class="nav-btn" href="../../index.html">🏠 หน้าหลักบริษัท</a>
+      <a class="nav-btn" href="../../guide.html">📖 คู่มือการใช้งาน</a>
+    </div>
+    <button class="print-btn" onclick="window.print()">🖨️ พิมพ์ A4 Landscape</button>
+  </div>
+</div>
+
+<!-- Tabs Bar -->
+<div class="tabs-outer">
+  <div class="tabs-scroll">
+    <button class="tab-btn active" onclick="switchTab(0)">
+      <span>1.0 จัดหาร้านค้าใหม่</span>
+      <span class="tab-badge">13 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab(1)">
+      <span>2.0 บาร์น้ำ & ภาชนะ ฟู้ดพลาซ่า</span>
+      <span class="tab-badge">24 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab(2)">
+      <span>3.0 งานหลัก Neighborfood</span>
+      <span class="tab-badge">18 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab(3)">
+      <span>4.0 กิจกรรมตลาด & เทศกาล</span>
+      <span class="tab-badge">10 ขั้นตอน</span>
+    </button>
+  </div>
+</div>
+
+<div class="main-wrapper">
+  <div class="content-col" id="contentCol">
+    <!-- TAB 0: 1.0 จัดหาร้านค้าใหม่ -->
+    <div class="tab-content active" id="tabContent-0">
+      <div class="proc-intro">
+        <div class="proc-title-box">
+          <h2><span>🏪 1.0 ติดต่อประสานงานเพื่อจัดหาร้านค้าใหม่ (Tenant Acquisition)</span></h2>
+          <p>กระบวนการนำเสนอพื้นที่แผงว่าง เทสรสชาติอาหาร (Food Tasting) จัดทำสัญญาเช่า เปิดหน้าบัญชี ACC-SL-0001 ผ่อนชำระเงินประกัน และกำหนดมาตรฐานภาชนะ</p>
+        </div>
+        <div class="proc-meta-badges">
+          <span class="pm-badge">👤 แอดมินฝ่ายขาย / ผจก.พื้นที่</span>
+          <span class="pm-badge">⏱️ 10 - 30 นาที / ขั้นตอน</span>
+          <span class="pm-badge">🛡️ สัญญา & Food Tasting QC</span>
+        </div>
+      </div>
+
+      <div class="swimlane-card">
+        <div class="swimlane-header">
+          <h3>ผังการปฏิบัติงานแบบ Swimlane ตามบทบาทหน้าที่ (13 ขั้นตอน)</h3>
+          <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูรายละเอียดด้านข้าง</span>
+        </div>
+        <div class="swimlane-table-wrap">
+          <table class="swimlane-table">
+            <thead>
+              <tr>
+                <th style="width:200px;">บทบาทหน้าที่ (Roles)</th>
+                <th>ขั้นตอนการปฏิบัติงาน (Operation Flow)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Lane: แอดมินฝ่ายขาย / ผจก.พื้นที่ -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-mgmt);color:var(--lane-mgmt-c);">👤 แอดมินฝ่ายขาย / ผจก.พื้นที่</span>
+                  <div class="role-desc">นำเสนอขาย ดูพื้นที่ สัญญา และประสานงาน</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('1-1')">
+                      <div class="step-top"><span class="step-code">1.1</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">1. นำเสนอขายพื้นที่ให้กับลูกค้าปัจจุบันและลูกค้าใหม่</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🎯 ตรวจสอบคุณสมบัติผู้เช่า</span><span class="step-tag">นำเสนอจุดเด่น</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-2')">
+                      <div class="step-top"><span class="step-code">1.2</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">2. พาลูกค้าไปดูพื้นที่เช่า (แผงว่าง) และดูผัง Layout ศูนย์อาหาร</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ผัง Layout ศูนย์อาหาร</span><span class="step-tag">ชี้ตำแหน่งระบบน้ำ/ไฟ/แก๊ส</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-3')">
+                      <div class="step-top"><span class="step-code">1.3</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">3. เตรียมการนำเสนอการขายและข้อเสนอเงื่อนไขเพื่อนำเสนอต่อลูกค้า</div>
+                      <div class="step-tags"><span class="step-tag">เงื่อนไขค่าเช่า & ส่วนแบ่งยอดขาย</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-4')">
+                      <div class="step-top"><span class="step-code">1.4</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">4. แจ้งทางร้านจัดเตรียมอาหารเพื่อเทสรสชาติ (Food Tasting QC) ก่อนอนุมัติเช่าพื้นที่</div>
+                      <div class="step-tags"><span class="step-tag tag-control">👨‍🍳 คณะกรรมการตรวจรสชาติ & สุขอนามัย</span><span class="step-tag tag-doc">แบบประเมิน Taste Test</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-5')">
+                      <div class="step-top"><span class="step-code">1.5</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">5. จัดเตรียมสื่อสำหรับนำเสนอขายพื้นที่ เช่น ใบเสนอราคา และขอสำเนาบัตรประชาชน</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ใบเสนอราคา / สำเนาบัตร ปชช.</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-6')">
+                      <div class="step-top"><span class="step-code">1.6</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">6. ทำเอกสารเปิดหน้าบัญชี และจัดทำสัญญาเช่าพื้นที่ศูนย์อาหาร</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ใบบันทึกข้อตกลงเช่าแผง</span><span class="step-tag tag-control">ตรวจเอกสารนิติบุคคล/บุคคล</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-7')">
+                      <div class="step-top"><span class="step-code">1.7</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">7. ทำเอกสารบันทึกข้อตกลงการเช่าแผงและชี้แจงใบกฎระเบียบแต่ละโซน</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ใบกฎระเบียบศูนย์อาหาร</span><span class="step-tag tag-control">ลงนามรับทราบข้อบังคับ</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <!-- Lane: แผนกการเงิน & บัญชี -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-fin);color:var(--lane-fin-c);">👤 แผนกการเงิน & บัญชี</span>
+                  <div class="role-desc">ผ่อนเงินประกัน ตั้งรหัส และรับชำระเงิน</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('1-8')">
+                      <div class="step-top"><span class="step-code">1.8</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">8. ทำเอกสารผ่อนชำระเงินประกันแผง (กรณีลูกค้าผ่อนเงินประกัน) โดยแผนกการเงิน</div>
+                      <div class="step-tags"><span class="step-tag tag-control">💰 ตารางงวดผ่อนชำระ</span><span class="step-tag tag-doc">สัญญาผ่อนเงินประกัน</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-9')">
+                      <div class="step-top"><span class="step-code">1.9</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">9. ประสานแผนกบัญชีตั้งรหัสลูกค้าเพื่อชำระเงิน (เอกสารใบเปิดหน้าบัญชี เลขที่ ACC-SL-0001)</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ACC-SL-0001</span><span class="step-tag tag-control">สร้างรหัส Master Data ใน ERP</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-10')">
+                      <div class="step-top"><span class="step-code">1.10</span><span class="step-sla">20 นาที</span></div>
+                      <div class="step-text">10. ลูกค้าชำระเงินค่าใช้จ่ายพร้อมรับใบเสร็จรับเงินจากแคชเชียร์แผนกการเงิน</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🧾 ใบเสร็จรับเงินระบบการเงิน 100%</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-11')">
+                      <div class="step-top"><span class="step-code">1.11</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">11. นำเอกสารเปิดหน้าบัญชีขอรหัสลูกหนี้ขายภาชนะในระบบบัญชี</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">รหัสลูกหนี้ภาชนะ</span><span class="step-tag">ระบบเบิกภาชนะชีวะ</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <!-- Lane: งานสนับสนุน & ป้าย -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-box);color:var(--lane-box-c);">🏷️ งานสนับสนุน & ติดตั้ง</span>
+                  <div class="role-desc">ภาชนะชีวะ ป้ายร้านค้า และเตรียมเปิดขาย</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('1-12')">
+                      <div class="step-top"><span class="step-code">1.12</span><span class="step-sla">20 นาที</span></div>
+                      <div class="step-text">12. แนะนำรายการภาชนะที่ร้านค้าต้องใช้ในศูนย์อาหาร (ภาชนะชีวะรักษ์โลก 100%)</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🌿 มาตรฐานภาชีวะ</span><span class="step-tag">แคตตาล็อกขนาดจาน/ชาม</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-13')">
+                      <div class="step-top"><span class="step-code">1.13</span><span class="step-sla">20 นาที</span></div>
+                      <div class="step-text">13. แจ้งประสานงานเรื่องป้ายและรายละเอียดร้านค้าให้กับทางร้านป้ายเพื่อจัดทำและติดตั้งก่อนเปิดขาย</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🎨 โทนสีและขนาดป้ายมาตรฐาน</span><span class="step-tag tag-doc">ใบสั่งทำป้ายร้านค้า</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 1: 2.0 บาร์น้ำ & ภาชนะชีวะ ฟู้ดพลาซ่า -->
+    <div class="tab-content" id="tabContent-1">
+      <div class="proc-intro">
+        <div class="proc-title-box">
+          <h2><span>🥤 2.0 บาร์น้ำ & ภาชนะชีวะ ยิ่งเจริญฟู้ดพลาซ่า (Beverage & Eco Containers)</span></h2>
+          <p>การบริหารจัดการจุดจำหน่ายเครื่องดื่มบาร์น้ำ (สต็อก FIFO, เปิด PR, ส่งเงินสด 14:00 และ 19:00 น.), ภาชนะชีวะรักษ์โลก, และระบบอาหารเดลิเวอรี่ออนไลน์</p>
+        </div>
+        <div class="proc-meta-badges">
+          <span class="pm-badge">👤 แคชเชียร์บาร์น้ำ / เจ้าหน้าที่ภาชนะ</span>
+          <span class="pm-badge">⏱️ 05:00 - 19:00 น. ประจำวัน</span>
+          <span class="pm-badge">🛡️ สรุปเงินสด 2 รอบ & สต็อก FIFO</span>
+        </div>
+      </div>
+
+      <div class="swimlane-card">
+        <div class="swimlane-header">
+          <h3>ผังการปฏิบัติงานส่วนงานบาร์น้ำ (2.1) และส่วนงานภาชนะ/ออนไลน์ (2.2) (24 ขั้นตอน)</h3>
+          <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูรายละเอียดด้านข้าง</span>
+        </div>
+        <div class="swimlane-table-wrap">
+          <table class="swimlane-table">
+            <thead>
+              <tr>
+                <th style="width:200px;">บทบาทหน้าที่ (Roles)</th>
+                <th>ขั้นตอนการปฏิบัติงาน (Operation Flow)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Lane: บาร์น้ำ ยิ่งเจริญฟู้ดพลาซ่า -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-bar);color:var(--lane-bar-c);">🥤 แคชเชียร์บาร์น้ำ</span>
+                  <div class="role-desc">ขายเครื่องดื่ม เช็กสต็อก FIFO และส่งเงินสด</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('2-1-1')">
+                      <div class="step-top"><span class="step-code">2.1.1</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">1. ตรวจพื้นที่บริเวณรอบในร้านบาร์น้ำดูความเรียบร้อย และตรวจเช็กเงินทอนคงเหลือ</div>
+                      <div class="step-tags"><span class="step-tag tag-control">💵 ตรวจนับเงินทอนเปิดกะ</span><span class="step-tag tag-doc">ใบตรวจเช็ค</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-1-2')">
+                      <div class="step-top"><span class="step-code">2.1.2</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">2. เช็กสินค้าตรงตามรอบที่เบิกไว้ จัดเรียงสินค้า ตรวจสอบป้ายราคาขายให้ถูกต้องพร้อมขาย</div>
+                      <div class="step-tags"><span class="step-tag">จัดเรียงสินค้าหน้าร้าน</span><span class="step-tag tag-control">ตรวจป้ายราคา</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-1-3')">
+                      <div class="step-top"><span class="step-code">2.1.3</span><span class="step-sla">5 นาที</span></div>
+                      <div class="step-text">3. เปิดให้บริการขาย ต้อนรับลูกค้า และกล่าวทักทายลูกค้าด้วยความสุภาพ</div>
+                      <div class="step-tags"><span class="step-tag">Customer Service</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-1-4')">
+                      <div class="step-top"><span class="step-code">2.1.4</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">4. เช็กสินค้าใน Stock หน้าร้านบาร์น้ำ พร้อมตรวจเช็กวันหมดอายุตามหลัก FIFO (รอบเช้า-รอบบ่าย)</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🔄 ตรวจวันหมดอายุ (FIFO)</span><span class="step-tag tag-doc">ใบโอนย้าย/ใบเบิก</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-1-5')">
+                      <div class="step-top"><span class="step-code">2.1.5</span><span class="step-sla">70 นาที</span></div>
+                      <div class="step-text">5. จดรายการและเบิกสินค้าจากห้องสโตร์ เติมเข้าชั้นวางและในตู้แช่เย็นเพื่อพร้อมขาย</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ใบเบิกสินค้า</span><span class="step-tag">เติมตู้แช่เย็น</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-1-6')">
+                      <div class="step-top"><span class="step-code">2.1.6</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">6. สรุปยอดขาย และส่งยอดเงินสดที่ขายรอบเช้า (05:00-14:00 น.) ส่งที่ออฟฟิศแผนกการเงิน</div>
+                      <div class="step-tags"><span class="step-tag tag-control">💰 ปิดยอดกะเช้า 14.00 น.</span><span class="step-tag tag-doc">ใบส่งเงิน</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-1-7')">
+                      <div class="step-top"><span class="step-code">2.1.7</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">7. จัดทำเอกสารใบขอซื้อ PR จัดซื้อสินค้า เพื่อเปิด PO สั่งซื้อสินค้าเข้า STOCK (แผนกจัดซื้อ)</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ใบขอซื้อสินค้า (PR)</span><span class="step-tag">เปิด PO สั่งซัพพลายเออร์</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-1-8')">
+                      <div class="step-top"><span class="step-code">2.1.8</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">8. ตรวจเช็กสินค้าที่สั่งซื้อตรงตามรายการ และนำเอกสารใบส่งของส่งให้แผนกบัญชีรับยอดเข้าระบบ</div>
+                      <div class="step-tags"><span class="step-tag tag-control">📦 ตรวจรับสินค้า & ใบส่งของ</span><span class="step-tag tag-doc">ใบส่งของซัพพลายเออร์</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-1-9')">
+                      <div class="step-top"><span class="step-code">2.1.9</span><span class="step-sla">40 นาที</span></div>
+                      <div class="step-text">9. เช็ก Stock คงเหลือหน้าร้านก่อนปิด สรุปยอดขายน้ำโพสมิกซ์ และส่งรายงานในกลุ่มไลน์ให้ผู้จัดการทราบ</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ใบนับสต็อกประจำวัน</span><span class="step-tag tag-control">นับหัวเชื้อน้ำโพสมิกซ์</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-1-10')">
+                      <div class="step-top"><span class="step-code">2.1.10</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">10. สรุปยอดขาย และส่งยอดเงินสดที่ขายรอบบ่าย (14:00-19:00 น.) นำส่งที่ห้อง บก.</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🔒 ปิดยอดกะบ่าย 19.00 น. ที่ บก.</span><span class="step-tag tag-doc">ใบส่งเงิน</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-1-11')">
+                      <div class="step-top"><span class="step-code">2.1.11</span><span class="step-sla">20 นาที</span></div>
+                      <div class="step-text">11. ปิดร้าน เก็บสินค้าเข้าในร้าน ถ่ายรูปส่งไลน์รายงาน ผจก. และนับ Stock ประจำเดือนกับแผนกบัญชี</div>
+                      <div class="step-tags"><span class="step-tag tag-control">📊 นับสต็อกสิ้นเดือนร่วมกับบัญชี</span><span class="step-tag">ส่งรูปปิดร้าน</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <!-- Lane: ภาชนะชีวะ & ออนไลน์ ฟู้ดพลาซ่า -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-box);color:var(--lane-box-c);">🌿 เจ้าหน้าที่ภาชนะ & ออนไลน์</span>
+                  <div class="role-desc">จ่ายภาชนะ คุมสต็อก และรับออเดอร์เดลิเวอรี่</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('2-2-1')">
+                      <div class="step-top"><span class="step-code">2.2.1</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">1. เช็กความสะอาดของชั้นวางและ Stock เก็บภาชนะชีวะให้เป็นระเบียบ</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🧹 5ส. ห้องเก็บภาชนะ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-2-2')">
+                      <div class="step-top"><span class="step-code">2.2.2</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">2. รับออเดอร์ภาชนะตามร้านค้าทุก 1 ชม. (06:00-12:00 น.) จัดเตรียมและนำส่งตามร้าน</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ใบสั่งซื้อภาชนะ</span><span class="step-tag">ส่งตามแผงค้า</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-2-3')">
+                      <div class="step-top"><span class="step-code">2.2.3</span><span class="step-sla">60 นาที</span></div>
+                      <div class="step-text">3. จัดเตรียมภาชนะชีวะทำ Stock แพ็กไว้พร้อมขาย (นับมัดละ 50 ใบ / ติดสติกเกอร์ภาชีวะ)</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🏷️ มัดละ 50 ใบ + สติกเกอร์ชีวะ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-2-4')">
+                      <div class="step-top"><span class="step-code">2.2.4</span><span class="step-sla">90 นาที</span></div>
+                      <div class="step-text">4. สรุปยอดภาชนะรายวัน ยอดเงินแต่ละร้าน คีย์เข้าระบบเพื่อเปิดบิลเก็บเงินร้านค้าฟู้ดพลาซ่า</div>
+                      <div class="step-tags"><span class="step-tag tag-control">📑 คีย์ยอดรายร้านเปิดบิล</span><span class="step-tag tag-doc">ใบสั่งซื้อ/ใบเสร็จ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-2-5')">
+                      <div class="step-top"><span class="step-code">2.2.5</span><span class="step-sla">90 นาที</span></div>
+                      <div class="step-text">5. สรุปยอดขายและส่งเงินสดค่าภาชนะ รอบเวลา 13:00-14:00 น. ส่งที่ออฟฟิศแผนกการเงิน</div>
+                      <div class="step-tags"><span class="step-tag tag-control">💰 ส่งเงินสด 14.00 น.</span><span class="step-tag tag-doc">ใบส่งเงิน</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-2-6')">
+                      <div class="step-top"><span class="step-code">2.2.6</span><span class="step-sla">60 นาที</span></div>
+                      <div class="step-text">6. ตรวจเช็กภาชนะตามร้านค้าและตรวจสอบสิ่งแปลกปลอม เพื่อสุขอนามัยของผู้บริโภค</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🔍 QC สุขอนามัยภาชนะตามร้าน</span><span class="step-tag tag-doc">ใบตรวจเช็ค</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-2-7')">
+                      <div class="step-top"><span class="step-code">2.2.7</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">7. เช็ก Stock บรรจุภัณฑ์คงเหลือ ทำ PR สั่งซื้อ และตรวจรับสินค้าซัพพลายเออร์ส่งบัญชี</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ใบขอซื้อ (PR) / ใบส่งของ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-2-8')">
+                      <div class="step-top"><span class="step-code">2.2.8</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">8. สรุปยอดขายประจำวันลงไฟล์ยอดขายภาชนะทุกสัปดาห์ และรายงานผู้จัดการทางไลน์</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ไฟล์ส่งยอดภาชนะ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-2-9')">
+                      <div class="step-top"><span class="step-code">2.2.9</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">9. งานออนไลน์: ตรวจเช็กราคาหน้าร้าน และร้านเปิด-ปิด เพื่อปิดเมนูอาหารในระบบ Platform</div>
+                      <div class="step-tags"><span class="step-tag">มอนิเตอร์แอป Platform</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-2-10')">
+                      <div class="step-top"><span class="step-code">2.2.10</span><span class="step-sla">25 นาที</span></div>
+                      <div class="step-text">10. รับออเดอร์ในระบบ Platform เดลิเวอรี่ และจัดซื้ออาหารตามรายการที่ลูกค้าสั่ง</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ใบเบิกเงินสดย่อย</span><span class="step-tag">ซื้ออาหารจากแผง</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-2-11')">
+                      <div class="step-top"><span class="step-code">2.2.11</span><span class="step-sla">5 นาที</span></div>
+                      <div class="step-text">11. นำส่งอาหารที่ลูกค้าสั่งซื้อให้ไรเดอร์ LINE MAN และ Robinhood ตรงจุดนัดรับ</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🛵 ตรวจ Order ID ไรเดอร์</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-2-12')">
+                      <div class="step-top"><span class="step-code">2.2.12</span><span class="step-sla">15 นาที</span></div>
+                      <div class="step-text">12. คีย์ยอดขายออนไลน์ส่งบัญชี สรุปยอดเบิกเงินรอบ 13:00-14:00 น. และนับ Stock ประจำเดือน</div>
+                      <div class="step-tags"><span class="step-tag tag-control">📊 กระทบยอดออนไลน์ & สิ้นเดือน</span><span class="step-tag tag-doc">ใบนับสต็อก</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: 3.0 งานหลัก Neighborfood -->
+    <div class="tab-content" id="tabContent-2">
+      <div class="proc-intro">
+        <div class="proc-title-box">
+          <h2><span>🥗 3.0 ขั้นตอนการทำงาน Neighborfood (Neighborfood Operations)</span></h2>
+          <p>การบริหารจัดการศูนย์อาหาร Neighborfood: งานบาร์น้ำรอบเช้า-บ่าย, งานแคชเชียร์ส่งเงิน 2 กะ (14:00 และ 20:00 น. ที่ บก.), งานแอดมินระบบ Eos, และการตรวจความปลอดภัยแก๊ส/ไฟฟ้า/ถังดักไขมัน</p>
+        </div>
+        <div class="proc-meta-badges">
+          <span class="pm-badge">👤 แคชเชียร์ / บาร์น้ำ / แอดมิน</span>
+          <span class="pm-badge">⏱️ 06:00 - 20:00 น. ประจำวัน</span>
+          <span class="pm-badge">🛡️ ตรวจความปลอดภัยแก๊ส & ปิดกะ บก.</span>
+        </div>
+      </div>
+
+      <div class="swimlane-card">
+        <div class="swimlane-header">
+          <h3>ผังการปฏิบัติงานแบบ Swimlane ศูนย์อาหาร Neighborfood (18 ขั้นตอน)</h3>
+          <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูรายละเอียดด้านข้าง</span>
+        </div>
+        <div class="swimlane-table-wrap">
+          <table class="swimlane-table">
+            <thead>
+              <tr>
+                <th style="width:200px;">บทบาทหน้าที่ (Roles)</th>
+                <th>ขั้นตอนการปฏิบัติงาน (Operation Flow)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Lane: บาร์น้ำ Neighborfood -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-bar);color:var(--lane-bar-c);">🥤 บาร์น้ำ Neighborfood</span>
+                  <div class="role-desc">รอบเช้า-บ่าย โพสมิกซ์ ชงน้ำ และเช็กสต็อก</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('3-1-1')">
+                      <div class="step-top"><span class="step-code">3.1.1</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">1. ปริ้นยอดขายจากระบบ Black Room เช็กสต็อกหน้าร้าน และตรวจเช็กเครื่องโพสมิกซ์</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ระบบ Black Room</span><span class="step-tag tag-control">เครื่องโพสมิกซ์พร้อมใช้</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-1-2')">
+                      <div class="step-top"><span class="step-code">3.1.2</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">2. ชงน้ำ ตรวจเช็กของหมดอายุ เติมสินค้าเข้าชั้นวางและตู้แช่เย็นให้สวยงามพร้อมขาย</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🍹 สุขอนามัยการชงเครื่องดื่ม</span><span class="step-tag">เช็กวันหมดอายุ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-1-3')">
+                      <div class="step-top"><span class="step-code">3.1.3</span><span class="step-sla">50 นาที</span></div>
+                      <div class="step-text">3. ทำเอกสาร PR สั่งซื้อสินค้า รับสินค้า ตรวจนับ และเช็กสินค้าเข้าระบบ</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ใบขอซื้อ (PR)</span><span class="step-tag tag-control">ตรวจนับสินค้าจริง</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-1-4')">
+                      <div class="step-top"><span class="step-code">3.1.4</span><span class="step-sla">15 นาที</span></div>
+                      <div class="step-text">4. ปิดกะเช้า เวลา 14.00 น. ส่งยอดขาย และรายงานภาพถ่ายลงกลุ่มไลน์ทีมงาน</div>
+                      <div class="step-tags"><span class="step-tag tag-control">⏱️ ปิดกะเช้า 14.00 น.</span><span class="step-tag">รายงานกลุ่มไลน์</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-1-5')">
+                      <div class="step-top"><span class="step-code">3.1.5</span><span class="step-sla">50 นาที</span></div>
+                      <div class="step-text">5. บาร์น้ำรอบบ่าย: เช็กสินค้าให้ตรงยอดกะเช้า เติมตู้แช่ ให้บริการลูกค้า และทำความสะอาดพื้นที่</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🔄 Handover ระหว่างกะ</span><span class="step-tag">ทำความสะอาดเคาน์เตอร์</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-1-6')">
+                      <div class="step-top"><span class="step-code">3.1.6</span><span class="step-sla">50 นาที</span></div>
+                      <div class="step-text">6. ปิดร้าน เก็บสินค้า ถ่ายรูปส่งไลน์รายงาน ผจก. และนับ Stock ประจำเดือนกับแผนกบัญชี</div>
+                      <div class="step-tags"><span class="step-tag tag-control">📊 นับสต็อกสิ้นเดือน</span><span class="step-tag">ตรวจความเรียบร้อย</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <!-- Lane: แคชเชียร์ Neighborfood -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-fin);color:var(--lane-fin-c);">💵 แคชเชียร์ Neighborfood</span>
+                  <div class="role-desc">เบิกเงินทอน บริการ POS ส่งเงิน 2 กะ (14:00 & 20:00 น.)</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('3-2-1')">
+                      <div class="step-top"><span class="step-code">3.2.1</span><span class="step-sla">25 นาที</span></div>
+                      <div class="step-text">7. แคชเชียร์รอบเช้า: เบิกเงินทอนจากการเงิน ตรวจนับเงินให้ครบถ้วน นำเข้าเครื่องแคชเชียร์ POS และบริการลูกค้า</div>
+                      <div class="step-tags"><span class="step-tag tag-control">💵 ตรวจนับเงินทอนเปิดกะ</span><span class="step-tag">เข้าสู่ระบบ POS</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-2-2')">
+                      <div class="step-top"><span class="step-code">3.2.2</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">8. ปิดระบบส่งเงินกะเช้า เวลา 14.00 น. ส่งงานในกลุ่มทีมงาน และแจ้งหัวหน้างาน/ผู้จัดการทราบ</div>
+                      <div class="step-tags"><span class="step-tag tag-control">💰 ปิดกะเช้า 14.00 น.</span><span class="step-tag tag-doc">ใบส่งเงินสด</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-2-3')">
+                      <div class="step-top"><span class="step-code">3.2.3</span><span class="step-sla">25 นาที</span></div>
+                      <div class="step-text">9. แคชเชียร์รอบบ่าย: เบิกเงินทอนจากการเงิน นับเงินเข้าเครื่อง POS และให้บริการลูกค้า</div>
+                      <div class="step-tags"><span class="step-tag tag-control">💵 รับมอบกะบ่าย</span><span class="step-tag">บริการลูกค้าต่อเนื่อง</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-2-4')">
+                      <div class="step-top"><span class="step-code">3.2.4</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">10. ปิดระบบส่งเงินกะบ่าย เวลา 20.00 น. (นำส่งเงินที่ห้อง บก.) ถ่ายรูปส่งไลน์ในกลุ่มทีมงาน</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🔒 ส่งเงิน 20.00 น. ที่ห้อง บก.</span><span class="step-tag tag-doc">ใบส่งเงิน บก.</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <!-- Lane: แอดมิน Neighborfood -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-admin);color:var(--lane-admin-c);">👤 แอดมิน Neighborfood</span>
+                  <div class="role-desc">งานเอกสาร ยอดขาย Eos และรายงานร้านค้า</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('3-3-1')">
+                      <div class="step-top"><span class="step-code">3.3.1</span><span class="step-sla">ประจำวัน</span></div>
+                      <div class="step-text">11. เช็กงานเอกสารค้าง ตามเอกสารส่งเซ็น เช็กยอดรายได้ร้านค้า และทำเอกสารขออนุมัติปรับราคา/เมนู</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">เอกสารขอปรับราคา/เมนู</span><span class="step-tag">ติดตามลายเซ็น ผจก.</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-3-2')">
+                      <div class="step-top"><span class="step-code">3.3.2</span><span class="step-sla">วันที่ 1 & 31</span></div>
+                      <div class="step-text">12. ปิดระบบเครื่อง Eos ปริ้นรายงานยอดขายแต่ละร้านส่งให้ลูกค้าทุกวันที่ 1 และ 31 ของเดือน และแก้ไขปัญหาหน้างาน</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🖥️ ปิดระบบ Eos</span><span class="step-tag tag-doc">รายงานยอดขายรายร้าน</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <!-- Lane: ตรวจความเรียบร้อย & ความปลอดภัย -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-tenant);color:var(--lane-tenant-c);">🛡️ ตรวจความปลอดภัย & สุขอนามัย</span>
+                  <div class="role-desc">แก๊ส ไฟฟ้า ถังดักไขมัน เครื่องดักแมลง/UV</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('3-4-1')">
+                      <div class="step-top"><span class="step-code">3.4.1</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">13. ตรวจร้านค้าช่วงเช้า: ตรวจร้านเปิด-ปิด, ความสะอาดหน้าร้าน, อุปกรณ์เครื่องปรุง, ถังดักไขมัน และจัดระเบียบโต๊ะเก้าอี้</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🔍 ตรวจถังดักไขมัน & ร้านเปิด</span><span class="step-tag tag-doc">ใบตรวจเช็คหน้าร้าน</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-4-2')">
+                      <div class="step-top"><span class="step-code">3.4.2</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">14. ตรวจความสะอาดภายใน: ที่วางช้อนส้อม, เครื่องดักแมลง, เครื่อง UV ฆ่าเชื้อ, บาร์น้ำ, แคชเชียร์ POS และการชงน้ำ</div>
+                      <div class="step-tags"><span class="step-tag tag-control">✨ สุขอนามัยช้อนส้อม & เครื่อง UV</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-4-3')">
+                      <div class="step-top"><span class="step-code">3.4.3</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">15. ตรวจร้านค้ารอบบ่าย: เติมช้อนส้อม จัดระเบียบโต๊ะ เช็ดทำความสะอาด และ Standby ในช่วงเวลาลูกค้าหนาแน่น</div>
+                      <div class="step-tags"><span class="step-tag">Standby Peak Hours</span><span class="step-tag">เช็ดโต๊ะรวดเร็ว</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-4-4')">
+                      <div class="step-top"><span class="step-code">3.4.4</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">16. ตรวจความปลอดภัยผ่าน LINE OpenChat: ตรวจการปิดระบบไฟฟ้า, ปิดระบบแก๊ส 100%, และตรวจถังดักไขมันหลังปิดร้าน</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🔥 ปิดระบบแก๊ส 100%</span><span class="step-tag tag-control">⚡ ปิดเบรกเกอร์ไฟฟ้า</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-5-1')">
+                      <div class="step-top"><span class="step-code">3.5.1</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">17. ลงสต็อกและเบิกของใช้สิ้นเปลืองรายวัน: กระดาษทิชชู่, สลิปปริ้นใบเสร็จ POS, และแรปยืดหุ้มจาน</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">บันทึกสต็อกทิชชู่/สลิป</span><span class="step-tag">เบิกของสโตร์</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-7-1')">
+                      <div class="step-top"><span class="step-code">3.7.1</span><span class="step-sla">5 นาที</span></div>
+                      <div class="step-text">18. การแจ้งและติดตามงานแคชเชียร์-บาร์น้ำ และการแก้ไขปัญหาเฉพาะหน้าเร่งด่วน (Urgent Incident Response)</div>
+                      <div class="step-tags"><span class="step-tag tag-control">⚡ SLA แก้ปัญหา ≤ 5-15 นาที</span><span class="step-tag">แจ้งวิทยุสื่อสาร/กลุ่มไลน์</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: 4.0 จัดกิจกรรมในเทศกาลต่าง ๆ เพื่อส่งเสริมการขาย -->
+    <div class="tab-content" id="tabContent-3">
+      <div class="proc-intro">
+        <div class="proc-title-box">
+          <h2><span>🎉 4.0 จัดกิจกรรมส่งเสริมการขายในเทศกาล (Marketing & Campaigns)</span></h2>
+          <p>กระบวนการวางแผนกิจกรรมตามเทศกาล ของบประมาณ บันทึกภายใน ประสานงานฝ่ายการตลาด-ประชาสัมพันธ์ จัดทำสื่อโปรโมต แจ้งร้านค้า และจัดทำคูปองเงินสด</p>
+        </div>
+        <div class="proc-meta-badges">
+          <span class="pm-badge">👤 ผจก.พื้นที่ / แอดมิน / ฝ่ายการตลาด</span>
+          <span class="pm-badge">⏱️ ล่วงหน้า 2 - 4 สัปดาห์ก่อนเทศกาล</span>
+          <span class="pm-badge">🛡️ อนุมัติงบประมาณ & คูปองเงินสด</span>
+        </div>
+      </div>
+
+      <div class="swimlane-card">
+        <div class="swimlane-header">
+          <h3>ผังการปฏิบัติงานแบบ Swimlane จัดกิจกรรมส่งเสริมการขาย (10 ขั้นตอน)</h3>
+          <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูรายละเอียดด้านข้าง</span>
+        </div>
+        <div class="swimlane-table-wrap">
+          <table class="swimlane-table">
+            <thead>
+              <tr>
+                <th style="width:200px;">บทบาทหน้าที่ (Roles)</th>
+                <th>ขั้นตอนการปฏิบัติงาน (Operation Flow)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Lane: ผจก.พื้นที่ & แอดมินฝ่ายขาย -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-mgmt);color:var(--lane-mgmt-c);">👤 ผจก.พื้นที่ & แอดมินฝ่ายขาย</span>
+                  <div class="role-desc">วางแผนกิจกรรม ขออนุมัติงบ และประชุมทีม</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('4-1')">
+                      <div class="step-top"><span class="step-code">9.1</span><span class="step-sla">2 ชั่วโมง</span></div>
+                      <div class="step-text">1. วางแผนจัดกิจกรรมตามเทศกาลเพื่อส่งเสริมการขาย (ผจก.พื้นที่)</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ตารางสรุปกิจกรรม</span><span class="step-tag tag-control">กำหนดเป้าหมายยอดขาย</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-2')">
+                      <div class="step-top"><span class="step-code">9.2</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">2. ทำเอกสารขออนุมัติแผนงานกิจกรรมเพื่อของบประมาณดำเนินการ</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">บันทึกภายในขออนุมัติงบ</span><span class="step-tag tag-control">เสนอผู้บริหารอนุมัติ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-6')">
+                      <div class="step-top"><span class="step-code">9.6</span><span class="step-sla">2 ชั่วโมง</span></div>
+                      <div class="step-text">6. ประชุมทีมศูนย์อาหารเพื่อสื่อสารเรื่องการจัดกิจกรรมและการเตรียมความพร้อม</div>
+                      <div class="step-tags"><span class="step-tag">ประชุม Brief ทีมงาน</span><span class="step-tag tag-doc">ตารางสรุปกิจกรรม</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-7')">
+                      <div class="step-top"><span class="step-code">9.7</span><span class="step-sla">1 ชั่วโมง</span></div>
+                      <div class="step-text">7. แจ้งข่าวสารและเงื่อนไขให้กับร้านค้าที่เข้าร่วมกิจกรรมรับทราบอย่างชัดเจน</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">สื่อโฆษณา / ประกาศร้านค้า</span><span class="step-tag tag-control">เกณฑ์ส่วนลด/ของแถม</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <!-- Lane: แผนกการตลาด & ประชาสัมพันธ์ -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-admin);color:var(--lane-admin-c);">📢 แผนกการตลาด & ประชาสัมพันธ์</span>
+                  <div class="role-desc">จัดทำสื่อ โปรโมต และกระจายข่าวสาร</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('4-3')">
+                      <div class="step-top"><span class="step-code">9.3</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">3. ประสานงานแผนกการตลาดส่งแผนงานจัดกิจกรรมส่งเสริมการขาย</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ตารางสรุปกิจกรรม</span><span class="step-tag">ร่วมวางกลยุทธ์สื่อ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-4')">
+                      <div class="step-top"><span class="step-code">9.4</span><span class="step-sla">10 นาที</span></div>
+                      <div class="step-text">4. ประสานงานแผนกประชาสัมพันธ์เพื่อแจ้งจัดกิจกรรมและกระจายเสียงในตลาด</div>
+                      <div class="step-tags"><span class="step-tag">เสียงตามสาย / จอดิจิทัล</span><span class="step-tag tag-doc">สคริปต์ประชาสัมพันธ์</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-5')">
+                      <div class="step-top"><span class="step-code">9.5</span><span class="step-sla">2 ชั่วโมง</span></div>
+                      <div class="step-text">5. จัดทำสื่อการตลาดเพื่อโปรโมทกิจกรรม (ป้ายไวนิล, สแตนดี้, โพสต์เพจ Facebook/TikTok)</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🎨 ผลิตสื่อ Artwork</span><span class="step-tag">โปรโมต Online & Offline</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <!-- Lane: แผนกบัญชี & การเงิน -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-fin);color:var(--lane-fin-c);">💰 แผนกบัญชี & การเงิน</span>
+                  <div class="role-desc">คุมงบประมาณ ตัดเบิกสินค้า และคูปองเงินสด</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('4-8')">
+                      <div class="step-top"><span class="step-code">9.8</span><span class="step-sla">30 นาที</span></div>
+                      <div class="step-text">8. ประสานงานแผนกบัญชีเรื่องขั้นตอนการใช้งบประมาณแต่ละกิจกรรม</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">บันทึกภายใน / ตารางกิจกรรม</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-8-1')">
+                      <div class="step-top"><span class="step-code">9.8.1</span><span class="step-sla">ตามรอบ</span></div>
+                      <div class="step-text">8.1 ตัดเบิกงบประมาณและตัดเบิกสินค้าที่นำไปจัดกิจกรรมส่งเสริมการขาย</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">ใบโอนสินค้า / ใบเบิกงบ</span><span class="step-tag tag-control">ตัดสต็อกระบบบัญชี</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-9')">
+                      <div class="step-top"><span class="step-code">9.9</span><span class="step-sla">20 นาที</span></div>
+                      <div class="step-text">9. จัดทำคูปองเงินสดเพื่อนำไปใช้ในกิจกรรมร่วมกับแผนกบัญชีและการเงิน</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🎟️ รหัสคูปองเงินสด & บาร์โค้ด</span><span class="step-tag tag-doc">คูปองเงินสด / บัญชีคุม</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content-col -->
+
+  <!-- Glassmorphism Side Detail Panel -->
+  <div class="panel-backdrop" id="panelBackdrop" onclick="closePanel()"></div>
+  <aside class="side-panel" id="sidePanel">
+    <button class="panel-close" onclick="closePanel()" title="ปิดแผงรายละเอียด">✕</button>
+    <div class="panel-code" id="pCode">ขั้นตอน 1.1</div>
+    <h3 class="panel-title" id="pTitle">ชื่อขั้นตอนการปฏิบัติงาน</h3>
+    <div>
+      <span class="panel-badge-role" id="pBadgeRole" style="background:#e0f2fe;color:#0369a1;">👤 ผู้รับผิดชอบ</span>
+    </div>
+
+    <!-- Section 1: Objective -->
+    <div class="panel-section">
+      <div class="panel-sec-title">🎯 วัตถุประสงค์และเป้าหมาย</div>
+      <div class="panel-sec-body" id="pObjective">วัตถุประสงค์ของขั้นตอนนี้</div>
+    </div>
+
+    <!-- Section 2: Detailed Procedure -->
+    <div class="panel-section">
+      <div class="panel-sec-title">📋 รายละเอียดขั้นตอนการปฏิบัติงาน</div>
+      <div class="panel-sec-body">
+        <ul class="panel-list" id="pDetails"></ul>
+      </div>
+    </div>
+
+    <!-- Section 3: Audit Controls -->
+    <div class="panel-section">
+      <div class="panel-sec-title">🛡️ จุดควบคุมความเสี่ยงและการตรวจสอบ (Audit Points)</div>
+      <div class="panel-sec-body">
+        <ul class="panel-list" id="pControls"></ul>
+      </div>
+    </div>
+
+    <!-- Section 4: Documents & Forms -->
+    <div class="panel-section">
+      <div class="panel-sec-title">📑 เอกสารและแบบฟอร์มที่เกี่ยวข้อง</div>
+      <div class="panel-sec-body" id="pDocs">ไม่มีเอกสารที่เกี่ยวข้อง</div>
+    </div>
+
+    <!-- Section 5: SLA -->
+    <div class="panel-section">
+      <div class="panel-sec-title">⏱️ ระยะเวลามาตรฐาน (SLA)</div>
+      <div class="panel-sec-body" id="pSla">ตามรอบการปฏิบัติงาน</div>
+    </div>
+
+    <!-- Section 6: Governance Alert -->
+    <div class="panel-alert" id="pAlert" style="display:none;">
+      <div class="panel-alert-title">⚠️ ข้อพึงระวังตามนโยบายองค์กร</div>
+      <div class="panel-alert-text" id="pAlertText">รายละเอียดข้อพึงระวัง</div>
+    </div>
+  </aside>
+</div><!-- /main-wrapper -->
+
+<script>
+const stepData = {
+  "1-1": {
+    "code": "1.1",
+    "title": "นำเสนอขายพื้นที่ให้กับลูกค้าปัจจุบันและลูกค้าใหม่",
+    "role": "แอดมินฝ่ายขาย / ผจก.พื้นที่",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "ประชาสัมพันธ์พื้นที่แผงว่างในศูนย์อาหารและดึงดูดผู้ประกอบการร้านอาหารคุณภาพเข้าสู่ตลาดยิ่งเจริญ",
+    "details": [
+      "ตรวจสอบสถานะแผงว่างและประเภทอาหารที่ยังขาดในศูนย์อาหาร (เช่น อาหารตามสั่ง, ก๋วยเตี๋ยว, ข้าวแกง, ของหวาน)",
+      "นำเสนอจุดเด่นของศูนย์อาหาร ทำเล ทราฟฟิกลูกค้า และสถิติยอดขายเฉลี่ย",
+      "ให้ข้อมูลเบื้องต้นเกี่ยวกับอัตราค่าเช่า ส่วนแบ่งยอดขาย (GP) และค่าบริการส่วนกลาง"
+    ],
+    "controls": [
+      "คัดเลือกร้านค้าที่ไม่ซ้ำซ้อนกับร้านค้าเดิมเกิน 20% ในหมวดหมู่เดียวกัน เพื่อความเป็นธรรม",
+      "บันทึกประวัติการติดต่อของลูกค้าลงในระบบฐานข้อมูลผู้สนใจเช่า (Leads Master)"
+    ],
+    "docs": "โบรชัวร์แนะนำศูนย์อาหาร, ทะเบียนแผงว่าง (Stall Master List)",
+    "sla": "30 นาที",
+    "alertTitle": "🎯 ความหลากหลายของเมนูอาหาร",
+    "alertText": "ต้องรักษาความหลากหลายของประเภทอาหารเพื่อเป็นทางเลือกสูงสุดให้แก่ผู้บริโภค"
+  },
+  "1-2": {
+    "code": "1.2",
+    "title": "พาลูกค้าไปดูพื้นที่เช่า (แผงว่าง)",
+    "role": "แอดมินฝ่ายขาย / ผจก.พื้นที่",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "พาลูกค้าสำรวจพื้นที่จริง ตรวจสอบตำแหน่งแผง ผัง Layout และจุดเชื่อมต่อระบบสาธารณูปโภค",
+    "details": [
+      "นำลูกค้าลงพื้นที่ศูนย์อาหารเพื่อดูตำแหน่งแผงค้า ทิศทางการสัญจรของลูกค้า และขนาดหน้ากว้าง",
+      "ชี้แจงจุดเชื่อมต่อระบบน้ำประปา ท่อน้ำทิ้ง รางดักไขมัน ปลั๊กไฟฟ้า และจุดเดินท่อแก๊สส่วนกลาง",
+      "อธิบายข้อกำหนดในการตกแต่งแผงค้าและป้ายหน้าร้านตามมาตรฐานศูนย์อาหาร"
+    ],
+    "controls": [
+      "ตรวจสอบมิเตอร์น้ำ-มิเตอร์ไฟฟ้าของแผงว่างร่วมกับลูกค้าก่อนตกลงเช่า",
+      "ยืนยันว่าไม่มีทรัพย์สินของร้านค้าเดิมตกค้างในแผงค้า"
+    ],
+    "docs": "ผัง Layout ศูนย์อาหาร, แบบแปลนระบบสาธารณูปโภคแผงค้า",
+    "sla": "30 นาที",
+    "alertTitle": "📏 ขอบเขตพื้นที่เช่า",
+    "alertText": "ชี้แจงขอบเขตพื้นที่วางของหน้าร้าน ห้ามล้ำแนวทางเดินส่วนกลางเพื่อความเป็นระเบียบเรียบร้อย"
+  },
+  "1-3": {
+    "code": "1.3",
+    "title": "เตรียมการนำเสนอการขายและข้อเสนอเพื่อนำเสนอต่อลูกค้า",
+    "role": "แอดมินฝ่ายขาย / ผจก.พื้นที่",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "จัดเตรียมเงื่อนไขทางการค้า สรุปประมาณการค่าใช้จ่าย และข้อเสนอพิเศษเพื่อประกอบการตัดสินใจ",
+    "details": [
+      "คำนวณอัตราค่าเช่าคงที่ (Fixed Rent) หรืออัตราส่วนแบ่งรายได้ (Revenue Sharing / GP)",
+      "แจกแจงค่าบริการส่วนกลาง ค่าน้ำ ค่าไฟ ค่าแก๊ส และค่าธรรมเนียมเก็บล้างภาชนะ",
+      "จัดทำข้อเสนอทางเลือกและระยะเวลาการให้ส่วนลดช่วงเปิดร้านใหม่ (Grand Opening Discount)"
+    ],
+    "controls": [
+      "ข้อเสนอส่วนลดพิเศษต้องเป็นไปตามอำนาจดำเนินการ (DOA) ที่ได้รับอนุมัติจากผู้บริหาร",
+      "ส่งเอกสารข้อเสนอให้ผู้จัดการพื้นที่ตรวจสอบก่อนส่งมอบลูกค้า"
+    ],
+    "docs": "เอกสารข้อเสนอทางการค้า (Commercial Proposal), ตารางเปรียบเทียบค่าใช้จ่าย",
+    "sla": "10 นาที",
+    "alertTitle": "⚖️ ความโปร่งใสของเงื่อนไขการค้า",
+    "alertText": "แจกแจงค่าใช้จ่ายทุกรายการอย่างโปร่งใส ไม่มีค่าใช้จ่ายแอบแฝงที่ไม่ได้ระบุในเอกสารข้อเสนอ"
+  },
+  "1-4": {
+    "code": "1.4",
+    "title": "แจ้งทางร้านจัดเตรียมอาหารเพื่อเทสรสชาติ (Food Tasting QC) ก่อนเช่าพื้นที่",
+    "role": "แอดมินฝ่ายขาย / ผจก.พื้นที่",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "ทดสอบคุณภาพ รสชาติ ความสะอาด และมาตรฐานการปรุงอาหารก่อนอนุมัติให้เข้าจำหน่ายในศูนย์อาหาร",
+    "details": [
+      "นัดหมายวันเวลาและสถานที่ในการทดสอบรสชาติ (Food Tasting Session) ล่วงหน้าอย่างน้อย 3 วัน",
+      "ผู้เช่าจัดเตรียมเมนูซิกเนเจอร์ 2-3 เมนู พร้อมจัดจานตามมาตรฐานที่จะขายจริง",
+      "คณะกรรมการศูนย์อาหารร่วมชิม ให้คะแนนรสชาติ ความคุ้มค่า ความสะอาด และการนำเสนอ"
+    ],
+    "controls": [
+      "เกณฑ์คะแนนผ่านการทดสอบต้องไม่ต่ำกว่า 80% จึงจะได้รับอนุมัติให้ทำสัญญาเช่า",
+      "จัดทำใบบันทึกผลการทดสอบรสชาติพร้อมลายมือชื่อกรรมการทุกคน"
+    ],
+    "docs": "แบบประเมินการทดสอบรสชาติอาหาร (Food Tasting Scorecard)",
+    "sla": "30 นาที",
+    "alertTitle": "👨‍🍳 มาตรฐานรสชาติคือหัวใจของศูนย์อาหาร",
+    "alertText": "อาหารต้องปรุงสด สะอาด ปราศจากสารปนเปื้อน และมีรสชาติกลมกล่อมตามมาตรฐานของตลาดยิ่งเจริญ"
+  },
+  "1-5": {
+    "code": "1.5",
+    "title": "จัดเตรียมสื่อสำหรับนำเสนอขายพื้นที่เช่น ใบเสนอราคา และขอเอกสาร",
+    "role": "แอดมินฝ่ายขาย / ผจก.พื้นที่",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "รวบรวมเอกสารยืนยันตัวตนของผู้เช่าและออกใบเสนอราคาอย่างเป็นทางการ",
+    "details": [
+      "จัดทำใบเสนอราคาอย่างเป็นทางการพร้อมระบุเงื่อนไขเงินประกันและค่าเช่าล่วงหน้า",
+      "ขอเอกสารสำเนาบัตรประชาชน สำเนาทะเบียนบ้าน และรูปถ่ายหน้าตรงของผู้เช่า",
+      "กรณีนิติบุคคล ขอหนังสือรับรองบริษัท (อายุไม่เกิน 3 เดือน) และ ภพ.20"
+    ],
+    "controls": [
+      "ผู้เช่าต้องลงลายมือชื่อ 'สำเนาถูกต้อง' ในเอกสารประกอบทุกฉบับ",
+      "ตรวจเช็กชื่อผู้เช่ากับฐานข้อมูลประวัติผู้ค้าเดิมเพื่อป้องกันการมีหนี้ค้างชำระ"
+    ],
+    "docs": "ใบเสนอราคา (Quotation), เอกสารหลักฐานประจำตัวผู้เช่า",
+    "sla": "10 นาที",
+    "alertTitle": "📑 การตรวจสอบความถูกต้องของเอกสาร",
+    "alertText": "ตรวจสอบความสมบูรณ์ของเอกสารให้ครบถ้วนก่อนส่งต่อไปยังขั้นตอนการทำสัญญาเช่า"
+  },
+  "1-6": {
+    "code": "1.6",
+    "title": "ทำเอกสารเปิดหน้าบัญชี/ทำสัญญาเช่า",
+    "role": "แอดมินฝ่ายขาย / ผจก.พื้นที่",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "ร่างและจัดทำสัญญาเช่าพื้นที่ศูนย์อาหารตามระเบียบนิติกรรมสัญญาของบริษัท",
+    "details": [
+      "กรอกข้อมูลสัญญาเช่า ระบุหมายเลขแผง ขนาดพื้นที่ อัตราค่าเช่า และระยะเวลาการเช่า (1-3 ปี)",
+      "ระบุเงื่อนไขเงินประกันความเสียหาย เงินประกันค่าไฟฟ้า-น้ำประปา และเงินล่วงหน้า",
+      "นัดหมายผู้เช่าและผู้มีอำนาจลงนามของบริษัทเพื่อลงลายมือชื่อในสัญญาเช่า"
+    ],
+    "controls": [
+      "สัญญาเช่าต้องใช้ฟอร์มมาตรฐานของฝ่ายกฎหมายตลาดยิ่งเจริญเท่านั้น",
+      "ติดอากรแสตมป์ตามอัตราที่ประมวลรัษฎากรกำหนดอย่างถูกต้อง"
+    ],
+    "docs": "สัญญาเช่าพื้นที่ศูนย์อาหาร, แบบคำขอเปิดหน้าบัญชีผู้เช่า",
+    "sla": "30 นาที",
+    "alertTitle": "⚖️ ความสมบูรณ์ทางกฎหมาย",
+    "alertText": "สัญญาต้องทำเป็น 2 ฉบับคู่ฉบับ ให้ผู้เช่าถือ 1 ฉบับ และบริษัทจัดเก็บเข้าแฟ้มสัญญา 1 ฉบับ"
+  },
+  "1-7": {
+    "code": "1.7",
+    "title": "ทำเอกสารบันทึกข้อตกลงการเช่าแผงและชี้แจงใบกฎระเบียบแต่ละโซน",
+    "role": "แอดมินฝ่ายขาย / ผจก.พื้นที่",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "ชี้แจงกฎระเบียบสุขอนามัย ความปลอดภัย และข้อปฏิบัติการค้าในศูนย์อาหารให้ผู้เช่าเข้าใจตรงกัน",
+    "details": [
+      "มอบคู่มือกฎระเบียบศูนย์อาหาร (เวลาเปิด-ปิดร้าน, การทิ้งขยะ, การแต่งกาย, การใช้แก๊ส)",
+      "อธิบายข้อห้ามเด็ดขาด เช่น การวางของเกะกะ, การใช้อุปกรณ์ไฟฟ้าเกินกำลัง, การดัดแปลงระบบท่อ",
+      "ให้ผู้เช่าลงนามรับทราบและยินยอมปฏิบัติตามกฎระเบียบแนบท้ายสัญญา"
+    ],
+    "controls": [
+      "เอกสารบันทึกข้อตกลงและใบรับทราบกฎระเบียบต้องมีลายมือชื่อผู้เช่าครบทุกหน้า",
+      "แจ้งเกณฑ์บทลงโทษกรณีฝ่าฝืนระเบียบ เช่น ตักเตือน 3 ครั้ง หรือปรับเข้ามูลนิธิตลาดยิ่งเจริญ"
+    ],
+    "docs": "ใบบันทึกข้อตกลงการเช่าแผง, ใบกฎระเบียบประจำโซนศูนย์อาหาร",
+    "sla": "30 นาที",
+    "alertTitle": "📜 มาตรฐานการอยู่ร่วมกัน",
+    "alertText": "ผู้เช่าต้องส่งพนักงานในร้านเข้ารับการตรวจสุขภาพและอบรมสุขาภิบาลอาหารตามเกณฑ์ กทม."
+  },
+  "1-8": {
+    "code": "1.8",
+    "title": "ทำเอกสารผ่อนชำระเงินประกันแผง (กรณีลูกค้าผ่อนเงินประกัน)",
+    "role": "แผนกการเงิน",
+    "roleBadge": "background:#fdf4ff;color:#a21caf;",
+    "objective": "สนับสนุนผู้ประกอบการที่มีศักยภาพแต่ต้องการแบ่งชำระเงินประกันตามเงื่อนไขที่องค์กรกำหนด",
+    "details": [
+      "ผู้เช่ายื่นคำร้องขอแบ่งชำระเงินประกันแผงค้าศูนย์อาหาร",
+      "แผนกการเงินตรวจสอบประวัติและจัดทำตารางแบ่งชำระ (เช่น 3 งวด หรือ 6 งวด)",
+      "ระบุเงื่อนไขการหักเงินจากยอดขายประจำวัน/สัปดาห์ หรือชำระตามดิว"
+    ],
+    "controls": [
+      "การผ่อนชำระต้องได้รับการพิจารณาอนุมัติจากผู้จัดการฝ่ายการเงินและผู้จัดการพื้นที่",
+      "หากผิดนัดชำระงวดใดงวดหนึ่ง บริษัทสงวนสิทธิ์ยกเลิกสัญญาและระงับการขาย"
+    ],
+    "docs": "แบบฟอร์มคำขอผ่อนชำระเงินประกัน, สัญญาแนบท้ายการผ่อนชำระ",
+    "sla": "30 นาที",
+    "alertTitle": "💰 การบริหารความเสี่ยงสินเชื่อ",
+    "alertText": "ต้องมีเงินมัดจำงวดแรกอย่างน้อย 30% ของเงินประกันทั้งหมดก่อนส่งมอบพื้นที่แผงค้า"
+  },
+  "1-9": {
+    "code": "1.9",
+    "title": "ประสานแผนกบัญชีตั้งรหัสลูกค้าเพื่อชำระเงิน (แบบฟอร์ม ACC-SL-0001)",
+    "role": "เจ้าหน้าที่แผนกบัญชี",
+    "roleBadge": "background:#f1f5f9;color:#334155;",
+    "objective": "สร้างฐานข้อมูลรหัสลูกค้าและรหัสลูกหนี้ในระบบ ERP/POS ของตลาดยิ่งเจริญ",
+    "details": [
+      "ส่งแบบฟอร์มเปิดหน้าบัญชี เลขที่ ACC-SL-0001 พร้อมสำเนาสัญญาเช่าให้ฝ่ายบัญชี",
+      "เจ้าหน้าที่บัญชีบันทึกข้อมูลและสร้างรหัสลูกค้า (Customer ID / Stall ID)",
+      "เปิดบัญชีลูกหนี้ในระบบเพื่อเตรียมบันทึกการตั้งหนี้และรับชำระเงิน"
+    ],
+    "controls": [
+      "รหัสลูกค้าต้องเชื่อมโยงกับหมายเลขแผงค้าและโซนศูนย์อาหารอย่างถูกต้อง",
+      "ตรวจสอบว่าไม่มีการสร้างรหัสลูกค้าซ้ำซ้อนในระบบฐานข้อมูล"
+    ],
+    "docs": "เอกสารใบเปิดหน้าบัญชี เลขที่ ACC-SL-0001, ระบบ ERP บัญชี",
+    "sla": "10 นาที",
+    "alertTitle": "🗄️ Master Data Integrity",
+    "alertText": "รหัสลูกค้าเป็นหัวใจสำคัญของการกระทบยอดรายได้และการตัดรอบบิล ห้ามกรอกข้อมูลผิดพลาด"
+  },
+  "1-10": {
+    "code": "1.10",
+    "title": "ลูกค้าชำระเงินค่าใช้จ่าย พร้อมรับใบเสร็จ",
+    "role": "แคชเชียร์แผนกการเงิน",
+    "roleBadge": "background:#fdf4ff;color:#a21caf;",
+    "objective": "รับชำระเงินค่าเช่างวดแรก เงินประกัน และค่าธรรมเนียมต่างๆ ออกใบเสร็จรับเงินอย่างเป็นทางการ",
+    "details": [
+      "ลูกค้านำเอกสารใบเปิดหน้าบัญชีมาชำระเงินที่เคาน์เตอร์การเงิน (เงินสด/โอนเงินผ่าน QR)",
+      "แคชเชียร์ตรวจสอบยอดเงินและออกใบเสร็จรับเงินเต็มรูปจากระบบ",
+      "มอบสำเนาใบเสร็จให้ผู้เช่าเพื่อใช้เป็นหลักฐานในการเบิกกุญแจและเข้าตกแต่งพื้นที่"
+    ],
+    "controls": [
+      "การรับเงินต้องออกใบเสร็จรับเงินจากระบบคอมพิวเตอร์การเงินทันที 100%",
+      "ห้ามรับเงินสดโดยไม่ออกใบเสร็จหรือออกใบรับเงินชั่วคราวโดยไม่มีเหตุจำเป็น"
+    ],
+    "docs": "ใบเสร็จรับเงิน/ใบกำกับภาษี, สลิปหลักฐานการโอนเงิน",
+    "sla": "20 นาที",
+    "alertTitle": "🧾 การรับเงินที่โปร่งใส",
+    "alertText": "ยอดเงินสดและเงินโอนต้องกระทบยอดตรงกับ Statement ของธนาคารในรอบวัน 100%"
+  },
+  "1-11": {
+    "code": "1.11",
+    "title": "นำเอกสารเปิดหน้าบัญชีขอรหัสลูกหนี้ขายภาชนะ",
+    "role": "เจ้าหน้าที่แผนกบัญชี",
+    "roleBadge": "background:#f1f5f9;color:#334155;",
+    "objective": "ตั้งรหัสลูกหนี้เฉพาะสำหรับการซื้อและเบิกใช้ภาชนะชีวะรักษ์โลกของศูนย์อาหาร",
+    "details": [
+      "นำใบเปิดหน้าบัญชีประสานแผนกบัญชีเพื่อเปิด Sub-account สำหรับการเบิกภาชนะชีวะ",
+      "กำหนดวงเงินเครดิตสำหรับการเบิกภาชนะรายวัน (Daily Container Credit Limit)",
+      "เชื่อมโยงรหัสลูกหนี้เข้ากับระบบแคชเชียร์และระบบคุมสต็อกภาชนะ"
+    ],
+    "controls": [
+      "รหัสลูกหนี้ภาชนะต้องผูกกับแผงค้าเพื่อตัดยอดรายได้ในรอบสรุปบิลทุกสัปดาห์",
+      "ตรวจสอบสถานะการเปิดบัญชีในระบบก่อนเริ่มจ่ายภาชนะให้ร้านค้า"
+    ],
+    "docs": "แบบคำขอรหัสลูกหนี้ภาชนะ, ระบบคุมลูกหนี้ขายภาชนะ",
+    "sla": "10 นาที",
+    "alertTitle": "🌿 การควบคุมภาชนะชีวะ",
+    "alertText": "ร้านค้าทุกร้านในศูนย์อาหารต้องใช้ภาชนะชีวะที่ผ่านระบบรหัสลูกหนี้เท่านั้น เพื่อมาตรฐานเดียวกัน"
+  },
+  "1-12": {
+    "code": "1.12",
+    "title": "แนะนำรายการภาชนะที่ร้านค้าต้องใช้ในศูนย์อาหาร",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "ให้ความรู้และจัดเตรียมชุดตัวอย่างภาชนะชีวะรักษ์โลกที่ถูกต้องตามมาตรฐานของตลาดยิ่งเจริญ",
+    "details": [
+      "มอบแคตตาล็อกขนาดจาน ชาม ถ้วย กล่อง และช้อนส้อมที่ทำจากวัสดุชีวภาพย่อยสลายได้",
+      "แนะนำขนาดภาชนะที่เหมาะสมกับแต่ละประเภทเมนูอาหารของร้านค้า",
+      "อธิบายกระบวนการสั่งซื้อ การเบิกจ่ายรายวัน และรอบเวลาจัดส่งถึงหน้าร้าน"
+    ],
+    "controls": [
+      "ห้ามร้านค้านำกล่องโฟมหรือภาชนะพลาสติกชนิดใช้ครั้งเดียวทิ้งเข้ามาใช้ในศูนย์อาหารเด็ดขาด",
+      "ภาชนะชีวะทุกชิ้นต้องมีสัญลักษณ์สติกเกอร์ 'ยิ่งเจริญ ภาชีวะ'"
+    ],
+    "docs": "แคตตาล็อกภาชนะชีวะศูนย์อาหาร, คู่มือมาตรฐานบรรจุภัณฑ์รักษ์โลก",
+    "sla": "20 นาที",
+    "alertTitle": "🌱 นโยบายตลาดยิ่งเจริญรักษ์โลก",
+    "alertText": "การใช้ภาชนะชีวะ 100% เป็นนโยบายระดับองค์กรเพื่อสิ่งแวดล้อมและความปลอดภัยของผู้บริโภค"
+  },
+  "1-13": {
+    "code": "1.13",
+    "title": "แจ้งประสานงานเรื่องป้ายและรายละเอียดของร้านค้าให้กับทางร้านป้ายเพื่อจัดทำและติดตั้งก่อนเปิดขาย",
+    "role": "แอดมินฝ่ายขาย / ผจก.พื้นที่",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "จัดทำและติดตั้งป้ายชื่อร้าน ป้ายเมนู และราคาขาย ให้เป็นไปตามมาตรฐานอัตลักษณ์ของศูนย์อาหาร",
+    "details": [
+      "รับข้อมูลชื่อร้าน โลโก้ รายการเมนู และราคาจากผู้เช่า",
+      "ส่งแบบให้ฝ่ายศิลป์/ร้านป้ายพันธมิตรจัดทำตามขนาดและโทนสีที่ศูนย์อาหารกำหนด",
+      "นัดหมายทีมช่างเข้าติดตั้งป้ายหน้าร้านและทดสอบระบบไฟส่องสว่างก่อนวันเปิดขายจริง 1 วัน"
+    ],
+    "controls": [
+      "ขนาดป้ายและตัวอักษรราคาต้องชัดเจนตาม พ.ร.บ. ว่าด้วยราคาสินค้าและบริการ",
+      "ตรวจรับความแข็งแรงปลอดภัยของการติดตั้งก่อนเปิดให้บริการ"
+    ],
+    "docs": "ใบสั่งทำป้ายร้านค้า, แบบแปลน Artwork ป้ายหน้าร้าน",
+    "sla": "20 นาที (ประสานงาน) / ติดตั้งล่วงหน้า 1 วัน",
+    "alertTitle": "🎨 อัตลักษณ์และมาตรฐานความสวยงาม",
+    "alertText": "ห้ามผู้เช่าติดตั้งป้ายผ้าไวนิลหรือป้ายชั่วคราวที่ไม่ได้ผ่านการอนุมัติแบบจากศูนย์อาหาร"
+  },
+  "2-1-1": {
+    "code": "2.1.1",
+    "title": "ตรวจพื้นที่บริเวณรอบในร้านบาร์น้ำดูความเรียบร้อย และตรวจเช็กเงินทอนคงเหลือ",
+    "role": "แคชเชียร์บาร์น้ำ",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "เตรียมความพร้อมของสถานที่ อุปกรณ์ และตรวจสอบความถูกต้องของเงินทอนก่อนเปิดบริการ",
+    "details": [
+      "ตรวจความสะอาดเคาน์เตอร์ อ่างล้างแก้ว ถังน้ำแข็ง และบริเวณโดยรอบร้านบาร์น้ำ",
+      "ตรวจนับเงินทอนคงเหลือในลิ้นชักเก็บเงินเทียบกับยอดเงินยกมาในสมุดบันทึก",
+      "ลงชื่อตรวจรับเงินทอนและบันทึกความพร้อมในใบตรวจเช็คเปิดร้าน"
+    ],
+    "controls": [
+      "เงินทอนต้องมีจำนวนตรงกับวงเงินสำรองทอนที่ได้รับอนุมัติ (Float Money)",
+      "หากพบส่วนต่างเงินทอน ต้องรายงานหัวหน้างานทันทีก่อนเริ่มขาย"
+    ],
+    "docs": "ใบตรวจเช็คความพร้อมบาร์น้ำ, บันทึกเงินทอนยกมา",
+    "sla": "10 นาที (05.00 น.)",
+    "alertTitle": "💵 ตรวจนับเงินทอนเปิดกะ",
+    "alertText": "การตรวจนับเงินทอนต่อหน้ากล้องวงจรปิดทุกเช้า ช่วยป้องกันข้อผิดพลาดและความไม่โปร่งใส"
+  },
+  "2-1-2": {
+    "code": "2.1.2",
+    "title": "เช็กสินค้าตรงตามรอบที่เบิกไว้ จัดเรียงสินค้า ตรวจสอบป้ายราคาขายให้ถูกต้องพร้อมขาย",
+    "role": "แคชเชียร์บาร์น้ำ",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "จัดเรียงสินค้าหน้าร้านและในตู้แช่ให้เป็นระเบียบ สวยงาม และตรวจสอบป้ายราคาให้ตรงกับระบบ POS",
+    "details": [
+      "นำสินค้าที่เบิกเตรียมไว้จากรอบเมื่อวานมาจัดเรียงบนชั้นวางและตู้โชว์",
+      "เช็กป้ายราคาขายทุกรายการให้ตรงกับฐานข้อมูลในเครื่องแคชเชียร์",
+      "ตรวจสอบความสะอาดของขวด แก้ว และบรรจุภัณฑ์เครื่องดื่ม"
+    ],
+    "controls": [
+      "ห้ามวางสินค้าโดยไม่มีป้ายราคา หรือป้ายราคาไม่ตรงกับราคาที่คิดเงินในระบบ",
+      "จัดเรียงสินค้าตามหมวดหมู่ (น้ำอัดลม, น้ำสมุนไพร, น้ำผลไม้, ชา-กาแฟ)"
+    ],
+    "docs": "Price Tag List, ตารางตรวจราคาหน้าร้าน",
+    "sla": "10 นาที",
+    "alertTitle": "🏷️ ความถูกต้องของราคา",
+    "alertText": "ราคาขายหน้าร้านต้องตรงกับระบบ POS เสมอเพื่อความเป็นธรรมต่อผู้บริโภค"
+  },
+  "2-1-3": {
+    "code": "2.1.3",
+    "title": "เปิดให้บริการขาย ต้อนรับลูกค้า และกล่าวทักทายลูกค้าด้วยความสุภาพ",
+    "role": "แคชเชียร์บาร์น้ำ",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "ส่งมอบบริการที่อบอุ่น ประทับใจ และรวดเร็ว สร้างความพึงพอใจสูงสุดแก่ผู้ใช้บริการศูนย์อาหาร",
+    "details": [
+      "กล่าวคำทักทาย 'สวัสดีครับ/ค่ะ ยินดีต้อนรับสู่ยิ่งเจริญฟู้ดพลาซ่า' ด้วยรอยยิ้ม",
+      "รับรายการเครื่องดื่มจากลูกค้า คีย์เข้าระบบ POS และแจ้งยอดเงินอย่างชัดเจน",
+      "ทอนเงินและส่งมอบเครื่องดื่มพร้อมกล่าวคำขอบคุณ"
+    ],
+    "controls": [
+      "ต้องกดคีย์ออเดอร์ในระบบ POS ทุกแก้ว ห้ามรับเงินโดยไม่กดเครื่อง",
+      "ส่งมอบใบเสร็จรับเงินให้ลูกค้าทุกครั้ง"
+    ],
+    "docs": "ใบเสร็จรับเงินระบบ POS",
+    "sla": "5 นาที / ออเดอร์",
+    "alertTitle": "❤️ มาตรฐานการบริการ",
+    "alertText": "พนักงานต้องสวมหมวกคลุมผม ผ้ากันเปื้อน และหน้ากากอนามัยขณะปฏิบัติงานตลอดเวลา"
+  },
+  "2-1-4": {
+    "code": "2.1.4",
+    "title": "เช็กสินค้าใน Stock หน้าร้านบาร์น้ำ พร้อมตรวจเช็กวันหมดอายุตามหลัก FIFO",
+    "role": "แคชเชียร์บาร์น้ำ",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "บริหารสต็อกสินค้าหน้าร้านตามหลัก First-In First-Out ป้องกันสินค้าหมดอายุและเสื่อมคุณภาพ",
+    "details": [
+      "ตรวจเช็กสต็อกสินค้าคงเหลือหน้าร้านรอบเช้าและรอบบ่าย",
+      "หมุนเวียนสินค้าโดยนำของล็อตเก่ามาไว้ด้านหน้า และนำของล็อตใหม่เติมไว้ด้านหลัง (FIFO)",
+      "คัดแยกสินค้าที่ใกล้หมดอายุ (ภายใน 7 วัน) เพื่อทำรายการโปรโมชันหรือส่งคืนสโตร์"
+    ],
+    "controls": [
+      "ห้ามจำหน่ายสินค้าหมดอายุหรือบรรจุภัณฑ์บุบ/รั่วซึมเด็ดขาด",
+      "บันทึกการตรวจสอบวันหมดอายุในใบเช็กสต็อกรายวัน"
+    ],
+    "docs": "ใบเช็กสต็อก FIFO, รายการสินค้าใกล้หมดอายุ",
+    "sla": "10 นาที / รอบ",
+    "alertTitle": "🔄 หลักการ First-In First-Out",
+    "alertText": "การหมุนเวียนสต็อกสินค้าอย่างเคร่งครัดช่วยลดการสูญเสียและสร้างความมั่นใจในคุณภาพสินค้า"
+  },
+  "2-1-5": {
+    "code": "2.1.5",
+    "title": "จดรายการและเบิกสินค้าจากห้องสโตร์ เติมเข้าชั้นวางและในตู้แช่เย็นเพื่อพร้อมขาย",
+    "role": "แคชเชียร์บาร์น้ำ",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "เบิกจ่ายสินค้าจากคลังสินค้าส่วนกลางมาเติมหน้าร้านให้เพียงพอต่อความต้องการของลูกค้า",
+    "details": [
+      "จดรายการเครื่องดื่ม วัตถุดิบชงน้ำ น้ำแข็ง และแก้ว ที่ต้องใช้ในแต่ละกะ",
+      "เขียนใบเบิกสินค้า (Store Requisition) ให้หัวหน้างานอนุมัติ",
+      "เบิกสินค้าจากห้องสโตร์ ตรวจนับจำนวนร่วมกับเจ้าหน้าที่คลัง และนำมาเติมเข้าตู้แช่เย็น"
+    ],
+    "controls": [
+      "จำนวนสินค้าที่เบิกต้องตรงกับใบเบิกและยอดรับเข้าในระบบสต็อก",
+      "เติมสินค้าในตู้แช่เย็นล่วงหน้าอย่างน้อย 1 ชั่วโมงเพื่อให้ได้อุณหภูมิความเย็นที่เหมาะสม"
+    ],
+    "docs": "ใบเบิกสินค้าจากสโตร์ (Requisition Form)",
+    "sla": "70 นาที (จด+เบิก+เติม)",
+    "alertTitle": "📦 การควบคุมสต็อกคลัง",
+    "alertText": "สินค้าที่เบิกออกจากสโตร์ต้องมีการตัดจ่ายในระบบบัญชีคลังสินค้าทุกครั้ง ห้ามเบิกของโดยไม่มีเอกสาร"
+  },
+  "2-1-6": {
+    "code": "2.1.6",
+    "title": "สรุปยอดขาย และส่งยอดเงินสดที่ขายรอบเช้า (05:00-14:00 น.) ส่งที่ออฟฟิศแผนกการเงิน",
+    "role": "แคชเชียร์บาร์น้ำ",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "ปิดกะรอบเช้า รวบรวมเงินสดและสลิปรายงานยอดขายนำส่งแผนกการเงินอย่างถูกต้องปลอดภัย",
+    "details": [
+      "สั่งพิมพ์รายงานปิดกะรอบเช้า (Shift X-Report) จากเครื่อง POS ณ เวลา 14.00 น.",
+      "ตรวจนับเงินสดในลิ้นชัก แยกเหรียญและธนบัตร มัดรวมและกรอกใบส่งเงินสด",
+      "นำเงินสดพร้อมใบส่งเงินไปส่งมอบให้แคชเชียร์แผนกการเงินที่ออฟฟิศ และรับใบรับเงินเซ็นรับมอบ"
+    ],
+    "controls": [
+      "ยอดเงินสดที่ส่งต้องตรงกับยอดขายเงินสดในรายงาน POS 100%",
+      "ใบส่งเงินต้องมีลายมือชื่อผู้ส่ง (บาร์น้ำ) และผู้รับเงิน (แผนกการเงิน) กำกับครบถ้วน"
+    ],
+    "docs": "ใบส่งเงินสด, สลิปรายงานปิดกะ POS (Shift X-Report)",
+    "sla": "10 นาที (14.00 น.)",
+    "alertTitle": "💰 ปิดกะเช้าส่งเงิน 14.00 น.",
+    "alertText": "ห้ามเก็บเงินสดกะเช้าค้างไว้ที่หน้าร้าน ต้องนำส่งแผนกการเงินทันทีเมื่อถึงเวลาปิดกะ"
+  },
+  "2-1-7": {
+    "code": "2.1.7",
+    "title": "จัดทำเอกสารใบขอซื้อ PR จัดซื้อสินค้า เพื่อเปิด PO สั่งซื้อสินค้าเข้า STOCK",
+    "role": "แผนกจัดซื้อ",
+    "roleBadge": "background:#f1f5f9;color:#334155;",
+    "objective": "วางแผนและออกใบขอซื้อสินค้า (PR) เพื่อสั่งซื้อวัตถุดิบและเครื่องดื่มเข้าสต็อกอย่างต่อเนื่อง",
+    "details": [
+      "ตรวจสอบยอดคงเหลือในสโตร์เทียบกับจุดสั่งซื้อซ้ำ (Re-order Point)",
+      "จัดทำใบขอซื้อสินค้า (PR) ระบุยี่ห้อ ขนาด จำนวน และกำหนดวันส่งของ",
+      "ส่งเอกสารให้ผู้จัดการพื้นที่อนุมัติและส่งต่อแผนกจัดซื้อเพื่อเปิด PO ไปยังซัพพลายเออร์"
+    ],
+    "controls": [
+      "การสั่งซื้อต้องอยู่ภายในงบประมาณที่ได้รับอนุมัติ",
+      "เปรียบเทียบราคาและเงื่อนไขการส่งมอบของซัพพลายเออร์ตามระเบียบจัดซื้อ"
+    ],
+    "docs": "ใบขอซื้อสินค้า (PR), ใบสั่งซื้อสินค้า (PO)",
+    "sla": "30 นาที",
+    "alertTitle": "📋 ความต่อเนื่องของสินค้า",
+    "alertText": "ต้องออก PR ล่วงหน้าอย่างน้อย 3-5 วันทำการ เพื่อป้องกันปัญหาสินค้าขาดสต็อก (Stockout)"
+  },
+  "2-1-8": {
+    "code": "2.1.8",
+    "title": "ตรวจเช็กสินค้าที่สั่งซื้อตรงตามรายการ และนำเอกสารใบส่งของส่งให้แผนกบัญชีรับยอดเข้าระบบ",
+    "role": "เจ้าหน้าที่แผนกบัญชี",
+    "roleBadge": "background:#f1f5f9;color:#334155;",
+    "objective": "ตรวจรับสินค้าจริงจากบริษัทซัพพลายเออร์และบันทึกตั้งหนี้รับสินค้าเข้าระบบบัญชี",
+    "details": [
+      "ตรวจนับจำนวน ตรวจสอบสภาพสินค้า และวันหมดอายุ ร่วมกับพนักงานส่งของของซัพพลายเออร์",
+      "ลงลายมือชื่อตรวจรับในใบส่งของ/ใบกำกับภาษีของซัพพลายเออร์",
+      "ส่งมอบเอกสารใบส่งของให้แผนกบัญชีเพื่อบันทึกรับยอดสินค้าเข้าคลัง (Goods Receipt) ในระบบ"
+    ],
+    "controls": [
+      "หากพบสินค้าชำรุด หมดอายุ หรือไม่ตรง PO ต้องปฏิเสธการรับและบันทึกในใบส่งของทันที",
+      "ใบส่งของต้องมีเลขที่ PO อ้างอิงอย่างชัดเจน"
+    ],
+    "docs": "ใบส่งของ/ใบกำกับภาษีซัพพลายเออร์, ใบรับสินค้าเข้าคลัง (GRN)",
+    "sla": "10 นาที",
+    "alertTitle": "📦 ตรวจรับสินค้าอย่างละเอียด",
+    "alertText": "ห้ามลงนามรับสินค้าก่อนการตรวจนับจริงเด็ดขาดเพื่อป้องกันความเสียหายต่อองค์กร"
+  },
+  "2-1-9": {
+    "code": "2.1.9",
+    "title": "เช็ก Stock คงเหลือหน้าร้านก่อนปิด สรุปยอดขายน้ำโพสมิกซ์ และส่งรายงานในกลุ่มไลน์",
+    "role": "แคชเชียร์บาร์น้ำ",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "ตรวจนับสต็อกเครื่องดื่มคงเหลือ สรุปยอดขายหัวเชื้อน้ำโพสมิกซ์ และรายงานผู้บริหารประจำวัน",
+    "details": [
+      "ตรวจนับจำนวนขวด กระป๋อง และวัดระดับหัวเชื้อน้ำโพสมิกซ์ในถัง",
+      "คำนวณยอดขายเครื่องดื่มโพสมิกซ์ (แก้วที่ขายได้ vs ปริมาณหัวเชื้อที่ใช้)",
+      "ถ่ายภาพสต็อกและสรุปยอดขายส่งรายงานเข้ากลุ่มไลน์ทีมงานศูนย์อาหาร"
+    ],
+    "controls": [
+      "เปรียบเทียบยอดขายในระบบ POS กับปริมาณหัวเชื้อที่ใช้จริง (Yield Calculation)",
+      "หากพบความคลาดเคลื่อนเกินเกณฑ์มาตรฐาน (±3%) ต้องหาสาเหตุและชี้แจงในรายงาน"
+    ],
+    "docs": "ใบนับสต็อกประจำวัน, รายงานยอดขายน้ำโพสมิกซ์",
+    "sla": "40 นาที (18.30 น.)",
+    "alertTitle": "🥤 การควบคุมน้ำโพสมิกซ์",
+    "alertText": "น้ำโพสมิกซ์เป็นสินค้ามาร์จิ้นสูง ต้องควบคุมอัตราส่วนผสมและการสูญเสียอย่างเคร่งครัด"
+  },
+  "2-1-10": {
+    "code": "2.1.10",
+    "title": "สรุปยอดขาย และส่งยอดเงินสดที่ขายรอบบ่าย (14:00-19:00 น.) นำส่งที่ห้อง บก.",
+    "role": "แคชเชียร์บาร์น้ำ",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "ปิดกะรอบบ่าย สรุปยอดขายเงินสดช่วงเย็น และนำส่งเงินที่ห้องกองอำนวยการ (บก.) อย่างปลอดภัย",
+    "details": [
+      "สั่งพิมพ์รายงานปิดรอบบ่าย (Z-Report) จากเครื่อง POS ณ เวลา 19.00 น.",
+      "ตรวจนับเงินสดทั้งหมด หักเงินทอนยกไปสำหรับวันรุ่งขึ้น และกรอกใบส่งเงิน",
+      "นำเงินสดบรรจุถุงนิรภัยและนำส่งเจ้าหน้าที่ห้อง บก. พร้อมเซ็นรับมอบในสมุดคุมรับส่งเงิน"
+    ],
+    "controls": [
+      "ส่งเงินสดที่ห้อง บก. พร้อมพนักงานรักษาความปลอดภัยหรือเพื่อนร่วมงานเพื่อความปลอดภัย",
+      "ได้รับใบรับฝากเงินที่มีลายมือชื่อเจ้าหน้าที่ บก. กลับมาเป็นหลักฐาน"
+    ],
+    "docs": "ใบส่งเงินสดห้อง บก., รายงานปิดรอบ Z-Report, สมุดคุมรับส่งเงิน",
+    "sla": "10 นาที (19.00 น.)",
+    "alertTitle": "🔒 ส่งเงินกะบ่ายที่ห้อง บก.",
+    "alertText": "เนื่องจากแผนกการเงินปิดทำการ 17.00 น. เงินสดรอบเย็นจึงต้องนำส่งที่ห้อง บก. เท่านั้น ห้ามเก็บไว้ที่ร้าน"
+  },
+  "2-1-11": {
+    "code": "2.1.11",
+    "title": "ปิดร้าน เก็บสินค้าเข้าในร้าน ถ่ายรูปส่งไลน์รายงาน ผจก. และนับ Stock ประจำเดือนกับบัญชี",
+    "role": "แคชเชียร์บาร์น้ำ",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "ปิดร้านบาร์น้ำอย่างปลอดภัย ดูแลสุขอนามัย และตรวจนับสต็อกร่วมกับผู้ตรวจสอบบัญชีทุกสิ้นเดือน",
+    "details": [
+      "ล้างทำความสะอาดเครื่องทำเครื่องดื่ม อ่างล้างแก้ว และปิดม่านม้วนหน้าร้าน",
+      "ปิดระบบไฟฟ้า เบรกเกอร์ และตรวจเช็กก๊อกน้ำให้สนิท",
+      "ถ่ายรูปความเรียบร้อยส่งไลน์กลุ่ม และร่วมกับเจ้าหน้าที่บัญชีตรวจนับสต็อกสินค้าทุกสิ้นเดือน"
+    ],
+    "controls": [
+      "ตรวจเช็กความปลอดภัย 100% ก่อนออกจากร้าน",
+      "ใบนับสต็อกสิ้นเดือนต้องมีลายเซ็นเจ้าหน้าที่บัญชีและแคชเชียร์คู่กัน"
+    ],
+    "docs": "ภาพถ่ายปิดร้าน, ใบนับสต็อกประจำเดือน (Monthly Inventory Sheet)",
+    "sla": "20 นาที (ปิดร้าน) / 1.30 ชม. (นับสต็อกสิ้นเดือน)",
+    "alertTitle": "📊 การตรวจนับสต็อกร่วมกับบัญชี",
+    "alertText": "ผลการนับสต็อกสิ้นเดือนใช้เป็นเกณฑ์ปิดงบต้นทุนขายประจำเดือน หากมีของขาดต้องชี้แจงเป็นลายลักษณ์อักษร"
+  },
+  "2-2-1": {
+    "code": "2.2.1",
+    "title": "เช็กความสะอาดของชั้นวางและ Stock เก็บภาชนะชีวะให้เป็นระเบียบ",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "ดูแลรักษาห้องเก็บภาชนะชีวะให้สะอาด ปลอดฝุ่น แมลง และมีความพร้อมในการจ่ายของ",
+    "details": [
+      "ทำความสะอาดชั้นวางและปัดฝุ่นกล่องบรรจุภัณฑ์ภาชนะชีวะ",
+      "จัดเรียงกล่องตามขนาดและประเภท (จานกลม, ชามก๋วยเตี๋ยว, กล่องข้าว, ถ้วยน้ำจิ้ม)",
+      "ตรวจเช็กไม่ให้มีร่องรอยสัตว์หรือแมลงในพื้นที่เก็บภาชนะ"
+    ],
+    "controls": [
+      "ภาชนะต้องวางบนพาเลทหรือชั้นวางสูงจากพื้นอย่างน้อย 15 ซม. ตามหลักสุขาภิบาล",
+      "ห้ามวางภาชนะสัมผัสพื้นโดยตรง"
+    ],
+    "docs": "บันทึกการทำความสะอาดห้องเก็บภาชนะ",
+    "sla": "10 นาที (06.00 น.)",
+    "alertTitle": "🌿 สุขอนามัยของภาชนะอาหาร",
+    "alertText": "ภาชนะชีวะต้องสัมผัสกับอาหารโดยตรง ความสะอาดจึงเป็นสิ่งที่ต้องให้ความสำคัญสูงสุด"
+  },
+  "2-2-2": {
+    "code": "2.2.2",
+    "title": "รับออเดอร์ภาชนะตามร้านค้าทุก 1 ชม. (06:00-12:00 น.) จัดเตรียมและนำส่งตามร้าน",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "กระจายภาชนะชีวะให้ร้านค้าในฟู้ดพลาซ่าได้อย่างเพียงพอ รวดเร็ว และไม่ขาดตอนช่วงเวลาขายดี",
+    "details": [
+      "เดินรับออเดอร์หรือรับใบสั่งซื้อภาชนะจากร้านค้าทุก 1 ชั่วโมง",
+      "จัดเตรียมภาชนะตามรายการและนำขึ้นรถเข็นส่งมอบถึงหน้าร้าน",
+      "ให้ร้านค้าตรวจนับและลงลายมือชื่อรับภาชนะในใบส่งของ"
+    ],
+    "controls": [
+      "ร้านค้าต้องเซ็นชื่อรับภาชนะทุกครั้งเพื่อใช้เป็นหลักฐานในการตั้งหนี้",
+      "ตรวจสอบว่าร้านค้าไม่มียอดค้างชำระค่าภาชนะเกินวงเงินที่กำหนด"
+    ],
+    "docs": "ใบสั่งซื้อภาชนะ, สมุดเซ็นรับภาชนะประจำร้าน",
+    "sla": "30 นาที / รอบ",
+    "alertTitle": "🚚 รอบการส่งที่ตรงเวลา",
+    "alertText": "ช่วงเวลา 11.00 - 13.00 น. เป็นช่วงพักเที่ยง ต้องจัดส่งภาชนะสำรองให้ร้านค้าล่วงหน้าให้พร้อม"
+  },
+  "2-2-3": {
+    "code": "2.2.3",
+    "title": "จัดเตรียมภาชนะชีวะทำ Stock แพ็กไว้พร้อมขาย (นับมัดละ 50 ใบ / ติดสติกเกอร์ภาชีวะ)",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "แพ็กบรรจุภัณฑ์ภาชนะชีวะให้ได้มาตรฐาน สะดวกต่อการตรวจนับและการควบคุมสต็อก",
+    "details": [
+      "นับจำนวนภาชนะแยกเป็นมัด มัดละ 50 ใบอย่างถูกต้องแม่นยำ",
+      "ติดสติกเกอร์โลโก้ 'ยิ่งเจริญ ภาชีวะ' บนบรรจุภัณฑ์ทุกมัด",
+      "ห่อด้วยฟิล์มยืดเพื่อป้องกันฝุ่นละอองและจัดเรียงขึ้นชั้นพร้อมจ่าย"
+    ],
+    "controls": [
+      "สุ่มตรวจนับจำนวนใบในแต่ละมัด ป้องกันการจ่ายของขาดหรือเกิน",
+      "ตรวจสอบคุณภาพสติกเกอร์ให้ติดแน่น ชัดเจน"
+    ],
+    "docs": "บันทึกยอดแพ็กภาชนะประจำวัน",
+    "sla": "60 นาที",
+    "alertTitle": "🏷️ สติกเกอร์รับรองภาชีวะ",
+    "alertText": "สติกเกอร์เป็นเครื่องหมายรับรองว่าร้านค้าใช้ภาชนะรักษ์โลกที่ได้รับการสนับสนุนจากตลาด"
+  },
+  "2-2-4": {
+    "code": "2.2.4",
+    "title": "สรุปยอดภาชนะรายวัน ยอดเงินแต่ละร้าน คีย์เข้าระบบเพื่อเปิดบิลเก็บเงินร้านค้าฟู้ดพลาซ่า",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "รวบรวมข้อมูลการเบิกภาชนะของร้านค้าทั้งหมด คีย์เข้าระบบ และออกบิลเรียกเก็บเงิน",
+    "details": [
+      "นำใบส่งมอบภาชนะที่มีลายเซ็นร้านค้ามารวบรวมและคัดแยกตามหมายเลขแผงค้า",
+      "คีย์ข้อมูลจำนวนและรหัสสินค้าลงในระบบโปรแกรมขายภาชนะ",
+      "พิมพ์ใบแจ้งหนี้/ใบเสร็จรับเงินเพื่อเตรียมจัดเก็บเงินหรือหักยอดขาย"
+    ],
+    "controls": [
+      "ยอดภาชนะที่คีย์ต้องตรงกับยอดสต็อกที่ตัดจ่ายออกจากคลัง 100%",
+      "ตรวจสอบราคาต่อหน่วยให้ตรงตามประกาศราคาภาชนะของศูนย์อาหาร"
+    ],
+    "docs": "ใบแจ้งหนี้ค่าภาชนะ, ระบบโปรแกรมขายภาชนะ",
+    "sla": "90 นาที",
+    "alertTitle": "📑 การลงบัญชีลูกหนี้ภาชนะ",
+    "alertText": "ต้องคีย์ยอดวันต่อวัน ห้ามสะสมเอกสารข้ามวันเพื่อป้องกันการตกหล่นของข้อมูล"
+  },
+  "2-2-5": {
+    "code": "2.2.5",
+    "title": "สรุปยอดขายและส่งเงินสดค่าภาชนะ รอบเวลา 13:00-14:00 น. ส่งที่ออฟฟิศแผนกการเงิน",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "รวบรวมเงินสดที่เก็บได้จากร้านค้านำส่งแผนกการเงินพร้อมเอกสารหลักฐาน",
+    "details": [
+      "ตรวจนับเงินสดค่าภาชนะที่เก็บได้จากร้านค้าฟู้ดพลาซ่า",
+      "จัดทำใบนำส่งเงินสดแนบสำเนาใบเสร็จรับเงิน",
+      "นำเงินสดไปส่งมอบให้แผนกการเงิน ณ ออฟฟิศกลาง และรับใบรับเงินกลับมา"
+    ],
+    "controls": [
+      "ยอดเงินสดต้องตรงกับรายงานสรุปยอดขายภาชนะประจำวัน",
+      "ผู้ส่งและผู้รับเงินต้องลงลายมือชื่อในใบส่งเงินคู่กัน"
+    ],
+    "docs": "ใบนำส่งเงินสดค่าภาชนะ, สำเนาใบเสร็จ",
+    "sla": "90 นาที (เก็บเงิน+นำส่ง 14.00 น.)",
+    "alertTitle": "💰 นำส่งเงินสดตรงเวลา 14.00 น.",
+    "alertText": "เงินสดค่าภาชนะต้องนำส่งการเงินรอบเดียวกับกะเช้าบาร์น้ำเพื่อปิดรอบบัญชีประจำวัน"
+  },
+  "2-2-6": {
+    "code": "2.2.6",
+    "title": "ตรวจเช็กภาชนะตามร้านค้าและตรวจสอบสิ่งแปลกปลอม เพื่อสุขอนามัยของผู้บริโภค",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "ตรวจสุ่มตรวจสอบการใช้งานภาชนะตามร้านค้าให้เป็นไปตามมาตรฐานความสะอาดและปลอดสิ่งปนเปื้อน",
+    "details": [
+      "เดินตรวจแผงค้าในฟู้ดพลาซ่า สุ่มตรวจภาชนะที่จัดเตรียมไว้ใส่อาหาร",
+      "ตรวจสอบสิ่งแปลกปลอม เช่น ฝุ่น คราบไขมัน หรือเศษวัสดุ",
+      "ตรวจสอบว่าร้านค้าไม่แอบนำกล่องโฟมหรือภาชนะภายนอกมาใช้"
+    ],
+    "controls": [
+      "หากพบร้านค้าใช้ภาชนะไม่ได้มาตรฐาน ให้แจ้งเตือนและทำบันทึกความผิด",
+      "บันทึกผลการตรวจในแบบฟอร์มตรวจสุขอนามัยภาชนะ"
+    ],
+    "docs": "ใบตรวจเช็กภาชนะและสุขอนามัยหน้าร้าน",
+    "sla": "60 นาที",
+    "alertTitle": "🔍 การควบคุมคุณภาพและภาพลักษณ์",
+    "alertText": "การตรวจจับสิ่งแปลกปลอมช่วยรักษาชื่อเสียงของศูนย์อาหารและความปลอดภัยของผู้บริโภค"
+  },
+  "2-2-7": {
+    "code": "2.2.7",
+    "title": "เช็ก Stock บรรจุภัณฑ์คงเหลือ ทำ PR สั่งซื้อ และตรวจรับสินค้าซัพพลายเออร์ส่งบัญชี",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "ควบคุมระดับสต็อกภาชนะชีวะให้เพียงพอและประสานงานจัดซื้อเติมสต็อกอย่างมีประสิทธิภาพ",
+    "details": [
+      "นับยอดคงเหลือของภาชนะแต่ละขนาดในห้องสโตร์",
+      "จัดทำใบขอซื้อ (PR) เมื่อสินค้าลดลงถึงจุดสั่งซื้อซ้ำ (ROP)",
+      "ตรวจรับสินค้าเมื่อซัพพลายเออร์มาส่งและนำใบส่งของส่งแผนกบัญชี"
+    ],
+    "controls": [
+      "ตรวจรับสินค้าโดยนับจำนวนลังและสุ่มเปิดตรวจคุณภาพเนื้อภาชนะ",
+      "ใบส่งของต้องมีเจ้าหน้าที่เซ็นรับพร้อมระบุวันที่ตรวจรับชัดเจน"
+    ],
+    "docs": "ใบขอซื้อ (PR), ใบส่งของซัพพลายเออร์",
+    "sla": "30 นาที",
+    "alertTitle": "📦 สต็อกสำรองปลอดภัย (Safety Stock)",
+    "alertText": "ต้องมีสต็อกภาชนะสำรองขั้นต่ำไม่น้อยกว่า 7 วัน เพื่อรองรับกรณีซัพพลายเออร์ส่งของล่าช้า"
+  },
+  "2-2-8": {
+    "code": "2.2.8",
+    "title": "สรุปยอดขายประจำวันลงไฟล์ยอดขายภาชนะทุกสัปดาห์ และรายงานผู้จัดการทางไลน์",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "รวบรวมสถิติการใช้งานและยอดขายภาชนะชีวะเพื่อวิเคราะห์แนวโน้มและรายงานผู้บริหาร",
+    "details": [
+      "บันทึกยอดขายรายวันลงในไฟล์ Excel / Google Sheets สรุปยอดภาชนะ",
+      "สรุปยอดรวมรายสัปดาห์ จำแนกตามประเภทร้านค้าและขนาดภาชนะ",
+      "ส่งรายงานสรุปยอดและข้อสังเกตเข้ากลุ่มไลน์ให้ผู้จัดการพื้นที่รับทราบ"
+    ],
+    "controls": [
+      "ตรวจสอบสูตรคำนวณในไฟล์ให้ถูกต้องตรงกับยอดเงินที่ส่งแผนกการเงิน",
+      "สำรองข้อมูลไฟล์สรุปยอดลงระบบคลาวด์ทุกสัปดาห์"
+    ],
+    "docs": "ไฟล์สรุปยอดขายภาชนะประจำสัปดาห์",
+    "sla": "10 นาที",
+    "alertTitle": "📊 การวิเคราะห์ข้อมูลการบริโภค",
+    "alertText": "สถิติการใช้ภาชนะสะท้อนถึงปริมาณลูกค้าและยอดขายของร้านค้าในศูนย์อาหารโดยตรง"
+  },
+  "2-2-9": {
+    "code": "2.2.9",
+    "title": "งานออนไลน์: ตรวจเช็กราคาหน้าร้าน และร้านเปิด-ปิด เพื่อปิดเมนูอาหารในระบบ Platform",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "ปรับปรุงสถานะร้านค้าและเมนูอาหารบนแอปพลิเคชันเดลิเวอรี่ให้ตรงกับสถานะจริงหน้าร้าน",
+    "details": [
+      "สำรวจร้านค้าในฟู้ดพลาซ่าว่าร้านใดเปิดหรือปิดทำการในแต่ละวัน",
+      "เข้าสู่ระบบหลังบ้านของ LINE MAN และ Robinhood เพื่อกด 'เปิด' หรือ 'ปิด' ร้านค้า",
+      "ปิดสถานะเมนูอาหารที่วัตถุดิบหมด (Sold Out) เพื่อไม่ให้ลูกค้ากดสั่งซื้อเข้ามา"
+    ],
+    "controls": [
+      "อัปเดตสถานะร้านค้าภายใน 09.00 น. ของทุกวันก่อนช่วงเวลาสั่งอาหารเที่ยง",
+      "ตรวจสอบราคาขายบนแพลตฟอร์มให้ตรงกับราคาที่ตกลงไว้"
+    ],
+    "docs": "Merchant Application (LINE MAN, Robinhood)",
+    "sla": "10 นาที (09.00 น.)",
+    "alertTitle": "📱 การจัดการสถานะออนไลน์",
+    "alertText": "หากร้านค้าปิดแต่ไม่ได้ปิดในระบบ แล้วลูกค้ากดสั่งเข้ามา จะส่งผลให้ถูกตัดคะแนนและถูกปรับจากแพลตฟอร์ม"
+  },
+  "2-2-10": {
+    "code": "2.2.10",
+    "title": "รับออเดอร์ในระบบ Platform เดลิเวอรี่ และจัดซื้ออาหารตามรายการที่ลูกค้าสั่ง",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "รับคำสั่งซื้อจากแอปพลิเคชันเดลิเวอรี่ เดินสั่งและรวบรวมอาหารจากแผงค้าต่างๆ ในฟู้ดพลาซ่า",
+    "details": [
+      "กดรับออเดอร์บนแท็บเล็ต Merchant App ทันทีที่มีสัญญาณแจ้งเตือน",
+      "เดินไปสั่งอาหารที่แผงค้าตามรายการ จ่ายเงินสดสำรองจ่ายให้ร้านค้า",
+      "ตรวจสอบความถูกต้องของอาหารและบรรจุลงในถุงรวมออเดอร์"
+    ],
+    "controls": [
+      "ตรวจสอบชื่อเมนู ความเผ็ด และข้อความพิเศษที่ลูกค้าระบุ",
+      "เก็บบิลหรือจดบันทึกยอดเงินสดที่จ่ายให้ร้านค้าแต่ละแผง"
+    ],
+    "docs": "ใบออเดอร์เดลิเวอรี่, บันทึกเงินสดย่อยซื้ออาหาร",
+    "sla": "25 นาที / ออเดอร์",
+    "alertTitle": "⏱️ ความรวดเร็วในการจัดเตรียม",
+    "alertText": "ต้องเตรียมอาหารให้เสร็จทันเวลาก่อนที่ไรเดอร์จะเดินทางมาถึงจุดนัดรับ"
+  },
+  "2-2-11": {
+    "code": "2.2.11",
+    "title": "นำส่งอาหารที่ลูกค้าสั่งซื้อให้ไรเดอร์ LINE MAN และ Robinhood ตรงจุดนัดรับ",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "ส่งมอบถุงอาหารให้แก่พนักงานขับรถส่งอาหาร (Rider) อย่างถูกต้อง รวดเร็ว และไม่ผิดคัน",
+    "details": [
+      "นำถุงอาหารมายังจุดส่งมอบเดลิเวอรี่กลางของฟู้ดพลาซ่า",
+      "ขอตรวจเช็กหมายเลขรหัสออเดอร์ (Order ID) และชื่อลูกค้าบนหน้าจอโทรศัพท์ของไรเดอร์",
+      "ส่งมอบอาหารและกดยืนยันการส่งมอบบนระบบ Merchant App"
+    ],
+    "controls": [
+      "ห้ามส่งมอบอาหารให้ไรเดอร์โดยไม่ได้ตรวจสอบ Order ID เด็ดขาด",
+      "ตรวจสอบให้แน่ใจว่าอุปกรณ์ช้อนส้อมและเครื่องปรุงถูกใส่ครบถ้วน"
+    ],
+    "docs": "หน้าจอสถานะ Order ID บนมือถือไรเดอร์และแท็บเล็ต",
+    "sla": "5 นาที",
+    "alertTitle": "🛵 ส่งมอบตรงรหัสออเดอร์",
+    "alertText": "การส่งผิดออเดอร์จะทำให้ลูกค้าได้รับอาหารผิดและเกิดความเสียหายที่บริษัทต้องรับผิดชอบ"
+  },
+  "2-2-12": {
+    "code": "2.2.12",
+    "title": "คีย์ยอดขายออนไลน์ส่งบัญชี สรุปยอดเบิกเงินรอบ 13:00-14:00 น. และนับ Stock ประจำเดือน",
+    "role": "เจ้าหน้าที่ภาชนะ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "สรุปยอดธุรกรรมออนไลน์ กระทบยอดเงินสดสำรองจ่าย และร่วมตรวจนับสต็อกสิ้นเดือน",
+    "details": [
+      "คีย์ยอดขายเดลิเวอรี่ลงใน Google Drive ส่งให้แผนกบัญชีเพื่อกระทบยอด GP",
+      "ทำเอกสารเบิกชดเชยเงินสดย่อยที่จ่ายซื้ออาหาร ส่งแผนกการเงินรอบ 13.00-14.00 น.",
+      "ร่วมกับแผนกบัญชีตรวจนับสต็อกภาชนะคงเหลือจริงทุกสิ้นเดือน"
+    ],
+    "controls": [
+      "ยอดเงินเบิกชดเชยต้องมีรายการสั่งซื้อในระบบแพลตฟอร์มรองรับ 100%",
+      "ลงนามรับรองในใบนับสต็อกประจำเดือนร่วมกับผู้ตรวจนับจากฝ่ายบัญชี"
+    ],
+    "docs": "ไฟล์ยอดขายออนไลน์, ใบเบิกเงินสดย่อย, ใบนับสต็อกสิ้นเดือน",
+    "sla": "15 นาที (รายวัน) / 1.30 ชม. (สิ้นเดือน)",
+    "alertTitle": "📊 การกระทบยอดบัญชีออนไลน์",
+    "alertText": "ต้องตรวจสอบยอดเงินโอนสุทธิจากแพลตฟอร์มเทียบกับยอดขายจริงทุกสัปดาห์"
+  },
+  "3-1-1": {
+    "code": "3.1.1",
+    "title": "ปริ้นยอดขายจากระบบ Black Room เช็กสต็อกหน้าร้าน และตรวจเช็กเครื่องโพสมิกซ์",
+    "role": "บาร์น้ำ Neighborfood",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "เตรียมความพร้อมบาร์น้ำ Neighborfood รอบเช้า ตรวจยอดขายระบบ Black Room และตรวจเครื่องโพสมิกซ์",
+    "details": [
+      "เปิดระบบคอมพิวเตอร์และพิมพ์รายงานยอดขายจากระบบ Black Room เพื่อใช้ตรวจสอบสต็อก",
+      "ตรวจนับสต็อกเครื่องดื่มและวัตถุดิบคงเหลือหน้าร้านให้ตรงกับรายงาน",
+      "ตรวจสอบความพร้อมของเครื่องจ่ายน้ำอัดลมโพสมิกซ์ ถังแก๊ส CO2 และระบบทำความเย็น"
+    ],
+    "controls": [
+      "ตรวจสอบแรงดันแก๊ส CO2 และอุณหภูมิน้ำโพสมิกซ์ให้อยู่ในเกณฑ์มาตรฐาน",
+      "บันทึกยอดสต็อกเปิดร้านลงในสมุดคุมบาร์น้ำ"
+    ],
+    "docs": "รายงานยอดขายจากระบบ Black Room, สมุดคุมบาร์น้ำ Neighborfood",
+    "sla": "30 นาที (06.00 น.)",
+    "alertTitle": "🖨️ ระบบ Black Room POS",
+    "alertText": "รายงานจาก Black Room เป็นเกณฑ์อ้างอิงในการตรวจรับมอบสต็อกระหว่างกะ"
+  },
+  "3-1-2": {
+    "code": "3.1.2",
+    "title": "ชงน้ำ ตรวจเช็กของหมดอายุ เติมสินค้าเข้าชั้นวางและตู้แช่เย็นให้สวยงามพร้อมขาย",
+    "role": "บาร์น้ำ Neighborfood",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "ปรุงเครื่องดื่มสดประจำวัน ตรวจสอบคุณภาพวัตถุดิบ และจัดเรียงสินค้าหน้าร้านให้พร้อมบริการ",
+    "details": [
+      "ต้มน้ำและชงเครื่องดื่มสมุนไพร ชา กาแฟ ตามสูตรมาตรฐานของ Neighborfood",
+      "ตรวจเช็กวันหมดอายุของนม น้ำหวาน วัตถุดิบชงน้ำ และเครื่องดื่มขวด",
+      "เติมเครื่องดื่มเข้าตู้แช่เย็นและจัดเรียงชั้นวางให้เป็นระเบียบสวยงาม"
+    ],
+    "controls": [
+      "ใช้น้ำกรองที่ผ่านระบบ RO และเครื่องกรองที่ได้มาตรฐานในการชงเครื่องดื่ม",
+      "ชงเครื่องดื่มตามสูตรมาตรฐานชั่งตวง ไม่กะปริมาณด้วยสายตา"
+    ],
+    "docs": "สูตรมาตรฐานเครื่องดื่ม Neighborfood, บันทึกตรวจวันหมดอายุ",
+    "sla": "30 นาที",
+    "alertTitle": "🍹 รสชาติและสุขอนามัยเครื่องดื่ม",
+    "alertText": "เครื่องดื่มที่ชงสดต้องเก็บในอุณหภูมิต่ำกว่า 4°C และจำหน่ายวันต่อวัน ห้ามค้างคืน"
+  },
+  "3-1-3": {
+    "code": "3.1.3",
+    "title": "ทำเอกสาร PR สั่งซื้อสินค้า รับสินค้า ตรวจนับ และเช็กสินค้าเข้าระบบ",
+    "role": "บาร์น้ำ Neighborfood",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "เบิกจ่ายและสั่งซื้อวัตถุดิบบาร์น้ำ Neighborfood ตรวจรับสินค้า และอัปเดตสต็อกในระบบ",
+    "details": [
+      "ตรวจสอบระดับสต็อกวัตถุดิบและจัดทำเอกสารขอซื้อ (PR)",
+      "ตรวจรับสินค้าที่มาส่ง ตรวจนับจำนวน สภาพกล่อง และวันหมดอายุ",
+      "คีย์ข้อมูลรับสินค้าเข้าระบบสต็อกของ Neighborfood"
+    ],
+    "controls": [
+      "ตรวจนับสินค้าจริงร่วมกับพนักงานส่งของก่อนลงลายมือชื่อในใบส่งของ",
+      "นำใบส่งของส่งมอบให้แอดมินเพื่อส่งต่อแผนกบัญชี"
+    ],
+    "docs": "ใบขอซื้อสินค้า (PR), ใบส่งของ, ระบบสต็อก Neighborfood",
+    "sla": "50 นาที",
+    "alertTitle": "📦 การรับสินค้าเข้าสต็อก",
+    "alertText": "สินค้าต้องตรงตามสเปกและมีอายุการเก็บรักษาไม่น้อยกว่า 75% ของอายุสินค้าทั้งหมด"
+  },
+  "3-1-4": {
+    "code": "3.1.4",
+    "title": "ปิดกะเช้า เวลา 14.00 น. ส่งยอดขาย และรายงานภาพถ่ายลงกลุ่มไลน์ทีมงาน",
+    "role": "บาร์น้ำ Neighborfood",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "สรุปยอดขายบาร์น้ำกะเช้า ส่งมอบพื้นที่ให้กะบ่าย และรายงานผู้บริหารทางกลุ่มไลน์",
+    "details": [
+      "ปิดกะบาร์น้ำรอบเช้า ณ เวลา 14.00 น. สรุปยอดขายแก้วและยอดเงิน",
+      "ทำความสะอาดอุปกรณ์และส่งมอบสต็อกคงเหลือให้พนักงานบาร์น้ำกะบ่าย",
+      "ถ่ายภาพเคาน์เตอร์และส่งรายงานสรุปยอดเข้ากลุ่มไลน์ทีมงาน"
+    ],
+    "controls": [
+      "พนักงานกะเช้าและกะบ่ายต้องตรวจนับสต็อกคงเหลือร่วมกันและลงชื่อรับมอบ",
+      "ยอดเงินสดต้องส่งมอบให้แคชเชียร์เพื่อนำส่งการเงิน"
+    ],
+    "docs": "แบบฟอร์มส่งมอบกะบาร์น้ำ, สรุปยอดขายกะเช้า",
+    "sla": "15 นาที (14.00 น.)",
+    "alertTitle": "⏱️ การส่งมอบกะที่ราบรื่น",
+    "alertText": "การส่งมอบกะตรงเวลาและชัดเจนช่วยป้องกันปัญหาสินค้าหรือเงินสดสูญหายระหว่างกะ"
+  },
+  "3-1-5": {
+    "code": "3.1.5",
+    "title": "บาร์น้ำรอบบ่าย: เช็กสินค้าให้ตรงยอดกะเช้า เติมตู้แช่ ให้บริการลูกค้า และทำความสะอาดพื้นที่",
+    "role": "บาร์น้ำ Neighborfood",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "ดำเนินงานขายเครื่องดื่มบาร์น้ำ Neighborfood กะบ่ายและค่ำอย่างต่อเนื่องและรักษาความสะอาด",
+    "details": [
+      "ตรวจรับสต็อกสินค้าจากกะเช้าให้ตรงตามรายงาน",
+      "เติมสินค้าในตู้แช่เย็นให้เต็มเพื่อรองรับลูกค้าช่วงเย็นและค่ำ",
+      "ให้บริการลูกค้าด้วยความสุภาพ รวดเร็ว และทำความสะอาดพื้นที่ขายสม่ำเสมอ"
+    ],
+    "controls": [
+      "กดคีย์ยอดขายในระบบ POS ทุกรายการ",
+      "ดูแลความสะอาดถังน้ำแข็งและช้อนตักน้ำแข็งให้ถูกสุขอนามัย"
+    ],
+    "docs": "ใบรับมอบกะบ่าย, ระบบ POS",
+    "sla": "50 นาที (เตรียม+เติม)",
+    "alertTitle": "🧊 มาตรฐานน้ำแข็งบริโภค",
+    "alertText": "ห้ามนำขวดน้ำหรือสิ่งของอื่นใดลงไปแช่ในถังน้ำแข็งสำหรับบริโภคเด็ดขาด"
+  },
+  "3-1-6": {
+    "code": "3.1.6",
+    "title": "ปิดร้าน เก็บสินค้า ถ่ายรูปส่งไลน์รายงาน ผจก. และนับ Stock ประจำเดือนกับแผนกบัญชี",
+    "role": "บาร์น้ำ Neighborfood",
+    "roleBadge": "background:#dbeafe;color:#1d4ed8;",
+    "objective": "ปิดร้านบาร์น้ำรอบค่ำ ทำความสะอาด ปิดระบบไฟฟ้า และตรวจนับสต็อกสิ้นเดือนร่วมกับบัญชี",
+    "details": [
+      "ล้างทำความสะอาดหัวจ่ายน้ำโพสมิกซ์ อ่างล้างแก้ว และคว่ำแก้วให้แห้ง",
+      "เก็บสินค้าเข้าตู้ล็อกกุญแจ ปิดสวิตช์เครื่องใช้ไฟฟ้าและตรวจเช็กความปลอดภัย",
+      "ถ่ายภาพส่งรายงานในกลุ่มไลน์ และร่วมกับเจ้าหน้าที่บัญชีตรวจนับสต็อกทุกสิ้นเดือน"
+    ],
+    "controls": [
+      "ตรวจเช็กการปิดวาล์วน้ำและสวิตช์ไฟฟ้า 100% ก่อนกลับบ้าน",
+      "ลงนามรับรองในใบนับสต็อกสิ้นเดือนร่วมกับผู้แทนฝ่ายบัญชี"
+    ],
+    "docs": "ภาพถ่ายปิดร้าน, ใบนับสต็อกสิ้นเดือน Neighborfood",
+    "sla": "50 นาที (20.00 น.)",
+    "alertTitle": "🔒 ปิดร้านอย่างปลอดภัย",
+    "alertText": "ตรวจสอบความปลอดภัยของอุปกรณ์ไฟฟ้าทุกชิ้นเพื่อป้องกันอัคคีภัยในศูนย์อาหาร"
+  },
+  "3-2-1": {
+    "code": "3.2.1",
+    "title": "แคชเชียร์รอบเช้า: เบิกเงินทอนจากการเงิน ตรวจนับเงินให้ครบถ้วน นำเข้าเครื่องแคชเชียร์ POS และบริการลูกค้า",
+    "role": "แคชเชียร์ Neighborfood",
+    "roleBadge": "background:#fdf4ff;color:#a21caf;",
+    "objective": "เบิกเงินสำรองทอนเปิดกะเช้า นำเข้าเครื่อง POS และให้บริการแลกบัตร/คิดเงินลูกค้า",
+    "details": [
+      "เดินทางไปเบิกเงินทอนที่แผนกการเงิน ณ ออฟฟิศกลาง เซ็นรับเงินในสมุดคุม",
+      "ตรวจนับเงินทอนแยกธนบัตรและเหรียญให้ครบถ้วนตามจำนวนที่เบิก",
+      "นำเงินเข้าเครื่องแคชเชียร์ POS เปิดระบบขาย และให้บริการลูกค้าด้วยความสุภาพ"
+    ],
+    "controls": [
+      "ตรวจนับเงินทอนต่อหน้าเจ้าหน้าที่การเงินก่อนออกจากเคาน์เตอร์การเงิน",
+      "เข้าสู่ระบบ POS ด้วยรหัสผ่านส่วนตัวของแคชเชียร์แต่ละคน ห้ามใช้รหัสร่วมกัน"
+    ],
+    "docs": "สมุดเบิกเงินทอน, ระบบแคชเชียร์ POS",
+    "sla": "25 นาที (06.30 น.)",
+    "alertTitle": "💵 ความปลอดภัยของรหัสแคชเชียร์",
+    "alertText": "ห้ามบอกรหัสผ่าน POS ให้ผู้อื่นทราบ และห้ามเปิดลิ้นชักเงินทิ้งไว้ขณะไม่มีลูกค้า"
+  },
+  "3-2-2": {
+    "code": "3.2.2",
+    "title": "ปิดระบบส่งเงินกะเช้า เวลา 14.00 น. ส่งงานในกลุ่มทีมงาน และแจ้งหัวหน้างาน/ผู้จัดการทราบ",
+    "role": "แคชเชียร์ Neighborfood",
+    "roleBadge": "background:#fdf4ff;color:#a21caf;",
+    "objective": "ปิดระบบคิดเงินกะเช้า ตรวจนับเงินสด นำส่งแผนกการเงิน และรายงานผลการดำเนินงาน",
+    "details": [
+      "สั่งพิมพ์รายงานปิดกะเช้า (X-Report) จากระบบ POS ณ เวลา 14.00 น.",
+      "ตรวจนับเงินสดทั้งหมด หักเงินทอน และกรอกใบนำส่งเงินสด",
+      "นำเงินสดไปส่งมอบให้แผนกการเงิน รับใบเสร็จรับเงิน และแจ้งหัวหน้างานทางไลน์กลุ่ม"
+    ],
+    "controls": [
+      "ยอดเงินสดที่นับได้ต้องตรงกับยอดขายเงินสดในรายงาน POS 100%",
+      "หากมียอดเงินขาดหรือเกิน ต้องทำบันทึกชี้แจงร่วมกับหัวหน้างานทันที"
+    ],
+    "docs": "ใบนำส่งเงินสดกะเช้า, รายงานปิดกะ X-Report",
+    "sla": "30 นาที (14.00 น.)",
+    "alertTitle": "💰 ปิดระบบส่งเงินกะเช้า 14.00 น.",
+    "alertText": "แคชเชียร์กะเช้าต้องส่งเงินให้เสร็จสิ้นก่อนส่งมอบเครื่อง POS ให้แคชเชียร์กะบ่าย"
+  },
+  "3-2-3": {
+    "code": "3.2.3",
+    "title": "แคชเชียร์รอบบ่าย: เบิกเงินทอนจากการเงิน นับเงินเข้าเครื่อง POS และให้บริการลูกค้า",
+    "role": "แคชเชียร์ Neighborfood",
+    "roleBadge": "background:#fdf4ff;color:#a21caf;",
+    "objective": "รับมอบการปฏิบัติงานแคชเชียร์กะบ่าย เบิกเงินทอน เปิดระบบ POS และให้บริการอย่างต่อเนื่อง",
+    "details": [
+      "เบิกเงินทอนกะบ่ายจากการเงิน ตรวจนับให้ถูกต้องครบถ้วน",
+      "ล็อกอินเข้าเครื่อง POS ด้วยรหัสแคชเชียร์กะบ่าย และบันทึกยอดเงินทอนเข้าระบบ",
+      "ให้บริการแลกบัตร เติมเงิน และคิดเงินลูกค้าช่วงบ่ายและค่ำ"
+    ],
+    "controls": [
+      "ตรวจเช็กความเรียบร้อยของเครื่องพิมพ์สลิปและสัญญาณเชื่อมต่อระบบเครือข่าย",
+      "ให้บริการด้วยความรวดเร็ว ลดแถวคอยในช่วงเวลาเร่งด่วน 17.00 - 19.30 น."
+    ],
+    "docs": "สมุดเบิกเงินทอนกะบ่าย, ระบบ POS",
+    "sla": "25 นาที (14.00 น.)",
+    "alertTitle": "💳 บริการแคชเชียร์ช่วง Peak Hours",
+    "alertText": "จัดเตรียมเหรียญและธนบัตรย่อยให้เพียงพอเพื่อความรวดเร็วในการทอนเงินแก่ลูกค้า"
+  },
+  "3-2-4": {
+    "code": "3.2.4",
+    "title": "ปิดระบบส่งเงินกะบ่าย เวลา 20.00 น. (นำส่งเงินที่ห้อง บก.) ถ่ายรูปส่งไลน์ในกลุ่มทีมงาน",
+    "role": "แคชเชียร์ Neighborfood",
+    "roleBadge": "background:#fdf4ff;color:#a21caf;",
+    "objective": "ปิดรอบระบบคิดเงินประจำวัน นำส่งเงินสดกะบ่ายที่ห้อง บก. และสรุปรายงานประจำวัน",
+    "details": [
+      "สั่งพิมพ์รายงานปิดวัน (Z-Report) จากระบบ POS ณ เวลา 20.00 น.",
+      "ตรวจนับเงินสดแยกตามมูลค่าธนบัตร กรอกใบนำส่งเงินสดห้อง บก.",
+      "นำเงินสดบรรจุถุงนิรภัยไปส่งมอบให้เจ้าหน้าที่ห้อง บก. เซ็นรับ และถ่ายภาพรายงานในกลุ่มไลน์"
+    ],
+    "controls": [
+      "มีเจ้าหน้าที่รักษาความปลอดภัยร่วมเดินไปส่งเงินที่ห้อง บก. ทุกคืน",
+      "ใบส่งเงินต้องมีลายเซ็นเจ้าหน้าที่ บก. และเก็บสำเนาไว้ตรวจสอบกับแผนกการเงินในเช้าวันถัดไป"
+    ],
+    "docs": "ใบนำส่งเงินสดห้อง บก., รายงานปิดวัน Z-Report, สมุดรับมอบเงิน บก.",
+    "sla": "30 นาที (20.00 น.)",
+    "alertTitle": "🔒 ส่งเงินกะบ่าย 20.00 น. ที่ห้อง บก.",
+    "alertText": "เงินสดกะบ่ายทุกบาทต้องนำส่งห้อง บก. ทันที ห้ามแคชเชียร์นำเงินสดกลับบ้านหรือเก็บไว้ในเครื่อง POS เด็ดขาด"
+  },
+  "3-3-1": {
+    "code": "3.3.1",
+    "title": "เช็กงานเอกสารค้าง ตามเอกสารส่งเซ็น เช็กยอดรายได้ร้านค้า และทำเอกสารขออนุมัติปรับราคา/เมนู",
+    "role": "แอดมิน Neighborfood",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "บริหารจัดการงานเอกสาร ติดตามยอดขายร้านค้า และดำเนินเรื่องขออนุมัติปรับปรุงเมนูหรือราคาอาหาร",
+    "details": [
+      "ตรวจสอบเอกสารสัญญา ข้อตกลง และใบเสร็จที่ยังรอการอนุมัติและติดตามผู้บริหารลงนาม",
+      "ตรวจสอบสถิติยอดขายประจำวันของแต่ละร้านค้าในระบบเพื่อวิเคราะห์ความผิดปกติ",
+      "รับคำร้องขอเพิ่มเมนูหรือปรับราคาอาหารจากร้านค้า ตรวจสอบต้นทุน และจัดทำเอกสารเสนอ ผจก."
+    ],
+    "controls": [
+      "การปรับราคาอาหารต้องได้รับการอนุมัติเป็นลายลักษณ์อักษรจากผู้จัดการศูนย์อาหาร",
+      "ราคาอาหารใหม่ต้องสอดคล้องกับโครงสร้างราคากลางของศูนย์อาหาร"
+    ],
+    "docs": "แบบคำขอปรับราคา/เพิ่มเมนูอาหาร, รายงานสถิติยอดขายร้านค้า",
+    "sla": "30 นาที / ทุกวัน",
+    "alertTitle": "📝 การควบคุมราคาอาหาร",
+    "alertText": "ห้ามร้านค้าปรับขึ้นราคาเองโดยไม่ได้รับอนุมัติจากศูนย์อาหาร เพื่อคุ้มครองผู้บริโภค"
+  },
+  "3-3-2": {
+    "code": "3.3.2",
+    "title": "ปิดระบบเครื่อง Eos ปริ้นรายงานยอดขายแต่ละร้านส่งให้ลูกค้าทุกวันที่ 1 และ 31 ของเดือน และแก้ไขปัญหาหน้างาน",
+    "role": "แอดมิน Neighborfood",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "ปิดระบบบัญชีขายเครื่อง Eos และจัดพิมพ์รายงานยอดขายรายร้านเพื่อสรุปยอดหักส่วนแบ่งรายได้ประจำงวด",
+    "details": [
+      "ดำเนินการปิดรอบระบบเครื่อง Eos ตามขั้นตอนมาตรฐาน",
+      "พิมพ์รายงานยอดขายรวมและยอดขายรายร้าน (Monthly Sales Statement) ทุกวันที่ 1 และ 31",
+      "ส่งมอบรายงานให้ร้านค้าตรวจสอบและลงนามรับทราบยอด พร้อมแก้ไขปัญหาหน้างานประจำวัน"
+    ],
+    "controls": [
+      "ตรวจสอบยอดขายในระบบ Eos ให้ตรงกับยอดเงินที่ส่งแผนกการเงินและ บก. ตลอดทั้งเดือน",
+      "เก็บสำเนารายงานยอดขายที่ร้านค้าเซ็นรับไว้เพื่อประกอบการจ่ายเงินปันส่วนยอดขาย"
+    ],
+    "docs": "รายงานยอดขายรายร้านจากเครื่อง Eos, ใบแจ้งยอดปันส่วนรายได้",
+    "sla": "ทำทุกวันที่ 1 และ 31 ของทุกเดือน",
+    "alertTitle": "🖥️ ความถูกต้องของระบบ Eos",
+    "alertText": "การปิดระบบเครื่อง Eos ต้องทำอย่างระมัดระวังตามคู่มือไอที ห้ามตัดไฟระหว่างที่ระบบกำลังประมวลผล"
+  },
+  "3-4-1": {
+    "code": "3.4.1",
+    "title": "ตรวจร้านค้าช่วงเช้า: ตรวจร้านเปิด-ปิด, ความสะอาดหน้าร้าน, อุปกรณ์เครื่องปรุง, ถังดักไขมัน และจัดระเบียบโต๊ะเก้าอี้",
+    "role": "แอดมิน Neighborfood",
+    "roleBadge": "background:#fee2e2;color:#b91c1c;",
+    "objective": "ตรวจตราความพร้อมของร้านค้า สุขอนามัย และความเรียบร้อยของพื้นที่ศูนย์อาหารก่อนเปิดบริการ",
+    "details": [
+      "ตรวจเช็กว่าร้านค้าเปิดทำการตรงตามเวลาที่กำหนด (07.00 น.)",
+      "ตรวจความสะอาดเคาน์เตอร์หน้าร้าน ภาชนะใส่เครื่องปรุง และป้ายราคา",
+      "ตรวจเช็กถังดักไขมันใต้ซิงค์ล้างจานว่ามีการตักเศษอาหารและไขมันทิ้งเรียบร้อย",
+      "จัดเรียงโต๊ะเก้าอี้ส่วนกลางให้เป็นระเบียบตามแนวที่กำหนด"
+    ],
+    "controls": [
+      "หากพบร้านค้าไม่เปิดโดยไม่แจ้งล่วงหน้า ให้บันทึกการขาดงานตามกฎระเบียบ",
+      "ถังดักไขมันต้องสะอาด ไม่มีกลิ่นเหม็นรบกวนพื้นที่รับประทานอาหาร"
+    ],
+    "docs": "ใบตรวจเช็กพื้นที่รอบเช้า, ทะเบียนเปิด-ปิดร้านค้า",
+    "sla": "30 นาที / ทุกวัน (07.00 น.)",
+    "alertTitle": "🔍 ตรวจความพร้อมหน้าร้านรอบเช้า",
+    "alertText": "ความสะอาดและความเป็นระเบียบของศูนย์อาหารสร้างความประทับใจแรกแก่ลูกค้าที่มาใช้บริการ"
+  },
+  "3-4-2": {
+    "code": "3.4.2",
+    "title": "ตรวจความสะอาดภายใน: ที่วางช้อนส้อม, เครื่องดักแมลง, เครื่อง UV ฆ่าเชื้อ, บาร์น้ำ, แคชเชียร์ POS และการชงน้ำ",
+    "role": "แอดมิน Neighborfood",
+    "roleBadge": "background:#fee2e2;color:#b91c1c;",
+    "objective": "ตรวจสอบมาตรฐานสุขอนามัยของอุปกรณ์สัมผัสอาหาร ระบบฆ่าเชื้อ และจุดบริการน้ำดื่ม",
+    "details": [
+      "ตรวจความสะอาดของตู้และกล่องใส่ช้อนส้อมส่วนกลาง ต้องแห้ง สะอาด ไม่มีคราบมัน",
+      "ตรวจสอบการทำงานของหลอดไฟ UV ฆ่าเชื้อช้อนส้อมและเครื่องดักแมลงไฟฟ้า",
+      "ตรวจความเรียบร้อยและความสะอาดของเคาน์เตอร์บาร์น้ำ จุดคิดเงิน POS และสุขอนามัยการชงน้ำ"
+    ],
+    "controls": [
+      "ช้อนส้อมต้องวางหันด้ามจับขึ้นด้านบนเสมอตามหลักสุขาภิบาล",
+      "หลอดไฟ UV และเครื่องดักแมลงต้องเปิดใช้งานได้ตามปกติ หากหลอดขาดให้แจ้งช่างทันที"
+    ],
+    "docs": "แบบตรวจสุขาภิบาลอาหารและสุขอนามัยอุปกรณ์",
+    "sla": "30 นาที / ทุกวัน",
+    "alertTitle": "✨ สุขอนามัยช้อนส้อมและเครื่อง UV",
+    "alertText": "อุปกรณ์สัมผัสอาหารต้องผ่านการฆ่าเชื้อด้วยความร้อนหรือรังสี UV เพื่อสุขอนามัยสูงสุดของผู้บริโภค"
+  },
+  "3-4-3": {
+    "code": "3.4.3",
+    "title": "ตรวจร้านค้ารอบบ่าย: เติมช้อนส้อม จัดระเบียบโต๊ะ เช็ดทำความสะอาด และ Standby ในช่วงเวลาลูกค้าหนาแน่น",
+    "role": "แอดมิน Neighborfood",
+    "roleBadge": "background:#fee2e2;color:#b91c1c;",
+    "objective": "ดูแลความสะดวกสบาย ความสะอาด และอำนวยความสะดวกแก่ผู้ใช้บริการในช่วงเวลาเร่งด่วน",
+    "details": [
+      "ตรวจเติมช้อน ส้อม และกระดาษทิชชู่ให้เต็มทุกจุดบริการส่วนกลาง",
+      "ดูแลแม่บ้านให้เช็ดทำความสะอาดโต๊ะอาหารทันทีเมื่อลูกค้าลุกออกจากที่นั่ง",
+      "ยืน Standby บริเวณพื้นที่รับประทานอาหารเพื่อคอยสังเกตการณ์และช่วยเหลือลูกค้า"
+    ],
+    "controls": [
+      "โต๊ะอาหารต้องถูกเช็ดทำความสะอาดภายใน 2 นาทีหลังลูกค้าลุกออก",
+      "ควบคุมไม่ให้มีเศษขยะตกหล่นบนพื้นทางเดิน"
+    ],
+    "docs": "บันทึกการตรวจพื้นที่รอบบ่าย",
+    "sla": "30 นาที / ทุกวัน (11.30 - 13.30 น.)",
+    "alertTitle": "🍽️ การบริการช่วงเวลาเร่งด่วน",
+    "alertText": "การหมุนเวียนโต๊ะอาหารอย่างรวดเร็วและสะอาดช่วยเพิ่มขีดความสามารถในการรองรับลูกค้าช่วงพักเที่ยง"
+  },
+  "3-4-4": {
+    "code": "3.4.4",
+    "title": "ตรวจความปลอดภัยผ่าน LINE OpenChat: ตรวจการปิดระบบไฟฟ้า, ปิดระบบแก๊ส 100%, และตรวจถังดักไขมันหลังปิดร้าน",
+    "role": "แอดมิน Neighborfood",
+    "roleBadge": "background:#fee2e2;color:#b91c1c;",
+    "objective": "ตรวจตรามาตรการความปลอดภัยจากอัคคีภัยและการจัดการสิ่งแวดล้อมหลังร้านค้าปิดทำการทุกคืน",
+    "details": [
+      "เดินตรวจสอบทุกแผงค้าในศูนย์อาหารว่าปิดวาล์วถังแก๊สและปิดระบบเซฟตี้วาล์ว 100%",
+      "ตรวจสับเบรกเกอร์ไฟฟ้า ปิดไฟ ปิดพัดลมดูดควัน และตรวจความสะอาดถังดักไขมัน",
+      "ถ่ายภาพหลักฐานการปิดแก๊ส-ไฟฟ้าของแต่ละร้านส่งรายงานเข้ากลุ่ม LINE OpenChat ศูนย์อาหาร"
+    ],
+    "controls": [
+      "หากพบร้านค้าลืมปิดวาล์วแก๊สหรือเปิดไฟทิ้งไว้ ให้เจ้าหน้าที่ปิดทันทีและบันทึกใบสั่งปรับ/ตักเตือน",
+      "รายงานความปลอดภัยต้องเสร็จสิ้นภายใน 21.00 น. ของทุกวัน"
+    ],
+    "docs": "บันทึกตรวจความปลอดภัยหลังปิดร้าน, ภาพถ่ายใน LINE OpenChat",
+    "sla": "30 นาที / ทุกวัน (หลัง 20.00 น.)",
+    "alertTitle": "🔥 ปิดระบบแก๊สและไฟฟ้า 100%",
+    "alertText": "ความปลอดภัยจากอัคคีภัยเป็นเรื่องที่ห้ามประมาทเด็ดขาด การตรวจเช็กและส่งภาพถ่ายรายงานทุกคืนเป็นข้อบังคับสูงสุด"
+  },
+  "3-5-1": {
+    "code": "3.5.1",
+    "title": "ลงสต็อกและเบิกของใช้สิ้นเปลืองรายวัน: กระดาษทิชชู่, สลิปปริ้นใบเสร็จ POS, และแรปยืดหุ้มจาน",
+    "role": "แอดมิน Neighborfood",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "ควบคุมปริมาณการใช้และเบิกจ่ายวัสดุสิ้นเปลืองในศูนย์อาหารให้อยู่ในเกณฑ์ประหยัดและคุ้มค่า",
+    "details": [
+      "บันทึกยอดการใช้กระดาษทิชชู่ ม้วนสลิปใบเสร็จ POS และฟิล์มแรปยืดหุ้มจานในแต่ละวัน",
+      "ทำเอกสารเบิกของจากคลังพัสดุส่วนกลางตามอัตราการใช้จริง",
+      "จัดเก็บของใช้อย่างเป็นระเบียบและจ่ายให้แคชเชียร์/จุดบริการตามความจำเป็น"
+    ],
+    "controls": [
+      "เปรียบเทียบปริมาณการใช้สลิปใบเสร็จกับจำนวนบิลที่พิมพ์ในระบบ POS",
+      "ควบคุมอัตราการสูญเสียของวัสดุสิ้นเปลืองไม่ให้เกินงบประมาณที่กำหนด"
+    ],
+    "docs": "แบบฟอร์มเบิกของใช้สิ้นเปลือง, สมุดบันทึกสต็อกกระดาษ/สลิป",
+    "sla": "30 นาที / ทุกวัน",
+    "alertTitle": "📄 การบริหารวัสดุสิ้นเปลือง",
+    "alertText": "กระดาษความร้อนพิมพ์สลิปและทิชชู่ต้องเก็บในที่แห้ง พ้นจากแสงแดดและความชื้น"
+  },
+  "3-7-1": {
+    "code": "3.7.1",
+    "title": "การแจ้งและติดตามงานแคชเชียร์-บาร์น้ำ และการแก้ไขปัญหาเฉพาะหน้าเร่งด่วน (Urgent Incident Response)",
+    "role": "แอดมิน Neighborfood",
+    "roleBadge": "background:#fee2e2;color:#b91c1c;",
+    "objective": "ตอบสนองและแก้ไขเหตุฉุกเฉิน ปัญหาเครื่อง POS ขัดข้อง หรือข้อร้องเรียนของลูกค้าอย่างทันท่วงที",
+    "details": [
+      "มอนิเตอร์วิทยุสื่อสารและกลุ่มไลน์เพื่อรับแจ้งปัญหาเร่งด่วนจากหน้าร้าน",
+      "กรณีเครื่อง POS เสีย ให้รีบสลับใช้เครื่องสำรองหรือระบบบิลกระดาษแมนนวลทันทีภายใน 5 นาที",
+      "กรณีลูกค้าร้องเรียนเรื่องอาหารหรือการบริการ ให้เข้าไกล่เกลี่ยและแก้ไขปัญหาด้วยความสุภาพ"
+    ],
+    "controls": [
+      "SLA การตอบสนองเหตุฉุกเฉินภายใน 3-5 นาที และแก้ไขให้แล้วเสร็จภายใน 15 นาที",
+      "บันทึกเหตุการณ์ฉุกเฉินและการแก้ไขในสมุดบันทึกประจำวันเสนอผู้จัดการพื้นที่"
+    ],
+    "docs": "สมุดบันทึกเหตุการณ์ฉุกเฉิน (Incident Log)",
+    "sla": "5 นาที (ตอบสนอง) / 15 นาที (แก้ไข)",
+    "alertTitle": "⚡ การแก้ไขปัญหาเฉพาะหน้า",
+    "alertText": "เมื่อระบบไอทีขัดข้อง ให้เปิดใช้ระบบบันทึกมือสำรองทันทีและต้องมีลายเซ็นหัวหน้างานกำกับทุกครั้ง"
+  },
+  "4-1": {
+    "code": "9.1",
+    "title": "วางแผนจัดกิจกรรมตามเทศกาลเพื่อส่งเสริมการขาย",
+    "role": "ผจก.พื้นที่",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "วางแผนแคมเปญการตลาดและกิจกรรมส่งเสริมการขายในเทศกาลสำคัญเพื่อกระตุ้นยอดขายศูนย์อาหาร",
+    "details": [
+      "กำหนดธีมกิจกรรมตามปฏิทินเทศกาล (เช่น ปีใหม่, ตรุษจีน, สงกรานต์, เทศกาลกินเจ, คริสต์มาส)",
+      "ตั้งเป้าหมายยอดขาย จำนวนลูกค้าผู้ใช้บริการ และกำหนดระยะเวลาการจัดกิจกรรม (Campaign Timeline)",
+      "จัดทำตารางสรุปกิจกรรมและข้อเสนอแนะเบื้องต้น"
+    ],
+    "controls": [
+      "แผนงานต้องสอดคล้องกับภาพลักษณ์และทิศทางการตลาดรวมของตลาดยิ่งเจริญ",
+      "วางแผนล่วงหน้าไม่น้อยกว่า 3-4 สัปดาห์ก่อนเริ่มเทศกาล"
+    ],
+    "docs": "ตารางสรุปกิจกรรมส่งเสริมการขาย (Event Plan Template)",
+    "sla": "2 ชั่วโมง",
+    "alertTitle": "🎯 การวางแผนเชิงกลยุทธ์",
+    "alertText": "กิจกรรมต้องสร้างประโยชน์ร่วมกัน (Win-Win) ทั้งแก่ลูกค้า ผู้เช่าร้านค้า และองค์กร"
+  },
+  "4-2": {
+    "code": "9.2",
+    "title": "ทำเอกสารขออนุมัตแผนงานกิจกรรมเพื่อของบประมาณ",
+    "role": "แอดมินฝ่ายขาย / ผจก.พื้นที่",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "จัดทำบันทึกข้อความภายในขออนุมัติงบประมาณและทรัพยากรในการจัดกิจกรรมเสนอผู้บริหาร",
+    "details": [
+      "แจกแจงรายละเอียดประมาณการค่าใช้จ่าย (ค่าสื่อโฆษณา, ค่าของรางวัล, ค่าคูปองส่วนลด, ค่าอุปกรณ์ตกแต่ง)",
+      "คำนวณผลตอบแทนที่คาดว่าจะได้รับ (ROI / Expected Revenue Growth)",
+      "จัดทำบันทึกข้อความภายในเสนอผู้จัดการฝ่ายและประธานเจ้าหน้าที่ปฏิบัติการอนุมัติ"
+    ],
+    "controls": [
+      "งบประมาณต้องอยู่ภายในกรอบงบการตลาดประจำปีของแผนกศูนย์อาหาร",
+      "บันทึกภายในต้องผ่านการตรวจสอบความถูกต้องจากฝ่ายบัญชีและการเงิน"
+    ],
+    "docs": "บันทึกข้อความภายในขออนุมัติงบประมาณ (Internal Memo)",
+    "sla": "30 นาที",
+    "alertTitle": "💰 ความคุ้มค่าของงบประมาณ",
+    "alertText": "การใช้งบประมาณต้องมีความโปร่งใส ตรวจสอบได้ และก่อให้เกิดผลลัพธ์ยอดขายที่วัดผลได้จริง"
+  },
+  "4-3": {
+    "code": "9.3",
+    "title": "ประสานงานทางการตลาดส่งแผนงานจัดกิจกรรมส่งเสริมการขาย",
+    "role": "แอดมินฝ่ายขาย / ผจก.พื้นที่ / แผนกการตลาด",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "บูรณาการแผนงานกิจกรรมร่วมกับแผนกการตลาดส่วนกลางเพื่อสร้างการรับรู้ในวงกว้าง",
+    "details": [
+      "ส่งมอบตารางสรุปกิจกรรมและบันทึกภายในที่ได้รับอนุมัติให้แผนกการตลาด",
+      "ประชุมร่วมกันเพื่อกำหนดช่องทางการสื่อสาร กลยุทธ์ Influencer และคอนเทนต์ออนไลน์",
+      "จัดสรรงบประมาณส่วนสื่อโฆษณาและของรางวัลร่วมกัน"
+    ],
+    "controls": [
+      "กำหนดผู้รับผิดชอบหลัก (Person in Charge) ของแต่ละส่วนงานอย่างชัดเจน",
+      "บันทึกข้อสรุปการประชุมร่วมและกำหนดวันส่งมอบงาน (Deadline)"
+    ],
+    "docs": "ตารางสรุปกิจกรรม, รายงานการประชุมร่วมกับแผนกการตลาด",
+    "sla": "10 นาที",
+    "alertTitle": "📢 การทำงานร่วมกันข้ามสายงาน",
+    "alertText": "การประสานงานที่รวดเร็วและชัดเจนช่วยให้งานผลิตสื่อโปรโมตออกมาได้ทันเวลา"
+  },
+  "4-4": {
+    "code": "9.4",
+    "title": "ประสานงานแผนกประชาสัมพันธ์เพื่อแจ้งจัดกิจกรรมส่งเสริมการขายรับทราบข้อมูล",
+    "role": "แอดมินฝ่ายขาย / แผนกประชาสัมพันธ์",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "ส่งต่อข้อมูลกิจกรรมให้แผนกประชาสัมพันธ์เพื่อกระจายข่าวสารผ่านช่องทางเสียงตามสายและหน้าเคาน์เตอร์",
+    "details": [
+      "จัดทำข้อความสคริปต์สปอตวิทยุเสียงตามสายของตลาดยิ่งเจริญ",
+      "แจ้งตารางเวลาการเปิดสปอตโฆษณาและช่วงเวลาเล่นเกมแจกของรางวัล",
+      "จัดส่งสื่อข้อมูลให้เคาน์เตอร์ประชาสัมพันธ์เพื่อตอบคำถามลูกค้า"
+    ],
+    "controls": [
+      "สคริปต์ประชาสัมพันธ์ต้องใช้ภาษาที่กระชับ ชัดเจน เข้าใจง่าย และดึงดูดใจ",
+      "ตรวจสอบระบบเสียงตามสายในบริเวณศูนย์อาหารให้ดังฟังชัดเจน"
+    ],
+    "docs": "สคริปต์สปอตเสียงตามสาย, เอกสารข้อมูลกิจกรรมประชาสัมพันธ์",
+    "sla": "10 นาที",
+    "alertTitle": "📻 การกระจายเสียงในตลาด",
+    "alertText": "การประชาสัมพันธ์เสียงตามสายช่วยดึงดูดลูกค้าที่กำลังเดินจับจ่ายในตลาดสดให้แวะมารับประทานอาหาร"
+  },
+  "4-5": {
+    "code": "9.5",
+    "title": "จัดทำสื่อการตลาดเพื่อโปรโมทกิจกรรม (Online & Offline)",
+    "role": "แอดมินฝ่ายขาย / แผนกการตลาด",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "ออกแบบ ผลิต และติดตั้งสื่อโฆษณาประชาสัมพันธ์ทุกช่องทางเพื่อสร้างการมองเห็นสูงสุด",
+    "details": [
+      "ออกแบบภาพกราฟิก โปสเตอร์ แบนเนอร์ ป้ายไวนิล และสแตนดี้ตั้งหน้าร้าน",
+      "จัดทำสื่อสำหรับช่องทางดิจิทัล เช่น Facebook Page, LINE OA, TikTok และจอดิจิทัลในตลาด",
+      "ติดตั้งป้ายโฆษณาตามจุดยุทธศาสตร์ของศูนย์อาหารก่อนวันเริ่มกิจกรรม 3 วัน"
+    ],
+    "controls": [
+      "Artwork ต้องผ่านการตรวจสอบความถูกต้องของข้อความ ราคา และเงื่อนไข",
+      "ป้ายโฆษณาต้องติดตั้งอย่างมั่นคง ปลอดภัย และไม่บดบังทางเดินสัญจร"
+    ],
+    "docs": "Artwork สื่อโฆษณา, ใบส่งงานป้ายไวนิล/สแตนดี้",
+    "sla": "2 ชั่วโมง",
+    "alertTitle": "🎨 สื่อโปรโมตที่น่าดึงดูด",
+    "alertText": "สื่อโฆษณาที่มีภาพอาหารสวยงามและข้อความสิทธิประโยชน์ชัดเจนจะช่วยเพิ่มยอดทราฟฟิกได้ทันที"
+  },
+  "4-6": {
+    "code": "9.6",
+    "title": "ประชุมทีมเพื่อสื่อสารเรื่องการจัดกิจกรรม",
+    "role": "ผจก.พื้นที่ / แอดมิน / ทีมศูนย์อาหาร",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "ถ่ายทอดเป้าหมาย รายละเอียดกิจกรรม และมอบหมายหน้าที่ให้ทีมงานศูนย์อาหารทุกคนเข้าใจตรงกัน",
+    "details": [
+      "จัดประชุมรวมทีมงานศูนย์อาหาร (แคชเชียร์, บาร์น้ำ, ภาชนะ, แม่บ้าน, แอดมิน)",
+      "อธิบายเงื่อนไขของกิจกรรม กติกาการแจกคูปอง และวิธีการรับชำระเงินพิเศษ",
+      "ซักซ้อมขั้นตอนการปฏิบัติงานและการแก้ปัญหาข้อสงสัยของลูกค้า"
+    ],
+    "controls": [
+      "พนักงานทุกคนต้องลงลายมือชื่อเข้าร่วมการประชุม",
+      "แจกคู่มือสรุปย่อขั้นตอนการปฏิบัติงานสำหรับแคชเชียร์และบาร์น้ำ"
+    ],
+    "docs": "บันทึกการประชุมทีมศูนย์อาหาร, เอกสารชี้แจงกติกาพนักงาน",
+    "sla": "2 ชั่วโมง",
+    "alertTitle": "🤝 ความเข้าใจที่ตรงกันของทีมงาน",
+    "alertText": "แคชเชียร์และบาร์น้ำเป็นด่านหน้าในการให้บริการ หากทีมเข้าใจกติกาชัดเจนจะช่วยลดข้อผิดพลาดหน้างาน"
+  },
+  "4-7": {
+    "code": "9.7",
+    "title": "แจ้งข่าวสารให้กับทางร้านค้าที่เข้าร่วมกิจกรรมรับทราบเงื่อนไขแต่ละกิจกรรมที่จัดขึ้น",
+    "role": "แผนกศูนย์อาหาร",
+    "roleBadge": "background:#fee2e2;color:#b91c1c;",
+    "objective": "สร้างการมีส่วนร่วมและชี้แจงเงื่อนไขสิทธิประโยชน์แก่ร้านค้าในศูนย์อาหารที่ร่วมแคมเปญ",
+    "details": [
+      "ส่งหนังสือประกาศแจ้งรายละเอียดกิจกรรม เงื่อนไขเมนูร่วมรายการ และวิธีรับคูปองเงินสด",
+      "เดินชี้แจงร้านค้าทีละแผงเพื่อตอบข้อซักถามและสร้างความมั่นใจ",
+      "มอบป้าย 'ร้านนี้เข้าร่วมโครงการ' ให้ร้านค้านำไปตั้งโชว์หน้าร้าน"
+    ],
+    "controls": [
+      "ร้านค้าต้องลงลายมือชื่อรับทราบเอกสารประกาศเงื่อนไขกิจกรรม",
+      "ชี้แจงรอบเวลาการนำคูปองมาขึ้นเงินสดคืนกับฝ่ายบัญชีให้ชัดเจน"
+    ],
+    "docs": "หนังสือแจ้งร้านค้าเข้าร่วมกิจกรรม, ป้ายสัญลักษณ์ร่วมโครงการ",
+    "sla": "1 ชั่วโมง",
+    "alertTitle": "🍜 ความร่วมมือของร้านค้า",
+    "alertText": "ร้านค้าที่ให้ความร่วมมือจัดเมนูพิเศษหรือให้ส่วนลดจะช่วยดึงดูดลูกค้าและสร้างยอดขายเติบโตร่วมกัน"
+  },
+  "4-8": {
+    "code": "9.8",
+    "title": "ประสานงานแผนกบัญชีเรื่องงบประมาณแต่ละกิจกรรมที่จัด ต้องดำเนินการตามขั้นตอนอย่างไรบ้าง",
+    "role": "แอดมินฝ่ายขาย / แผนกบัญชี",
+    "roleBadge": "background:#f1f5f9;color:#334155;",
+    "objective": "กำหนดแนวทางปฏิบัติทางบัญชี การตั้งรหัสค่าใช้จ่าย และการรวบรวมเอกสารเบิกจ่ายตามระเบียบ",
+    "details": [
+      "เข้าพบเจ้าหน้าที่บัญชีเพื่อทำความเข้าใจผังบัญชี (Cost Center) และรหัสงบประมาณกิจกรรม",
+      "กำหนดรูปแบบใบเสร็จ บิลเงินสด และเอกสารรับเงินที่ถูกต้องตามเกณฑ์สรรพากร",
+      "วางกำหนดการส่งมอบเอกสารเคลียร์ค่าใช้จ่ายหลังจบกิจกรรม"
+    ],
+    "controls": [
+      "การเบิกจ่ายทุกรายการต้องมีใบกำกับภาษีเต็มรูปหรือใบสำคัญรับเงินที่มีหลักฐานครบถ้วน",
+      "ห้ามเบิกจ่ายเงินเกินวงเงินงบประมาณที่ได้รับอนุมัติในบันทึกภายใน"
+    ],
+    "docs": "บันทึกข้อตกลงแนวทางปฏิบัติทางบัญชี, ผังบัญชีกิจกรรม",
+    "sla": "30 นาที",
+    "alertTitle": "📑 การควบคุมทางบัญชีที่ถูกต้อง",
+    "alertText": "การประสานงานตั้งแต่เริ่มต้นช่วยป้องกันปัญหาเอกสารไม่สมบูรณ์หรือไม่สามารถลงบัญชีค่าใช้จ่ายได้"
+  },
+  "4-8-1": {
+    "code": "9.8.1",
+    "title": "โดยงานตัดเบิกงบตัดเบิกสินค้าที่นำไปจัดกิจกรรม",
+    "role": "แอดมินฝ่ายขาย / แผนกบัญชี",
+    "roleBadge": "background:#f1f5f9;color:#334155;",
+    "objective": "ตัดจ่ายสต็อกสินค้าและเบิกจ่ายงบประมาณที่นำไปใช้ในกิจกรรมส่งเสริมการขายอย่างถูกต้อง",
+    "details": [
+      "ทำเอกสารใบโอนสินค้า/ใบเบิกสินค้า สำหรับวัตถุดิบและของรางวัลที่นำไปใช้ในกิจกรรม",
+      "ส่งเอกสารให้แผนกบัญชีเพื่อทำการตัดสต็อกออกจากคลังสินค้าในระบบ",
+      "บันทึกโอนมูลค่าสินค้าเข้าเป็นค่าใช้จ่ายส่งเสริมการขายของแผนก"
+    ],
+    "controls": [
+      "สินค้าที่ตัดเบิกต้องมีรายการตรงกับกิจกรรมจริงและมีผู้จัดการพื้นที่ลงนามอนุมัติ",
+      "สินค้าที่เหลือจากกิจกรรมต้องนำส่งคืนเข้าสต็อกและทำใบลดหนี้ค่าใช้จ่าย"
+    ],
+    "docs": "ใบโอนสินค้า, ใบตัดสต็อกเพื่อการส่งเสริมการขาย",
+    "sla": "ตามรอบกิจกรรม",
+    "alertTitle": "📦 การตัดสต็อกที่ตรวจสอบได้",
+    "alertText": "ทุกชิ้นของสินค้าที่นำไปแจกหรือจัดกิจกรรมต้องมีเอกสารตัดสต็อกเพื่อป้องกันสินค้าสูญหาย"
+  },
+  "4-9": {
+    "code": "9.9",
+    "title": "จัดทำคูปองเงินสดเพื่อนำไปใช้ในกิจกรรม ร่วมกับแผนกบัญชีและการเงิน",
+    "role": "แอดมินฝ่ายขาย / แผนกบัญชี / แผนกการเงิน",
+    "roleBadge": "background:#fdf4ff;color:#a21caf;",
+    "objective": "ผลิตและควบคุมระบบคูปองเงินสด (Cash Coupon / E-Coupon) สำหรับแคมเปญส่งเสริมการขาย",
+    "details": [
+      "กำหนดมูลค่าคูปอง (เช่น 20 บาท, 50 บาท), เงื่อนไขการใช้งาน, และวันหมดอายุ",
+      "พิมพ์คูปองที่มีหมายเลข Running Number, แถบบาร์โค้ด และลายเซ็นหรือตราประทับควบคุม",
+      "จัดทำทะเบียนคุมการเบิกจ่ายคูปองและการรับแลกคืนเงินสดจากร้านค้า"
+    ],
+    "controls": [
+      "คูปองทุกใบต้องมีมาตรการป้องกันการทำซ้ำ (Anti-counterfeit features)",
+      "ตรวจนับยอดคูปองที่จ่ายออก vs ยอดคูปองที่ร้านค้านำมาขึ้นเงิน กระทบยอดตรงกัน 100%"
+    ],
+    "docs": "คูปองเงินสด, ทะเบียนคุมยอดคูปอง, ใบขอรับเงินคืนค่าคูปอง",
+    "sla": "20 นาที",
+    "alertTitle": "🎟️ การควบคุมคูปองเงินสด",
+    "alertText": "คูปองมีมูลค่าแทนเงินสด ต้องเก็บรักษาในตู้เซฟและควบคุมการเบิกจ่ายด้วยความระมัดระวังสูงสุด"
+  }
+};
+
+// Switch Tabs
+function switchTab(index) {
+  const tabs = document.querySelectorAll('.tab-btn');
+  const contents = document.querySelectorAll('.tab-content');
+
+  tabs.forEach((t, i) => {
+    if (i === index) {
+      t.classList.add('active');
+    } else {
+      t.classList.remove('active');
+    }
+  });
+
+  contents.forEach((c, i) => {
+    if (i === index) {
+      c.classList.add('active');
+    } else {
+      c.classList.remove('active');
+    }
+  });
+
+  closePanel();
+  window.scrollTo({ top: 180, behavior: 'smooth' });
+}
+
+// Open Side Detail Panel
+function openPanel(stepId) {
+  const data = stepData[stepId];
+  if (!data) return;
+
+  // Active step styling
+  document.querySelectorAll('.step-node').forEach(s => s.classList.remove('active'));
+  if (event && event.currentTarget) {
+    event.currentTarget.classList.add('active');
+  }
+
+  // Populate data
+  document.getElementById('pCode').textContent = `ขั้นตอน ${data.code}`;
+  document.getElementById('pTitle').textContent = data.title;
+  
+  const badge = document.getElementById('pBadgeRole');
+  badge.textContent = `👤 ${data.role}`;
+  badge.style = data.roleBadge || 'background:#e0f2fe;color:#0369a1;';
+
+  document.getElementById('pObjective').textContent = data.objective || '-';
+
+  // Details List
+  const detailsUl = document.getElementById('pDetails');
+  detailsUl.innerHTML = '';
+  if (data.details && data.details.length > 0) {
+    data.details.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      detailsUl.appendChild(li);
+    });
+  }
+
+  // Controls List
+  const controlsUl = document.getElementById('pControls');
+  controlsUl.innerHTML = '';
+  if (data.controls && data.controls.length > 0) {
+    data.controls.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      controlsUl.appendChild(li);
+    });
+  }
+
+  // Docs
+  document.getElementById('pDocs').textContent = data.docs || 'ไม่มีเอกสารระบุ';
+
+  // SLA
+  document.getElementById('pSla').textContent = data.sla || '-';
+
+  // Alert Box
+  const alertBox = document.getElementById('pAlert');
+  if (data.alertTitle) {
+    alertBox.style.display = 'block';
+    alertBox.querySelector('.panel-alert-title').textContent = data.alertTitle;
+    document.getElementById('pAlertText').textContent = data.alertText || '';
+  } else {
+    alertBox.style.display = 'none';
+  }
+
+  // Open Panel
+  document.getElementById('sidePanel').classList.add('open');
+  document.getElementById('contentCol').classList.add('shrunk');
+  if (window.innerWidth <= 900) {
+    document.getElementById('panelBackdrop').classList.add('open');
+  }
+}
+
+// Close Side Panel
+function closePanel() {
+  document.getElementById('sidePanel').classList.remove('open');
+  document.getElementById('contentCol').classList.remove('shrunk');
+  document.getElementById('panelBackdrop').classList.remove('open');
+  document.querySelectorAll('.step-node').forEach(s => s.classList.remove('active'));
+}
+
+// Handle URL query parameters on load (e.g. ?tab=1)
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabParam = urlParams.get('tab');
+  if (tabParam !== null) {
+    const idx = parseInt(tabParam, 10);
+    if (!isNaN(idx) && idx >= 0 && idx < 4) {
+      switchTab(idx);
+    }
+  }
+});
+</script>
+
+</body>
+</html>

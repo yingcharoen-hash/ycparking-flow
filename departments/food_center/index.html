@@ -69,26 +69,6 @@ body {
   font-weight: 400;
 }
 
-/* Quick Action Button */
-.hero-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--accent-orange);
-  color: #ffffff;
-  padding: 12px 28px;
-  border-radius: 999px;
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  box-shadow: 0 4px 20px rgba(255, 149, 0, 0.4);
-  transition: all 0.2s ease;
-}
-.hero-action:hover {
-  background: #e08300;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(255, 149, 0, 0.5);
-}
 
 /* Navigation Bar */
 .nav-bar {
@@ -295,112 +275,6 @@ body {
   gap: 5px;
 }
 
-/* Key Operational Modules Section */
-.module-section {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 32px;
-  border: 1px solid var(--gray-border);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 48px;
-}
-.section-head {
-  margin-bottom: 24px;
-}
-.section-title {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.section-subtitle {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-.module-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
-}
-.module-item {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 18px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-.module-icon {
-  font-size: 24px;
-  line-height: 1;
-}
-.module-text-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 4px;
-}
-.module-text-desc {
-  font-size: 12px;
-  color: #64748b;
-  line-height: 1.5;
-}
-
-/* Compliance & Governance Banner */
-.compliance-banner {
-  background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
-  color: #ffffff;
-  border-radius: 20px;
-  padding: 32px;
-  box-shadow: var(--shadow-md);
-  margin-bottom: 40px;
-}
-.comp-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.comp-badge {
-  background: rgba(255, 149, 0, 0.2);
-  color: #ff9500;
-  border: 1px solid rgba(255, 149, 0, 0.5);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 6px;
-}
-.comp-title {
-  font-size: 20px;
-  font-weight: 700;
-}
-.comp-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-}
-.comp-box {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 18px;
-  border-radius: 14px;
-}
-.comp-box-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: #fb923c;
-  margin-bottom: 6px;
-}
-.comp-box-desc {
-  font-size: 12px;
-  color: #d6d3d1;
-  line-height: 1.6;
-}
 
 /* Footer */
 footer {
@@ -425,10 +299,6 @@ footer {
   <div class="hero-badge">🍜 FOOD CENTER MANAGEMENT</div>
   <h1 class="hero-title">แผนกบริหารกิจการศูนย์อาหารตลาดยิ่งเจริญ</h1>
   <p class="hero-subtitle">ระบบคู่มือปฏิบัติงานมาตรฐาน การบริหารจัดการศูนย์อาหาร ฟู้ดพลาซ่า, จุดจำหน่ายเครื่องดื่มบาร์น้ำ, ภาชนะชีวะรักษ์โลก, ศูนย์อาหาร Neighborfood และการจัดกิจกรรมส่งเสริมการขายร่วมกับการตลาด</p>
-  <a href="workflow_swimlane_tabs.html" class="hero-action">
-    <span>🧭 เปิดผังกระบวนการ Swimlane (4 หมวดหลัก)</span>
-    <span>→</span>
-  </a>
 </div>
 
 <!-- Sticky Navigation -->
@@ -437,7 +307,6 @@ footer {
     <div class="nav-links">
       <a class="nav-link" href="../../index.html">🏠 หน้าหลักบริษัท</a>
       <a class="nav-link" href="../../guide.html">📖 คู่มือการใช้งานมาตรฐาน</a>
-      <a class="nav-link" href="workflow_swimlane_tabs.html" style="color:var(--accent-orange);font-weight:700;">📑 ผังขั้นตอน Swimlane</a>
     </div>
     <div style="font-size:13px;color:var(--text-muted);">
       รหัสองค์กร: <strong>YINGCHAROEN-FOODCENTER</strong>
@@ -543,79 +412,6 @@ footer {
 
   </div>
 
-  <!-- Operational Focus Modules -->
-  <div class="module-section">
-    <div class="section-head">
-      <h2 class="section-title">🍱 จุดเน้นและมาตรฐานการควบคุมเฉพาะด้าน (Operational Standards)</h2>
-      <p class="section-subtitle">มาตรฐานการปฏิบัติงานของศูนย์อาหารตลาดยิ่งเจริญ เพื่อสุขอนามัย ความปลอดภัย และความถูกต้องทางการเงิน</p>
-    </div>
-    <div class="module-grid">
-      <div class="module-item">
-        <span class="module-icon">👨‍🍳</span>
-        <div>
-          <div class="module-text-title">1. Food Tasting & QC ตรวจรสชาติ</div>
-          <div class="module-text-desc">ร้านค้าใหม่ต้องผ่านการทดสอบรสชาติและตรวจสุขอนามัยก่อนอนุมัติทำสัญญาลงแผง</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">💵</span>
-        <div>
-          <div class="module-text-title">2. ระบบส่งเงินสด 2 กะ (เช้า-บ่าย)</div>
-          <div class="module-text-desc">กะเช้าส่งปิดกะ 14.00 น. ที่ออฟฟิศการเงิน และกะบ่ายส่ง 20.00 น. ที่ห้อง บก. ทุกวัน</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">🌿</span>
-        <div>
-          <div class="module-text-title">3. ภาชนะชีวะรักษ์โลก 100%</div>
-          <div class="module-text-desc">ควบคุมการใช้ภาชนะที่ย่อยสลายได้ ติดสติกเกอร์ภาชีวะ ตรวจจับสิ่งแปลกปลอมตามร้าน</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">🔥</span>
-        <div>
-          <div class="module-text-title">4. ตรวจระบบความปลอดภัย แก๊ส & ไฟฟ้า</div>
-          <div class="module-text-desc">ตรวจการปิดวาล์วแก๊ส ปิดเบรกเกอร์ไฟฟ้า และตรวจถังดักไขมันทุกวันผ่าน LINE OpenChat</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">🛵</span>
-        <div>
-          <div class="module-text-title">5. ศูนย์รวมออเดอร์ Delivery ออนไลน์</div>
-          <div class="module-text-desc">รับออเดอร์ LINE MAN & Robinhood รวมบิล จัดซื้อ ส่งมอบไรเดอร์ตรงจุดนัดรับ</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">📊</span>
-        <div>
-          <div class="module-text-title">6. นับ Stock ร่วมกับบัญชีสิ้นเดือน</div>
-          <div class="module-text-desc">นับสต็อกวัตถุดิบบาร์น้ำ เครื่องดื่มโพสมิกซ์ และภาชนะคงเหลือร่วมกับเจ้าหน้าที่บัญชี</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Compliance & Audit Banner -->
-  <div class="compliance-banner">
-    <div class="comp-header">
-      <span class="comp-badge">GOVERNANCE & AUDIT COMPLIANCE</span>
-      <h2 class="comp-title">มาตรฐานความโปร่งใสและการควบคุมภายใน (System Audit)</h2>
-    </div>
-    <div class="comp-grid">
-      <div class="comp-box">
-        <div class="comp-box-title">⚖️ Wording & Compliance Policy</div>
-        <div class="comp-box-desc">ใช้ถ้อยคำเป็นกลางเชิงมาตรฐานการปฏิบัติงาน ปรับคำว่า "ทุจริต" เป็น "การสอบทานความถูกต้องของรายการและเอกสารการเงิน" และปรับคำว่า "ปลายวัน" เป็น "การปิดกะ/สรุปยอดประจำวัน"</div>
-      </div>
-      <div class="comp-box">
-        <div class="comp-box-title">💰 100% Cash Handover Reconciliation</div>
-        <div class="comp-box-desc">ยอดเงินสดจากการขายบาร์น้ำ แคชเชียร์ และค่าภาชนะชีวะ ต้องมีใบส่งเงินแนบสลิป POS และมีลายมือชื่อผู้รับเงินจากแผนกการเงินหรือห้อง บก. กำกับตรงกัน 100% ทุกกะ</div>
-      </div>
-      <div class="comp-box">
-        <div class="comp-box-title">✍️ Manual Fallback & Supervisor Signatures</div>
-        <div class="comp-box-desc">กรณีระบบแคชเชียร์หรือระบบเครื่อง Eos ขัดข้อง ให้ใช้เอกสารบันทึกมือสำรองและต้องมี <strong>ลายมือชื่อผู้จัดการพื้นที่หรือหัวหน้างานกำกับรับรองทุกครั้ง</strong> ก่อนนำเข้าสู่ระบบย้อนหลัง</div>
-      </div>
-    </div>
-  </div>
 
 </div>
 

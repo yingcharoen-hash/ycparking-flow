@@ -68,26 +68,6 @@ body {
   font-weight: 400;
 }
 
-/* Quick Action Button */
-.hero-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--accent-green);
-  color: #ffffff;
-  padding: 12px 28px;
-  border-radius: 999px;
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  box-shadow: 0 4px 20px rgba(52, 199, 89, 0.4);
-  transition: all 0.2s ease;
-}
-.hero-action:hover {
-  background: #2ebd4f;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(52, 199, 89, 0.5);
-}
 
 /* Navigation Bar */
 .nav-bar {
@@ -294,111 +274,6 @@ body {
   gap: 5px;
 }
 
-/* Functional Focus Modules (10 ID Jobs) */
-.module-section {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 32px;
-  border: 1px solid var(--gray-border);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 48px;
-}
-.section-head {
-  margin-bottom: 24px;
-}
-.section-title {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.section-subtitle {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-.module-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 14px;
-}
-.module-item {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-.module-icon {
-  font-size: 20px;
-  line-height: 1;
-}
-.module-text-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 2px;
-}
-.module-text-desc {
-  font-size: 12px;
-  color: #64748b;
-}
-
-/* Compliance & Governance Banner */
-.compliance-banner {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  color: #ffffff;
-  border-radius: 20px;
-  padding: 32px;
-  box-shadow: var(--shadow-md);
-  margin-bottom: 40px;
-}
-.comp-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.comp-badge {
-  background: rgba(52, 199, 89, 0.2);
-  color: #34c759;
-  border: 1px solid rgba(52, 199, 89, 0.5);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 6px;
-}
-.comp-title {
-  font-size: 20px;
-  font-weight: 700;
-}
-.comp-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-}
-.comp-box {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 18px;
-  border-radius: 14px;
-}
-.comp-box-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: #38bdf8;
-  margin-bottom: 6px;
-}
-.comp-box-desc {
-  font-size: 12px;
-  color: #cbd5e1;
-  line-height: 1.6;
-}
 
 /* Footer */
 footer {
@@ -423,10 +298,6 @@ footer {
   <div class="hero-badge">🥬 SONGSOD DELIVERY SERVICE</div>
   <h1 class="hero-title">แผนกบริการส่งสด (ตลาดยิ่งเจริญ)</h1>
   <p class="hero-subtitle">ระบบคู่มือปฏิบัติงานมาตรฐาน การบริหารจัดการออเดอร์ จัดซื้อ คัดสรรสเปกสินค้าสด-แห้ง ควบคุมการแพ็คกิ้ง จัดส่ง และระบบบัญชีครบวงจร (B2B, B2C, Online Platforms)</p>
-  <a href="workflow_swimlane_tabs.html" class="hero-action">
-    <span>🧭 เปิดผังกระบวนการ Swimlane (4 หมวดหลัก)</span>
-    <span>→</span>
-  </a>
 </div>
 
 <!-- Sticky Navigation -->
@@ -435,7 +306,6 @@ footer {
     <div class="nav-links">
       <a class="nav-link" href="../../index.html">🏠 หน้าหลักบริษัท</a>
       <a class="nav-link" href="../../guide.html">📖 คู่มือการใช้งานมาตรฐาน</a>
-      <a class="nav-link" href="workflow_swimlane_tabs.html" style="color:var(--accent-green);font-weight:700;">📑 ผังขั้นตอน Swimlane</a>
     </div>
     <div style="font-size:13px;color:var(--text-muted);">
       รหัสองค์กร: <strong>YINGCHAROEN-SONGSOD</strong>
@@ -539,108 +409,6 @@ footer {
       </div>
     </a>
 
-  </div>
-
-  <!-- Functional Job Controls Section (10 ID Jobs) -->
-  <div class="module-section">
-    <div class="section-head">
-      <h2 class="section-title">🎯 10 จุดควบคุมภารกิจเฉพาะ (Job Control Checklist)</h2>
-      <p class="section-subtitle">ภารกิจตรวจสอบและควบคุมคุณภาพมาตรฐานการปฏิบัติงานตามสารบัญหลักของแผนกบริการส่งสด</p>
-    </div>
-    <div class="module-grid">
-      <div class="module-item">
-        <span class="module-icon">📋</span>
-        <div>
-          <div class="module-text-title">1. รับออเดอร์ จัดซื้อสินค้า</div>
-          <div class="module-text-desc">ตรวจยอดสั่งซื้อและส่งต่อ Shopper ทันรอบ</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">⚖️</span>
-        <div>
-          <div class="module-text-title">2. ตรวจสเปกสินค้า</div>
-          <div class="module-text-desc">น้ำหนัก จำนวน ราคาทุน สด สะอาด ปลอดภัย</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">🔍</span>
-        <div>
-          <div class="module-text-title">3. ตรวจสอบคำสั่งซื้อ</div>
-          <div class="module-text-desc">Recheck ความถูกต้องก่อนอนุมัติจัดส่ง</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">📦</span>
-        <div>
-          <div class="module-text-title">4. แพคสินค้ามาตรฐาน</div>
-          <div class="module-text-desc">คัดแยกของสด ของแห้ง น้ำแข็ง และอุณหภูมิ</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">💵</span>
-        <div>
-          <div class="module-text-title">5. คุมเบิกจ่ายร้านค้า-ขนส่ง</div>
-          <div class="module-text-desc">มีใบเสร็จรับเงิน/ใบสำคัญรับเงินกำกับครบ</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">🔒</span>
-        <div>
-          <div class="module-text-title">6. รักษาเงินสดในแผนก</div>
-          <div class="module-text-desc">เก็บในตู้เซฟ ปิดกะกระทบยอดเงินสดทุกวัน</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">📑</span>
-        <div>
-          <div class="module-text-title">7. ติดตามชำระ วางบิล</div>
-          <div class="module-text-desc">ตามยอด B2B ตามเครดิตเทอม ห้ามค้างเกินกำหนด</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">🧾</span>
-        <div>
-          <div class="module-text-title">8. ใบกำกับภาษี & ใบลดหนี้</div>
-          <div class="module-text-desc">ออกเอกสารถูกต้องตามเกณฑ์กรมสรรพากร</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">🤝</span>
-        <div>
-          <div class="module-text-title">9. ติดต่อสื่อสาร ดูแลลูกค้า</div>
-          <div class="module-text-desc">สอบถามความพึงพอใจ แก้ไขปัญหาภายใน 15 นาที</div>
-        </div>
-      </div>
-      <div class="module-item">
-        <span class="module-icon">🚚</span>
-        <div>
-          <div class="module-text-title">10. ตรวจรอบ ระยะทาง ขนส่ง</div>
-          <div class="module-text-desc">ควบคุมค่าจัดส่งตามโซน คิวรถตรงเวลา 100%</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Governance & Audit Policy Banner -->
-  <div class="compliance-banner">
-    <div class="comp-header">
-      <span class="comp-badge">GOVERNANCE & AUDIT TRAIL</span>
-      <h2 class="comp-title">มาตรฐานการควบคุมและตรวจสอบความโปร่งใส (System Audit)</h2>
-    </div>
-    <div class="comp-grid">
-      <div class="comp-box">
-        <div class="comp-box-title">⚖️ Wording & Compliance Policy</div>
-        <div class="comp-box-desc">ใช้ถ้อยคำเป็นกลางเชิงมาตรฐานการปฏิบัติงาน ปรับคำว่า "ทุจริต" เป็น "การสอบทานความถูกต้องและสมบูรณ์ของเอกสารหลักฐาน" และปรับคำว่า "ปลายวัน" เป็น "การปิดกะ/สรุปยอดประจำวัน"</div>
-      </div>
-      <div class="comp-box">
-        <div class="comp-box-title">💰 100% Cash & Bank Reconciliation</div>
-        <div class="comp-box-desc">ยอดเงินสดที่เก็บรักษาในแผนก เงินโอนเข้าบัญชี และยอดขายผ่านแพลตฟอร์มออนไลน์ (LINE MAN, Robinhood) ต้องกระทบยอดตรงกับ Statement ธนาคารและใบเสร็จทุกวัน 100%</div>
-      </div>
-      <div class="comp-box">
-        <div class="comp-box-title">✍️ Manual Fallback & Supervisor Signatures</div>
-        <div class="comp-box-desc">กรณีระบบออนไลน์ขัดข้อง ให้ใช้เอกสารบันทึกมือสำรองและต้องมี <strong>ลายมือชื่อผู้จัดการแผนกกำกับรับรองทุกครั้ง</strong> ก่อนนำเข้าสู่ระบบย้อนหลังเมื่อระบบพร้อมใช้งาน</div>
-      </div>
-    </div>
   </div>
 
 </div>

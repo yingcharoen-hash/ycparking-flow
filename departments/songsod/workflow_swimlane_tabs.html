@@ -1,0 +1,1837 @@
+# -*- coding: utf-8 -*-
+import json
+import os
+
+html_head = """<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผังขั้นตอนการทำงาน — แผนกบริการส่งสด (ตลาดยิ่งเจริญ)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f5f5f7;
+  --card-bg: #ffffff;
+  --text-main: #1d1d1f;
+  --text-muted: #86868b;
+  --accent-green: #34c759;
+  --accent-green-dark: #248a3d;
+  --accent-blue: #0071e3;
+  --accent-orange: #ff9500;
+  --accent-purple: #af52de;
+  --accent-teal: #06b6d4;
+  --accent-red: #ef4444;
+  --gray50: #f8fafc;
+  --gray100: #f1f5f9;
+  --gray200: #e2e8f0;
+  --gray400: #94a3b8;
+  --gray600: #475569;
+  --gray800: #1e293b;
+
+  --lane-mgmt: #f3e8ff;
+  --lane-mgmt-c: #7e22ce;
+  --lane-admin: #e0f2fe;
+  --lane-admin-c: #0369a1;
+  --lane-shopper: #fef3c7;
+  --lane-shopper-c: #b45309;
+  --lane-checker: #ffedd5;
+  --lane-checker-c: #c2410c;
+  --lane-rider: #dbeafe;
+  --lane-rider-c: #1d4ed8;
+  --lane-acct: #dcfce7;
+  --lane-acct-c: #15803d;
+  --lane-cust: #f1f5f9;
+  --lane-cust-c: #475569;
+
+  --shadow: 0 4px 20px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Sarabun", sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.top-header {
+  background: radial-gradient(circle at 50% 25%, #1e293b 0%, #0b0f17 100%);
+  color: #fff;
+  padding: 44px 24px 36px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(52, 199, 89, 0.15);
+  border: 1px solid rgba(52, 199, 89, 0.4);
+  color: #34c759;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.header-title {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.header-sub {
+  font-size: 14px;
+  color: #94a3b8;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* Nav */
+.top-nav {
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--gray200);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  padding: 12px 24px;
+}
+.nav-wrap {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.nav-btn {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.15s;
+}
+.nav-btn:hover { color: var(--accent-blue); }
+.print-btn {
+  background: var(--text-main);
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.print-btn:hover { background: #334155; }
+
+/* Tabs Bar */
+.tabs-outer {
+  background: #ffffff;
+  border-bottom: 1px solid var(--gray200);
+  padding: 12px 24px 0;
+  position: sticky;
+  top: 53px;
+  z-index: 35;
+}
+.tabs-scroll {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+}
+.tab-btn {
+  background: var(--gray50);
+  border: 1px solid var(--gray200);
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray600);
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.tab-btn:hover {
+  background: #e2e8f0;
+  color: var(--text-main);
+}
+.tab-btn.active {
+  background: var(--text-main);
+  color: #ffffff;
+  border-color: var(--text-main);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.tab-badge {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.06);
+  font-weight: 700;
+}
+.tab-btn.active .tab-badge {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+}
+
+/* Layout with Sliding Glassmorphism Side Panel */
+.main-wrapper {
+  max-width: 1440px;
+  margin: 24px auto 60px;
+  padding: 0 24px;
+  display: flex;
+  gap: 24px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.content-col {
+  flex: 1;
+  min-width: 0;
+  transition: all 0.3s ease;
+}
+.content-col.shrunk {
+  margin-right: 440px;
+}
+
+/* Tab Content Panel */
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+/* Process Intro Header */
+.proc-intro {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px 28px;
+  border: 1px solid var(--gray200);
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.proc-title-box h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.proc-title-box p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.proc-meta-badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.pm-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--gray100);
+  color: var(--gray800);
+  border: 1px solid var(--gray200);
+}
+
+/* Swimlane Table Container */
+.swimlane-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid var(--gray200);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.swimlane-header {
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--gray200);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.swimlane-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.swimlane-table-wrap {
+  overflow-x: auto;
+}
+.swimlane-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+.swimlane-table th, .swimlane-table td {
+  border: 1px solid var(--gray200);
+  padding: 14px 16px;
+  vertical-align: top;
+}
+.swimlane-table th {
+  background: #f1f5f9;
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
+  text-align: left;
+}
+.lane-col-role {
+  width: 190px;
+  background: #fafafa;
+}
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.role-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Step Node inside Swimlane */
+.steps-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.step-node {
+  background: #ffffff;
+  border: 1px solid var(--gray200);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.step-node:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-blue);
+  box-shadow: 0 6px 16px rgba(0, 113, 227, 0.12);
+}
+.step-node.active {
+  border-color: var(--accent-blue);
+  background: #f0f7ff;
+  box-shadow: 0 0 0 2px var(--accent-blue);
+}
+.step-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.step-code {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.step-sla {
+  font-size: 11px;
+  color: #0284c7;
+  font-weight: 600;
+}
+.step-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+.step-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.step-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #e2e8f0;
+  color: #475569;
+}
+.tag-control {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+.tag-doc {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+/* Glassmorphism Side Detail Panel */
+.side-panel {
+  position: fixed;
+  top: 60px;
+  right: -450px;
+  width: 420px;
+  height: calc(100vh - 80px);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border-left: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 24px 0 0 24px;
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.12);
+  z-index: 60;
+  overflow-y: auto;
+  transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+.side-panel.open {
+  right: 0;
+}
+.panel-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 55;
+  backdrop-filter: blur(2px);
+}
+.panel-backdrop.open { display: block; }
+
+.panel-close {
+  align-self: flex-end;
+  background: #e2e8f0;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  transition: background 0.2s;
+}
+.panel-close:hover { background: #cbd5e1; }
+
+.panel-code {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--accent-green);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.panel-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.35;
+  margin-bottom: 14px;
+}
+.panel-badge-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+
+.panel-section {
+  margin-bottom: 18px;
+}
+.panel-sec-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray600);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.panel-sec-body {
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.6;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+.panel-list {
+  list-style: none;
+}
+.panel-list li {
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.5;
+}
+.panel-list li::before {
+  content: "•";
+  position: absolute;
+  left: 4px;
+  color: var(--accent-green);
+  font-weight: bold;
+}
+
+.panel-alert {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 8px;
+}
+.panel-alert-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #b91c1c;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.panel-alert-text {
+  font-size: 12px;
+  color: #7f1d1d;
+  line-height: 1.5;
+}
+
+/* Print CSS for A4 Landscape */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
+  body { background: #fff; color: #000; font-size: 10pt; }
+  .top-header, .top-nav, .tabs-outer, .side-panel, .panel-backdrop, .print-btn { display: none !important; }
+  .main-wrapper { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+  .content-col { margin-right: 0 !important; }
+  .tab-content { display: block !important; page-break-after: always; }
+  .swimlane-card { border: 1px solid #999; box-shadow: none; break-inside: avoid; }
+  .step-node { border: 1px solid #aaa; break-inside: avoid; }
+}
+
+@media (max-width: 900px) {
+  .content-col.shrunk { margin-right: 0; }
+  .side-panel { width: 100%; right: -100%; border-radius: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="top-header">
+  <div class="header-badge">🥬 SONGSOD DELIVERY SERVICE</div>
+  <h1 class="header-title">ผังขั้นตอนการปฏิบัติงาน — แผนกบริการส่งสด</h1>
+  <p class="header-sub">ครอบคลุม 4 งานหลัก (1.0 บริหารจัดการทั่วไป, 2.0 รับออเดอร์ & ขนส่ง, 3.0 จัดซื้อสินค้า & แพ็คกิ้ง, 4.0 จัดทำเอกสาร & บัญชีออนไลน์) เชื่อมโยง 10 จุดควบคุมภารกิจ</p>
+</div>
+
+<!-- Navigation -->
+<div class="top-nav">
+  <div class="nav-wrap">
+    <div class="nav-left">
+      <a class="nav-btn" href="index.html">← แดชบอร์ดส่งสด</a>
+      <a class="nav-btn" href="../../index.html">🏠 หน้าหลักบริษัท</a>
+      <a class="nav-btn" href="../../guide.html">📖 คู่มือการใช้งาน</a>
+    </div>
+    <button class="print-btn" onclick="window.print()">🖨️ พิมพ์ A4 Landscape</button>
+  </div>
+</div>
+
+<!-- Tabs Bar -->
+<div class="tabs-outer">
+  <div class="tabs-scroll">
+    <button class="tab-btn active" onclick="switchTab(0)">
+      <span>1.0 บริหารจัดการทั่วไป</span>
+      <span class="tab-badge">9 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab(1)">
+      <span>2.0 รับออเดอร์ & จัดส่ง</span>
+      <span class="tab-badge">9 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab(2)">
+      <span>3.0 จัดซื้อสินค้า & แพ็คกิ้ง</span>
+      <span class="tab-badge">7 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab(3)">
+      <span>4.0 เอกสาร & ออนไลน์</span>
+      <span class="tab-badge">9 ขั้นตอน</span>
+    </button>
+  </div>
+</div>
+
+<div class="main-wrapper">
+  <div class="content-col" id="contentCol">
+"""
+
+# Tabs HTML Content
+tabs_html = """
+    <!-- TAB 0: 1.0 บริหารจัดการทั่วไป -->
+    <div class="tab-content active" id="tabContent-0">
+      <div class="proc-intro">
+        <div class="proc-title-box">
+          <h2><span>📊 1.0 บริหารจัดการทั่วไป (General Management)</span></h2>
+          <p>กำกับดูแลภาพรวมรายได้ B2B/B2C ควบคุมระบบราคาทุน-ราคาขาย บริหารการขนส่ง เจรจาต่อรองร้านค้า และควบคุมงบประมาณ</p>
+        </div>
+        <div class="proc-meta-badges">
+          <span class="pm-badge">👤 ผู้จัดการแผนกส่งสด</span>
+          <span class="pm-badge">⏱️ ประจำวัน / สัปดาห์ / เดือน</span>
+          <span class="pm-badge">🛡️ สรุปยอดและรายงานผลผู้บริหาร</span>
+        </div>
+      </div>
+
+      <div class="swimlane-card">
+        <div class="swimlane-header">
+          <h3>ผังการปฏิบัติงานแบบ Swimlane ตามบทบาทหน้าที่ (9 ขั้นตอน)</h3>
+          <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูรายละเอียดด้านข้าง</span>
+        </div>
+        <div class="swimlane-table-wrap">
+          <table class="swimlane-table">
+            <thead>
+              <tr>
+                <th style="width:200px;">บทบาทหน้าที่ (Roles)</th>
+                <th>ขั้นตอนการปฏิบัติงาน (Operation Flow)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Lane: ผู้จัดการแผนกส่งสด -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-mgmt);color:var(--lane-mgmt-c);">👤 ผู้จัดการแผนกส่งสด</span>
+                  <div class="role-desc">กำกับนโยบาย ราคา ต้นทุน และแก้ไขปัญหา</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('1-1')">
+                      <div class="step-top"><span class="step-code">1.1</span><span class="step-sla">ทุกวัน / สิ้นเดือน</span></div>
+                      <div class="step-text">1. บริหารรายได้แผนกบริการส่งสด B2B, B2C, Platform ขายออนไลน์</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🎯 ควบคุมเป้าหมายยอดขาย</span><span class="step-tag">Dashboard</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-2')">
+                      <div class="step-top"><span class="step-code">1.2</span><span class="step-sla">ประจำวัน</span></div>
+                      <div class="step-text">2. ควบคุมระบบงานทั้งหมดของส่งสด ดูแลลูกค้า, ราคาทุน, ราคาขาย และสเปกสินค้า</div>
+                      <div class="step-tags"><span class="step-tag tag-control">⚖️ สเปกน้ำหนัก & Margin</span><span class="step-tag tag-doc">Price Matrix</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-3')">
+                      <div class="step-top"><span class="step-code">1.3</span><span class="step-sla">ประจำวัน</span></div>
+                      <div class="step-text">3. ควบคุมจัดการระบบขนส่งสินค้า บริหารค่าขนส่ง ค่าสินค้า และบริการ</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🚚 คุมต้นทุนกิโลเมตร/รอบ</span><span class="step-tag tag-doc">Delivery Sheet</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-4')">
+                      <div class="step-top"><span class="step-code">1.4</span><span class="step-sla">ก่อนออกใบเสนอราคา</span></div>
+                      <div class="step-text">4. ตรวจสอบเอกสารการซื้อขายราคาต้นทุน กำหนดราคาขาย</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🔍 ตรวจสอบกำไรขั้นต้น (GP)</span><span class="step-tag tag-doc">ใบเสนอราคา</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-5')">
+                      <div class="step-top"><span class="step-code">1.5</span><span class="step-sla">ต่อเนื่อง</span></div>
+                      <div class="step-text">5. ดูแลจัดระบบงานและจัดสรรบุคลากรให้เหมาะสมกับปริมาณงาน</div>
+                      <div class="step-tags"><span class="step-tag">จัดตารางกะเวร Shopper/Admin</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-6')">
+                      <div class="step-top"><span class="step-code">1.6</span><span class="step-sla">เมื่อเปิดดีลลูกค้าใหม่</span></div>
+                      <div class="step-text">6. เจรจา ต่อรอง สื่อสารงานขายลูกค้ารายใหญ่ B2B และ B2C</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">สัญญาข้อตกลงซื้อขาย</span><span class="step-tag">เงื่อนไขเครดิตเทอม</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-7')">
+                      <div class="step-top"><span class="step-code">1.7</span><span class="step-sla">สัปดาห์ละ 1-2 ครั้ง</span></div>
+                      <div class="step-text">7. ตรวจสอบ คัดสรร ดีลร้านค้า ตรวจสอบคุณภาพและราคาทุนในตลาด</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🥬 แผงค้าพันธมิตรคุณภาพ</span><span class="step-tag">เปรียบเทียบราคา</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-8')">
+                      <div class="step-top"><span class="step-code">1.8</span><span class="step-sla">ทันทีเมื่อเกิดเหตุ</span></div>
+                      <div class="step-text">8. ตัดสินใจและแก้ไขปัญหาข้อร้องเรียน / สินค้ามีปัญหาฉุกเฉิน</div>
+                      <div class="step-tags"><span class="step-tag tag-control">⚡ SLA แก้ปัญหา ≤ 15 นาที</span><span class="step-tag tag-doc">บันทึกเหตุการณ์</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('1-9')">
+                      <div class="step-top"><span class="step-code">1.9</span><span class="step-sla">สิ้นเดือน / สรุปงวด</span></div>
+                      <div class="step-text">9. ควบคุมดูแลค่าใช้จ่าย OT วัสดุสิ้นเปลืองสำนักงาน และอุปกรณ์แพ็คเกจจิ้ง</div>
+                      <div class="step-tags"><span class="step-tag tag-control">💰 อนุมัติเบิกจ่ายตามงบ</span><span class="step-tag tag-doc">ใบสรุป OT & เบิกของ</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 1: 2.0 รับออเดอร์ -->
+    <div class="tab-content" id="tabContent-1">
+      <div class="proc-intro">
+        <div class="proc-title-box">
+          <h2><span>📲 2.0 รับออเดอร์ & จัดส่ง (Order Processing & Dispatch)</span></h2>
+          <p>กระบวนการรับคำสั่งซื้อจากทุกช่องทาง ประสานงานลูกค้า-ร้านค้า ออกเอกสารกำกับการส่ง จัดคิวรถ และติดตามความพึงพอใจ</p>
+        </div>
+        <div class="proc-meta-badges">
+          <span class="pm-badge">👤 Admin ประจำแผนก</span>
+          <span class="pm-badge">⏱️ ประจำวัน (รอบเช้า 04.00 - 15.00 น.)</span>
+          <span class="pm-badge">🛡️ ตรวจสอบยอดโอน 100% ก่อนส่ง</span>
+        </div>
+      </div>
+
+      <div class="swimlane-card">
+        <div class="swimlane-header">
+          <h3>ผังการปฏิบัติงานแบบ Swimlane ตามบทบาทหน้าที่ (9 ขั้นตอน)</h3>
+          <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูรายละเอียดด้านข้าง</span>
+        </div>
+        <div class="swimlane-table-wrap">
+          <table class="swimlane-table">
+            <thead>
+              <tr>
+                <th style="width:200px;">บทบาทหน้าที่ (Roles)</th>
+                <th>ขั้นตอนการปฏิบัติงาน (Operation Flow)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Lane: ลูกค้า -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-cust);color:var(--lane-cust-c);">🛒 ลูกค้า (Customer)</span>
+                  <div class="role-desc">ส่งคำสั่งซื้อและชำระเงิน</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('2-2')">
+                      <div class="step-top"><span class="step-code">2.2</span><span class="step-sla">ตามรอบสั่งซื้อ</span></div>
+                      <div class="step-text">2. ลูกค้าส่งรายการคำสั่งซื้อสินค้า (LINE OA / โทร / ฟอร์มสั่งซื้อ)</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">รายการสินค้า & สเปก</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <!-- Lane: Admin ส่งสด -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-admin);color:var(--lane-admin-c);">👤 Admin ประจำแผนก</span>
+                  <div class="role-desc">รับออเดอร์ คีย์ระบบ ออกบิล จัดคิวรถ</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('2-1')">
+                      <div class="step-top"><span class="step-code">2.1</span><span class="step-sla">ต่อเนื่อง 24 ชม.</span></div>
+                      <div class="step-text">1. รับออเดอร์ จากทุกช่องทาง (LINE OA, เบอร์โทรศัพท์, แพลตฟอร์มออนไลน์)</div>
+                      <div class="step-tags"><span class="step-tag">รวมออเดอร์เข้าระบบ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-3')">
+                      <div class="step-top"><span class="step-code">2.3</span><span class="step-sla">ภายใน 15 นาที</span></div>
+                      <div class="step-text">3. ประสานงานกับลูกค้า Shopper Checker และร้านค้า กรณีนอกเหนือคำสั่งซื้อในระบบ</div>
+                      <div class="step-tags"><span class="step-tag tag-control">📞 เช็กสต็อก/สินค้าพิเศษ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-4')">
+                      <div class="step-top"><span class="step-code">2.4</span><span class="step-sla">ก่อนเริ่มซื้อ</span></div>
+                      <div class="step-text">4. คีย์ออเดอร์ เพื่อออกเอกสารการขายให้ถูกต้องเรื่องราคาทุน ราคาขาย จำนวน เพื่อแจ้งยอดโอนชำระ</div>
+                      <div class="step-tags"><span class="step-tag tag-control">💰 ตรวจสลิปเงินโอน 100%</span><span class="step-tag tag-doc">ใบสั่งซื้อ / ใบแจ้งหนี้</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-5')">
+                      <div class="step-top"><span class="step-code">2.5</span><span class="step-sla">ก่อนรถออก 15 นาที</span></div>
+                      <div class="step-text">5. ออกเอกสารให้ทันรอบส่งสินค้า มีเอกสารกำกับทุกครั้ง และตรวจสอบเลขที่เอกสารก่อนส่ง</div>
+                      <div class="step-tags"><span class="step-tag tag-control">📑 เลขที่บิลตรงกับกล่องสินค้า</span><span class="step-tag tag-doc">ใบส่งของ / ใบเสร็จ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-6')">
+                      <div class="step-top"><span class="step-code">2.6</span><span class="step-sla">ตามตารางรอบ</span></div>
+                      <div class="step-text">6. จัดคิวรถส่งสินค้าให้ทันเวลาที่ลูกค้ากำหนด เพื่อป้องกันความล่าช้า</div>
+                      <div class="step-tags"><span class="step-tag tag-control">⏱️ จัด Route เส้นทางขนส่ง</span><span class="step-tag tag-doc">ใบคิวรถส่งของ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-7')">
+                      <div class="step-top"><span class="step-code">2.7</span><span class="step-sla">ก่อนล้อหมุน 5 นาที</span></div>
+                      <div class="step-text">7. ก่อนรถออก ต้องแจ้งให้ลูกค้าทราบก่อนทุกครั้ง (ส่งรูปและแจ้งเวลาคาดหมาย)</div>
+                      <div class="step-tags"><span class="step-tag">ส่งรูปรถ & เบอร์คนขับ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-8')">
+                      <div class="step-top"><span class="step-code">2.8</span><span class="step-sla">หลังส่งมอบ 30 นาที</span></div>
+                      <div class="step-text">8. ติดตามงาน บริการสอบถาม ห่วงใยในการที่ลูกค้าได้รับสินค้าเรียบร้อยหรือยัง</div>
+                      <div class="step-tags"><span class="step-tag tag-control">❤️ สอบถามความพึงพอใจ</span><span class="step-tag tag-doc">บันทึกตรวจรับ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('2-9')">
+                      <div class="step-top"><span class="step-code">2.9</span><span class="step-sla">16.00 น. ประจำวัน</span></div>
+                      <div class="step-text">9. จบงานในระบบ ตรวจสอบยอดครบถ้วน และเปิดรับออเดอร์รอบวันพรุ่งนี้</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🔒 ปิดกะประจำวัน</span><span class="step-tag tag-doc">Daily Order Summary</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: 3.0 จัดซื้อสินค้าตามออเดอร์ -->
+    <div class="tab-content" id="tabContent-2">
+      <div class="proc-intro">
+        <div class="proc-title-box">
+          <h2><span>🥬 3.0 จัดซื้อสินค้าตามออเดอร์ (Procurement, Inspection & Packing)</span></h2>
+          <p>กระบวนการช้อปสินค้าสด-แห้งในตลาด ตรวจสอบสเปกและน้ำหนัก ชั่งตวง ดีลราคา แพ็คกิ้งแยกของสดของแห้ง และทำเอกสารราคาทุน</p>
+        </div>
+        <div class="proc-meta-badges">
+          <span class="pm-badge">👤 Shopper + Checker</span>
+          <span class="pm-badge">⏱️ 03.00 - 10.00 น. ประจำวัน</span>
+          <span class="pm-badge">🛡️ สเปกสด สะอาด ปลอดภัย 100%</span>
+        </div>
+      </div>
+
+      <div class="swimlane-card">
+        <div class="swimlane-header">
+          <h3>ผังการปฏิบัติงานแบบ Swimlane ตามบทบาทหน้าที่ (7 ขั้นตอน)</h3>
+          <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูรายละเอียดด้านข้าง</span>
+        </div>
+        <div class="swimlane-table-wrap">
+          <table class="swimlane-table">
+            <thead>
+              <tr>
+                <th style="width:200px;">บทบาทหน้าที่ (Roles)</th>
+                <th>ขั้นตอนการปฏิบัติงาน (Operation Flow)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Lane: Shopper & Checker -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-shopper);color:var(--lane-shopper-c);">🛒 Shopper & Checker</span>
+                  <div class="role-desc">จัดซื้อ ตรวจสเปก ชั่งน้ำหนัก แพ็คกิ้ง</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('3-1')">
+                      <div class="step-top"><span class="step-code">3.1</span><span class="step-sla">03.30 น.</span></div>
+                      <div class="step-text">1. รับออเดอร์และใบหยิบสินค้า (Picking List) จาก Admin</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">Picking List</span><span class="step-tag">แยกโซนเดินตลาด</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-4')">
+                      <div class="step-top"><span class="step-code">3.4</span><span class="step-sla">ระหว่างเดินตลาด</span></div>
+                      <div class="step-text">4. เสนอราคาและเช็กราคาสินค้าประจำวันกับแผงค้า</div>
+                      <div class="step-tags"><span class="step-tag">เช็กราคาตลาดกลาง</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-5')">
+                      <div class="step-top"><span class="step-code">3.5</span><span class="step-sla">ระหว่างจัดซื้อ</span></div>
+                      <div class="step-text">5. ดีลราคาในการสั่งซื้อเพื่อให้ได้ราคาทุนที่เหมาะสมและคุณภาพดีที่สุด</div>
+                      <div class="step-tags"><span class="step-tag tag-control">⚖️ ราคาทุนตามเกณฑ์ที่ ผจก. กำหนด</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-2')">
+                      <div class="step-top"><span class="step-code">3.2</span><span class="step-sla">ทันทีที่รับสินค้า</span></div>
+                      <div class="step-text">2. Checker ตรวจสอบสเปกและจัดซื้อสินค้าตามใบสั่งซื้อของลูกค้าให้ถูกต้อง (น้ำหนัก/ขนาด/ความสด)</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🔍 QC สเปก & ชั่งตาชั่งมาตรฐาน</span><span class="step-tag tag-doc">QC Tag</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-6')">
+                      <div class="step-top"><span class="step-code">3.6</span><span class="step-sla">ภายใน 10 นาที</span></div>
+                      <div class="step-text">6. ประสานงาน Admin กรณีสินค้าไม่ครบ/ขาดตลาด เพื่อเสนอสินค้าทดแทนให้ลูกค้าพิจารณา</div>
+                      <div class="step-tags"><span class="step-tag tag-control">⚡ ขออนุมัติลูกค้าก่อนเปลี่ยนของ</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-3')">
+                      <div class="step-top"><span class="step-code">3.3</span><span class="step-sla">ก่อนขึ้นรถขนส่ง</span></div>
+                      <div class="step-text">3. แพ็คกิ้งสินค้าพร้อมส่ง คัดแยกของสด ของแห้ง ผัก เนื้อสัตว์ และควบคุมอุณหภูมิ</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🧊 บรรจุภัณฑ์สะอาด + น้ำแข็งเจล</span><span class="step-tag">ติดสติกเกอร์ลูกค้า</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('3-7')">
+                      <div class="step-top"><span class="step-code">3.7</span><span class="step-sla">12.00 น. ประจำวัน</span></div>
+                      <div class="step-text">7. จัดทำเอกสารราคาต้นทุน จำนวน ปิดระบบบัญชีเพื่อส่งบัญชีในแผนกส่งสด</div>
+                      <div class="step-tags"><span class="step-tag tag-control">💵 แนบใบเสร็จ/บิลเงินสดร้านค้า</span><span class="step-tag tag-doc">ใบสรุปต้นทุนซื้อประจำวัน</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: 4.0 จัดทำเอกสาร+Plat form Online -->
+    <div class="tab-content" id="tabContent-3">
+      <div class="proc-intro">
+        <div class="proc-title-box">
+          <h2><span>📑 4.0 จัดทำเอกสาร & บัญชีออนไลน์ (Accounting & Online Platforms)</span></h2>
+          <p>จัดทำรายงานซื้อ-ขาย ออกใบกำกับภาษี/ใบลดหนี้ รับออเดอร์ LINE MAN & Robinhood ควบคุมเงินสด และปิดยอดประจำวัน</p>
+        </div>
+        <div class="proc-meta-badges">
+          <span class="pm-badge">👤 Admin Account</span>
+          <span class="pm-badge">⏱️ ประจำวัน / ปิดงวดสิ้นเดือน</span>
+          <span class="pm-badge">🛡️ กระทบยอดบัญชีตรง 100%</span>
+        </div>
+      </div>
+
+      <div class="swimlane-card">
+        <div class="swimlane-header">
+          <h3>ผังการปฏิบัติงานแบบ Swimlane ตามบทบาทหน้าที่ (9 ขั้นตอน)</h3>
+          <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูรายละเอียดด้านข้าง</span>
+        </div>
+        <div class="swimlane-table-wrap">
+          <table class="swimlane-table">
+            <thead>
+              <tr>
+                <th style="width:200px;">บทบาทหน้าที่ (Roles)</th>
+                <th>ขั้นตอนการปฏิบัติงาน (Operation Flow)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Lane: Admin Account -->
+              <tr>
+                <td class="lane-col-role">
+                  <span class="role-badge" style="background:var(--lane-acct);color:var(--lane-acct-c);">👤 Admin Account</span>
+                  <div class="role-desc">ทำรายงาน ออกบิล คุมเงินสด และแพลตฟอร์ม</div>
+                </td>
+                <td>
+                  <div class="steps-flow">
+                    <div class="step-node" onclick="openPanel('4-6')">
+                      <div class="step-top"><span class="step-code">4.6</span><span class="step-sla">ตามเวลาเปิดระบบ</span></div>
+                      <div class="step-text">6. รับออเดอร์ผ่านช่องทางออนไลน์ (LINE MAN, Robinhood) และรับคำสั่งซื้อผ่านระบบ</div>
+                      <div class="step-tags"><span class="step-tag">Merchant App</span><span class="step-tag">รับออเดอร์ Delivery</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-5')">
+                      <div class="step-top"><span class="step-code">4.5</span><span class="step-sla">ต่อเนื่อง</span></div>
+                      <div class="step-text">5. ตอบ-ถาม สื่อสารงานขายและให้ข้อมูลสินค้าแก่ลูกค้าออนไลน์</div>
+                      <div class="step-tags"><span class="step-tag">Customer Support</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-8')">
+                      <div class="step-top"><span class="step-code">4.8</span><span class="step-sla">ก่อนออกจ่ายเงิน</span></div>
+                      <div class="step-text">8. ควบคุมดูแล เบิก-จ่ายเงินซื้อสินค้าที่สั่ง (เงินสดย่อย / เงินทดรองจ่ายร้านค้า)</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🔒 ทะเบียนคุมเงินสด & เซฟ</span><span class="step-tag tag-doc">ใบสำคัญเบิกจ่ายเงิน</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-1')">
+                      <div class="step-top"><span class="step-code">4.1</span><span class="step-sla">ประจำวัน</span></div>
+                      <div class="step-text">1. จัดทำเอกสารรายงานการซื้อ-ขายทั้งหมด ภายในวันนั้นๆ</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">รายงานสรุปซื้อ-ขาย</span><span class="step-tag">ระบบ ERP/POS</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-2')">
+                      <div class="step-top"><span class="step-code">4.2</span><span class="step-sla">เมื่อมีคำร้องขอ</span></div>
+                      <div class="step-text">2. จัดทำเอกสารตามงานแก้ไข ออกใบกำกับภาษีเต็มรูป และใบลดหนี้/เพิ่มหนี้</div>
+                      <div class="step-tags"><span class="step-tag tag-control">🧾 เลขประจำตัวผู้เสียภาษี</span><span class="step-tag tag-doc">ใบกำกับภาษี / ใบลดหนี้</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-3')">
+                      <div class="step-top"><span class="step-code">4.3</span><span class="step-sla">ประจำวัน</span></div>
+                      <div class="step-text">3. จัดเก็บและบันทึกข้อมูลการซื้อ-ขาย ลงในระบบฐานข้อมูลอย่างปลอดภัย</div>
+                      <div class="step-tags"><span class="step-tag tag-control">💾 สำรองข้อมูลระบบคลาวด์</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-4')">
+                      <div class="step-top"><span class="step-code">4.4</span><span class="step-sla">ตามรอบเครดิต</span></div>
+                      <div class="step-text">4. ติดตามการชำระเงินค่าสินค้า ออกบิล วางบิล ตามรอบเอกสารของลูกค้า B2B</div>
+                      <div class="step-tags"><span class="step-tag tag-control">📑 ติดตามหนี้ตามดิว</span><span class="step-tag tag-doc">ใบวางบิล / ใบแจ้งหนี้</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-7')">
+                      <div class="step-top"><span class="step-code">4.7</span><span class="step-sla">17.00 น. ประจำวัน</span></div>
+                      <div class="step-text">7. จัดทำเอกสารยอดขายออนไลน์ (LINE MAN, Robinhood) ส่งฝ่ายบัญชีส่วนกลาง</div>
+                      <div class="step-tags"><span class="step-tag tag-doc">Online Sales Summary</span><span class="step-tag">กระทบยอด GP Platform</span></div>
+                    </div>
+                    <div class="step-node" onclick="openPanel('4-9')">
+                      <div class="step-top"><span class="step-code">4.9</span><span class="step-sla">17.30 น. ประจำวัน</span></div>
+                      <div class="step-text">9. ปิดยอดซื้อ-ขายประจำวัน กระทบยอดเงินสด เงินโอน และส่งรายงานต่อผู้จัดการแผนก</div>
+                      <div class="step-tags"><span class="step-tag tag-control">✍️ ลายเซ็น ผจก. กำกับรายงานปิดกะ</span><span class="step-tag tag-doc">Daily Closing Report</span></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+"""
+
+# Now write python script that will construct full HTML
+with open('build_songsod_html.py', 'w', encoding='utf-8') as f:
+    f.write(html_head)
+    f.write(tabs_html)
+
+print("Tabs written to build_songsod_html.py")
+
+  </div><!-- /content-col -->
+
+  <!-- Glassmorphism Side Detail Panel -->
+  <div class="panel-backdrop" id="panelBackdrop" onclick="closePanel()"></div>
+  <aside class="side-panel" id="sidePanel">
+    <button class="panel-close" onclick="closePanel()" title="ปิดแผงรายละเอียด">✕</button>
+    <div class="panel-code" id="pCode">ขั้นตอน 1.1</div>
+    <h3 class="panel-title" id="pTitle">ชื่อขั้นตอนการปฏิบัติงาน</h3>
+    <div>
+      <span class="panel-badge-role" id="pBadgeRole" style="background:#e0f2fe;color:#0369a1;">👤 ผู้รับผิดชอบ</span>
+    </div>
+
+    <!-- Section 1: Objective -->
+    <div class="panel-section">
+      <div class="panel-sec-title">🎯 วัตถุประสงค์และเป้าหมาย</div>
+      <div class="panel-sec-body" id="pObjective">วัตถุประสงค์ของขั้นตอนนี้</div>
+    </div>
+
+    <!-- Section 2: Detailed Procedure -->
+    <div class="panel-section">
+      <div class="panel-sec-title">📋 รายละเอียดขั้นตอนการปฏิบัติงาน</div>
+      <div class="panel-sec-body">
+        <ul class="panel-list" id="pDetails"></ul>
+      </div>
+    </div>
+
+    <!-- Section 3: Audit Controls -->
+    <div class="panel-section">
+      <div class="panel-sec-title">🛡️ จุดควบคุมความเสี่ยงและการตรวจสอบ (Audit Points)</div>
+      <div class="panel-sec-body">
+        <ul class="panel-list" id="pControls"></ul>
+      </div>
+    </div>
+
+    <!-- Section 4: Documents & Forms -->
+    <div class="panel-section">
+      <div class="panel-sec-title">📑 เอกสารและแบบฟอร์มที่เกี่ยวข้อง</div>
+      <div class="panel-sec-body" id="pDocs">ไม่มีเอกสารที่เกี่ยวข้อง</div>
+    </div>
+
+    <!-- Section 5: SLA -->
+    <div class="panel-section">
+      <div class="panel-sec-title">⏱️ ระยะเวลามาตรฐาน (SLA)</div>
+      <div class="panel-sec-body" id="pSla">ตามรอบการปฏิบัติงาน</div>
+    </div>
+
+    <!-- Section 6: Governance Alert -->
+    <div class="panel-alert" id="pAlert" style="display:none;">
+      <div class="panel-alert-title">⚠️ ข้อพึงระวังตามนโยบายองค์กร</div>
+      <div class="panel-alert-text" id="pAlertText">รายละเอียดข้อพึงระวัง</div>
+    </div>
+  </aside>
+</div><!-- /main-wrapper -->
+
+<script>
+const stepData = {
+  "1-1": {
+    "code": "1.1",
+    "title": "บริหารรายได้แผนกบริการส่งสด B2B, B2C, Plat form ขายออนไลน์",
+    "role": "ผู้จัดการแผนกส่งสด",
+    "roleBadge": "background:#f3e8ff;color:#7e22ce;",
+    "objective": "วางแผน กำกับ และผลักดันยอดขายในทุกช่องทาง (ลูกค้าร้านอาหาร/องค์กร B2B, ลูกค้าทั่วไป B2C, LINE MAN, Robinhood) ให้บรรลุเป้าหมายทางการเงินของบริษัท",
+    "details": [
+      "วิเคราะห์ยอดขายรายวัน รายสัปดาห์ และรายเดือน เทียบกับเป้าหมายงบประมาณ",
+      "วางแผนขยายฐานลูกค้าร้านอาหาร โรงแรม โรงเรียน (B2B) และโปรโมชันบนแพลตฟอร์มออนไลน์",
+      "ประเมินอัตราผลกำไรขั้นต้น (GP Margin) ในแต่ละช่องทางให้ไม่ต่ำกว่าเกณฑ์มาตรฐานองค์กร"
+    ],
+    "controls": [
+      "เปรียบเทียบยอดขายในระบบ ERP/POS กับรายงาน Platform Delivery สัปดาห์ละ 1 ครั้ง",
+      "รายงานสรุปผลประกอบการต่อผู้บริหารระดับฝ่ายและประธานเจ้าหน้าที่ปฏิบัติการทุกสิ้นเดือน"
+    ],
+    "docs": "รายงานยอดขายประจำวัน (Daily Sales Dashboard), รายงานสรุปผลประกอบการประจำเดือน",
+    "sla": "วิเคราะห์ทุกวัน / สรุปผู้บริหารทุกสิ้นเดือน",
+    "alertTitle": "⚠️ การกระทบยอดรายได้ครบวงจร",
+    "alertText": "ต้องตรวจสอบกระทบยอดขายจริงกับเงินโอนเข้าบัญชีบริษัทให้ตรงกัน 100% ห้ามมียอดค้างกระทบข้ามงวดเกิน 3 วันทำการ"
+  },
+  "1-2": {
+    "code": "1.2",
+    "title": "ควบคุมระบบงานทั้งหมดของส่งสด ดูแลลูกค้า, ราคาทุน, ราคาขาย สเปกสินค้า",
+    "role": "ผู้จัดการแผนกส่งสด",
+    "roleBadge": "background:#f3e8ff;color:#7e22ce;",
+    "objective": "สร้างมาตรฐานการตั้งราคาขายและควบคุมสเปกสินค้าสดให้คงคุณภาพ สะอาด สดใหม่ ปลอดภัย และมีกำไรเหมาะสม",
+    "details": [
+      "กำหนดสูตรโครงสร้างราคา (Pricing Matrix) ตามประเภทสินค้า (เนื้อสัตว์, ผักสด, อาหารทะเล, ของแห้ง)",
+      "อนุมัติสเปกมาตรฐานของสินค้าแต่ละรายการ เช่น เกรด ขนาด น้ำหนัก และบรรจุภัณฑ์",
+      "ทบทวนราคาทุนตลาดเช้าทุกวัน เพื่อปรับราคาขายในระบบให้สอดคล้องกับกลไกตลาดจริง"
+    ],
+    "controls": [
+      "ตรวจสอบสุ่มตรวจสเปกและราคาขายระบบกับราคาทุนจริงทุกวัน ป้องกันการตั้งราคาผิดพลาด",
+      "การให้ส่วนลดพิเศษแก่ลูกค้ารายใหญ่ต้องได้รับการอนุมัติตามอำนาจดำเนินการ (DOA)"
+    ],
+    "docs": "ตารางโครงสร้างราคา (Pricing Matrix), มาตรฐานสเปกสินค้า (Product Spec Sheet)",
+    "sla": "ทบทวนประจำวัน เวลา 05.00 น.",
+    "alertTitle": "⚖️ ความโปร่งใสในการตั้งราคา",
+    "alertText": "ห้ามปรับราคาขายโดยไม่มีตารางราคาทุนอ้างอิงจากแผงค้าในตลาด และต้องเก็บบันทึกประวัติราคาย้อนหลังเพื่อการสืบค้น"
+  },
+  "1-3": {
+    "code": "1.3",
+    "title": "ควบคุมจัดการระบบขนส่งสินค้า บริหารค่าขนส่งค่าสินค้าและบริการ",
+    "role": "ผู้จัดการแผนกส่งสด",
+    "roleBadge": "background:#f3e8ff;color:#7e22ce;",
+    "objective": "บริหารจัดการต้นทุนโลจิสติกส์ จัดเส้นทางส่งมอบสินค้าให้รวดเร็ว ตรงเวลา และสินค้าคงสภาพความสดสมบูรณ์ 100%",
+    "details": [
+      "กำหนดโครงสร้างค่าจัดส่งตามโซนระยะทาง (Zone Pricing) และควบคุมจำนวนรอบการวิ่งส่ง",
+      "คัดเลือกและประเมินผลการปฏิบัติงานของพนักงานขับรถส่งของและผู้ให้บริการขนส่งภายนอก",
+      "ตรวจสอบการใช้น้ำมันเชื้อเพลิงและการบำรุงรักษายานพาหนะให้อยู่ในงบประมาณ"
+    ],
+    "controls": [
+      "ตรวจสอบใบสรุปเส้นทางวิ่งรถ (Log Sheet) เปรียบเทียบกับระยะทาง GPS จริง",
+      "ควบคุมอัตราค่าจัดส่งเฉลี่ยต่อออเดอร์ให้อยู่ในกรอบเป้าหมายที่กำหนด"
+    ],
+    "docs": "ตารางค่าขนส่งตามโซน, บันทึกการใช้รถและน้ำมัน (Fleet Log Sheet)",
+    "sla": "ควบคุมทุกรอบการจัดส่งประจำวัน",
+    "alertTitle": "🚚 มาตรฐานความปลอดภัยการขนส่ง",
+    "alertText": "สินค้าควบคุมอุณหภูมิต้องใช้อุปกรณ์รักษาความเย็น (กล่องโฟม/เจลน้ำแข็ง) ทุกครั้ง และห้ามส่งสินค้าล่าช้าเกินเวลาที่นัดหมายเกิน 30 นาที"
+  },
+  "1-4": {
+    "code": "1.4",
+    "title": "ตรวจสอบเอกสารการซื้อขายราคาต้นทุน กำหนดราคาขาย",
+    "role": "ผู้จัดการแผนกส่งสด",
+    "roleBadge": "background:#f3e8ff;color:#7e22ce;",
+    "objective": "ตรวจสอบความถูกต้องของเอกสารต้นทุนการจัดซื้อจริงจากร้านค้า เพื่อความถูกต้องโปร่งใสทางบัญชี",
+    "details": [
+      "ตรวจเทียบใบเสร็จรับเงิน/บิลเงินสดของร้านค้าในตลาดกับใบสั่งซื้อและระบบบัญชีส่งสด",
+      "ตรวจสอบอัตรากำไรส่วนเพิ่ม (Mark-up) ให้ถูกต้องตามนโยบายองค์กรก่อนส่งใบเสนอราคาให้ลูกค้า",
+      "ลงนามอนุมัติในใบสรุปยอดต้นทุนจัดซื้อประจำวัน"
+    ],
+    "controls": [
+      "ทุกรายการจัดซื้อต้องมีใบสำคัญหรือบิลเงินสดที่มีชื่อร้านค้าและหมายเลขแผงค้าชัดเจน",
+      "สุ่มตรวจสอบราคากลางกับแผงค้าใกล้เคียงอย่างสม่ำเสมอ"
+    ],
+    "docs": "ใบสรุปต้นทุนจัดซื้อประจำวัน, บิลเงินสดร้านค้า, ใบเสนอราคาลูกค้า",
+    "sla": "ตรวจสอบและอนุมัติภายใน 11.00 น. ของวันทำการ",
+    "alertTitle": "📑 การควบคุมเอกสารการเงิน",
+    "alertText": "หากพบรายการต้นทุนผิดปกติหรือไม่มีเอกสารรับเงินประกอบ ต้องระงับการเบิกจ่ายและเรียกตรวจสอบทันที"
+  },
+  "1-5": {
+    "code": "1.5",
+    "title": "ดูแลจัดระบบงานให้เหมาะสมกับงาน",
+    "role": "ผู้จัดการแผนกส่งสด",
+    "roleBadge": "background:#f3e8ff;color:#7e22ce;",
+    "objective": "จัดสรรกำลังพล ตารางเวลาการทำงาน และอุปกรณ์เครื่องมือให้สอดคล้องกับช่วงเวลาเร่งด่วนของตลาดสด",
+    "details": [
+      "จัดตารางกะการทำงานของ Admin, Shopper, Checker และ Rider ให้ครอบคลุมช่วงตลาดเปิด (03.00 - 17.00 น.)",
+      "ปรับเกลี่ยอัตรากำลังในวันที่มีคำสั่งซื้อปริมาณมากเป็นพิเศษ (เทศกาล/วันหยุด)",
+      "ดูแลความพร้อมของอุปกรณ์ชั่งตวง อุปกรณ์แพ็คเกจจิ้ง และอุปกรณ์ไอที"
+    ],
+    "controls": [
+      "ตรวจสอบตารางเวรและการลงเวลาปฏิบัติงานผ่านระบบสแกนนิ้วมือ/แอปพลิเคชันองค์กร",
+      "ประเมินประสิทธิภาพการทำงานต่อคน (Orders per Person per Day)"
+    ],
+    "docs": "ตารางเวรการปฏิบัติงานประจำเดือน, รายงานสถิติคำสั่งซื้อรายชั่วโมง",
+    "sla": "วางแผนล่วงหน้าทุกสัปดาห์ / ปรับปรุงตามสถานการณ์",
+    "alertTitle": "⏱️ การบริหารเวลาช่วงเช้าตรู่",
+    "alertText": "ช่วงเวลา 04.00 - 08.00 น. เป็นช่วงวิกฤต ห้ามขาดกำลังพลในจุด Shopper และ Checker เกินกว่าแผนที่กำหนด"
+  },
+  "1-6": {
+    "code": "1.6",
+    "title": "เจรจา ต่อรอง สื่อสารงานขาย B2B B2C",
+    "role": "ผู้จัดการแผนกส่งสด",
+    "roleBadge": "background:#f3e8ff;color:#7e22ce;",
+    "objective": "สร้างความสัมพันธ์ทางการค้าและข้อตกลงระยะยาวกับลูกค้ารายใหญ่ เพิ่มปริมาณการสั่งซื้อที่สม่ำเสมอ",
+    "details": [
+      "เข้าพบลูกค้าร้านอาหาร ผู้ประกอบการแฟรนไชส์ หรือองค์กร เพื่อนำเสนอบริการส่งสด",
+      "เจรจาเงื่อนไขปริมาณการสั่งซื้อขั้นต่ำ (MOQ), รอบการส่ง, และระยะเวลาให้สินเชื่อการค้า (Credit Term)",
+      "จัดทำข้อตกลงและสัญญาให้บริการจัดส่งวัตถุดิบอาหารสดอย่างเป็นทางการ"
+    ],
+    "controls": [
+      "การให้เครดิตเทอมต้องผ่านการตรวจสอบสถานะทางการเงินและอนุมัติจากฝ่ายบริหารการเงิน",
+      "จัดทำสัญญาข้อตกลงเป็นลายลักษณ์อักษรและเก็บรักษาในระบบเอกสารสัญญาบริษัท"
+    ],
+    "docs": "สัญญาซื้อขายวัตถุดิบอาหาร, ใบคำขอเปิดบัญชีเครดิตการค้า",
+    "sla": "ตามรอบการเจรจาลูกค้าใหม่",
+    "alertTitle": "📝 เงื่อนไขการค้าที่เป็นธรรม",
+    "alertText": "ต้องระบุข้อกำหนดเรื่องการรับประกันคุณภาพสินค้าและการเคลมสินค้าให้ชัดเจนในสัญญา เพื่อป้องกันข้อพิพาท"
+  },
+  "1-7": {
+    "code": "1.7",
+    "title": "ตรวจสอบ คัดสรรค์ ดีลร้านค้า ตรวจสอบคุณภาพและราคาทุน",
+    "role": "ผู้จัดการแผนกส่งสด",
+    "roleBadge": "background:#f3e8ff;color:#7e22ce;",
+    "objective": "คัดเลือกแผงค้าพันธมิตรในตลาดยิ่งเจริญที่มีมาตรฐานสุขอนามัย ปลอดสารเคมี และราคาต้นทุนแข่งขันได้",
+    "details": [
+      "สำรวจแผงค้าเนื้อสัตว์ ผัก ผลไม้ และอาหารทะเลในตลาดที่มีป้ายรับรองมาตรฐาน (เช่น ปศุสัตว์ OK, ฮาลาล, อาหารปลอดภัย)",
+      "เจรจาตกลงราคาซื้อส่งในฐานะลูกค้ารายใหญ่เพื่อรับส่วนลดพิเศษหรือข้อตกลงคัดสินค้าเกรดเอ",
+      "ประเมินคุณภาพร้านค้าพันธมิตรรายเดือน หากพบสินค้าไม่ได้มาตรฐานให้เปลี่ยนร้านค้าทดแทน"
+    ],
+    "controls": [
+      "จัดทำทะเบียนรายชื่อร้านค้าพันธมิตรที่ผ่านการรับรอง (Approved Supplier List)",
+      "ห้ามซื้อสินค้าจากร้านค้าที่เคยถูกตักเตือนเรื่องสุขอนามัยจากฝ่ายบริหารตลาด"
+    ],
+    "docs": "ทะเบียนร้านค้าพันธมิตร (Vendor Master List), แบบประเมินคุณภาพร้านค้า",
+    "sla": "ทบทวนรายชื่อร้านค้าทุก 3 เดือน",
+    "alertTitle": "🥬 สุขอนามัยและความปลอดภัยอาหาร",
+    "alertText": "ต้องให้ความสำคัญกับร้านค้าที่มีใบรับรองตรวจสารปนเปื้อนและแหล่งที่มาของสินค้าที่ตรวจสอบย้อนกลับได้"
+  },
+  "1-8": {
+    "code": "1.8",
+    "title": "ตัดสินใจ แก้ไขปัญหา",
+    "role": "ผู้จัดการแผนกส่งสด",
+    "roleBadge": "background:#f3e8ff;color:#7e22ce;",
+    "objective": "ระงับและแก้ไขปัญหาเฉพาะหน้าในกระบวนการทำงานและข้อร้องเรียนของลูกค้าอย่างรวดเร็วและเป็นธรรม",
+    "details": [
+      "รับเรื่องกรณีสินค้าเสียหาย ชำรุด ขาดส่ง หรือไม่ตรงสเปกจาก Admin",
+      "ตัดสินใจแนวทางแก้ไขทันที เช่น จัดส่งสินค้าทดแทนด่วนภายใน 60 นาที หรือออกใบลดหนี้ในรอบบิลถัดไป",
+      "สืบหาสาเหตุที่แท้จริง (Root Cause) และปรับปรุงขั้นตอนไม่ให้เกิดซ้ำ"
+    ],
+    "controls": [
+      "บันทึกประวัติข้อร้องเรียนและการแก้ไขในสมุดทะเบียนปัญหาประจำวัน",
+      "กรณีการชดเชยค่าเสียหายเกินอำนาจให้รายงานผู้บริหารฝ่ายเพื่อขออนุมัติ"
+    ],
+    "docs": "แบบฟอร์มบันทึกการแก้ไขปัญหาและข้อร้องเรียน (Incident Report)",
+    "sla": "ตัดสินใจและแจ้งลูกค้าภายใน 15 นาที",
+    "alertTitle": "🤝 จิตวิทยาการบริการลูกค้า",
+    "alertText": "ยึดถือความพึงพอใจของลูกค้าเป็นสำคัญ ชี้แจงด้วยความสุภาพ และไม่โยนความผิดให้พนักงานระดับปฏิบัติการต่อหน้าลูกค้า"
+  },
+  "1-9": {
+    "code": "1.9",
+    "title": "ควบคุมดูแลค่าใช้จ่าย OT วัสดุสิ้นเปลืองสำนักงาน",
+    "role": "ผู้จัดการแผนกส่งสด",
+    "roleBadge": "background:#f3e8ff;color:#7e22ce;",
+    "objective": "ควบคุมต้นทุนการดำเนินงานของแผนกให้อยู่ในกรอบงบประมาณที่ได้รับอนุมัติ ป้องกันการสิ้นเปลือง",
+    "details": [
+      "ตรวจสอบความจำเป็นและอนุมัติการทำงานล่วงเวลา (OT) ก่อนเริ่มงานทุกครั้ง",
+      "ควบคุมการเบิกจ่ายถุงบรรจุภัณฑ์ กล่องกระดาษ สก๊อตเทป ถุงน้ำแข็ง และอุปกรณ์สำนักงาน",
+      "สรุปรายงานค่าใช้จ่ายประจำเดือนเปรียบเทียบกับงบประมาณ"
+    ],
+    "controls": [
+      "การทำ OT ต้องมีใบขออนุมัติที่มีหัวหน้างานลงนามชัดเจน",
+      "ตรวจนับสต็อกวัสดุสิ้นเปลืองทุกสิ้นสัปดาห์เพื่อควบคุมอัตราการสูญเสีย"
+    ],
+    "docs": "ใบขออนุมัติทำงานล่วงเวลา (OT Form), ทะเบียนเบิกจ่ายวัสดุสิ้นเปลือง",
+    "sla": "อนุมัติล่วงหน้า / สรุปยอดสิ้นเดือน",
+    "alertTitle": "💰 ความคุ้มค่าทางเศรษฐกิจ",
+    "alertText": "ค่าใช้จ่าย OT ต้องสอดคล้องกับปริมาณออเดอร์จริงที่เพิ่มขึ้น ไม่อนุมัติ OT ในกรณีงานล่าช้าจากความผิดพลาดในการบริหารงาน"
+  },
+  "2-1": {
+    "code": "2.1",
+    "title": "รับออเดอร์ จากทุกช่องทาง",
+    "role": "Admin",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "รวบรวมคำสั่งซื้อจากลูกค้าทุกช่องทาง (LINE OA, โทรศัพท์, แอปพลิเคชัน) เข้าสู่ศูนย์กลางข้อมูล",
+    "details": [
+      "เข้าสู่ระบบรับคำสั่งซื้อและมอนิเตอร์ข้อความจาก LINE Official Account และโทรศัพท์ของแผนก",
+      "เปิดรับรายการสั่งซื้อของวันพรุ่งนี้และรับคำสั่งซื้อด่วนในรอบวัน",
+      "ตอบรับลูกค้าทันทีด้วยข้อความมาตรฐานแจ้งการรับรายการเข้าคิว"
+    ],
+    "controls": [
+      "ตั้งค่าระบบอัตโนมัติแจ้งเตือนเมื่อมีออเดอร์ใหม่เข้ามาเกิน 5 นาทีโดยยังไม่มีแอดมินตอบ",
+      "เก็บบันทึกแชตข้อความคำสั่งซื้อไว้เป็นหลักฐานอ้างอิง"
+    ],
+    "docs": "ประวัติการแชต LINE OA, บันทึกรับคำสั่งซื้อทางโทรศัพท์",
+    "sla": "ตอบกลับลูกค้าภายใน 3 นาที",
+    "alertTitle": "📱 การสื่อสารที่ถูกต้อง",
+    "alertText": "ตรวจสอบข้อมูลผู้สั่งซื้อ เบอร์โทร และสถานที่จัดส่งให้ถูกต้องชัดเจนก่อนดำเนินการขั้นตอนถัดไป"
+  },
+  "2-2": {
+    "code": "2.2",
+    "title": "รับคำสั่งซื้อจากลูกค้า",
+    "role": "Admin",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "แจกแจงรายการสินค้า ปริมาณ น้ำหนัก และสเปกตามที่ลูกค้าต้องการอย่างละเอียดถี่ถ้วน",
+    "details": [
+      "อ่านรายการสั่งซื้อและตรวจสอบความครบถ้วนของชื่อสินค้า หน่วยนับ (กก./ชิ้น/แพ็ค) และขนาด",
+      "สอบถามความต้องการพิเศษเพิ่มเติม เช่น การหั่น การบด การชำแหละ หรือการแพ็คแยกลัง",
+      "ยืนยันรอบเวลาที่ลูกค้าต้องการรับสินค้าปลายทาง"
+    ],
+    "controls": [
+      "ทวนรายการสั่งซื้อกับลูกค้าอย่างน้อย 1 ครั้งก่อนกดยืนยัน",
+      "ระบุชื่อผู้สั่งซื้อและรหัสลูกค้าในระบบเพื่อประวัติการสั่งซื้อซ้ำ"
+    ],
+    "docs": "ใบสั่งซื้อสินค้า (Customer Purchase Order)",
+    "sla": "สรุปรายการภายใน 5 นาทีหลังรับเรื่อง",
+    "alertTitle": "📝 สเปกสินค้าที่ชัดเจน",
+    "alertText": "ห้ามใช้การคาดเดาความต้องการของลูกค้า หากรายการไม่ชัดเจน (เช่น ผักกาดขาว หรือ กะหล่ำปลี) ต้องสอบถามเพื่อยืนยันทันที"
+  },
+  "2-3": {
+    "code": "2.3",
+    "title": "ประสานงานกับลูกค้า และประสานงานกับ Shopper Checker และร้านค้า กรณีนอกเหนือคำสั่งซื้อในระบบ",
+    "role": "Admin",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "ตรวจสอบความพร้อมของสินค้าพิเศษหรือสินค้าที่มีตามฤดูกาลในตลาดก่อนรับยืนยันออเดอร์",
+    "details": [
+      "กรณีมีสินค้าพิเศษที่ไม่มีในแคตตาล็อกระบบ ให้โทร/วิทยุสื่อสารเช็กกับ Shopper ในตลาดสดทันที",
+      "Shopper เดินตรวจสอบแผงค้าและแจ้งราคากลางพร้อมสเปกกลับมายัง Admin",
+      "Admin โทรหรือพิมพ์แจ้งลูกค้าเพื่อยืนยันราคาและความต้องการสั่งซื้อ"
+    ],
+    "controls": [
+      "ได้รับความยินยอมเรื่องราคาและสเปกจากลูกค้าเป็นลายลักษณ์อักษร (ในแชต) ก่อนสั่งซื้อจริง",
+      "บันทึกรายการสินค้าพิเศษลงในระบบบันทึกช่วยจำ"
+    ],
+    "docs": "บันทึกสอบถามราคาสินค้าพิเศษ, แชตยืนยันคำสั่งซื้อ",
+    "sla": "ประสานงานเสร็จสิ้นภายใน 15 นาที",
+    "alertTitle": "⚡ การยืนยันราคาก่อนซื้อ",
+    "alertText": "สินค้าพิเศษที่ผันผวนด้านราคา ต้องแจ้งราคาทุนบวกมาร์จิ้นให้ลูกค้าอนุมัติก่อน Shopper จ่ายเงินซื้อทุกครั้ง"
+  },
+  "2-4": {
+    "code": "2.4",
+    "title": "คีย์ออเดอร์ เพื่อออกเอกสาร การขายให้ถูกต้องเรื่องราคาทุน ราคาขาย จำนวนการสั่งซื้อ เพื่อแจ้งยอดโอนชำระ",
+    "role": "Admin",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "บันทึกข้อมูลเข้าสู่ระบบขาย ออกใบสั่งซื้อ/ใบแจ้งยอด และตรวจสอบหลักฐานการชำระเงินของลูกค้า",
+    "details": [
+      "คีย์รายการสินค้า จำนวน ราคาทุน และราคาขายลงในระบบโปรแกรมขายส่งสด",
+      "ออกใบแจ้งยอดโอนเงิน (Proforma Invoice) ส่งให้ลูกค้าผ่าน LINE พร้อม QR Code บัญชีธนาคารบริษัท",
+      "ตรวจสอบสลิปการโอนเงินของลูกค้า (ยอดเงิน, วันเวลา, ชื่อบัญชีปลายทางตลาดยิ่งเจริญ) ให้ถูกต้องสมบูรณ์"
+    ],
+    "controls": [
+      "ลูกค้าเงินสดต้องโอนชำระเงินเต็มจำนวนก่อนปล่อยออเดอร์ให้จัดส่ง",
+      "ลูกค้าเครดิตเทอมต้องตรวจสอบว่าวงเงินคงเหลือไม่เกินเกณฑ์ที่ได้รับอนุมัติ"
+    ],
+    "docs": "ใบแจ้งยอดชำระเงิน, สลิปหลักฐานการโอนเงิน, ระบบโปรแกรมขาย",
+    "sla": "คีย์ข้อมูลและแจ้งยอดภายใน 10 นาที",
+    "alertTitle": "💰 ตรวจสอบสลิปโอนเงิน 100%",
+    "alertText": "ต้องตรวจสอบสลิปโอนเงินผ่านระบบ Krungthai/Bank Application ห้ามปล่อยสินค้าโดยไม่มีหลักฐานเงินเข้าบัญชีจริงเด็ดขาด"
+  },
+  "2-5": {
+    "code": "2.5",
+    "title": "ออกเอกสารให้ทันรอบส่งสินค้า มีเอกสารกำกับทุกครั้งในการออกส่งสินค้า และตรวจสอบเลขที่เอกสารก่อนส่ง",
+    "role": "Admin",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "จัดพิมพ์และส่งมอบเอกสารกำกับการขนส่งที่ถูกต้องให้พนักงานขับรถนำไปส่งมอบพร้อมสินค้า",
+    "details": [
+      "สั่งพิมพ์ใบส่งของ/ใบกำกับภาษีอย่างย่อ (Delivery Order) จำนวน 2 ชุด (ชุดลูกค้า 1 ชุด, ชุดเซ็นรับคืน 1 ชุด)",
+      "ตรวจเช็กเลขที่เอกสาร รหัสลูกค้า รายการ และจำนวนกล่องบรรจุให้ตรงกับป้าย Tag บนกล่องสินค้า",
+      "ส่งมอบเอกสารให้พนักงานขับรถพร้อมลงชื่อรับเอกสารในสมุดคุม"
+    ],
+    "controls": [
+      "ห้ามนำสินค้าขึ้นรถโดยไม่มีใบส่งของที่มีหมายเลขกำกับของระบบ",
+      "สุ่มตรวจนับจำนวนกล่องจริงเทียบกับตัวเลขในใบส่งของ"
+    ],
+    "docs": "ใบส่งของ (Delivery Order), ใบเสร็จรับเงิน/ใบกำกับภาษี, สมุดคุมเอกสารส่งของ",
+    "sla": "พิมพ์เอกสารเสร็จก่อนเวลารถออก 15 นาที",
+    "alertTitle": "📑 เอกสารกำกับการขนส่ง",
+    "alertText": "สินค้าทุกชิ้นที่ออกจากจุดกระจายสินค้าต้องมีเอกสารกำกับตามกฎระเบียบด้านภาษีและการควบคุมสินค้าของบริษัท"
+  },
+  "2-6": {
+    "code": "2.6",
+    "title": "จัดคิวรถส่งสินค้าให้ทันเวลาที่ลูกค้ากำหนดไว้ เพื่อไม่ให้เกิดความล่าช้า",
+    "role": "Admin",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "วางแผนเส้นทางและจัดคิวรถส่งของตามลำดับความเร่งด่วนและโซนพื้นที่อย่างมีประสิทธิภาพ",
+    "details": [
+      "จัดกลุ่มออเดอร์ตามโซนเส้นทาง (เช่น สายพหลโยธิน, สายรามอินทรา, สายวิภาวดี)",
+      "กำหนดรอบเวลาออกของรถแต่ละคันให้สัมพันธ์กับเวลาเปิดครัวของลูกค้าร้านอาหาร",
+      "มอบหมายงานให้พนักงานขับรถพร้อมระบุเวลาคาดหมายส่งมอบ (ETA) ของแต่ละจุด"
+    ],
+    "controls": [
+      "บันทึกเวลาปล่อยรถออกจากจุดกระจายสินค้าลงในระบบติดตาม",
+      "ตรวจสอบว่าปริมาณน้ำหนักสินค้าบนรถไม่เกินพิกัดความปลอดภัยของยานพาหนะ"
+    ],
+    "docs": "ตารางคิวรถขนส่ง (Dispatch Schedule), ใบจัดส่งตามเส้นทาง (Route Sheet)",
+    "sla": "จัดคิวรถเสร็จก่อนรอบออกเดินทาง 30 นาที",
+    "alertTitle": "⏱️ การบริหารเวลาจัดส่ง",
+    "alertText": "หากประเมินแล้วว่าจะไปถึงช้ากว่าเวลานัดหมายเกิน 15 นาที ต้องแจ้งเตือนลูกค้าและรายงานผู้จัดการแผนกทันที"
+  },
+  "2-7": {
+    "code": "2.7",
+    "title": "ก่อนรถออก ต้องแจ้งให้ลูกค้าทราบก่อนทุกครั้ง",
+    "role": "Admin",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "สื่อสารข้อมูลการเดินทาง เบอร์ติดต่อพนักงานขับรถ และเวลาคาดการณ์ให้ลูกค้าเตรียมตัวรับของ",
+    "details": [
+      "ถ่ายภาพสินค้าที่จัดเรียงเรียบร้อยบนรถส่งของ",
+      "ส่งข้อความแจ้งลูกค้าทาง LINE พร้อมระบุชื่อคนขับ เบอร์โทรศัพท์ และเวลาที่จะถึงโดยประมาณ",
+      "เปิดรับการติดต่อหากลูกค้าต้องการแจ้งเปลี่ยนจุดรับของหรือข้อแนะนำเส้นทางเข้าซอย"
+    ],
+    "controls": [
+      "ตรวจสอบให้แน่ใจว่าได้ส่งแจ้งเตือนลูกค้าครบทุกรายในเที่ยวรถคันนั้นๆ",
+      "บันทึกประวัติการแจ้งเตือนไว้ในระบบข้อความ"
+    ],
+    "docs": "ข้อความแจ้งเตือนการส่งสินค้าทาง LINE OA, ภาพถ่ายสินค้าบนรถ",
+    "sla": "ส่งข้อความแจ้งเตือน 5-10 นาทีก่อนรถออกจากแผนก",
+    "alertTitle": "📲 การสร้างความมั่นใจแก่ลูกค้า",
+    "alertText": "การแจ้งเตือนล่วงหน้าช่วยลดปัญหาคนขับไปถึงแล้วไม่มีผู้รับของ และแสดงถึงความใส่ใจในระดับพรีเมียม"
+  },
+  "2-8": {
+    "code": "2.8",
+    "title": "ติดตามงาน บริการสอบถาม ห่วงใยในการที่ลูกค้าได้รับสินค้าหรือยัง",
+    "role": "Admin",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "ตรวจสอบยืนยันการรับมอบสินค้าและประเมินความพึงพอใจในคุณภาพสินค้าและความสด",
+    "details": [
+      "ตรวจสอบสถานะการเซ็นรับของผ่านระบบคนขับ หรือสอบถามคนขับหลังเสร็จสิ้นการส่ง",
+      "ทักข้อความหรือโทรสอบถามลูกค้าว่าได้รับสินค้าครบถ้วนสมบูรณ์ คุณภาพสินค้าตรงตามความต้องการหรือไม่",
+      "บันทึกคะแนนความพึงพอใจหรือข้อเสนอแนะของลูกค้าลงในระบบ CRM"
+    ],
+    "controls": [
+      "พนักงานขับรถต้องนำใบส่งของที่มีลายมือชื่อผู้รับสินค้ากลับมาคืน Admin ทุกรอบ",
+      "หากลูกค้ามีข้อตำหนิ ต้องส่งต่อข้อมูลให้ผู้จัดการแผนกรับทราบภายใน 15 นาที"
+    ],
+    "docs": "ใบส่งของที่มีลายเซ็นผู้รับสินค้า, แบบประเมินความพึงพอใจลูกค้า",
+    "sla": "ติดตามผลภายใน 30-60 นาทีหลังการส่งมอบ",
+    "alertTitle": "❤️ บริการหลังการขาย",
+    "alertText": "หากสินค้ามีปัญหา ห้ามโต้เถียงกับลูกค้า ให้กล่าวคำขอโทษและรีบประสานงานเพื่อทำการเปลี่ยนหรือชดเชยตามนโยบายทันที"
+  },
+  "2-9": {
+    "code": "2.9",
+    "title": "จบงานในระบบและรับออเดอร์ของวันพรุ่งนี้ได้",
+    "role": "Admin",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "ปิดสถานะออเดอร์ของวัน ตรวจเช็กเอกสารเซ็นรับ และเตรียมความพร้อมสำหรับรอบสั่งซื้อถัดไป",
+    "details": [
+      "อัปเดตสถานะออเดอร์ในระบบทั้งหมดเป็น 'Completed' เมื่อได้รับเอกสารเซ็นรับครบถ้วน",
+      "รวบรวมเอกสารการขายทั้งหมดของวันส่งมอบให้ Admin Account ตรวจสอบกระทบยอด",
+      "เปิดรับและจัดหมวดหมู่ออเดอร์ล่วงหน้าสำหรับรอบจัดซื้อเช้าวันรุ่งขึ้น"
+    ],
+    "controls": [
+      "ตรวจสอบว่าไม่มีออเดอร์ค้างในสถานะ 'Pending' หรือ 'In-Transit' ข้ามวันโดยไม่มีเหตุผล",
+      "บันทึกยอดสรุปจำนวนออเดอร์และยอดขายประจำวัน"
+    ],
+    "docs": "รายงานสรุปปิดกะงาน Admin ประจำวัน (Daily Admin Closing Report)",
+    "sla": "ปิดระบบรอบวันภายในเวลา 16.00 น.",
+    "alertTitle": "🔒 ปิดรอบอย่างสมบูรณ์",
+    "alertText": "ออเดอร์ที่มีปัญหาค้างส่งต้องทำบันทึกหมายเหตุชี้แจงสาเหตุและแจ้งให้เวรเช้ารับทราบเพื่อติดตามงานต่อทันที"
+  },
+  "3-1": {
+    "code": "3.1",
+    "title": "รับออเดอร์จาก Admin",
+    "role": "Shopper + Checker",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "รับใบหยิบสินค้า (Picking List) วางแผนเส้นทางเดินซื้อของในตลาดสดอย่างมีประสิทธิภาพและทันเวลา",
+    "details": [
+      "รับรายการใบสั่งซื้อและใบเบิกของจาก Admin ในระบบหรือเอกสารกระดาษกันน้ำ",
+      "จัดกลุ่มรายการสินค้าตามโซนแผงค้าในตลาดยิ่งเจริญ (โซนผัก, โซนเนื้อหมู-ไก่-เนื้อ, โซนทะเล, โซนของแห้ง/เครื่องปรุง)",
+      "เตรียมรถเข็น กล่องโฟม ตาชั่งมือถือ และอุปกรณ์คัดแยกสินค้า"
+    ],
+    "controls": [
+      "ตรวจสอบความชัดเจนของจำนวนและหน่วยนับก่อนเริ่มเดินซื้อ",
+      "ตรวจเช็กยอดเงินทดรองจ่ายที่เบิกจาก Admin Account ว่าถูกต้องตรงตามเอกสาร"
+    ],
+    "docs": "ใบหยิบสินค้า (Picking List), ใบเบิกเงินทดรองจ่ายซื้อของ",
+    "sla": "เตรียมตัวและเริ่มเดินซื้อภายใน 04.00 น.",
+    "alertTitle": "🛒 การวางแผนเส้นทางเดินตลาด",
+    "alertText": "ต้องซื้อสินค้าแห้งและผักก่อน แล้วจึงซื้อของสดและของแช่แข็งเป็นลำดับสุดท้าย เพื่อรักษาความเย็นให้นานที่สุด"
+  },
+  "3-2": {
+    "code": "3.2",
+    "title": "ตรวจสอบสเปคและจัดซื้อสินค้าตามใบสั่งซื้อของลูกค้าให้ถูกต้อง",
+    "role": "Checker",
+    "roleBadge": "background:#ffedd5;color:#c2410c;",
+    "objective": "คัดเลือกสินค้าสดที่มีคุณภาพสูงสุด ตรงตามสเปกที่ลูกค้ากำหนด ทั้งขนาด น้ำหนัก และความสด",
+    "details": [
+      "ตรวจเช็กตาชั่งที่แผงค้า และชั่งซ้ำด้วยตาชั่งมาตรฐานของแผนกส่งสดที่ผ่านการรับรอง",
+      "ตรวจสอบความสดของเนื้อสัตว์ (สีสด ไร้กลิ่นผิดปกติ), ผักสด (ไม่ช้ำ ไม่เน่าเสีย), อาหารทะเล (ตาใส เหงือกแดง)",
+      "ระบุชื่อแผงค้าและราคาทุนจริงที่ซื้อลงในใบเบิกสินค้าทันทีที่ตกลงซื้อ"
+    ],
+    "controls": [
+      "ห้ามรับสินค้าที่ไม่ตรงตามสเปกของลูกค้า เช่น ลูกค้าสั่งเนื้อสันนอก แต่แผงค้าส่งเนื้อสะโพก",
+      "ตาชั่งต้องผ่านการทดสอบตุ้มน้ำหนักมาตรฐาน (Calibration) ทุกเช้า"
+    ],
+    "docs": "ใบตรวจสอบคุณภาพสินค้า (QC Checklist), ใบเสร็จ/บิลเงินสดแผงค้า",
+    "sla": "ตรวจเช็กทันทีขณะจัดซื้อที่แผงค้า",
+    "alertTitle": "🔍 คุณภาพและสเปกคือหัวใจ",
+    "alertText": "สินค้าสดที่มีรอยช้ำหรือใกล้หมดอายุ ห้ามรับเข้ามาในระบบเด็ดขาด หากแผงค้าไม่มีของเกรดเอ ให้แจ้ง Admin เพื่อขอคำแนะนำทันที"
+  },
+  "3-3": {
+    "code": "3.3",
+    "title": "แพ็คกิ้งสินค้าพร้อมส่งคัดแยกของสดของแห้ง",
+    "role": "Shopper",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "บรรจุสินค้าลงในบรรจุภัณฑ์ที่สะอาด ถูกสุขอนามัย แยกประเภท และรักษาอุณหภูมิได้อย่างเหมาะสม",
+    "details": [
+      "นำสินค้ามายังโต๊ะแพ็คกิ้งกลางของแผนกส่งสด ทำความสะอาดภายนอกและตัดแต่งตามคำสั่งซื้อ",
+      "คัดแยกบรรจุภัณฑ์: ของแห้งใส่ถุง/กล่องกระดาษ, ของสดใส่ถุงซีลหรือกล่องโฟมพร้อมเจลน้ำแข็ง",
+      "ติดป้ายชื่อลูกค้า หมายเลขออเดอร์ และรายการสินค้ากำกับที่หน้ากล่องทุกกล่องอย่างชัดเจน"
+    ],
+    "controls": [
+      "ห้ามวางของสดปะปนกับของแห้งในบรรจุภัณฑ์เดียวกันเด็ดขาด",
+      "สวมถุงมือ หมวกคลุมผม และผ้ากันเปื้อนตามมาตรฐานความปลอดภัยทางอาหาร (GMP/GHP)"
+    ],
+    "docs": "ป้ายกำกับสินค้าหน้ากล่อง (Customer Box Tag), รายการตรวจสอบการแพ็ค",
+    "sla": "แพ็คเสร็จสิ้นก่อนเวลารถออก 20 นาที",
+    "alertTitle": "🧊 การควบคุมอุณหภูมิและความสะอาด",
+    "alertText": "สินค้ากลุ่มเนื้อสัตว์และอาหารทะเลต้องมีน้ำแข็งรองด้านล่างและปิดคลุมด้านบน อุณหภูมิในกล่องต้องไม่เกิน 4°C"
+  },
+  "3-4": {
+    "code": "3.4",
+    "title": "เสนอราคา",
+    "role": "Shopper",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "รวบรวมและแจ้งระดับราคาตลาดสดประจำวันให้ Admin รับทราบเพื่อใช้ในการคำนวณราคาขาย",
+    "details": [
+      "สำรวจราคาสินค้าเกษตรและเนื้อสัตว์ที่แผงค้าหลักของตลาดตลาดยิ่งเจริญ",
+      "แจ้งข้อมูลราคาเปิดตลาดเช้าเข้ากลุ่มสื่อสารภายในของแผนก",
+      "รายงานแนวโน้มสินค้าที่มีการปรับขึ้นหรือลงราคาผิดปกติจากวันก่อนหน้า"
+    ],
+    "controls": [
+      "อ้างอิงราคาจากแผงค้ามาตรฐานอย่างน้อย 2-3 แผงเพื่อเปรียบเทียบ",
+      "บันทึกราคาอ้างอิงลงในตารางสถิติราคาประจำวัน"
+    ],
+    "docs": "รายงานสำรวจราคาตลาดเช้า (Morning Market Price Survey)",
+    "sla": "แจ้งข้อมูลภายใน 05.00 น. ของทุกวัน",
+    "alertTitle": "📊 ความแม่นยำของข้อมูลราคา",
+    "alertText": "ราคาสินค้าสดในตลาดมีความผันผวนสูง การแจ้งราคาที่แม่นยำจะช่วยป้องกันการตั้งราคาขายที่ขาดทุนหรือสูงเกินไป"
+  },
+  "3-5": {
+    "code": "3.5",
+    "title": "ดีลราคาในการสั่งซื้อ",
+    "role": "Shopper",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "ต่อรองราคาซื้อส่งกับร้านค้าพันธมิตรให้ได้ต้นทุนที่คุ้มค่าที่สุดภายใต้มาตรฐานคุณภาพคงเดิม",
+    "details": [
+      "เจรจาขอราคาพิเศษสำหรับการซื้อยกลัง ยกกระสอบ หรือปริมาณมากเป็นประจำ",
+      "ตกลงเงื่อนไขการแถม การตัดแต่ง หรือบริการส่งถึงจุดแพ็คกิ้งของแผนก",
+      "สรุปยอดซื้อและรับใบเสร็จหรือบิลเงินสดที่มีลายเซ็นพ่อค้าแม่ค้ากำกับ"
+    ],
+    "controls": [
+      "ราคาทุนที่ตกลงต้องไม่เกินเพดานที่ผู้จัดการแผนกกำหนดไว้",
+      "ห้ามรับผลประโยชน์ส่วนตัวหรือส่วนลดส่วนตัวจากร้านค้าในตลาดเด็ดขาด"
+    ],
+    "docs": "บิลเงินสดร้านค้า, ตารางเปรียบเทียบราคาซื้อส่ง",
+    "sla": "เสร็จสิ้นตามกระบวนการเดินซื้อในแต่ละแผง",
+    "alertTitle": "⚖️ จริยธรรมในการจัดซื้อ",
+    "alertText": "การจัดซื้อทุกรายการต้องโปร่งใสและตรวจสอบราคาย้อนหลังได้กับร้านค้าในตลาดทุกเมื่อตามนโยบายต่อต้านการทุจริต"
+  },
+  "3-6": {
+    "code": "3.6",
+    "title": "ประสานงาน เพื่อสินค้าไม่ครบขาด อาจต้องเสนอสินค้าทดแทน",
+    "role": "Shopper",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "แก้ปัญหาสินค้าขาดตลาดอย่างรวดเร็ว โดยหาทางเลือกสินค้าทดแทนที่มีคุณภาพใกล้เคียงกัน",
+    "details": [
+      "เมื่อพบว่าสินค้าบางรายการไม่มีในตลาด ให้โทรแจ้ง Admin และ Checker ทันที",
+      "เสนอรายการสินค้าทดแทน เช่น ไซส์ใกล้เคียงกัน หรือแบรนด์อื่นที่มีคุณภาพเทียบเท่า พร้อมแจ้งส่วนต่างราคา",
+      "รอการยืนยันอนุมัติจากลูกค้าผ่าน Admin ก่อนตัดสินใจซื้อสินค้าทดแทน"
+    ],
+    "controls": [
+      "ห้ามซื้อสินค้าทดแทนโดยพลการโดยที่ลูกค้ายังไม่ได้อนุมัติ",
+      "หากลูกค้าปฏิเสธสินค้าทดแทน ให้แจ้งยกเลิกรายการและคืนเงินค่าสินค้านั้นๆ"
+    ],
+    "docs": "บันทึกแจ้งสินค้าทดแทน, ข้อความอนุมัติจากลูกค้า",
+    "sla": "ประสานงานและสรุปผลภายใน 10 นาที",
+    "alertTitle": "⚠️ ความโปร่งใสในการทดแทนสินค้า",
+    "alertText": "หากสินค้าทดแทนมีราคาต่ำกว่า ต้องปรับลดราคาในบิลให้ลูกค้า ห้ามคิดราคาเดิมของสินค้าเกรดสูงกว่า"
+  },
+  "3-7": {
+    "code": "3.7",
+    "title": "จัดทำเอกสารราคาต้นทุน จำนวนปิดระบบบัญชีในแต่ละวันเพื่อส่งบัญชีในแผนกส่งสด",
+    "role": "Shopper",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "รวบรวมบิลเงินสด เอกสารการซื้อจริง และเคลียร์เงินทดรองจ่ายกับ Admin Account อย่างถูกต้องครบถ้วน",
+    "details": [
+      "รวบรวมบิลเงินสดและใบเสร็จจากแผงค้าทั้งหมด เรียงลำดับตามใบสั่งซื้อ",
+      "กรอกข้อมูลลงในแบบฟอร์มสรุปการจัดซื้อประจำวัน (ชื่อแผงค้า, สินค้า, จำนวน, ราคาต่อหน่วย, ยอดเงินรวม)",
+      "คำนวณยอดเงินสดคงเหลือและส่งมอบเงินทอนพร้อมเอกสารให้ Admin Account ตรวจนับและลงนามรับมอบ"
+    ],
+    "controls": [
+      "ยอดรวมในบิลซื้อของ + เงินสดคงเหลือ ต้องเท่ากับเงินทดรองจ่ายที่เบิกไป 100%",
+      "ทั้งผู้ส่งมอบ (Shopper) และผู้รับมอบ (Admin Account) ต้องลงนามคู่กันในใบเคลียร์เงิน"
+    ],
+    "docs": "ใบสรุปการจัดซื้อประจำวัน, บิลเงินสดร้านค้า, ใบเคลียร์เงินทดรองจ่าย",
+    "sla": "ส่งมอบและเคลียร์เงินภายใน 12.00 น. ของทุกวัน",
+    "alertTitle": "💵 การกระทบยอดเงินสดให้ตรง 100%",
+    "alertText": "หากพบยอดเงินขาดหรือเกิน ต้องตรวจสอบบิลทีละรายการร่วมกับ Admin Account ทันที และบันทึกหมายเหตุชี้แจง"
+  },
+  "4-1": {
+    "code": "4.1",
+    "title": "จัดทำเอกสารรายงานการซื้อ-ขายทั้งหมด ภายในวันนั้นๆ",
+    "role": "Admin Account",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "รวบรวมข้อมูลธุรกรรมการซื้อและการขายทั้งหมดของวันเพื่อบันทึกบัญชีต้นทุนและรายได้",
+    "details": [
+      "นำข้อมูลคำสั่งซื้อที่เสร็จสมบูรณ์จาก Admin และข้อมูลต้นทุนจริงจาก Shopper เข้าสู่ระบบบัญชี",
+      "คำนวณกำไรขั้นต้น (Gross Profit) ของแต่ละออเดอร์และยอดรวมของวัน",
+      "พิมพ์รายงานสรุปยอดซื้อ-ขายประจำวัน (Daily Purchase & Sales Report)"
+    ],
+    "controls": [
+      "ตรวจสอบให้แน่ใจว่าทุกรายการขายมีรายการต้นทุนซื้อคู่กันอย่างสมบูรณ์",
+      "ระบบต้องป้องกันการแก้ไขข้อมูลย้อนหลังหลังจากปิดยอดประจำวันแล้ว"
+    ],
+    "docs": "รายงานการซื้อ-ขายประจำวัน (Daily Transaction Report), ระบบ ERP บัญชี",
+    "sla": "จัดทำเสร็จสิ้นภายใน 15.00 น.",
+    "alertTitle": "📑 การลงบัญชีที่โปร่งใส",
+    "alertText": "ตัวเลขยอดขายและต้นทุนต้องตรงกับหลักฐานเอกสารต้นฉบับทุกประการเพื่อรองรับการตรวจสอบจากผู้ตรวจสอบภายใน"
+  },
+  "4-2": {
+    "code": "4.2",
+    "title": "จัดทำเอกสาร ตามงานแก้ไขออกใบกำกับภาษี , ใบลดหนี้",
+    "role": "Admin Account",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "ออกเอกสารภาษีมูลค่าเพิ่มที่ถูกต้องตามกฎหมาย และดำเนินการปรับปรุงยอดหนี้กรณียกเลิกหรือส่งคืนสินค้า",
+    "details": [
+      "ตรวจสอบข้อมูลชื่อ ที่อยู่ และเลขประจำตัวผู้เสียภาษี 13 หลักของลูกค้านิติบุคคล",
+      "ออกใบกำกับภาษีเต็มรูป (Tax Invoice) ผ่านระบบบัญชีของบริษัท",
+      "กรณีมีสินค้าคืนหรือลดราคา ให้จัดทำใบลดหนี้ (Credit Note) ตามมาตรา 86/10 แห่งประมวลรัษฎากร พร้อมระบุเหตุผล"
+    ],
+    "controls": [
+      "การออกใบลดหนี้ต้องได้รับอนุมัติจากผู้จัดการแผนกส่งสดและผู้จัดการฝ่ายบัญชี",
+      "เก็บสำเนาใบกำกับภาษีและใบลดหนี้เรียงตามลำดับเล่มที่/เลขที่ห้ามสูญหาย"
+    ],
+    "docs": "ใบกำกับภาษีเต็มรูป, ใบลดหนี้ (Credit Note), หนังสือขอแก้ไขเอกสาร",
+    "sla": "ออกเอกสารภายใน 24 ชม. หลังได้รับคำขอ",
+    "alertTitle": "🧾 ความถูกต้องตามหลักสรรพากร",
+    "alertText": "การออกใบลดหนี้ต้องมีเอกสารรับคืนสินค้าจริงแนบประกอบทุกครั้ง ห้ามออกใบลดหนี้ลอยโดยไม่มีมูลเหตุทางภาษี"
+  },
+  "4-3": {
+    "code": "4.3",
+    "title": "จัดเก็บและบันทึกข้อมูลการซื้อ - ขาย",
+    "role": "Admin Account",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "จัดเก็บเอกสารทางกายภาพและสำรองข้อมูลดิจิทัลตามระเบียบบริษัทเพื่อความปลอดภัยและการสืบค้น",
+    "details": [
+      "เจาะแฟ้มจัดเก็บเอกสารใบส่งของ ใบเสร็จรับเงิน และบิลซื้อ แยกตามวันและเดือนอย่างเป็นระบบ",
+      "สแกนเอกสารสำคัญเข้าสู่ระบบ Cloud Document Archive ขององค์กร",
+      "สำรองฐานข้อมูลการขายประจำวันลงในระบบเซิร์ฟเวอร์หลัก"
+    ],
+    "controls": [
+      "แฟ้มเอกสารตัวจริงต้องเก็บในตู้เอกสารที่มีกุญแจล็อกปลอดภัย",
+      "กำหนดสิทธิ์การเข้าถึงข้อมูลดิจิทัลเฉพาะบุคลากรที่เกี่ยวข้องเท่านั้น"
+    ],
+    "docs": "แฟ้มเอกสารการซื้อขายประจำเดือน, ระบบคลาวด์จัดเก็บเอกสาร",
+    "sla": "จัดเก็บเอกสารของวันให้เสร็จสิ้นภายในสิ้นวัน",
+    "alertTitle": "🔒 อายุการเก็บรักษาเอกสาร",
+    "alertText": "เอกสารทางการเงินและภาษีต้องเก็บรักษาไว้ไม่น้อยกว่า 5 ปี ตามประมวลรัษฎากรและนโยบายบรรษัทภิบาลของบริษัท"
+  },
+  "4-4": {
+    "code": "4.4",
+    "title": "ติดตามการชำระเงินค่าสินค้าออกบิล วางบิล ตามเอกสาร",
+    "role": "Admin Account",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "บริหารลูกหนี้การค้า (Accounts Receivable) เรียกเก็บเงินค่าสินค้าจากลูกค้า B2B ให้ตรงตามกำหนดเวลา",
+    "details": [
+      "จัดทำใบวางบิล (Billing Note) รวบรวมใบส่งของตามรอบดิวของลูกค้าแต่ละราย",
+      "ส่งใบวางบิลให้แผนกบัญชีของลูกค้าทางอีเมลหรือไปรษณีย์ และติดตามรับเอกสารเซ็นรับวางบิล",
+      "ตรวจสอบยอดเงินโอนเข้าบัญชีบริษัทในวันครบกำหนดชำระเงิน และออกใบเสร็จรับเงินส่งให้ลูกค้า"
+    ],
+    "controls": [
+      "จัดทำรายงานวิเคราะห์อายุลูกหนี้ (Aging Report) ทุกสิ้นสัปดาห์",
+      "หากมียอดค้างชำระเกินกำหนด (Overdue) เกิน 7 วัน ให้รายงานผู้จัดการแผนกเพื่อระงับการปล่อยออเดอร์ใหม่"
+    ],
+    "docs": "ใบวางบิล, ใบเสร็จรับเงิน, รายงานอายุหนี้ (Aging Report)",
+    "sla": "วางบิลตามรอบดิว / ติดตามเงินโอนในวันครบกำหนด",
+    "alertTitle": "📑 การบริหารสภาพคล่อง",
+    "alertText": "ต้องประสานงานกับฝ่ายการเงินเพื่อยืนยันยอดเงินเข้าจริงก่อนออกใบเสร็จรับเงินฉบับจริงให้ลูกค้าเสมอ"
+  },
+  "4-5": {
+    "code": "4.5",
+    "title": "ตอบ - ถามสื่อสารงานขายลูกค้า",
+    "role": "Admin Account",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "ให้บริการข้อมูลราคาสินค้า โปรโมชัน และให้คำแนะนำแก่ลูกค้าผ่านช่องทางออนไลน์ด้วยความสุภาพ",
+    "details": [
+      "มอนิเตอร์ช่องทางข้อความของแอปพลิเคชันเดลิเวอรี่และเพจส่งสด",
+      "ให้ข้อมูลรายละเอียดสินค้า แหล่งที่มา สเปก และเวลาทำการจัดส่ง",
+      "ช่วยประสานงานแก้ปัญหาข้อสงสัยเกี่ยวกับรายการในบิลหรือใบกำกับภาษี"
+    ],
+    "controls": [
+      "ใช้ถ้อยคำสุภาพตามมาตรฐาน Customer Service Script ของบริษัท",
+      "บันทึกคำถามที่พบบ่อย (FAQ) เพื่อนำไปปรับปรุงข้อมูลหน้าเว็บและแอปพลิเคชัน"
+    ],
+    "docs": "ประวัติการตอบข้อความลูกค้า, คู่มือมาตรฐานการตอบคำถาม (Script)",
+    "sla": "ตอบกลับข้อความภายใน 5 นาที",
+    "alertTitle": "🤝 ภาพลักษณ์แบรนด์ส่งสด",
+    "alertText": "การสื่อสารข้อมูลเรื่องราคาและค่าจัดส่งต้องชัดเจน ตรงไปตรงมา และไม่ทำให้ลูกค้าเข้าใจผิดในเงื่อนไขการบริการ"
+  },
+  "4-6": {
+    "code": "4.6",
+    "title": "รับออเดอร์ผ่านช่องทางออนไลน์ Lime man , Robinhood",
+    "role": "Admin Account",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "บริหารจัดการคำสั่งซื้อผ่านแอปพลิเคชันเดลิเวอรี่ภายนอก (Merchant Application) อย่างราบรื่น",
+    "details": [
+      "เปิดระบบรับออเดอร์บนเครื่องแท็บเล็ต Merchant App (LINE MAN Wongnai x Robinhood) ตามเวลาเปิดทำการ",
+      "กดรับออเดอร์ (Accept Order) ทันทีที่มีสัญญาณแจ้งเตือน และพิมพ์ใบเตรียมสินค้าส่งต่อให้ Shopper",
+      "ตรวจสอบความพร้อมของสินค้าและอัปเดตสต็อกในแอปพลิเคชันกรณีสินค้าบางรายการหมด (Sold Out)"
+    ],
+    "controls": [
+      "ห้ามปล่อยให้ออเดอร์หลุด (Auto Cancel) เกินเวลาที่แพลตฟอร์มกำหนด",
+      "ตรวจสอบราคาขายและค่า GP ของแอปพลิเคชันให้ถูกต้องตรงตามสัญญาพันธมิตร"
+    ],
+    "docs": "รายงานคำสั่งซื้อผ่าน Merchant Application, ใบพิมพ์ออเดอร์หน้าร้าน",
+    "sla": "กดรับออเดอร์ภายใน 2 นาที",
+    "alertTitle": "📱 การควบคุมออเดอร์เดลิเวอรี่",
+    "alertText": "ต้องตรวจสอบชื่อไรเดอร์และหมายเลขรหัสออเดอร์ (Order ID) ก่อนส่งมอบถุงสินค้าให้ไรเดอร์ภายนอกทุกครั้ง"
+  },
+  "4-7": {
+    "code": "4.7",
+    "title": "จัดทำเอกสารขายออนไลน์ส่งฝ่ายบัญชี",
+    "role": "Admin Account",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "สรุปยอดขาย ค่าธรรมเนียม GP และยอดเงินโอนสุทธิจากแพลตฟอร์มเดลิเวอรี่เพื่อส่งฝ่ายบัญชีกลาง",
+    "details": [
+      "ดาวน์โหลดรายงานยอดขายประจำวันจากระบบหลังบ้านของ LINE MAN และ Robinhood",
+      "คำนวณหักค่าธรรมเนียมการใช้บริการ (GP) และภาษีมูลค่าเพิ่มส่วนของแพลตฟอร์ม",
+      "จัดทำใบปะหน้าสรุปยอดขายออนไลน์แนบรายงานส่งให้ฝ่ายบัญชีการเงินส่วนกลางของตลาดยิ่งเจริญ"
+    ],
+    "controls": [
+      "ตรวจสอบยอดเงินโอนสุทธิที่ได้รับจากแพลตฟอร์มเข้าบัญชีบริษัทให้ตรงกับรายงานยอดขาย",
+      "ติดตามทวงถามกรณีเงินเข้าไม่ครบหรือถูกหักค่าปรับผิดพลาด"
+    ],
+    "docs": "รายงานสรุปยอดขายแพลตฟอร์มออนไลน์ (Platform Settlement Report), ใบโอนเงิน",
+    "sla": "ส่งเอกสารให้ฝ่ายบัญชีภายใน 11.00 น. ของวันทำการถัดไป",
+    "alertTitle": "💰 กระทบยอด GP แพลตฟอร์ม",
+    "alertText": "ต้องตรวจสอบอัตราหัก GP ให้ตรงตามสัญญา และติดตามใบกำกับภาษีค่าบริการจากบริษัทแพลตฟอร์มมาบันทึกภาษีซื้อให้ครบถ้วน"
+  },
+  "4-8": {
+    "code": "4.8",
+    "title": "ควบคุมดูแล เบิก - จ่ายซื้อสินค้าที่สั่ง",
+    "role": "Admin Account",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "บริหารเงินสดหมุนเวียน (Cash on Hand) และเงินสดย่อยสำหรับการจัดซื้อสินค้าสดในตลาดอย่างรัดกุม",
+    "details": [
+      "จัดเตรียมเงินสดสำรองจ่ายสำหรับ Shopper ตามประมาณการยอดสั่งซื้อประจำวัน",
+      "บันทึกการจ่ายเงินทดรองในสมุดคุมเงินสด โดยให้ Shopper ลงลายมือชื่อรับเงิน",
+      "เก็บรักษาเงินสดที่เหลือและเงินทอนในตู้เซฟนิรภัยของแผนกที่มีรหัสผ่านและการล็อกสองชั้น"
+    ],
+    "controls": [
+      "ตรวจนับเงินสดในเซฟร่วมกับผู้จัดการแผนกทุกวันก่อนเปิดและหลังปิดทำการ",
+      "มีวงเงินเพดานการถือครองเงินสดสูงสุด (Cash Limit) หากเกินต้องนำฝากเข้าบัญชีธนาคารทันที"
+    ],
+    "docs": "สมุดทะเบียนคุมเงินสด (Petty Cash Book), ใบสำคัญจ่ายเงินทดรอง",
+    "sla": "ควบคุมทุกครั้งที่มีการเบิก-จ่ายเงิน",
+    "alertTitle": "🔒 ความปลอดภัยของการเก็บรักษาเงินสด",
+    "alertText": "ห้ามเก็บเงินสดไว้นอกตู้เซฟ และห้ามพนักงานที่ไม่ได้รับมอบหมายเข้าถึงกุญแจหรือรหัสเซฟเด็ดขาด"
+  },
+  "4-9": {
+    "code": "4.9",
+    "title": "ปิดยอดซื้อ-ขายประจำวัน ทุกวัน",
+    "role": "Admin Account",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "สรุปผลการดำเนินงานทางการเงินประจำวัน กระทบยอดบัญชี และเสนอรายงานให้ผู้จัดการแผนกอนุมัติ",
+    "details": [
+      "กระทบยอดเงินสดในมือ + ยอดเงินโอนเข้าบัญชีธนาคาร + ยอดลูกหนี้ค้างชำระ ให้เท่ากับยอดขายรวมประจำวัน",
+      "จัดทำรายงานการปิดยอดประจำวัน (Daily Closing Statement) สรุปยอดขาย ต้นทุนซื้อ กำไรขั้นต้น และค่าใช้จ่าย",
+      "เสนอรายงานให้ผู้จัดการแผนกส่งสดตรวจสอบและลงลายมือชื่อรับรองก่อนจัดส่งฝ่ายบริหาร"
+    ],
+    "controls": [
+      "รายงานปิดยอดต้องมีลายมือชื่อผู้จัดทำ (Admin Account) และผู้ตรวจรับรอง (ผู้จัดการแผนก) ครบถ้วน",
+      "หากพบส่วนต่างยอดเงิน (Discrepancy) แม้เพียง 1 บาท ต้องตรวจสอบหาสาเหตุและบันทึกชี้แจงในรายงาน"
+    ],
+    "docs": "รายงานการปิดยอดประจำวัน (Daily Financial Closing Report), รายงาน Statement ธนาคาร",
+    "sla": "ปิดยอดเสร็จสิ้นภายใน 17.30 น. ของทุกวันทำการ",
+    "alertTitle": "✍️ ลายมือชื่อผู้จัดการกำกับรับรอง",
+    "alertText": "เอกสารรายงานปิดกะและรายงานการเงินประจำวันต้องมีลายมือชื่อผู้จัดการแผนกกำกับรับรองทุกฉบับ ห้ามละเว้นเด็ดขาด"
+  }
+};
+
+// Switch Tabs
+function switchTab(index) {
+  const tabs = document.querySelectorAll('.tab-btn');
+  const contents = document.querySelectorAll('.tab-content');
+
+  tabs.forEach((t, i) => {
+    if (i === index) {
+      t.classList.add('active');
+    } else {
+      t.classList.remove('active');
+    }
+  });
+
+  contents.forEach((c, i) => {
+    if (i === index) {
+      c.classList.add('active');
+    } else {
+      c.classList.remove('active');
+    }
+  });
+
+  closePanel();
+  window.scrollTo({ top: 180, behavior: 'smooth' });
+}
+
+// Open Side Detail Panel
+function openPanel(stepId) {
+  const data = stepData[stepId];
+  if (!data) return;
+
+  // Active step styling
+  document.querySelectorAll('.step-node').forEach(s => s.classList.remove('active'));
+  if (event && event.currentTarget) {
+    event.currentTarget.classList.add('active');
+  }
+
+  // Populate data
+  document.getElementById('pCode').textContent = `ขั้นตอน ${data.code}`;
+  document.getElementById('pTitle').textContent = data.title;
+  
+  const badge = document.getElementById('pBadgeRole');
+  badge.textContent = `👤 ${data.role}`;
+  badge.style = data.roleBadge || 'background:#e0f2fe;color:#0369a1;';
+
+  document.getElementById('pObjective').textContent = data.objective || '-';
+
+  // Details List
+  const detailsUl = document.getElementById('pDetails');
+  detailsUl.innerHTML = '';
+  if (data.details && data.details.length > 0) {
+    data.details.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      detailsUl.appendChild(li);
+    });
+  }
+
+  // Controls List
+  const controlsUl = document.getElementById('pControls');
+  controlsUl.innerHTML = '';
+  if (data.controls && data.controls.length > 0) {
+    data.controls.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      controlsUl.appendChild(li);
+    });
+  }
+
+  // Docs
+  document.getElementById('pDocs').textContent = data.docs || 'ไม่มีเอกสารระบุ';
+
+  // SLA
+  document.getElementById('pSla').textContent = data.sla || '-';
+
+  // Alert Box
+  const alertBox = document.getElementById('pAlert');
+  if (data.alertTitle) {
+    alertBox.style.display = 'block';
+    alertBox.querySelector('.panel-alert-title').textContent = data.alertTitle;
+    document.getElementById('pAlertText').textContent = data.alertText || '';
+  } else {
+    alertBox.style.display = 'none';
+  }
+
+  // Open Panel
+  document.getElementById('sidePanel').classList.add('open');
+  document.getElementById('contentCol').classList.add('shrunk');
+  if (window.innerWidth <= 900) {
+    document.getElementById('panelBackdrop').classList.add('open');
+  }
+}
+
+// Close Side Panel
+function closePanel() {
+  document.getElementById('sidePanel').classList.remove('open');
+  document.getElementById('contentCol').classList.remove('shrunk');
+  document.getElementById('panelBackdrop').classList.remove('open');
+  document.querySelectorAll('.step-node').forEach(s => s.classList.remove('active'));
+}
+
+// Handle URL query parameters on load (e.g. ?tab=1)
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabParam = urlParams.get('tab');
+  if (tabParam !== null) {
+    const idx = parseInt(tabParam, 10);
+    if (!isNaN(idx) && idx >= 0 && idx < 4) {
+      switchTab(idx);
+    }
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-import json
-import os
-
-html_head = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="UTF-8">
@@ -609,10 +605,6 @@ body{
 
 <div class="main-wrapper">
   <div class="content-col" id="contentCol">
-"""
-
-# Tabs HTML Content
-tabs_html = """
     <!-- TAB 0: 1.0 บริหารจัดการทั่วไป -->
     <div class="tab-content active" id="tabContent-0">
       <div class="proc-intro">
@@ -973,15 +965,6 @@ tabs_html = """
         </div>
       </div>
     </div>
-"""
-
-# Now write python script that will construct full HTML
-with open('build_songsod_html.py', 'w', encoding='utf-8') as f:
-    f.write(html_head)
-    f.write(tabs_html)
-
-print("Tabs written to build_songsod_html.py")
-
   </div><!-- /content-col -->
 
   <!-- Glassmorphism Side Detail Panel -->

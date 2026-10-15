@@ -1,0 +1,3424 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผังขั้นตอนการทำงาน — แผนกบริหารพื้นที่เช่า (1–16)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f5f5f7;
+  --card-bg: #ffffff;
+  --text-main: #1d1d1f;
+  --text-muted: #86868b;
+  --accent-blue: #0071e3;
+  --accent-blue-lt: #e8f2fc;
+  --gold: #d8a032; 
+  --gold-lt: #fdf6e3;
+  --red: #ff3b30;
+  --red-lt: #ffeceb;
+  --green: #34c759;
+  --green-lt: #ebf9ee;
+  --teal: #5ac8fa;
+  --teal-lt: #eaf8ff;
+  --purple: #af52de;
+  --purple-lt: #f4eafe;
+  --orange: #ff9500;
+  --orange-lt: #fff4e5;
+  --gray50: #f5f5f7;
+  --gray100: #e5e5ea;
+  --gray200: #d1d1d6;
+  --gray400: #8e8e93;
+  --gray600: #48484a;
+  --gray800: #1c1c1e;
+  
+  --lane-sales: #ede9fe;
+  --lane-sales-color: #7c3aed;
+  --lane-acct: #cffafe;
+  --lane-acct-color: #0891b2;
+  --lane-fin: #e0f2fe;
+  --lane-fin-color: #0284c7;
+  --lane-eng: #fef3c7;
+  --lane-eng-color: #d97706;
+  --lane-sec: #d1fae5;
+  --lane-sec-color: #059669;
+  --lane-tenant: #fee2e2;
+  --lane-tenant-color: #dc2626;
+  --lane-mgmt: #f1f5f9;
+  --lane-mgmt-color: #475569;
+  --lane-audit: #fdf2f8;
+  --lane-audit-color: #db2777;
+
+  --shadow: 0 4px 24px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Sarabun", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  font-size: 13px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ======= HEADER ======= */
+.header {
+  background: #000000;
+  color: #f5f5f7;
+  padding: 48px 48px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 50% 0%, rgba(0,113,227,0.18) 0%, transparent 50%);
+  pointer-events: none;
+}
+.header-inner { position: relative; z-index: 1; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.header-left { flex: 1; }
+.header-eyebrow {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a1a1a6;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.header-title { font-size: 32px; font-weight: 700; line-height: 1.25; color: #ffffff; letter-spacing: -0.5px; }
+.header-title em { color: var(--accent-blue); font-style: normal; }
+.header-meta { display: flex; gap: 32px; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; }
+.meta-item { display: flex; flex-direction: column; gap: 4px; }
+.meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #86868b; font-weight: 600; }
+.meta-value { font-size: 13px; color: #f5f5f7; font-weight: 500; }
+
+/* Navigation buttons in header */
+.header-actions { display: flex; gap: 12px; align-items: center; }
+.hdr-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hdr-btn:hover { background: rgba(255,255,255,0.25); }
+.hdr-btn.print { background: #fff; color: #1d1d1f; border: none; cursor: pointer; }
+.hdr-btn.print:hover { background: #f0f0f5; }
+
+/* ======= TABS BAR ======= */
+.tab-bar-wrap {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.tab-bar {
+  display: flex;
+  padding: 8px 32px;
+  gap: 6px;
+  overflow-x: auto;
+  align-items: center;
+}
+.tab-bar::-webkit-scrollbar { height: 4px; }
+.tab-bar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+
+.tab-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text-main); background: rgba(0,0,0,0.04); }
+.tab-btn.active {
+  color: #fff;
+  background: var(--text-main);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+.tab-num {
+  width: 18px; height: 18px; border-radius: 6px;
+  background: var(--gray200); color: var(--gray600);
+  font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.tab-btn.active .tab-num { background: rgba(255,255,255,0.2); color: #fff; }
+
+/* ======= MAIN CONTAINER & PANELS ======= */
+.main-wrapper { display: flex; min-height: calc(100vh - 220px); }
+.content-col { flex: 1; min-width: 0; padding: 36px 36px 64px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.content-col.shrunk { margin-right: 420px; }
+
+.tab-panel { display: none; animation: fadein 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.tab-panel.active { display: block; }
+@keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* Section Header */
+.proc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; gap: 20px; }
+.proc-header-left { display: flex; align-items: center; gap: 16px; }
+.proc-icon {
+  width: 52px; height: 52px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  background: #fff;
+}
+.proc-title { font-size: 20px; font-weight: 700; color: var(--text-main); letter-spacing: -0.3px; }
+.proc-sub { font-size: 12.5px; color: var(--text-muted); font-weight: 400; margin-top: 3px; }
+.proc-badge-tag { background: var(--gray100); padding: 4px 12px; border-radius: 14px; font-size: 11px; font-weight: 600; color: var(--text-main); }
+
+/* ======= SWIMLANE ======= */
+.swimlane-wrap {
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: var(--shadow-lg);
+  overflow-x: auto;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+.sl-table { width: 100%; border-collapse: collapse; min-width: 780px; }
+
+.sl-lane-label {
+  width: 170px;
+  color: var(--text-main);
+  vertical-align: middle;
+  text-align: center;
+  padding: 18px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.45;
+  border-right: 1px solid var(--gray200);
+  border-bottom: 1px solid var(--gray200);
+  position: relative;
+}
+.sl-lane-label::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+.sl-lane-label.hdr { background: var(--gray100); color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.sl-lane-label.sales { background: var(--lane-sales); color: var(--lane-sales-color); }
+.sl-lane-label.sales::before { background: var(--lane-sales-color); }
+.sl-lane-label.acct { background: var(--lane-acct); color: var(--lane-acct-color); }
+.sl-lane-label.acct::before { background: var(--lane-acct-color); }
+.sl-lane-label.fin { background: var(--lane-fin); color: var(--lane-fin-color); }
+.sl-lane-label.fin::before { background: var(--lane-fin-color); }
+.sl-lane-label.eng { background: var(--lane-eng); color: var(--lane-eng-color); }
+.sl-lane-label.eng::before { background: var(--lane-eng-color); }
+.sl-lane-label.sec { background: var(--lane-sec); color: var(--lane-sec-color); }
+.sl-lane-label.sec::before { background: var(--lane-sec-color); }
+.sl-lane-label.tenant { background: var(--lane-tenant); color: var(--lane-tenant-color); }
+.sl-lane-label.tenant::before { background: var(--lane-tenant-color); }
+.sl-lane-label.mgmt { background: var(--lane-mgmt); color: var(--lane-mgmt-color); }
+.sl-lane-label.mgmt::before { background: var(--lane-mgmt-color); }
+.sl-lane-label.audit { background: var(--lane-audit); color: var(--lane-audit-color); }
+.sl-lane-label.audit::before { background: var(--lane-audit-color); }
+
+.sl-steps { padding: 18px 24px; vertical-align: middle; border-bottom: 1px solid var(--gray200); }
+
+/* Horizontal Flow */
+.hflow { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.arrow { color: var(--gray400); font-size: 18px; padding: 0 4px; flex-shrink: 0; font-weight: 300; }
+
+/* Step Box */
+.step {
+  background: var(--card-bg);
+  border: 1px solid var(--gray200);
+  border-radius: 14px;
+  padding: 12px 14px;
+  min-width: 155px;
+  max-width: 220px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+.step:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  border-color: var(--accent-blue);
+}
+.step.active {
+  border: 2px solid var(--accent-blue);
+  box-shadow: 0 0 0 3px var(--accent-blue-lt), 0 10px 24px rgba(0,113,227,0.12);
+  transform: translateY(-2px);
+}
+
+.step-num {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-muted);
+  background: var(--gray100);
+  padding: 2px 6px;
+  border-radius: 4px;
+  align-self: flex-start;
+  text-transform: uppercase;
+}
+.step-text { font-size: 12.5px; font-weight: 600; line-height: 1.4; color: var(--text-main); }
+.step-doc { font-size: 11px; color: var(--accent-blue); margin-top: 2px; }
+
+.step.sales { border-left: 3.5px solid var(--lane-sales-color); }
+.step.acct { border-left: 3.5px solid var(--lane-acct-color); }
+.step.fin { border-left: 3.5px solid var(--lane-fin-color); }
+.step.eng { border-left: 3.5px solid var(--lane-eng-color); }
+.step.sec { border-left: 3.5px solid var(--lane-sec-color); }
+.step.tenant { border-left: 3.5px solid var(--lane-tenant-color); }
+.step.mgmt { border-left: 3.5px solid var(--lane-mgmt-color); }
+.step.audit { border-left: 3.5px solid var(--lane-audit-color); }
+
+.step.risk { background: var(--red-lt); border-color: rgba(255,59,48,0.3); }
+.step.ctrl { background: var(--green-lt); border-color: rgba(52,199,89,0.3); }
+
+/* Badges on Step */
+.badge-step {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.badge-step.time { background: var(--accent-blue); }
+.badge-step.ctrl { background: var(--green); }
+.badge-step.risk { background: var(--red); }
+
+/* ======= GLASSMORPHISM SIDE PANEL ======= */
+.side-panel {
+  position: fixed;
+  top: 0;
+  right: -450px;
+  width: 420px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border-left: 1px solid rgba(0,0,0,0.08);
+  padding: 32px 28px;
+  box-shadow: -8px 0 32px rgba(0,0,0,0.08);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 200;
+}
+.side-panel.open { right: 0; }
+
+.side-panel::-webkit-scrollbar { width: 5px; }
+.side-panel::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+
+.panel-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.05);
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: var(--text-muted);
+}
+.panel-close:hover { background: rgba(0,0,0,0.1); color: var(--text-main); }
+
+.panel-eyebrow { font-size: 11px; font-weight: 800; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.panel-title { font-size: 18px; font-weight: 700; color: var(--text-main); line-height: 1.35; margin-bottom: 16px; padding-right: 32px; }
+
+.panel-section { margin-bottom: 24px; }
+.panel-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--gray200);
+}
+
+.task-list { display: flex; flex-direction: column; gap: 10px; list-style: none; }
+.task-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-main);
+  background: rgba(255,255,255,0.6);
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+.task-bullet { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-blue); margin-top: 7px; flex-shrink: 0; }
+
+.info-pill-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  background: rgba(0,0,0,0.02);
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+.info-pill { display: flex; flex-direction: column; gap: 3px; }
+.info-pill-label { font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
+.info-pill-value { font-size: 12.5px; font-weight: 600; color: var(--text-main); }
+
+.panel-alert {
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+.panel-alert.warning {
+  background: var(--red-lt);
+  border: 1px solid rgba(255,59,48,0.25);
+  color: #a32020;
+}
+.panel-alert.control {
+  background: var(--green-lt);
+  border: 1px solid rgba(52,199,89,0.25);
+  color: #1a6b45;
+}
+.panel-alert-title { font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+.panel-alert-text { font-size: 12.5px; line-height: 1.5; font-weight: 500; }
+
+.doc-tag-list { display: flex; flex-direction: column; gap: 6px; }
+.doc-tag-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--gray200);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+/* Overlay for mobile or closing */
+.panel-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(4px);
+  z-index: 150;
+  display: none;
+}
+.panel-backdrop.open { display: block; }
+
+/* ======= PRINT STYLES (A4 LANDSCAPE) ======= */
+@media print {
+  @page { size: A4 landscape; margin: 8mm; }
+  .tab-bar-wrap, .header-actions, .side-panel, .panel-backdrop { display: none !important; }
+  body { background: #fff !important; }
+  .header { padding: 0 !important; background: none !important; color: #000 !important; border-bottom: 2px solid #e5e5ea; }
+  .header-title, .meta-label, .meta-value { color: #000 !important; }
+  .header::after { display: none; }
+  .header-badge { color: #000; border: 1px solid #000; }
+  
+  .content-col { padding: 0 !important; margin: 0 !important; }
+  .tab-panel { display: block !important; page-break-after: always; margin-bottom: 20px; animation: none !important; }
+  .tab-panel:last-child { page-break-after: auto; }
+  
+  .swimlane-wrap { box-shadow: none !important; border: 1px solid #000 !important; break-inside: avoid; page-break-inside: avoid; }
+  .sl-table { min-width: 100% !important; }
+  .step { box-shadow: none !important; border: 1px solid #999 !important; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-eyebrow">เอกสารตรวจสอบภายใน (Internal Audit SOP)</div>
+      <div class="header-title">ผังกระบวนการปฏิบัติงาน <em>(Swimlane Workflow 1–16)</em></div>
+      <div class="header-meta">
+        <div class="meta-item"><span class="meta-label">หน่วยงาน</span><span class="meta-value">แผนกบริหารพื้นที่เช่า</span></div>
+        <div class="meta-item"><span class="meta-label">อัปเดตล่าสุด</span><span class="meta-value">ตุลาคม 2569</span></div>
+        <div class="meta-item"><span class="meta-label">กระบวนการ</span><span class="meta-value">16 กระบวนการหลัก</span></div>
+        <div class="meta-item"><span class="meta-label">การสอบทาน</span><span class="meta-value">System Audit 100%</span></div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="../../index.html" class="hdr-btn">🏢 หน้าหลักบริษัท</a>
+      <a href="index.html" class="hdr-btn">🏠 หน้าหลักแผนก</a>
+      <button onclick="window.print()" class="hdr-btn print">🖨️ พิมพ์รายงานทั้งหมด</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tab Navigation Bar -->
+<div class="tab-bar-wrap">
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-btn active" onclick="switchTab(0)"><span class="tab-num">1</span>รับลูกค้าเช่าใหม่</button>
+    <button class="tab-btn" onclick="switchTab(1)"><span class="tab-num">2</span>สัญญาเช่า & VIP</button>
+    <button class="tab-btn" onclick="switchTab(2)"><span class="tab-num">3</span>ลูกค้าโปรโมชั่น</button>
+    <button class="tab-btn" onclick="switchTab(3)"><span class="tab-num">4</span>ร้านค้ารายวัน</button>
+    <button class="tab-btn" onclick="switchTab(4)"><span class="tab-num">5</span>เตรียมความพร้อมพื้นที่</button>
+    <button class="tab-btn" onclick="switchTab(5)"><span class="tab-num">6</span>โอน ย้าย เปลี่ยน แผง</button>
+    <button class="tab-btn" onclick="switchTab(6)"><span class="tab-num">7</span>ย้ายร้านค้า & ปรับปรุง</button>
+    <button class="tab-btn" onclick="switchTab(7)"><span class="tab-num">8</span>รับลูกค้ายกเลิกเช่า</button>
+    <button class="tab-btn" onclick="switchTab(8)"><span class="tab-num">9</span>ควบคุมข้อบังคับตลาด</button>
+    <button class="tab-btn" onclick="switchTab(9)"><span class="tab-num">10</span>ตลาดนัดริมคลอง</button>
+    <button class="tab-btn" onclick="switchTab(10)"><span class="tab-num">11</span>นโยบายตลาด & ราชการ</button>
+    <button class="tab-btn" onclick="switchTab(11)"><span class="tab-num">12</span>บัตรอนุญาตทำงาน</button>
+    <button class="tab-btn" onclick="switchTab(12)"><span class="tab-num">13</span>รับเรื่องร้องเรียน</button>
+    <button class="tab-btn" onclick="switchTab(13)"><span class="tab-num">14</span>ลูกค้าสัมพันธ์สวัสดิการ</button>
+    <button class="tab-btn" onclick="switchTab(14)"><span class="tab-num">15</span>ขอผ่อนชำระค่าเช่า</button>
+    <button class="tab-btn" onclick="switchTab(15)"><span class="tab-num">16</span>ขอปรับลดค่าเช่า</button>
+  </div>
+</div>
+
+<!-- Main Body -->
+<div class="main-wrapper">
+  
+  <div class="content-col" id="contentCol">
+
+    <!-- TAB 0: รับลูกค้าเช่าใหม่ -->
+    <div id="tab-0" class="tab-panel active">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#e8f2fc;">🏪</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 1: การรับลูกค้าเช่าพื้นที่ใหม่ (แผงถาวร)</div>
+            <div class="proc-sub">New Permanent Tenant Leasing Workflow</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 1: การขายและสัญญา</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">
+              ขั้นตอนการปฏิบัติงาน (Flow ซ้ายไปขวา) — คลิกที่กล่องขั้นตอนเพื่อดูรายละเอียดด้านข้าง
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">แอดมินฝ่ายขาย /<br>ผจก.พื้นที่</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales" onclick="showPanel('1-1')">
+                  <div class="step-num">ขั้น 1.1</div>
+                  <div class="step-text">นำเสนอขายพื้นที่เช่า</div>
+                  <span class="badge-step time">30 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('1-2')">
+                  <div class="step-num">ขั้น 1.2</div>
+                  <div class="step-text">พาลูกค้าดูแผงว่าง (Layout)</div>
+                  <span class="badge-step time">30 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('1-3')">
+                  <div class="step-num">ขั้น 1.3</div>
+                  <div class="step-text">จัดทำใบเสนอราคา</div>
+                  <span class="badge-step time">10 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('1-4')">
+                  <div class="step-num">ขั้น 1.4</div>
+                  <div class="step-text">บันทึกข้อตกลงเช่า & ระเบียบโซน</div>
+                  <div class="step-doc">ใบบันทึกข้อตกลง</div>
+                  <span class="badge-step time">30 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('1-5')">
+                  <div class="step-num">ขั้น 1.5</div>
+                  <div class="step-text">เปิดหน้าบัญชี ACC-SL-0001</div>
+                  <span class="badge-step ctrl">✓ เอกสารหลัก</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label acct">แผนกบัญชี</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step acct ctrl" onclick="showPanel('1-6')">
+                  <div class="step-num">ขั้น 1.6</div>
+                  <div class="step-text">ตั้งรหัสลูกค้าในระบบบัญชี</div>
+                  <div class="step-doc">ACC-SL-0001</div>
+                  <span class="badge-step ctrl">✓ รหัสบัญชี</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label fin">แผนกการเงิน / แคชเชียร์</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step fin ctrl" onclick="showPanel('1-7')">
+                  <div class="step-num">ขั้น 1.7</div>
+                  <div class="step-text">รับชำระเงินประกัน & ค่าเช่า ออกใบเสร็จ</div>
+                  <span class="badge-step ctrl">✓ ใบเสร็จรับเงิน</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step fin" onclick="showPanel('1-8')">
+                  <div class="step-num">ขั้น 1.8</div>
+                  <div class="step-text">จัดทำแผนผ่อนเงินประกัน (กรณีผ่อน)</div>
+                  <span class="badge-step time">30 นาที</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label audit">Audit ตรวจสอบ</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step audit ctrl" onclick="showPanel('1-9')">
+                  <div class="step-num">Audit-1</div>
+                  <div class="step-text">กระทบยอด ACC-SL กับระบบบัญชี</div>
+                  <span class="badge-step ctrl">✓ ทวนสอบระบบ</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 1: สัญญาเช่า & VIP -->
+    <div id="tab-1" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#f4eafe;">📜</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 2: สัญญาเช่าและสัญญาบริการ (นิติบุคคล / VIP1 / VIP2)</div>
+            <div class="proc-sub">Corporate & VIP Long-term Contracts</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 1: การขายและสัญญา</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">
+              ขั้นตอนการปฏิบัติงาน (Flow ซ้ายไปขวา)
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">แอดมินฝ่ายขาย /<br>ผจก.พื้นที่</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales" onclick="showPanel('2-1')">
+                  <div class="step-num">ขั้น 2.1</div>
+                  <div class="step-text">ตรวจเอกสารบริษัท / ภพ.20</div>
+                  <span class="badge-step time">30 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('2-2')">
+                  <div class="step-num">ขั้น 2.2</div>
+                  <div class="step-text">ร่างสัญญา SL-xxxx & สัญญาบริการ</div>
+                  <span class="badge-step time">2 ชม.</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('2-3')">
+                  <div class="step-num">ขั้น 2.3</div>
+                  <div class="step-text">เสนอราคา VIP1 (ลด 0.5-1.5 ด.)</div>
+                  <span class="badge-step time">20 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales risk" onclick="showPanel('2-4')">
+                  <div class="step-num">ขั้น 2.4</div>
+                  <div class="step-text">VIP2: เช็คเครดิตบูโร (ธ.กรุงเทพ)</div>
+                  <span class="badge-step risk">⚠ ตรวจเครดิต</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('2-5')">
+                  <div class="step-num">ขั้น 2.5</div>
+                  <div class="step-text">ส่งสินเชื่อ MSCW กู้ 30%</div>
+                  <span class="badge-step time">10 นาที</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label acct">แผนกบัญชี</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step acct ctrl" onclick="showPanel('2-6')">
+                  <div class="step-num">ขั้น 2.6</div>
+                  <div class="step-text">ออกเลขที่สัญญา SL-xxxx & ใบแจ้งหนี้</div>
+                  <span class="badge-step ctrl">✓ รหัสสัญญา</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label mgmt">ผู้บริหาร (ผบห.)</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step mgmt ctrl" onclick="showPanel('2-7')">
+                  <div class="step-num">ขั้น 2.7</div>
+                  <div class="step-text">ผบห. ลงนามสัญญาเช่าและบริการ</div>
+                  <span class="badge-step ctrl">✓ นิติกรณ์</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label tenant">ผู้เช่า / นิติบุคคล</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step tenant ctrl" onclick="showPanel('2-8')">
+                  <div class="step-num">ขั้น 2.8</div>
+                  <div class="step-text">ลงนามคู่ฉบับ + ติดอากรแสตมป์</div>
+                  <span class="badge-step ctrl">✓ อากรแสตมป์</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: ลูกค้าโปรโมชั่น -->
+    <div id="tab-2" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#ebf9ee;">🎪</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 3: การรับลูกค้าโปรโมชั่นและอีเวนต์</div>
+            <div class="proc-sub">Temporary Promotion & Event Booths</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 1: การขายและสัญญา</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">แอดมินฝ่ายขาย</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales" onclick="showPanel('3-1')">
+                  <div class="step-num">ขั้น 3.1</div>
+                  <div class="step-text">เสนอขาย & พาดูจุดตั้งบูธ Layout</div>
+                  <span class="badge-step time">30 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('3-2')">
+                  <div class="step-num">ขั้น 3.2</div>
+                  <div class="step-text">จัดเตรียมใบเสนอราคา</div>
+                  <span class="badge-step time">10 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('3-3')">
+                  <div class="step-num">ขั้น 3.3</div>
+                  <div class="step-text">ทำเอกสารเปิดหน้าบัญชี ACC-SL</div>
+                  <span class="badge-step time">30 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('3-4')">
+                  <div class="step-num">ขั้น 3.4</div>
+                  <div class="step-text">แจ้ง ปชส. & รปภ. ตำแหน่งวันเวลา</div>
+                  <span class="badge-step ctrl">✓ ประสานงาน</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label acct">แผนกบัญชี</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step acct ctrl" onclick="showPanel('3-5')">
+                  <div class="step-num">ขั้น 3.5</div>
+                  <div class="step-text">ตั้งรหัสลูกค้าระบบบัญชี</div>
+                  <span class="badge-step ctrl">✓ ACC-SL-0001</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label fin">การเงิน / แคชเชียร์</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step fin ctrl" onclick="showPanel('3-6')">
+                  <div class="step-num">ขั้น 3.6</div>
+                  <div class="step-text">รับชำระเงิน + ตรวจใบหัก ณ ที่จ่าย</div>
+                  <span class="badge-step ctrl">✓ หักภาษี 3%</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: ร้านค้ารายวัน -->
+    <div id="tab-3" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#fff4e5;">🛒</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 4: การรับร้านค้ารายวัน (รถเข็น / ขาจร)</div>
+            <div class="proc-sub">Daily Mobile & Hawker Vendors Workflow</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 1: การขายและสัญญา</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sec">เจ้าหน้าที่ ปชส.</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sec" onclick="showPanel('4-1')">
+                  <div class="step-num">ขั้น 4.1</div>
+                  <div class="step-text">รับติดต่อ & ตรวจประเภทสินค้า</div>
+                  <span class="badge-step time">03.00-16.00</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sec ctrl" onclick="showPanel('4-2')">
+                  <div class="step-num">ขั้น 4.2</div>
+                  <div class="step-text">แลกบัตร ปปช. + มัดจำ 100.- มอบบัตรร้านค้า</div>
+                  <span class="badge-step ctrl">✓ มัดจำ 100.-</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sec ctrl" onclick="showPanel('4-3')">
+                  <div class="step-num">ขั้น 4.3</div>
+                  <div class="step-text">รับบัตรคืน ตรวจใบเสร็จ คืนเงินมัดจำ</div>
+                  <span class="badge-step ctrl">✓ ปิดกะ</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label fin">การเงินเดินเก็บ</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step fin ctrl" onclick="showPanel('4-4')">
+                  <div class="step-num">ขั้น 4.4</div>
+                  <div class="step-text">เดินเก็บค่าที่ 100 / 200 / 300.- ออกใบเสร็จ</div>
+                  <span class="badge-step ctrl">✓ ใบเสร็จรับเงิน</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label audit">Audit ตรวจสอบ</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step audit ctrl" onclick="showPanel('4-5')">
+                  <div class="step-num">Audit-4</div>
+                  <div class="step-text">สุ่มตรวจยอดบัตรร้านค้ารายวันเทียบเงินมัดจำ</div>
+                  <span class="badge-step ctrl">✓ Reconciliation</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 4: เตรียมความพร้อมพื้นที่ -->
+    <div id="tab-4" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#eaf8ff;">📐</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 5: การเตรียมความพร้อมและส่งมอบพื้นที่</div>
+            <div class="proc-sub">Space Preparation, Utilities & Handover</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 2: จัดการพื้นที่และแผงค้า</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">ฝ่ายขาย</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales" onclick="showPanel('5-1')">
+                  <div class="step-num">ขั้น 5.1</div>
+                  <div class="step-text">ประสานขอแบบร้านค้า & ร้านป้าย</div>
+                  <span class="badge-step time">10 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('5-2')">
+                  <div class="step-num">ขั้น 5.2</div>
+                  <div class="step-text">เก็บเงินประกันตกแต่ง 30,000.-</div>
+                  <span class="badge-step ctrl">✓ เงินประกัน</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('5-3')">
+                  <div class="step-num">ขั้น 5.3</div>
+                  <div class="step-text">ประสานทำความสะอาดพื้นที่</div>
+                  <span class="badge-step time">30 นาที</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label eng">ช่าง / อาคาร / วิศวกร</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step eng ctrl" onclick="showPanel('5-4')">
+                  <div class="step-num">ขั้น 5.4</div>
+                  <div class="step-text">อนุมัติแบบร้าน & ติดตั้งมิเตอร์น้ำ/ไฟ/แก๊ส/ดักไขมัน</div>
+                  <span class="badge-step ctrl">✓ งานระบบ</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step eng" onclick="showPanel('5-5')">
+                  <div class="step-num">ขั้น 5.5</div>
+                  <div class="step-text">อบรมผู้รับเหมาก่อนเข้าทำงาน</div>
+                  <span class="badge-step ctrl">✓ ความปลอดภัย</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step eng ctrl" onclick="showPanel('5-6')">
+                  <div class="step-num">ขั้น 5.6</div>
+                  <div class="step-text">ส่งมอบพื้นที่ (YS-SAL-004 Re.02)</div>
+                  <span class="badge-step ctrl">✓ รับมอบพื้นที่</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step eng ctrl" onclick="showPanel('5-7')">
+                  <div class="step-num">ขั้น 5.7</div>
+                  <div class="step-text">ตรวจงานระบบคืนเงินประกัน (หลัง 3 เดือน)</div>
+                  <span class="badge-step ctrl">✓ คืนประกัน</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label acct">บัญชี / การเงิน</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step acct ctrl" onclick="showPanel('5-8')">
+                  <div class="step-num">ขั้น 5.8</div>
+                  <div class="step-text">ออกใบเสร็จประกัน & คืนเงินผ่านบัญชีธนาคาร</div>
+                  <span class="badge-step ctrl">✓ โอนคืนบัญชี</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 5: โอน ย้าย เปลี่ยน แผง -->
+    <div id="tab-5" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#fdf6e3;">🔄</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 6: การโอน ย้าย เปลี่ยน แผงค้าและเปลี่ยนชื่อ</div>
+            <div class="proc-sub">Stall Transfer, Relocation & Renaming</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 2: จัดการพื้นที่และแผงค้า</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">แอดมินฝ่ายขาย /<br>ผจก.พื้นที่</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales" onclick="showPanel('6-1')">
+                  <div class="step-num">ขั้น 6.1</div>
+                  <div class="step-text">ยกเลิกสัญญาผู้ค้าเดิม</div>
+                  <span class="badge-step time">30 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('6-2')">
+                  <div class="step-num">ขั้น 6.2</div>
+                  <div class="step-text">ทำเอกสาร ACC-SL-002</div>
+                  <span class="badge-step ctrl">✓ โอนย้ายเปลี่ยน</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('6-3')">
+                  <div class="step-num">ขั้น 6.3</div>
+                  <div class="step-text">ทำสัญญาผู้ค้าใหม่ & แจ้งค่าธรรมเนียมโอน</div>
+                  <span class="badge-step time">30 นาที</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label acct">แผนกบัญชี</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step acct ctrl" onclick="showPanel('6-4')">
+                  <div class="step-num">ขั้น 6.4</div>
+                  <div class="step-text">เช็คเงินประกันแผงเดิม & ส่วนต่าง</div>
+                  <span class="badge-step time">10 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step acct ctrl" onclick="showPanel('6-5')">
+                  <div class="step-num">ขั้น 6.5</div>
+                  <div class="step-text">ตั้งรหัสลูกค้าผู้ค้าใหม่ในระบบ</div>
+                  <span class="badge-step ctrl">✓ ACC-SL-0001</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label fin">การเงิน / ติดตามหนี้</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step fin risk" onclick="showPanel('6-6')">
+                  <div class="step-num">ขั้น 6.6</div>
+                  <div class="step-text">เช็คหนี้ยอดค้างจ่ายผู้ค้าเดิม</div>
+                  <span class="badge-step risk">⚠ เช็คหนี้ค้าง</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step fin ctrl" onclick="showPanel('6-7')">
+                  <div class="step-num">ขั้น 6.7</div>
+                  <div class="step-text">รับชำระส่วนต่าง & ค่าธรรมเนียมโอน</div>
+                  <span class="badge-step ctrl">✓ ออกใบเสร็จ</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 6: ย้ายร้านค้า & ปรับปรุง -->
+    <div id="tab-6" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#e8f2fc;">🚚</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 7: การย้ายร้านค้าและการปรับปรุงพื้นที่เช่า</div>
+            <div class="proc-sub">Shop Relocation & Renovation Workflow</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 2: จัดการพื้นที่และแผงค้า</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">ฝ่ายขาย / ออกแบบ</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales" onclick="showPanel('7-1')">
+                  <div class="step-num">ขั้น 7.1</div>
+                  <div class="step-text">สำรวจแผงเย็น/แอร์/กระจก & เขียนผังใหม่</div>
+                  <span class="badge-step time">1-3 วัน</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('7-2')">
+                  <div class="step-num">ขั้น 7.2</div>
+                  <div class="step-text">นัดประชุมร้านค้า & หน่วยงานภายใน</div>
+                  <span class="badge-step time">1-2 ชม.</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('7-3')">
+                  <div class="step-num">ขั้น 7.3</div>
+                  <div class="step-text">จัดทำเอกสารเปรียบเทียบรายได้เดิม-ใหม่</div>
+                  <span class="badge-step ctrl">✓ วิเคราะห์รายได้</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label eng">ช่าง / รปภ.</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step eng" onclick="showPanel('7-4')">
+                  <div class="step-num">ขั้น 7.4</div>
+                  <div class="step-text">ช่างปรับปรุงระบบ & รปภ. ช่วยขนย้ายของ</div>
+                  <span class="badge-step time">1-2 วัน</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label fin">แผนกการเงิน</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step fin ctrl" onclick="showPanel('7-5')">
+                  <div class="step-num">ขั้น 7.5</div>
+                  <div class="step-text">จดมิเตอร์น้ำ/ไฟ ถ่ายรูปยืนยันกับร้านค้า</div>
+                  <span class="badge-step ctrl">✓ ถ่ายรูปมิเตอร์</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 7: รับลูกค้ายกเลิกเช่า -->
+    <div id="tab-7" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#ffeceb;">🚪</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 8: การยกเลิกเช่าพื้นที่ (ปกติ / ค้างชำระละทิ้งแผง)</div>
+            <div class="proc-sub">Lease Termination & Default Settlement</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 2: จัดการพื้นที่และแผงค้า</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">ฝ่ายขาย</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales ctrl" onclick="showPanel('8-1')">
+                  <div class="step-num">ขั้น 8.1</div>
+                  <div class="step-text">ทำเอกสารยกเลิกเช่า ACC-SL-0001</div>
+                  <span class="badge-step ctrl">✓ ใบยกเลิก</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('8-2')">
+                  <div class="step-num">ขั้น 8.2</div>
+                  <div class="step-text">แจ้งรายละเอียดคืนเงินประกัน & ขนย้ายของ</div>
+                  <span class="badge-step time">10 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales risk" onclick="showPanel('8-3')">
+                  <div class="step-num">ขั้น 8.3</div>
+                  <div class="step-text">กรณีละทิ้งแผง: ตีราคาทรัพย์สินหักกลบลบหนี้</div>
+                  <span class="badge-step risk">⚠ ตีราคาทรัพย์</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label fin">การเงิน / ติดตามหนี้</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step fin risk" onclick="showPanel('8-4')">
+                  <div class="step-num">ขั้น 8.4</div>
+                  <div class="step-text">ตรวจสอบหนี้ค้างจ่าย & เช็คเงินประกัน</div>
+                  <span class="badge-step risk">⚠ ตรวจสอบหนี้</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label eng">อาคาร / รปภ.</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step eng ctrl" onclick="showPanel('8-5')">
+                  <div class="step-num">ขั้น 8.5</div>
+                  <div class="step-text">รับมอบพื้นที่คืน (YS-SAL-004 Re.02)</div>
+                  <span class="badge-step ctrl">✓ คืนพื้นที่</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 8: ควบคุมข้อบังคับตลาด -->
+    <div id="tab-8" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#ffeceb;">🛡️</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 9: การควบคุมดูแลผู้ค้าตามข้อบังคับตลาด</div>
+            <div class="proc-sub">Market Regulation Enforcement & Inspection</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 3: ควบคุมระเบียบและนโยบาย</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">แอดมินฝ่ายขาย /<br>ผจก.พื้นที่</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales ctrl" onclick="showPanel('9-1')">
+                  <div class="step-num">ขั้น 9.1</div>
+                  <div class="step-text">ตรวจพื้นที่ขายตามฟอร์ม SL-2567-0001</div>
+                  <span class="badge-step ctrl">✓ ตรวจพื้นที่</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('9-2')">
+                  <div class="step-num">ขั้น 9.2</div>
+                  <div class="step-text">ถ่ายภาพหลักฐาน (สถานที่/เวลา/การกระทำ)</div>
+                  <span class="badge-step ctrl">✓ ภาพหลักฐาน</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales risk" onclick="showPanel('9-3')">
+                  <div class="step-num">ขั้น 9.3</div>
+                  <div class="step-text">ออกหนังสือแจ้งเตือน (ครั้ง 1, 2, 3)</div>
+                  <span class="badge-step risk">⚠ เตือน 3 ครั้ง</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales risk" onclick="showPanel('9-4')">
+                  <div class="step-num">ขั้น 9.4</div>
+                  <div class="step-text">เสนอพักการขาย / ยกเลิกสัญญาเช่า</div>
+                  <span class="badge-step risk">⚠ มาตรการเด็ดขาด</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label fin">การเงิน / แคชเชียร์</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step fin ctrl" onclick="showPanel('9-5')">
+                  <div class="step-num">ขั้น 9.5</div>
+                  <div class="step-text">รับชำระค่าปรับเข้ามูลนิธิตลาดยิ่งเจริญ</div>
+                  <span class="badge-step ctrl">✓ มูลนิธิฯ</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 9: ตลาดนัดริมคลอง -->
+    <div id="tab-9" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#eef2f7;">⛺</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 10: การบริหารจัดการตลาดนัดริมคลอง</div>
+            <div class="proc-sub">Canal Flea Market Management</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 3: ควบคุมระเบียบและนโยบาย</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">ฝ่ายขายตลาดนัด</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales" onclick="showPanel('10-1')">
+                  <div class="step-num">ขั้น 10.1</div>
+                  <div class="step-text">รับจองล็อค แยกครัวร้อน-ครัวเย็น Layout</div>
+                  <span class="badge-step time">2 ชม.</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('10-2')">
+                  <div class="step-num">ขั้น 10.2</div>
+                  <div class="step-text">ประสานเต็นท์/ไฟ/เครื่องเสียง/รีดน้ำ</div>
+                  <span class="badge-step time">30 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('10-3')">
+                  <div class="step-num">ขั้น 10.3</div>
+                  <div class="step-text">หาผู้สนับสนุนเต็นท์สปอนเซอร์</div>
+                  <span class="badge-step time">สัปดาห์เว้นสัปดาห์</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sec">ฝ่ายขาย / รปภ.</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sec risk" onclick="showPanel('10-4')">
+                  <div class="step-num">ขั้น 10.4</div>
+                  <div class="step-text">ตรวจความปลอดภัย 14.00 น. (ปลั๊กไฟ/ผ้าปู/น้ำมัน)</div>
+                  <span class="badge-step risk">⚠ ตรวจ 14.00 น.</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sec risk" onclick="showPanel('10-5')">
+                  <div class="step-num">ขั้น 10.5</div>
+                  <div class="step-text">ตรวจระบบแก๊ส PT & เซฟตี้วาล์ว 100%</div>
+                  <span class="badge-step risk">🔴 วิกฤตแก๊ส PT</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label fin">การเงินเดินเก็บ</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step fin ctrl" onclick="showPanel('10-6')">
+                  <div class="step-num">ขั้น 10.6</div>
+                  <div class="step-text">เดินเก็บค่าจองล็อค ออกบิลเงินสด สรุปรายได้วัน</div>
+                  <span class="badge-step ctrl">✓ สรุปรายวัน</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 10: นโยบายตลาด & ราชการ -->
+    <div id="tab-10" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#ebf9ee;">📋</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 11: นโยบายตลาดและมาตรฐานการค้าภาครัฐ</div>
+            <div class="proc-sub">Market Policies, Certifications & Government Standards</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 3: ควบคุมระเบียบและนโยบาย</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">ฝ่ายขาย</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales" onclick="showPanel('11-1')">
+                  <div class="step-num">ขั้น 11.1</div>
+                  <div class="step-text">อบรมดับเพลิงประจำปีร้านค้า</div>
+                  <span class="badge-step time">4 ชม.</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('11-2')">
+                  <div class="step-num">ขั้น 11.2</div>
+                  <div class="step-text">ต่ออายุใบค้าซากสัตว์ ร.10 (ปศุสัตว์)</div>
+                  <span class="badge-step ctrl">✓ ใบ ร.10</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('11-3')">
+                  <div class="step-num">ขั้น 11.3</div>
+                  <div class="step-text">โครงการปศุสัตว์ OK (7 เอกสาร)</div>
+                  <span class="badge-step ctrl">✓ ปศุสัตว์ OK</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('11-4')">
+                  <div class="step-num">ขั้น 11.4</div>
+                  <div class="step-text">เครื่องหมายรับรองฮาลาล (อิสลามกลาง)</div>
+                  <span class="badge-step ctrl">✓ ฮาลาล</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label mgmt">ฝ่ายบุคคล / เขต</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step mgmt ctrl" onclick="showPanel('11-5')">
+                  <div class="step-num">ขั้น 11.5</div>
+                  <div class="step-text">อบรม & ออกบัตรผู้สัมผัสอาหาร (เขต)</div>
+                  <span class="badge-step ctrl">✓ สำนักงานเขต</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 11: บัตรอนุญาตทำงาน -->
+    <div id="tab-11" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#f4eafe;">🪪</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 12: การออกบัตรอนุญาตทำงานในตลาด (คนไทย / ต่างด้าว)</div>
+            <div class="proc-sub">Market Work Permit & AppSheet QR Registration</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 3: ควบคุมระเบียบและนโยบาย</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">ฝ่ายขาย</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales" onclick="showPanel('12-1')">
+                  <div class="step-num">ขั้น 12.1</div>
+                  <div class="step-text">รับลงทะเบียน ปปช./พาสปอร์ต + วัคซีน</div>
+                  <span class="badge-step time">5 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('12-2')">
+                  <div class="step-num">ขั้น 12.2</div>
+                  <div class="step-text">บันทึก AppSheet & Gen QR Code สมาชิก</div>
+                  <span class="badge-step ctrl">✓ AppSheet QR</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('12-3')">
+                  <div class="step-num">ขั้น 12.3</div>
+                  <div class="step-text">นำเข้า Template AI & พิมพ์บัตร</div>
+                  <span class="badge-step time">10 นาที</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label fin">การเงิน / แคชเชียร์</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step fin ctrl" onclick="showPanel('12-4')">
+                  <div class="step-num">ขั้น 12.4</div>
+                  <div class="step-text">รับชำระค่าธรรมเนียมทำบัตร ออกใบเสร็จ</div>
+                  <span class="badge-step ctrl">✓ ค่าธรรมเนียม</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 12: รับเรื่องร้องเรียน -->
+    <div id="tab-12" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#fff4e5;">📢</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 13: การรับเรื่องร้องเรียนจากผู้ค้าและลูกค้า</div>
+            <div class="proc-sub">Tenant & Customer Grievance Handling</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 4: ผู้ค้าสัมพันธ์และการเงิน</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">ฝ่ายขาย</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales" onclick="showPanel('13-1')">
+                  <div class="step-num">ขั้น 13.1</div>
+                  <div class="step-text">รับเรื่องทางโทรศัพท์ / LINE / หน้าร้าน</div>
+                  <span class="badge-step time">5 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('13-2')">
+                  <div class="step-num">ขั้น 13.2</div>
+                  <div class="step-text">ลงพื้นที่สอบสวนข้อเท็จจริง & คุยลูกค้า</div>
+                  <span class="badge-step time">20 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('13-3')">
+                  <div class="step-num">ขั้น 13.3</div>
+                  <div class="step-text">ออกหนังสือแจ้งเตือนร้านค้า (กรณีผิดจริง)</div>
+                  <span class="badge-step ctrl">✓ ตักเตือน</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label eng">ช่างซ่อมบำรุง</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step eng ctrl" onclick="showPanel('13-4')">
+                  <div class="step-num">ขั้น 13.4</div>
+                  <div class="step-text">คีย์ลงระบบแจ้งซ่อม (งานด่วนโทรแจ้ง ≤3 นาที)</div>
+                  <span class="badge-step ctrl">⏱ ด่วน ≤3 นาที</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 13: ลูกค้าสัมพันธ์สวัสดิการ -->
+    <div id="tab-13" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#eaf8ff;">🎁</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 14: งานลูกค้าสัมพันธ์และเงินช่วยเหลือสวัสดิการ</div>
+            <div class="proc-sub">Tenant Welfare & Relationship Management</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 4: ผู้ค้าสัมพันธ์และการเงิน</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">ฝ่ายขาย</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales" onclick="showPanel('14-1')">
+                  <div class="step-num">ขั้น 14.1</div>
+                  <div class="step-text">ตรวจหลักฐาน (การ์ดเชิญ / ใบมรณบัตร)</div>
+                  <span class="badge-step time">20 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('14-2')">
+                  <div class="step-num">ขั้น 14.2</div>
+                  <div class="step-text">พิมพ์บันทึกภายในขออนุมัติเบิกเงิน</div>
+                  <span class="badge-step ctrl">✓ ขออนุมัติ</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('14-3')">
+                  <div class="step-num">ขั้น 14.3</div>
+                  <div class="step-text">จัดกระเช้า & ลงพื้นที่มอบเงิน/เยี่ยมไข้</div>
+                  <span class="badge-step time">1-2 ชม.</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label acct">แผนกบัญชี</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step acct ctrl" onclick="showPanel('14-4')">
+                  <div class="step-num">ขั้น 14.4</div>
+                  <div class="step-text">ตรวจสอบเอกสาร & ทำเรื่องเบิกจ่ายเงินสวัสดิการ</div>
+                  <span class="badge-step ctrl">✓ เบิกจ่ายสวัสดิการ</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 14: ขอผ่อนชำระค่าเช่า -->
+    <div id="tab-14" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#fdf6e3;">🤝</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 15: งานพิจารณาคำขอผ่อนชำระค่าเช่า</div>
+            <div class="proc-sub">Rent Installment & Payment Plan Request</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 4: ผู้ค้าสัมพันธ์และการเงิน</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label fin">การเงินฝ่ายติดตามหนี้</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step fin risk" onclick="showPanel('15-1')">
+                  <div class="step-num">ขั้น 15.1</div>
+                  <div class="step-text">รับเรื่อง & ตรวจสอบยอดหนี้ค้างชำระ</div>
+                  <span class="badge-step risk">⚠ ยอดหนี้ค้าง</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step fin ctrl" onclick="showPanel('15-2')">
+                  <div class="step-num">ขั้น 15.2</div>
+                  <div class="step-text">ลงพื้นที่จัดเก็บเงินตามงวดที่อนุมัติ</div>
+                  <span class="badge-step ctrl">✓ เก็บตามงวด</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">ฝ่ายขาย</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales" onclick="showPanel('15-3')">
+                  <div class="step-num">ขั้น 15.3</div>
+                  <div class="step-text">จัดทำแบบฟอร์มคำร้อง & บันทึกภายในเสนอ ผบห.</div>
+                  <span class="badge-step time">10 นาที</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label mgmt">ผู้บริหาร (ผบห.)</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step mgmt ctrl" onclick="showPanel('15-4')">
+                  <div class="step-num">ขั้น 15.4</div>
+                  <div class="step-text">ผบห. พิจารณาลงนามอนุมัติแผนผ่อนชำระ</div>
+                  <span class="badge-step ctrl">✓ อนุมัติแผน</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 15: ขอปรับลดค่าเช่า -->
+    <div id="tab-15" class="tab-panel">
+      <div class="proc-header">
+        <div class="proc-header-left">
+          <div class="proc-icon" style="background:#fde8e8;">📉</div>
+          <div>
+            <div class="proc-title">กระบวนการที่ 16: งานพิจารณาคำขอปรับลดค่าเช่า</div>
+            <div class="proc-sub">Rent Reduction & Relief Request Review</div>
+          </div>
+        </div>
+        <div class="proc-badge-tag">หมวดที่ 4: ผู้ค้าสัมพันธ์และการเงิน</div>
+      </div>
+      <div class="swimlane-wrap">
+        <table class="sl-table">
+          <tr>
+            <td class="sl-lane-label hdr">ผู้รับผิดชอบ</td>
+            <td class="sl-steps" style="background:var(--gray50); font-weight:700; font-size:11px; color:var(--text-muted);">ขั้นตอนการปฏิบัติงาน</td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label sales">ฝ่ายขาย</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step sales risk" onclick="showPanel('16-1')">
+                  <div class="step-num">ขั้น 16.1</div>
+                  <div class="step-text">รับคำร้องยอดขายตก / สุขภาพ</div>
+                  <span class="badge-step risk">⚠ ตรวจสอบเหตุผล</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales" onclick="showPanel('16-2')">
+                  <div class="step-num">ขั้น 16.2</div>
+                  <div class="step-text">ตรวจบัญชีรายรับ-จ่าย หรือใบรับรองแพทย์</div>
+                  <span class="badge-step time">10 นาที</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step sales ctrl" onclick="showPanel('16-3')">
+                  <div class="step-num">ขั้น 16.3</div>
+                  <div class="step-text">จัดทำบันทึกภายในเสนอ ผบห.</div>
+                  <span class="badge-step ctrl">✓ บันทึกภายใน</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label mgmt">ผู้บริหาร (ผบห.)</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step mgmt ctrl" onclick="showPanel('16-4')">
+                  <div class="step-num">ขั้น 16.4</div>
+                  <div class="step-text">ผบห. พิจารณาลงนามอนุมัติปรับลดค่าเช่า</div>
+                  <span class="badge-step ctrl">✓ อนุมัติส่วนลด</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="sl-lane-label acct">แผนกบัญชี</td>
+            <td class="sl-steps">
+              <div class="hflow">
+                <div class="step acct ctrl" onclick="showPanel('16-5')">
+                  <div class="step-num">ขั้น 16.5</div>
+                  <div class="step-text">รับบันทึกอนุมัติ & ปรับปรุงยอดตั้งหนี้ในระบบ</div>
+                  <span class="badge-step ctrl">✓ ปรับระบบบัญชี</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+  </div> <!-- End content-col -->
+
+</div> <!-- End main-wrapper -->
+
+<!-- Backdrop -->
+<div class="panel-backdrop" id="panelBackdrop" onclick="closePanel()"></div>
+
+<!-- Glassmorphism Side Panel -->
+<div class="side-panel" id="sidePanel">
+  <button class="panel-close" onclick="closePanel()">✕</button>
+  
+  <div class="panel-eyebrow" id="pEyebrow">ขั้นตอนที่ X.X</div>
+  <div class="panel-title" id="pTitle">ชื่อขั้นตอนการทำงาน</div>
+
+  <div id="pAlert" class="panel-alert control" style="display:none;">
+    <div class="panel-alert-title" id="pAlertTitle">✓ จุดควบคุมสำคัญ</div>
+    <div class="panel-alert-text" id="pAlertText">คำอธิบาย</div>
+  </div>
+
+  <div class="panel-section">
+    <div class="panel-section-title">ข้อมูลพื้นฐาน & ระยะเวลา</div>
+    <div class="info-pill-box">
+      <div class="info-pill">
+        <span class="info-pill-label">ผู้รับผิดชอบหลัก</span>
+        <span class="info-pill-value" id="pResp">-</span>
+      </div>
+      <div class="info-pill">
+        <span class="info-pill-label">ระยะเวลาปฏิบัติ</span>
+        <span class="info-pill-value" id="pDuration">-</span>
+      </div>
+      <div class="info-pill">
+        <span class="info-pill-label">หน่วยงานร่วม</span>
+        <span class="info-pill-value" id="pCoop">-</span>
+      </div>
+      <div class="info-pill">
+        <span class="info-pill-label">รอบความถี่</span>
+        <span class="info-pill-value" id="pFreq">-</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-section">
+    <div class="panel-section-title">รายละเอียดการปฏิบัติงาน (Task Checklist)</div>
+    <ul class="task-list" id="pTasks">
+      <!-- Injected by JS -->
+    </ul>
+  </div>
+
+  <div class="panel-section">
+    <div class="panel-section-title">เอกสารและรหัสอ้างอิง</div>
+    <div class="doc-tag-list" id="pDocs">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <div class="panel-section" style="margin-top:auto;">
+    <div class="panel-section-title">การควบคุมและ System Audit</div>
+    <div style="font-size:12px; color:var(--text-muted); line-height:1.6;" id="pAuditDesc">
+      • ข้อมูลต้องถูกบันทึกเข้าระบบหลักเพื่อรองรับการทวนสอบย้อนหลัง 100%<br>
+      • กรณีระบบขัดข้อง ต้องมีลายเซ็นหัวหน้างานกำกับบนเอกสารสำเนาเสมอ
+    </div>
+  </div>
+</div>
+
+<script>
+// Tab Switching
+function switchTab(index) {
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+  
+  tabs.forEach((tab, i) => {
+    if (i === index) tab.classList.add('active');
+    else tab.classList.remove('active');
+  });
+
+  panels.forEach((panel, i) => {
+    if (i === index) panel.classList.add('active');
+    else panel.classList.remove('active');
+  });
+
+  // Scroll active tab into view
+  if (tabs[index]) {
+    tabs[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+
+  // Update URL parameter without reload
+  const url = new URL(window.location);
+  url.searchParams.set('tab', index);
+  window.history.replaceState({}, '', url);
+
+  // Close panel on tab switch
+  closePanel();
+}
+
+// Side Panel Data
+const stepData = {
+  // Tab 0: รับลูกค้าใหม่
+  '1-1': {
+    eyebrow: 'ขั้นตอนที่ 1.1 · รับลูกค้าเช่าใหม่',
+    title: 'นำเสนอขายพื้นที่ให้กับลูกค้าปัจจุบันและลูกค้าใหม่',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '30 นาที',
+    coop: 'ฝ่ายบริหารกิจการภายในตลาด',
+    freq: 'เมื่อมีลูกค้าติดต่อหรือแผงว่าง',
+    tasks: [
+      'สอบถามประเภทสินค้า รูปแบบธุรกิจ และความต้องการขนาดพื้นที่ของลูกค้า',
+      'ชี้แจงอัตราค่าเช่า ค่าบริการส่วนกลาง และโครงสร้างเงินประกันตามระเบียบตลาด',
+      'ตรวจสอบประวัติการค้าเบื้องต้นเพื่อจัดกลุ่มลงโซนสินค้าที่เหมาะสม'
+    ],
+    docs: ['โบรชัวร์ข้อมูลตลาดและอัตราค่าเช่ากลาง'],
+    alertType: 'control',
+    alertTitle: '✓ จุดควบคุมการคัดกรอง',
+    alertText: 'ต้องตรวจสอบว่าประเภทสินค้าไม่ขัดต่อกฎระเบียบของตลาดหรือสินค้าห้ามขาย'
+  },
+  '1-2': {
+    eyebrow: 'ขั้นตอนที่ 1.2 · รับลูกค้าเช่าใหม่',
+    title: 'พาลูกค้าไปดูพื้นที่เช่า (แผงว่างจริงตาม Layout)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '30 นาที',
+    coop: 'ฝ่ายอาคารสถานที่',
+    freq: 'เมื่อมีลูกค้านัดหมายดูหน้างาน',
+    tasks: [
+      'นำผังแม่บท (Layout Map) ล่าสุดไปพาเดินดูแผงว่างจริงหน้างาน',
+      'อธิบายจุดต่อระบบไฟฟ้า มิเตอร์น้ำ จุดระบายน้ำ และการไหลเวียนของลูกค้าในโซน',
+      'แจ้งข้อจำกัดกายภาพของแต่ละแผง เช่น เสา หรือทิศทางลม'
+    ],
+    docs: ['ผังแผงค้าตลาดรวม (Layout Plan)'],
+    alertType: 'control',
+    alertTitle: '✓ การตรวจสอบผังจริง',
+    alertText: 'แผงที่พาลูกค้าดูต้องตรงกับสถานะ "ว่าง" ในระบบข้อมูลพื้นที่เช่าเท่านั้น'
+  },
+  '1-3': {
+    eyebrow: 'ขั้นตอนที่ 1.3 · รับลูกค้าเช่าใหม่',
+    title: 'จัดเตรียมสื่อการขายและใบเสนอราคา',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '10 นาที',
+    coop: 'แผนกบัญชี',
+    freq: 'ตามคำขอของลูกค้า',
+    tasks: [
+      'ระบุรหัสแผง ขนาดพื้นที่ ตารางเมตร และอัตราค่าเช่ามาตรฐานลงในใบเสนอราคา',
+      'ระบุเงื่อนไขเงินประกันแผง เงินประกันมิเตอร์ และระยะเวลาผูกพันสัญญา',
+      'ส่งมอบใบเสนอราคาให้ลูกค้าลงนามรับทราบหรือส่งทาง LINE ทางการ'
+    ],
+    docs: ['ใบเสนอราคาพื้นที่เช่ามาตรฐาน (Quotation)'],
+    alertType: 'control',
+    alertTitle: '✓ ความถูกต้องของราคา',
+    alertText: 'ราคาต้องเป็นไปตามตารางราคาที่ฝ่ายบริหารอนุมัติ ห้ามตกลงราคานอกเกณฑ์โดยพลการ'
+  },
+  '1-4': {
+    eyebrow: 'ขั้นตอนที่ 1.4 · รับลูกค้าเช่าใหม่',
+    title: 'ทำเอกสารบันทึกข้อตกลงเช่าแผง & ระเบียบประจำโซน',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '30 นาที',
+    coop: 'ผู้ค้าใหม่',
+    freq: 'เมื่อลูกค้าตกลงเช่า',
+    tasks: [
+      'กรอกใบบันทึกข้อตกลงการเช่าแผงค้า กำหนดวันเริ่มสัญญา และวันเปิดขาย',
+      'มอบคู่มือกฎระเบียบประจำโซน (เช่น เวลาเปิด-ปิด, ความสะอาด, ห้ามต่อเติมล้ำแนว)',
+      'แจ้งกำหนดเวลาตกแต่งร้าน/ติดตั้งเคาน์เตอร์ได้ไม่เกิน 15 วัน'
+    ],
+    docs: ['ใบบันทึกข้อตกลงการเช่าแผง', 'เอกสารกฎระเบียบประจำโซน'],
+    alertType: 'control',
+    alertTitle: '✓ กำหนดเวลาเปิดร้าน',
+    alertText: 'ต้องระบุชัดเจนว่าให้เวลาเตรียมร้านไม่เกิน 15 วัน หากเกินกำหนดจะเริ่มคิดค่าเช่าตามสัญญา'
+  },
+  '1-5': {
+    eyebrow: 'ขั้นตอนที่ 1.5 · รับลูกค้าเช่าใหม่',
+    title: 'ทำเอกสารเปิดหน้าบัญชีลูกค้า (ACC-SL-0001)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '30 นาที',
+    coop: 'แผนกบัญชี',
+    freq: 'ทุกรายที่มีการทำสัญญาใหม่',
+    tasks: [
+      'รวบรวมสำเนาบัตรประชาชน 2 ชุด พร้อมเบอร์โทรและที่อยู่ตามทะเบียนบ้าน',
+      'กรอกแบบฟอร์มเปิดหน้าบัญชีลูกค้า เลขที่ ACC-SL-0001',
+      'ระบุรหัสแผง อัตราค่าเช่ารายเดือน และรายละเอียดเงินประกันให้ครบถ้วน',
+      'ส่งเอกสารให้แผนกบัญชีเพื่อสร้างรหัสลูกค้าในระบบ ERP/Kassone'
+    ],
+    docs: ['แบบฟอร์มเปิดหน้าบัญชีลูกค้า เลขที่ ACC-SL-0001', 'สำเนาบัตรประชาชน'],
+    alertType: 'control',
+    alertTitle: '✓ เอกสารตั้งต้นระบบ (Audit Anchor)',
+    alertText: 'ACC-SL-0001 เป็นเอกสารแม่บทในการตั้งต้นหนี้และสิทธิ์แผงค้า ต้องมีลายเซ็นผู้ค้าครบถ้วน'
+  },
+  '1-6': {
+    eyebrow: 'ขั้นตอนที่ 1.6 · รับลูกค้าเช่าใหม่',
+    title: 'ตั้งรหัสลูกค้าในระบบบัญชีและการเงิน',
+    resp: 'เจ้าหน้าที่แผนกบัญชี',
+    duration: '10 นาที',
+    coop: 'ฝ่ายขาย / แผนกการเงิน',
+    freq: 'เมื่อได้รับฟอร์ม ACC-SL-0001',
+    tasks: [
+      'ตรวจสอบความถูกต้องของฟอร์ม ACC-SL-0001 เทียบกับสำเนาบัตรประชาชน',
+      'คีย์สร้าง Master Customer Code ในระบบบัญชี',
+      'ผูกรหัสแผงค้ากับรหัสลูกค้าเพื่อรองรับการออกใบแจ้งหนี้อัตโนมัติ'
+    ],
+    docs: ['ระบบบัญชีและการเงิน', 'เอกสาร ACC-SL-0001'],
+    alertType: 'control',
+    alertTitle: '✓ การตรวจสอบย้อนกลับ (Reconciliation)',
+    alertText: 'รหัสลูกค้าต้องตรงกับเลขประจำตัวผู้เสียภาษี/บัตรประชาชน เพื่อป้องกันความสับสนในระบบ'
+  },
+  '1-7': {
+    eyebrow: 'ขั้นตอนที่ 1.7 · รับลูกค้าเช่าใหม่',
+    title: 'รับชำระเงินประกัน & ค่าเช่า พร้อมออกใบเสร็จรับเงิน',
+    resp: 'แคชเชียร์แผนกการเงิน',
+    duration: '20 นาที',
+    coop: 'ผู้ค้าใหม่ / แผนกบัญชี',
+    freq: 'ณ วันทำสัญญา',
+    tasks: [
+      'เรียกเก็บเงินประกันแผง เงินประกันมิเตอร์น้ำ-ไฟ และค่าเช่าล่วงหน้าตามฟอร์ม ACC-SL-0001',
+      'รับชำระผ่านเงินสด หรือสแกน QR PromptPay ของบัญชีตลาดเท่านั้น (ไม่รับโอนเงินส่วนตัว)',
+      'ออกใบเสร็จรับเงินตัวจริงจากระบบบัญชีมอบให้ลูกค้า และเก็บสำเนาแนบสัญญา'
+    ],
+    docs: ['ใบเสร็จรับเงินค่าประกันตัวจริง', 'หลักฐานการชำระเงิน'],
+    alertType: 'control',
+    alertTitle: '✓ จุดควบคุมทางการเงิน',
+    alertText: 'ห้ามส่งมอบกุญแจหรืออนุญาตเข้าพื้นที่ หากยังไม่มีใบเสร็จรับเงินประกันยืนยันจากระบบ'
+  },
+  '1-8': {
+    eyebrow: 'ขั้นตอนที่ 1.8 · รับลูกค้าเช่าใหม่',
+    title: 'จัดทำเอกสารผ่อนชำระเงินประกันแผง (กรณีขอผ่อน)',
+    resp: 'แผนกการเงิน / ฝ่ายขาย',
+    duration: '30 นาที',
+    coop: 'ผู้บริหาร / ผู้ค้า',
+    freq: 'เฉพาะกรณีได้รับอนุมัติผ่อนชำระ',
+    tasks: [
+      'จัดทำตารางงวดการผ่อนชำระเงินประกัน (ไม่เกินจำนวนงวดที่ระเบียบกำหนด)',
+      'ผู้ค้าลงนามรับทราบข้อตกลงการผ่อนชำระเงินประกัน',
+      'บันทึกตารางงวดลงระบบติดตามหนี้เพื่อแจ้งเตือนแคชเชียร์เก็บเงินในแต่ละเดือน'
+    ],
+    docs: ['เอกสารขอผ่อนชำระเงินประกัน', 'ตารางงวดการชำระ'],
+    alertType: 'warning',
+    alertTitle: '⚠ จุดเสี่ยงการผิดนัดชำระ',
+    alertText: 'หากค้างชำระเงินประกันงวดใดงวดหนึ่ง ต้องแจ้งฝ่ายขายเพื่อระงับการต่อสัญญา'
+  },
+  '1-9': {
+    eyebrow: 'Audit-1 · ตรวจสอบภายใน',
+    title: 'กระทบยอด ACC-SL-0001 กับระบบบัญชีและยอดเงินฝาก',
+    resp: 'ฝ่ายตรวจสอบภายใน (Internal Audit)',
+    duration: 'ตามรอบตรวจสอบ (Monthly)',
+    coop: 'แผนกบัญชี / การเงิน',
+    freq: 'ประจำเดือน / สุ่มตรวจ',
+    tasks: [
+      'ดึงรายงานสัญญาทั้งหมดที่เปิดใหม่ในเดือนจากระบบบัญชี',
+      'สุ่มทวนสอบเลขที่ ACC-SL-0001 กับใบเสร็จเงินประกันและรายการเดินบัญชีธนาคาร (Bank Statement)',
+      'ตรวจสอบสถานะแผงในระบบ Layout ว่าตรงกับการใช้งานจริงหน้างาน'
+    ],
+    docs: ['รายงานสัญญาเปิดใหม่', 'Statement ธนาคาร', 'ทะเบียนคุม ACC-SL'],
+    alertType: 'control',
+    alertTitle: '✓ Third Line of Defense',
+    alertText: 'Audit ตรวจสอบผ่านระบบ 100% ไม่ต้องลงพื้นที่ประจำวัน ทวนสอบความถูกต้องของกระบวนการ'
+  },
+
+  // Tab 1: สัญญาเช่า & VIP
+  '2-1': {
+    eyebrow: 'ขั้นตอนที่ 2.1 · สัญญานิติบุคคล & VIP',
+    title: 'ตรวจสอบเอกสารนิติบุคคล / ภพ.20',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '30 นาที',
+    coop: 'ผู้เช่านิติบุคคล',
+    freq: 'เมื่อมีลูกค้านิติบุคคลทำสัญญา',
+    tasks: [
+      'ตรวจสอบหนังสือรับรองบริษัท (อายุไม่เกิน 3 เดือน) วัตถุประสงค์ และผู้มีอำนาจลงนาม',
+      'ตรวจสอบใบ ภพ.20 บัตรประชาชนกรรมการผู้มีอำนาจ และหนังสือมอบอำนาจ (ถ้ามี)',
+      'ส่งเอกสารให้ฝ่ายบัญชีตรวจสอบสถานะภาษี'
+    ],
+    docs: ['หนังสือรับรองบริษัท', 'ภพ.20', 'บัตรประชาชนกรรมการ'],
+    alertType: 'control',
+    alertTitle: '✓ ความถูกต้องทางนิติบุคคล',
+    alertText: 'ต้องมีตราประทับสำคัญและลายมือชื่อกรรมการตามหนังสือรับรองครบถ้วน'
+  },
+  '2-2': {
+    eyebrow: 'ขั้นตอนที่ 2.2 · สัญญานิติบุคคล & VIP',
+    title: 'ร่างสัญญาเช่าสถานที่ SL-xxxx & สัญญาบริการ',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '2 ชั่วโมง',
+    coop: 'ฝ่ายนิติการ / บัญชี',
+    freq: 'ทุกสัญญานิติบุคคล',
+    tasks: [
+      'ขอเลขที่สัญญามาตรฐานจากแผนกบัญชี (รหัส SL-ปี พ.ศ.-ลำดับ เช่น SL-2569-0001)',
+      'ร่างสัญญาเช่าพื้นที่และสัญญาบริการตามมาตรฐานที่ฝ่ายกฎหมายกำหนด',
+      'ส่งร่างสัญญาให้ผู้เช่านิติบุคคลตรวจสอบเงื่อนไขก่อนจัดพิมพ์ฉบับจริง'
+    ],
+    docs: ['ร่างสัญญาเช่า SL-xxxx', 'ร่างสัญญาบริการ'],
+    alertType: 'control',
+    alertTitle: '✓ รหัสสัญญามาตรฐาน',
+    alertText: 'เลขที่สัญญาต้องรันจากบัญชีส่วนกลางเท่านั้น ห้ามตั้งเลขขึ้นเอง'
+  },
+  '2-3': {
+    eyebrow: 'ขั้นตอนที่ 2.3 · สัญญา VIP1',
+    title: 'นำเสนอราคาและส่วนลดโครงการ VIP1 (1 ปี / 3 ปี)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '20 นาที',
+    coop: 'แผนกบัญชี',
+    freq: 'เมื่อผู้ค้าขอเข้าโครงการ VIP1',
+    tasks: [
+      'เช็คประวัติค่าเช่าเดิมและส่วนลดที่ได้รับอนุมัติจากบัญชี',
+      'เสนอส่วนลด: สัญญา 1 ปี ส่วนลดครึ่งเดือน / สัญญา 3 ปี ส่วนลด 1.5 เดือน',
+      'ให้ผู้ค้าลงนามตกลงเข้าร่วมโครงการระยะยาว'
+    ],
+    docs: ['ตารางคำนวณส่วนลด VIP1', 'ใบสมัครโครงการ VIP1'],
+    alertType: 'control',
+    alertTitle: '✓ เกณฑ์ส่วนลด VIP1',
+    alertText: 'อัตราส่วนลดต้องเป็นไปตามประกาศนโยบายตลาด ห้ามปรับแก้ส่วนลดเองเด็ดขาด'
+  },
+  '2-4': {
+    eyebrow: 'ขั้นตอนที่ 2.4 · สัญญา VIP2',
+    title: 'VIP2: จัดทำเอกสารยินยอมตรวจเครดิตบูโร (ส่ง ธ.กรุงเทพ)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '15 นาที',
+    coop: 'ธนาคารกรุงเทพ / ผู้ค้า',
+    freq: 'ผู้ค้าที่สมัครโครงการ VIP2',
+    tasks: [
+      'ให้ผู้ค้าลงนามในหนังสือยินยอมเปิดเผยข้อมูลเครดิต (NCB Consent)',
+      'แนบสำเนาบัตรประชาชน 2 ชุดพร้อมรับรองสำเนาถูกต้อง',
+      'จัดส่งเอกสารให้เจ้าหน้าที่ธนาคารกรุงเทพเพื่อตรวจสอบประวัติการเงิน'
+    ],
+    docs: ['หนังสือให้ความยินยอมเปิดเผยข้อมูลเครดิต', 'สำเนาบัตรประชาชน 2 ชุด'],
+    alertType: 'warning',
+    alertTitle: '⚠ ความปลอดภัยข้อมูลส่วนบุคคล (PDPA)',
+    alertText: 'เอกสาร NCB Consent ต้องจัดเก็บในตู้ล็อกกุญแจ ส่งต่อให้ธนาคารเท่านั้น ห้ามเปิดเผยภายนอก'
+  },
+  '2-5': {
+    eyebrow: 'ขั้นตอนที่ 2.5 · สัญญา VIP2 สินเชื่อ',
+    title: 'ประสานสินเชื่อ MSCW กู้ได้สูงสุด 30% ของยอดเงินกู้',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '30 นาที',
+    coop: 'บริษัท เอ็ม เอส ซี ดับเบิลยู จำกัด (MSCW)',
+    freq: 'เฉพาะผู้ค้า VIP2 ที่ขอกู้เงิน',
+    tasks: [
+      'รวบรวมเอกสาร 6 รายการ: บัตรประชาชน, ทะเบียนบ้าน, หน้าสมุดบัญชี, Statement 6 เดือน, รูปถ่ายกิจการ, ทะเบียนการค้า',
+      'ส่งเอกสารให้เจ้าหน้าที่บริษัท เอ็ม เอส ซี ดับเบิลยู จำกัด (MSCW)',
+      'ติดตามผลการอนุมัติวงเงินสินเชื่อเพื่อนำมาหักชำระค่าเช่าล่วงหน้า'
+    ],
+    docs: ['เอกสารขอสินเชื่อ 6 รายการ', 'หนังสือยืนยันอนุมัติสินเชื่อ MSCW'],
+    alertType: 'control',
+    alertTitle: '✓ ข้อจำกัดการกู้',
+    alertText: 'กู้ได้สูงสุด 30% ของวงเงินประเมิน เฉพาะผู้ค้าที่ผ่านเกณฑ์โครงการ VIP2 เท่านั้น'
+  },
+  '2-6': {
+    eyebrow: 'ขั้นตอนที่ 2.6 · สัญญาเช่า',
+    title: 'ออกเลขที่สัญญา SL-xxxx & ใบแจ้งหนี้ระบบบัญชี',
+    resp: 'เจ้าหน้าที่แผนกบัญชี',
+    duration: '15 นาที',
+    coop: 'ฝ่ายขาย / การเงิน',
+    freq: 'ทุกครั้งที่มีสัญญาใหม่/ต่อสัญญา',
+    tasks: [
+      'ตรวจสอบความถูกต้องของเงื่อนไขในร่างสัญญากับข้อมูลการเงิน',
+      'บันทึกสัญญารหัส SL ลงทะเบียนคุมสัญญาและออกใบแจ้งหนี้ค่าเช่า',
+      'ส่งใบแจ้งหนี้ให้ฝ่ายขายเพื่อประสานผู้ค้าชำระเงิน'
+    ],
+    docs: ['ทะเบียนคุมสัญญาเช่า', 'ใบแจ้งหนี้ระบบบัญชี'],
+    alertType: 'control',
+    alertTitle: '✓ จุดควบคุมบัญชี',
+    alertText: 'เลขที่สัญญา SL ต้องเรียงลำดับต่อเนื่อง ไม่มีการข้ามเลข'
+  },
+  '2-7': {
+    eyebrow: 'ขั้นตอนที่ 2.7 · สัญญาเช่า',
+    title: 'ผู้บริหาร (ผบห.) ลงนามในสัญญาเช่าและสัญญาบริการ',
+    resp: 'ผู้บริหาร / กรรมการผู้มีอำนาจ',
+    duration: '1 ชั่วโมง',
+    coop: 'ฝ่ายขาย',
+    freq: 'ทุกสัญญาเช่าสถานที่',
+    tasks: [
+      'ฝ่ายขายนำส่งสัญญาฉบับสมบูรณ์พร้อมเอกสารแนบให้ ผบห. ตรวจสอบ',
+      'ผบห. ลงนามรับรองสัญญาเช่าและสัญญาบริการ',
+      'ส่งสัญญาคืนฝ่ายขายเพื่อนัดผู้เช่าลงนามคู่ฉบับ'
+    ],
+    docs: ['สัญญาเช่าและสัญญาบริการฉบับจริง (2 ชุด)'],
+    alertType: 'control',
+    alertTitle: '✓ นิติกรณ์สมบูรณ์',
+    alertText: 'ต้องมีลายเซ็นผู้บริหารที่มีอำนาจลงนามตามหนังสือรับรองบริษัท'
+  },
+  '2-8': {
+    eyebrow: 'ขั้นตอนที่ 2.8 · สัญญาเช่า',
+    title: 'ผู้เช่าลงนามคู่ฉบับ + ติดค่าอากรแสตมป์ตามกฎหมาย',
+    resp: 'ผู้เช่า / แอดมินฝ่ายขาย',
+    duration: '30 นาที',
+    coop: 'แผนกบัญชี',
+    freq: 'เมื่อ ผบห. ลงนามแล้ว',
+    tasks: [
+      'ผู้เช่าลงนามในสัญญาทั้ง 2 ชุด พร้อมประทับตรานิติบุคคล',
+      'คำนวณและติดอากรแสตมป์ตามอัตรากฎหมาย (1,000 ละ 1 บาท ตลอดอายุสัญญา) และขีดฆ่า',
+      'ส่งมอบสัญญาคู่ฉบับให้ผู้เช่า 1 ชุด และส่งฉบับจริงเข้าเก็บที่แผนกบัญชี 1 ชุด'
+    ],
+    docs: ['สัญญาเช่าติดอากรแสตมป์สมบูรณ์'],
+    alertType: 'control',
+    alertTitle: '✓ กฎหมายอากรแสตมป์',
+    alertText: 'สัญญาต้องติดอากรแสตมป์ครบถ้วนและขีดฆ่าถูกต้องตามประมวลรัษฎากรเพื่อใช้เป็นพยานหลักฐานได้'
+  },
+
+  // Tab 2: ลูกค้าโปรโมชั่น
+  '3-1': {
+    eyebrow: 'ขั้นตอนที่ 3.1 · ลูกค้าโปรโมชั่น',
+    title: 'นำเสนอขาย & พาลูกค้าดูจุดตั้งบูธโปรโมชั่นตาม Layout',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '30 นาที',
+    coop: 'ฝ่ายอาคาร',
+    freq: 'เมื่อมีลูกค้าสนใจตั้งบูธชั่วคราว',
+    tasks: [
+      'พาลูกค้าสำรวจพื้นที่โซนโปรโมชั่น เช่น หน้าห้าง หรือลานกิจกรรมกลาง',
+      'ชี้แจงขนาดบูธ (เช่น 2x2 ม., 3x3 ม.) และจุดเชื่อมต่อไฟฟ้า',
+      'แจ้งกฎระเบียบการตั้งบูธ ความสูงของโครงสร้าง และเวลาเข้า-ออกพื้นที่'
+    ],
+    docs: ['ผังจุดตั้งบูธโปรโมชั่น (Promotion Layout)'],
+    alertType: 'control',
+    alertTitle: '✓ การจัดสรรพื้นที่',
+    alertText: 'บูธต้องไม่กีดขวางทางหนีไฟ ประตูเข้าออก หรือบดบังหน้าร้านค้าประจำ'
+  },
+  '3-2': {
+    eyebrow: 'ขั้นตอนที่ 3.2 · ลูกค้าโปรโมชั่น',
+    title: 'จัดเตรียมใบเสนอราคาสำหรับพื้นที่โปรโมชั่น',
+    resp: 'แอดมินฝ่ายขาย',
+    duration: '10 นาที',
+    coop: 'ลูกค้า',
+    freq: 'ตามคำขอของลูกค้า',
+    tasks: [
+      'คำนวณค่าเช่าตามจำนวนวัน (รายวัน หรือแพ็กเกจสัปดาห์)',
+      'ระบุค่าไฟ ค่าทำความสะอาด และเงินมัดจำความเสียหาย (ถ้ามี)',
+      'ส่งใบเสนอราคาให้ลูกค้าลงนามยืนยัน'
+    ],
+    docs: ['ใบเสนอราคาพื้นที่โปรโมชั่น'],
+    alertType: 'control',
+    alertTitle: '✓ ราคามาตรฐาน',
+    alertText: 'อัตราค่าเช่าโปรโมชั่นต้องสอดคล้องกับตารางราคาตามช่วงเทศกาล'
+  },
+  '3-3': {
+    eyebrow: 'ขั้นตอนที่ 3.3 · ลูกค้าโปรโมชั่น',
+    title: 'จัดทำเอกสารเปิดหน้าบัญชีลูกค้าชั่วคราว (ACC-SL-0001)',
+    resp: 'แอดมินฝ่ายขาย',
+    duration: '30 นาที',
+    coop: 'แผนกบัญชี',
+    freq: 'ทุกรายก่อนเริ่มลงบูธ',
+    tasks: [
+      'ขอสำเนาบัตรประชาชน (บุคคลธรรมดา) หรือ หนังสือรับรอง/ภพ.20 (นิติบุคคล)',
+      'กรอกฟอร์ม ACC-SL-0001 ระบุประเภท "เช่าชั่วคราว/โปรโมชั่น"',
+      'ประสานแผนกบัญชีเพื่อเปิดรหัสรับเงิน'
+    ],
+    docs: ['ฟอร์ม ACC-SL-0001', 'สำเนาบัตร/ภพ.20'],
+    alertType: 'control',
+    alertTitle: '✓ เอกสารทางภาษี',
+    alertText: 'กรณีเป็นนิติบุคคลต้องมี ภพ.20 และแจ้งลูกค้าเตรียมใบหัก ณ ที่จ่ายมาในวันชำระ'
+  },
+  '3-4': {
+    eyebrow: 'ขั้นตอนที่ 3.4 · ลูกค้าโปรโมชั่น',
+    title: 'ประสานแจ้งฝ่ายประชาสัมพันธ์และฝ่ายรักษาความปลอดภัย',
+    resp: 'แอดมินฝ่ายขาย',
+    duration: '5 นาที',
+    coop: 'ประชาสัมพันธ์ / รปภ.',
+    freq: 'ก่อนวันลงบูธ 1 วัน',
+    tasks: [
+      'ส่งใบแจ้งกำหนดการตั้งบูธ ให้ห้องประชาสัมพันธ์และหัวหน้า รปภ.',
+      'ระบุชื่อร้าน วันที่ เวลาติดตั้ง เวลาขาย และเวลาเก็บโครงสร้าง',
+      'รปภ. อำนวยความสะดวกเรื่องการนำรถลงของและตรวจตราความเรียบร้อย'
+    ],
+    docs: ['ใบแจ้งการลงบูธโปรโมชั่นประจำวัน'],
+    alertType: 'control',
+    alertTitle: '✓ ความปลอดภัยหน้างาน',
+    alertText: 'รปภ. จะอนุญาตให้เข้าติดตั้งได้เฉพาะบูธที่มีใบแจ้งจากฝ่ายขายเท่านั้น'
+  },
+  '3-5': {
+    eyebrow: 'ขั้นตอนที่ 3.5 · ลูกค้าโปรโมชั่น',
+    title: 'แผนกบัญชีตั้งรหัสลูกค้าในระบบ',
+    resp: 'เจ้าหน้าที่แผนกบัญชี',
+    duration: '10 นาที',
+    coop: 'การเงิน',
+    freq: 'เมื่อได้รับเอกสาร ACC-SL-0001',
+    tasks: [
+      'ตรวจสอบเอกสารภาษีของลูกค้าโปรโมชั่น',
+      'สร้างรหัสลูกค้ารายย่อยในระบบบัญชี',
+      'เปิดรายการตั้งหนี้เพื่อให้แคชเชียร์รับชำระเงิน'
+    ],
+    docs: ['ระบบบัญชีและการเงิน'],
+    alertType: 'control',
+    alertTitle: '✓ Reconciliation',
+    alertText: 'แยกหมวดรายได้ค่าเช่าโปรโมชั่นออกจากค่าเช่าแผงประจำชัดเจน'
+  },
+  '3-6': {
+    eyebrow: 'ขั้นตอนที่ 3.6 · ลูกค้าโปรโมชั่น',
+    title: 'รับชำระเงินและตรวจสอบใบหักภาษี ณ ที่จ่าย',
+    resp: 'แคชเชียร์แผนกการเงิน',
+    duration: '20 นาที',
+    coop: 'ลูกค้า',
+    freq: 'ก่อนเริ่มเปิดขาย',
+    tasks: [
+      'รับชำระค่าเช่าบูธโปรโมชั่นเต็มจำนวนก่อนเริ่มใช้งานพื้นที่',
+      'กรณีเป็นนิติบุคคล ตรวจสอบใบหักภาษี ณ ที่จ่าย (ภ.ง.ด.53 อัตรา 5% หรือ 3% ตามเงื่อนไข)',
+      'ออกใบเสร็จรับเงิน/ใบกำกับภาษีมอบให้ลูกค้า'
+    ],
+    docs: ['ใบเสร็จรับเงิน/ใบกำกับภาษี', 'หนังสือรับรองหักภาษี ณ ที่จ่าย'],
+    alertType: 'control',
+    alertTitle: '✓ ความถูกต้องทางภาษี',
+    alertText: 'หากลูกค้านิติบุคคลไม่นำใบหัก ณ ที่จ่ายมา ต้องเรียกเก็บเงินสดเต็มจำนวนไว้ก่อน'
+  },
+
+  // Tab 3: ร้านค้ารายวัน
+  '4-1': {
+    eyebrow: 'ขั้นตอนที่ 4.1 · ร้านค้ารายวัน',
+    title: 'รับติดต่อและตรวจสอบประเภทสินค้าหน้าร้าน',
+    resp: 'เจ้าหน้าที่ประชาสัมพันธ์ (ปชส.)',
+    duration: '5 นาที',
+    coop: 'ผู้ค้ารายวัน',
+    freq: 'ทุกวัน เวลา 03.00 - 16.00 น.',
+    tasks: [
+      'ผู้ค้ารายวันติดต่อที่ห้องประชาสัมพันธ์เพื่อขอขายสินค้า',
+      'ปชส. ตรวจสอบประเภทสินค้า ขนาดรถเข็น และจัดสรรจุดขายที่ไม่ทับซ้อนกับผู้ค้าประจำ',
+      'แจ้งกฎระเบียบเรื่องความสะอาดและเวลาเลิกขาย (ไม่เกิน 16.00 น.)'
+    ],
+    docs: ['สมุดลงทะเบียนผู้ค้ารายวัน'],
+    alertType: 'control',
+    alertTitle: '✓ ช่วงเวลาอนุญาต',
+    alertText: 'อนุญาตให้ขายเฉพาะช่วงเวลา 03.00 - 16.00 น. เท่านั้น นอกเวลาต้องเคลียร์พื้นที่'
+  },
+  '4-2': {
+    eyebrow: 'ขั้นตอนที่ 4.2 · ร้านค้ารายวัน',
+    title: 'แลกบัตรประชาชน + รับเงินมัดจำ 100 บาท และมอบบัตรรายวัน',
+    resp: 'เจ้าหน้าที่ประชาสัมพันธ์ / ผู้ค้า',
+    duration: '5 นาที',
+    coop: 'แผนกการเงิน',
+    freq: 'ก่อนเข้าพื้นที่ขาย',
+    tasks: [
+      'ผู้ค้าส่งมอบบัตรประชาชนตัวจริงให้เจ้าหน้าที่ ปชส. เก็บรักษา',
+      'ผู้ค่าวางเงินมัดจำบัตรอนุญาตจำนวน 100 บาทถ้วน',
+      'ปชส. บันทึกเลขบัตรและมอบ "บัตรร้านค้ารายวัน" ให้ผู้ค้านำไปติดแสดงหน้ารถเข็น'
+    ],
+    docs: ['บัตรร้านค้ารายวัน', 'บัตรประชาชนผู้ค้าตัวจริง'],
+    alertType: 'control',
+    alertTitle: '✓ จุดควบคุมมัดจำบัตร',
+    alertText: 'เงินมัดจำ 100 บาทต้องเก็บในกล่องเซฟ ปชส. และลงบันทึกเล่มมัดจำทุกราย'
+  },
+  '4-3': {
+    eyebrow: 'ขั้นตอนที่ 4.3 · ร้านค้ารายวัน',
+    title: 'รับบัตรคืน ตรวจสอบใบเสร็จ และคืนเงินมัดจำ 100 บาท',
+    resp: 'เจ้าหน้าที่ประชาสัมพันธ์ / ผู้ค้า',
+    duration: '5 นาที',
+    coop: 'ผู้ค้า',
+    freq: 'เมื่อขายเสร็จสิ้น (ก่อน 16.00 น.)',
+    tasks: [
+      'ผู้ค้านำบัตรร้านค้ารายวันมาคืน พร้อมแสดง "ใบเสร็จรับเงินค่าที่" จากการเงิน',
+      'ปชส. ตรวจสอบความถูกต้อง ส่งคืนบัตรประชาชนและเงินมัดจำ 100 บาทให้ผู้ค้า',
+      'ผู้ค้าลงลายมือชื่อรับเงินมัดจำคืนในสมุดทะเบียน'
+    ],
+    docs: ['สมุดทะเบียนมัดจำ', 'ใบเสร็จค่าที่รายวัน'],
+    alertType: 'warning',
+    alertTitle: '⚠ กรณีบัตรหาย',
+    alertText: 'หากผู้ค้าทำบัตรอนุญาตหาย จะทำการริบเงินมัดจำ 100 บาทเข้าบัญชีตลาดทันที'
+  },
+  '4-4': {
+    eyebrow: 'ขั้นตอนที่ 4.4 · ร้านค้ารายวัน',
+    title: 'การเงินเดินเก็บค่าที่หน้างาน พร้อมออกใบเสร็จรับเงิน',
+    resp: 'เจ้าหน้าที่การเงินลงพื้นที่',
+    duration: 'ตามรอบเดินตรวจ',
+    coop: 'ผู้ค้ารายวัน',
+    freq: 'ทุกวัน (เช้า-บ่าย)',
+    tasks: [
+      'เจ้าหน้าที่การเงินเดินตรวจนับรถเข็น/แผงรายวันหน้างาน',
+      'เรียกเก็บค่าบริการตามขนาด: ขนาดเล็ก 100 บาท / ขนาดกลาง 200 บาท / ขนาดใหญ่ 300 บาท',
+      'เขียนและฉีกใบเสร็จรับเงินเล่มรายวันมอบให้ผู้ค้าเป็นหลักฐานทันที'
+    ],
+    docs: ['เล่มใบเสร็จรับเงินรายวัน', 'สรุปยอดเงินสดประจำวัน'],
+    alertType: 'control',
+    alertTitle: '✓ การควบคุมเงินสดหน้างาน',
+    alertText: 'เงินที่เก็บได้ต้องกระทบยอดกับจำนวนหางบัตรใบเสร็จ และนำส่งแคชเชียร์ทันทีหลังจบรอบ'
+  },
+  '4-5': {
+    eyebrow: 'Audit-4 · ตรวจสอบภายใน',
+    title: 'สุ่มตรวจยอดบัตรร้านค้ารายวันเทียบเงินมัดจำและใบเสร็จ',
+    resp: 'ฝ่ายตรวจสอบภายใน (Internal Audit)',
+    duration: 'ตามรอบสุ่มตรวจ',
+    coop: 'ปชส. / การเงิน',
+    freq: 'สุ่มตรวจย้อนหลัง',
+    tasks: [
+      'ตรวจนับจำนวนเงินมัดจำคงเหลือในตู้ ปชส. เทียบบัตรประชาชนที่ฝากไว้',
+      'ทวนสอบยอดส่งเงินค่าที่รายวันจากการเงินเทียบกับจำนวนเล่มใบเสร็จ',
+      'ตรวจสอบรายงานบันทึกกรณีริบเงินมัดจำบัตรหาย'
+    ],
+    docs: ['สมุดคุมมัดจำ ปชส.', 'รายงานนำส่งเงินการเงิน'],
+    alertType: 'control',
+    alertTitle: '✓ Third Line of Defense',
+    alertText: 'ตรวจสอบความโปร่งใสของกระบวนการมัดจำและเงินสดหน้างาน'  },
+  // Tab 4: เตรียมความพร้อมและส่งมอบพื้นที่
+  '5-1': {
+    eyebrow: 'ขั้นตอนที่ 5.1 · เตรียมความพร้อมพื้นที่',
+    title: 'ประสานขอแบบร้านค้า & ร้านป้ายชื่อภายนอก',
+    resp: 'ฝ่ายขาย / แอดมิน',
+    duration: '10 นาที',
+    coop: 'ร้านค้า / ช่างทำป้าย',
+    freq: 'เมื่อมีผู้ค้าใหม่ทำสัญญา',
+    tasks: [
+      'ประสานผู้ค้าใหม่จัดส่งแบบแปลนร้านค้าและรายการอุปกรณ์ที่จะติดตั้ง',
+      'ส่งแบบให้แผนกช่างซ่อมบำรุงและฝ่ายอาคารตรวจสอบและอนุมัติแบบ',
+      'ประสานร้านทำป้ายชื่อร้านภายนอกตามขนาดและมาตรฐานที่ตลาดกำหนด'
+    ],
+    docs: ['เอกสารแบบร้านค้า', 'แผนผังร้านค้า'],
+    alertType: 'control',
+    alertTitle: '✓ การอนุมัติแบบ',
+    alertText: 'ต้องได้รับอนุมัติแบบจากแผนกช่างก่อนเริ่มเข้าดำเนินการตกแต่ง'
+  },
+  '5-2': {
+    eyebrow: 'ขั้นตอนที่ 5.2 · เตรียมความพร้อมพื้นที่',
+    title: 'เก็บเงินประกันตกแต่ง 30,000 บาท',
+    resp: 'ฝ่ายขาย / บัญชีและการเงิน',
+    duration: '20 นาที',
+    coop: 'ผู้รับเหมา / เจ้าของร้าน',
+    freq: 'ก่อนผู้รับเหมาเข้าทำงาน',
+    tasks: [
+      'ประสานเจ้าของร้านหรือผู้รับเหมาวางเงินประกันตกแต่ง 30,000 บาท',
+      'ประสานฝ่ายบัญชีและแคชเชียร์ออกใบเสร็จรับเงินประกันตกแต่ง',
+      'แนบสัญญาค้ำประกัน สลิปใบเสร็จ และเอกสารร้านค้า'
+    ],
+    docs: ['สัญญาค้ำประกันตกแต่ง', 'ใบเสร็จเงินประกันตกแต่ง 30,000 บาท'],
+    alertType: 'control',
+    alertTitle: '✓ จุดควบคุมเงินประกัน',
+    alertText: 'ห้ามอนุญาตให้ช่าง/ผู้รับเหมาเข้าพื้นที่ก่อนวางเงินประกันตกแต่งครบถ้วน'
+  },
+  '5-3': {
+    eyebrow: 'ขั้นตอนที่ 5.3 · เตรียมความพร้อมพื้นที่',
+    title: 'ประสานงานแผนกรักษาความสะอาดทำความสะอาดพื้นที่',
+    resp: 'ฝ่ายขาย',
+    duration: '30 นาที',
+    coop: 'แผนกรักษาความสะอาด',
+    freq: 'ก่อนส่งมอบพื้นที่',
+    tasks: [
+      'แจ้งแผนกรักษาความสะอาดเข้าเก็บกวาด ล้างพื้น และเคลียร์ขยะรอบบริเวณ',
+      'ตรวจเช็คความสะอาดและสุขอนามัยก่อนการเข้าตกแต่งและส่งมอบ'
+    ],
+    docs: ['ใบแจ้งงานทำความสะอาด'],
+    alertType: 'control',
+    alertTitle: '✓ สุขอนามัย',
+    alertText: 'พื้นที่ต้องสะอาด พร้อมสำหรับการทำงานติดตั้งระบบ'
+  },
+  '5-4': {
+    eyebrow: 'ขั้นตอนที่ 5.4 · เตรียมความพร้อมพื้นที่',
+    title: 'อนุมัติแบบ & ติดตั้งมิเตอร์น้ำ มิเตอร์ไฟ ซิงค์ล้างมือ ถังดักไขมัน ระบบแก๊ส',
+    resp: 'แผนกซ่อมบำรุง / ฝ่ายอาคาร',
+    duration: '1-3 วัน',
+    coop: 'ผู้รับเหมา / ร้านค้า',
+    freq: 'ตามแผนงานตกแต่ง',
+    tasks: [
+      'ติดตั้งมิเตอร์ไฟฟ้าและมิเตอร์น้ำประจำแผง พร้อมตรวจสอบการทำงาน',
+      'ตรวจสอบการติดตั้งซิงค์ล้างมือและถังดักไขมันตามสุขาภิบาลตลาด',
+      'ตรวจสอบแนวท่อแก๊สและระบบตัดแก๊สอัตโนมัติ (Solenoid Valve)'
+    ],
+    docs: ['แบบงานระบบวิศวกรรม', 'บันทึกการติดตั้งมิเตอร์'],
+    alertType: 'control',
+    alertTitle: '✓ มาตรฐานวิศวกรรมและความปลอดภัย',
+    alertText: 'ระบบไฟฟ้าและถังดักไขมันต้องเป็นไปตามมาตรฐานวิศวกรรมของตลาด 100%'
+  },
+  '5-5': {
+    eyebrow: 'ขั้นตอนที่ 5.5 · เตรียมความพร้อมพื้นที่',
+    title: 'อบรมผู้รับเหมาก่อนเข้าทำงานในพื้นที่ตลาด',
+    resp: 'ฝ่ายอาคาร / แผนกความปลอดภัย',
+    duration: '1 ชั่วโมง',
+    coop: 'ผู้รับเหมาตกแต่ง',
+    freq: 'ก่อนเริ่มงานตกแต่ง',
+    tasks: [
+      'อบรมกฎความปลอดภัย การใช้อุปกรณ์ป้องกันภัยส่วนบุคคล (PPE)',
+      'แจ้งเวลาที่อนุญาตให้ทำงานที่มีเสียงดังหรือกลิ่นรบกวน',
+      'ชี้แจงจุดทิ้งเศษวัสดุก่อสร้างและมาตรการป้องกันอัคคีภัย'
+    ],
+    docs: ['เอกสารอบรมผู้รับเหมา', 'ใบอนุญาตเข้าทำงาน (Work Permit)'],
+    alertType: 'warning',
+    alertTitle: '⚠ ความปลอดภัยสถานที่',
+    alertText: 'งานที่มีประกายไฟ (Hot Work) ต้องขอใบอนุญาตพิเศษและมีถังดับเพลิงประจำจุด'
+  },
+  '5-6': {
+    eyebrow: 'ขั้นตอนที่ 5.6 · เตรียมความพร้อมพื้นที่',
+    title: 'ส่งมอบพื้นที่ร้านค้า (เอกสารเลขที่ YS-SAL-004 Re.02)',
+    resp: 'ฝ่ายอาคาร / ฝ่ายวิศวกร / ฝ่ายขาย',
+    duration: '30 นาที',
+    coop: 'เจ้าของร้านค้า',
+    freq: 'วันส่งมอบพื้นที่',
+    tasks: [
+      'ร่วมตรวจสอบความพร้อมของพื้นที่จริง มิเตอร์น้ำ-ไฟ และความสมบูรณ์ของแผง',
+      'เจ้าของร้านและตัวแทนฝ่ายอาคารลงนามในใบส่งมอบพื้นที่ YS-SAL-004 Re.02',
+      'เริ่มนับระยะเวลาตกแต่งร้านค้า (ไม่เกิน 15 วัน)'
+    ],
+    docs: ['เอกสารรับมอบพื้นที่ เลขที่ YS-SAL-004 Re.02'],
+    alertType: 'control',
+    alertTitle: '✓ เอกสารรับมอบพื้นที่',
+    alertText: 'YS-SAL-004 Re.02 เป็นหลักฐานสำคัญที่ใช้เป็นจุดเริ่มต้นการคิดค่าเช่าและการคืนเงินประกัน'
+  },
+  '5-7': {
+    eyebrow: 'ขั้นตอนที่ 5.7 · เตรียมความพร้อมพื้นที่',
+    title: 'ตรวจงานระบบเพื่อคืนเงินประกันตกแต่ง (หลังเปิดร้านครบ 3 เดือน)',
+    resp: 'ฝ่ายวิศวกร / ฝ่ายอาคาร',
+    duration: '1 ชั่วโมง',
+    coop: 'เจ้าของร้านค้า',
+    freq: 'หลังเปิดขายแล้วครบ 3 เดือน',
+    tasks: [
+      'ฝ่ายวิศวกรเข้าตรวจสอบสภาพโครงสร้าง งานระบบไฟฟ้า น้ำทิ้ง และถังดักไขมัน',
+      'ตรวจเช็คว่าไม่มีความเสียหายต่อพื้นที่ส่วนกลางและพื้นที่ข้างเคียง',
+      'ออกเอกสารผลการตรวจงานระบบเพื่อเสนอขอคืนเงินประกันตกแต่ง'
+    ],
+    docs: ['เอกสารตรวจงานระบบวิศวกร', 'ภาพถ่ายสภาพพื้นที่'],
+    alertType: 'control',
+    alertTitle: '✓ เงื่อนไข 3 เดือน',
+    alertText: 'ต้องเปิดดำเนินการจริงครบ 3 เดือน และไม่มีข้อบกพร่องทางโครงสร้าง จึงจะอนุมัติคืนเงิน'
+  },
+  '5-8': {
+    eyebrow: 'ขั้นตอนที่ 5.8 · เตรียมความพร้อมพื้นที่',
+    title: 'คืนเงินประกันตกแต่ง 30,000 บาท ผ่านบัญชีธนาคาร',
+    resp: 'ฝ่ายอาคาร / บัญชีและการเงิน',
+    duration: '1-3 วันทำการ',
+    coop: 'เจ้าของร้านค้า',
+    freq: 'เมื่อผ่านการตรวจงานระบบ',
+    tasks: [
+      'รวบรวมเอกสาร 5 รายการ: 1.เอกสารตรวจงานระบบ 2.เอกสารรับมอบพื้นที่ 3.แบบงานระบบ 4.ใบเสร็จเงินประกันตัวจริง 5.หน้าสมุดบัญชี',
+      'ฝ่ายบัญชีตรวจสอบความครบถ้วนและทำเรื่องโอนเงินประกันคืนเข้าบัญชีผู้ค้า',
+      'บันทึกปิดสถานะเงินประกันตกแต่งในระบบ'
+    ],
+    docs: ['ใบเสร็จเงินประกันตัวจริง', 'หน้าสมุดบัญชีโอนคืน'],
+    alertType: 'control',
+    alertTitle: '✓ จุดควบคุมการเงิน',
+    alertText: 'ต้องเรียกเก็บใบเสร็จตัวจริงคืน หากสูญหายต้องมีใบแจ้งความและหนังสือรับรองจากฝ่ายขาย'
+  },
+
+  // Tab 5: โอน ย้าย เปลี่ยน แผง
+  '6-1': {
+    eyebrow: 'ขั้นตอนที่ 6.1 · โอน ย้าย เปลี่ยน แผง',
+    title: 'ทำเอกสารยกเลิกสัญญา (ผู้ค้าเดิม)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '30 นาที',
+    coop: 'ผู้ค้าเดิม',
+    freq: 'เมื่อผู้ค้าเดิมประสงค์โอนสิทธิ์',
+    tasks: [
+      'ตรวจสอบสถานะสัญญาเดิมและสาเหตุการโอนสิทธิ์แผงค้า',
+      'จัดทำเอกสารยกเลิกสัญญาเช่าและยินยอมโอนสิทธิ์',
+      'ให้ผู้ค้าเดิมลงนามพร้อมแนบสำเนาบัตรประชาชน'
+    ],
+    docs: ['เอกสารขอยกเลิกเช่าและโอนสิทธิ์', 'สำเนาบัตรประชาชน'],
+    alertType: 'control',
+    alertTitle: '✓ ความยินยอมผู้ถือสิทธิ์เดิม',
+    alertText: 'ต้องมีลายเซ็นผู้ถือสิทธิ์เดิมตัวจริงเท่านั้น เพื่อป้องกันข้อพิพาทสิทธิ์การครอบครองแผง'
+  },
+  '6-2': {
+    eyebrow: 'ขั้นตอนที่ 6.2 · โอน ย้าย เปลี่ยน แผง',
+    title: 'จัดทำเอกสาร โอน ย้าย เปลี่ยน แผง (ACC-SL-002)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '30 นาที',
+    coop: 'ผู้ค้าเดิม & ผู้ค้าใหม่',
+    freq: 'ทุกกรณีโอน ย้าย หรือเปลี่ยนชื่อ',
+    tasks: [
+      'กรอกแบบฟอร์ม ACC-SL-002 ระบุรหัสแผงเดิม-ใหม่ และข้อมูลคู่กรณี',
+      'ระบุรายละเอียดเงินประกันที่จะโอนหรือเรียกเก็บเพิ่ม',
+      'ให้คู่กรณีทั้งสองฝ่ายลงนามรับทราบเงื่อนไข'
+    ],
+    docs: ['เอกสารเลขที่ ACC-SL-002', 'สำเนาบัตรประชาชน 2 ชุด'],
+    alertType: 'control',
+    alertTitle: '✓ เอกสารคุมสิทธิ์ ACC-SL-002',
+    alertText: 'ACC-SL-002 เป็นเอกสารหลักฐานสำคัญในการเปลี่ยนชื่อผู้ครอบครองในระบบทะเบียนตลาด'
+  },
+  '6-3': {
+    eyebrow: 'ขั้นตอนที่ 6.3 · โอน ย้าย เปลี่ยน แผง',
+    title: 'ทำสัญญาผู้ค้าใหม่ & แจ้งค่าธรรมเนียมการโอน',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '30 นาที',
+    coop: 'ผู้ค้าใหม่',
+    freq: 'เมื่อผ่านการอนุมัติโอนสิทธิ์',
+    tasks: [
+      'ทำเอกสารเปิดหน้าบัญชีและสัญญาเช่าฉบับใหม่สำหรับผู้ค้าใหม่',
+      'แจ้งค่าธรรมเนียมการโอน (ยกเว้นเฉพาะกรณีมีความสัมพันธ์เป็นเครือญาติสายตรง)',
+      'มอบคู่มือกฎระเบียบประจำโซนให้ผู้ค้าใหม่ลงนามรับทราบ'
+    ],
+    docs: ['สัญญาเช่าฉบับใหม่', 'ใบกฎระเบียบประจำโซน'],
+    alertType: 'control',
+    alertTitle: '✓ การยกเว้นค่าธรรมเนียมเครือญาติ',
+    alertText: 'กรณียกเว้นค่าธรรมเนียมโอน ต้องแนบสำเนาทะเบียนบ้านหรือสูติบัตรยืนยันความเป็นเครือญาติ'
+  },
+  '6-4': {
+    eyebrow: 'ขั้นตอนที่ 6.4 · โอน ย้าย เปลี่ยน แผง',
+    title: 'เช็คเงินประกันแผงเดิม & ส่วนต่างเงินประกัน',
+    resp: 'เจ้าหน้าที่แผนกบัญชี',
+    duration: '10 นาที',
+    coop: 'ฝ่ายขาย',
+    freq: 'เมื่อได้รับฟอร์ม ACC-SL-002',
+    tasks: [
+      'ตรวจสอบยอดเงินประกันแผง เงินประกันน้ำ-ไฟ และแก๊สของผู้ค้าเดิมในระบบ',
+      'คำนวณส่วนต่างเงินประกันกรณีแผงใหม่มีอัตราค่าเช่าสูงกว่าเดิม',
+      'ยืนยันยอดเงินที่ต้องเรียกเก็บเพิ่มจากผู้ค้าใหม่'
+    ],
+    docs: ['รายงานเงินประกันในระบบบัญชี'],
+    alertType: 'control',
+    alertTitle: '✓ ความถูกต้องของยอดเงินประกัน',
+    alertText: 'ต้องมั่นใจว่ายอดเงินประกันครบถ้วนตามเกณฑ์แผงใหม่ก่อนเซ็นอนุมัติ'
+  },
+  '6-5': {
+    eyebrow: 'ขั้นตอนที่ 6.5 · โอน ย้าย เปลี่ยน แผง',
+    title: 'ตั้งรหัสลูกค้าผู้ค้าใหม่ในระบบบัญชี',
+    resp: 'เจ้าหน้าที่แผนกบัญชี',
+    duration: '10 นาที',
+    coop: 'ฝ่ายขาย / การเงิน',
+    freq: 'เมื่อผู้ค้าใหม่ส่งเอกสารครบ',
+    tasks: [
+      'สร้าง Master Customer Code ของผู้ค้าใหม่ในระบบ',
+      'โอนย้ายประวัติและแผงค้าไปยังรหัสลูกค้าใหม่',
+      'ปิดรหัสหรือปลดล็อคภาระผูกพันของผู้ค้าเดิม'
+    ],
+    docs: ['ระบบบัญชีและการเงิน (Kassone)'],
+    alertType: 'control',
+    alertTitle: '✓ System Reconciliation',
+    alertText: 'ปรับปรุงฐานข้อมูลให้ตรงกับสิทธิ์จริง เพื่อให้ออกใบแจ้งหนี้รอบถัดไปได้อย่างถูกต้อง'
+  },
+  '6-6': {
+    eyebrow: 'ขั้นตอนที่ 6.6 · โอน ย้าย เปลี่ยน แผง',
+    title: 'ตรวจสอบหนี้ยอดค้างจ่ายของผู้ค้าเดิม',
+    resp: 'แผนกการเงิน / คุณสาลี่ (ฝ่ายติดตามหนี้)',
+    duration: '10 นาที',
+    coop: 'ฝ่ายขาย',
+    freq: 'ก่อนอนุมัติการโอนสิทธิ์ทุกครั้ง',
+    tasks: [
+      'ตรวจสอบยอดหนี้ค่าเช่า ค่าน้ำ ค่าไฟ และค่าบริการที่จอดรถค้างชำระของผู้ค้าเดิม',
+      'หากมียอดค้างชำระ ต้องให้ผู้ค้าเดิมหรือผู้รับโอนเคลียร์หนี้ให้ครบถ้วนก่อน',
+      'ลงนามรับรองสถานะ "ปลอดหนี้" ในเอกสาร ACC-SL-0001 / ACC-SL-002'
+    ],
+    docs: ['รายงานหนี้ค้างชำระระบบการเงิน', 'เอกสาร ACC-SL-0001'],
+    alertType: 'warning',
+    alertTitle: '⚠ จุดวิกฤตการเงิน (Stop Gate)',
+    alertText: 'ห้ามดำเนินการโอนสิทธิ์เด็ดขาดหากยังมีหนี้ค้างชำระโดยไม่มีแผนชำระที่ ผบห. อนุมัติ'
+  },
+  '6-7': {
+    eyebrow: 'ขั้นตอนที่ 6.7 · โอน ย้าย เปลี่ยน แผง',
+    title: 'รับชำระส่วนต่างเงินประกันและค่าธรรมเนียมการโอน',
+    resp: 'แคชเชียร์แผนกการเงิน',
+    duration: '20 นาที',
+    coop: 'ผู้ค้าใหม่',
+    freq: 'ณ วันดำเนินการโอน',
+    tasks: [
+      'รับชำระค่าธรรมเนียมการโอนและส่วนต่างเงินประกัน (ถ้ามี)',
+      'ออกใบเสร็จรับเงินจากระบบมอบให้ผู้ค้าใหม่',
+      'ส่งสำเนาใบเสร็จให้ฝ่ายขายแนบเข้าแฟ้มสัญญา'
+    ],
+    docs: ['ใบเสร็จรับเงินค่าธรรมเนียมและเงินประกันส่วนต่าง'],
+    alertType: 'control',
+    alertTitle: '✓ การออกใบเสร็จระบบ',
+    alertText: 'ค่าธรรมเนียมการโอนต้องออกใบเสร็จเข้าหมวดรายได้ค่าธรรมเนียมของตลาด'
+  },
+
+  // Tab 6: ย้ายร้านค้า & ปรับปรุง
+  '7-1': {
+    eyebrow: 'ขั้นตอนที่ 7.1 · ย้ายร้านค้า & ปรับปรุง',
+    title: 'สำรวจแผงเย็น/แอร์/กระจก & ฝ่ายออกแบบเขียนผังใหม่',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่ / ฝ่ายออกแบบ',
+    duration: '1-3 วัน',
+    coop: 'ร้านค้า',
+    freq: 'เมื่อมีโครงการปรับปรุงพื้นที่เช่า',
+    tasks: [
+      'สำรวจเคาน์เตอร์ แผงเย็น ขนาดพื้นที่ และอุปกรณ์เฉพาะของร้าน',
+      'ตรวจสอบลักษณะพื้นที่ใหม่ (เช่น กั้นห้องกระจก ระบบปรับอากาศ มิเตอร์น้ำ-ไฟ)',
+      'ฝ่ายออกแบบเขียนผังแปลนพื้นที่ใหม่พร้อมขนาดที่แน่นอน'
+    ],
+    docs: ['ผังแบบแปลนพื้นที่ใหม่', 'รายงานสำรวจอุปกรณ์ร้านค้า'],
+    alertType: 'control',
+    alertTitle: '✓ การออกแบบที่ถูกต้อง',
+    alertText: 'ขนาดพื้นที่ใหม่ต้องรองรับอุปกรณ์หลักของร้านได้โดยไม่กีดขวางทางเดินส่วนกลาง'
+  },
+  '7-2': {
+    eyebrow: 'ขั้นตอนที่ 7.2 · ย้ายร้านค้า & ปรับปรุง',
+    title: 'นัดประชุมร้านค้า & หน่วยงานภายในแจ้งแผนงานย้าย',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '1-2 ชั่วโมง',
+    coop: 'ช่าง / รปภ. / การเงิน / ร้านค้า',
+    freq: 'ก่อนวันย้าย 3-5 วัน',
+    tasks: [
+      'จัดประชุมชี้แจงกำหนดการย้าย เวลาตัด-ต่อระบบไฟ และการขนส่งอุปกรณ์',
+      'ประสานฝ่ายช่างซ่อมบำรุงเตรียมเข้าติดตั้งระบบ',
+      'ประสานร้านทำป้ายชื่อร้านค้าใหม่'
+    ],
+    docs: ['แผนการย้ายร้านค้า (Relocation Plan)', 'บันทึกการประชุม'],
+    alertType: 'control',
+    alertTitle: '✓ การบูรณาการข้ามฝ่าย',
+    alertText: 'ทุกฝ่ายต้องรับทราบไทม์ไลน์เดียวกันเพื่อลดผลกระทบต่อการขายของร้านค้า'
+  },
+  '7-3': {
+    eyebrow: 'ขั้นตอนที่ 7.3 · ย้ายร้านค้า & ปรับปรุง',
+    title: 'จัดทำเอกสารเปรียบเทียบรายได้พื้นที่เดิมกับพื้นที่ใหม่',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '1-2 ชั่วโมง',
+    coop: 'เจ้าหน้าที่แผนกบัญชี',
+    freq: 'ก่อนย้ายร้านค้า',
+    tasks: [
+      'เปรียบเทียบอัตราค่าเช่าและรายได้เฉลี่ยของบูธเดิมเทียบกับบูธใหม่',
+      'ระบุรหัสบูธเดิมและรหัสบูธใหม่เพื่อส่งให้แผนกบัญชีปรับปรุงฐานข้อมูล',
+      'กรณีมีค่าทำโต๊ะหรืออุปกรณ์ที่ร้านค้าขอผ่อน ให้คำนวณดอกเบี้ย/ค่าบริการ 5-20% ตามระเบียบ'
+    ],
+    docs: ['เอกสารเปรียบเทียบรายได้พื้นที่เช่า', 'ตารางคำนวณการผ่อนชำระ'],
+    alertType: 'control',
+    alertTitle: '✓ การควบคุมรายได้ตลาด',
+    alertText: 'การย้ายแผงต้องไม่ทำให้รายได้รวมของโซนลดลงโดยไม่มีเหตุผลทางยุทธศาสตร์รองรับ'
+  },
+  '7-4': {
+    eyebrow: 'ขั้นตอนที่ 7.4 · ย้ายร้านค้า & ปรับปรุง',
+    title: 'ช่างปรับปรุงระบบ & รปภ. อำนวยความสะดวกขนย้าย',
+    resp: 'เจ้าหน้าที่ช่างซ่อมบำรุง / รปภ.',
+    duration: '1-2 วัน',
+    coop: 'ร้านค้า',
+    freq: 'วันเข้าปรับปรุงและขนย้าย',
+    tasks: [
+      'ช่างเข้าต่อระบบไฟฟ้า ประปา และระบบแก๊สในจุดใหม่',
+      'รปภ. ตรวจสอบการขนย้ายอุปกรณ์ ป้องกันทรัพย์สินสูญหาย และจัดระเบียบการจราจร'
+    ],
+    docs: ['ใบแจ้งงานซ่อมบำรุง', 'สมุดบันทึก รปภ.'],
+    alertType: 'control',
+    alertTitle: '✓ ความปลอดภัยในการย้าย',
+    alertText: 'ต้องตัดกระแสไฟก่อนรื้อถอนอุปกรณ์ และมี รปภ. เฝ้าระวังขณะขนย้าย'
+  },
+  '7-5': {
+    eyebrow: 'ขั้นตอนที่ 7.5 · ย้ายร้านค้า & ปรับปรุง',
+    title: 'จดมิเตอร์น้ำ/ไฟ ถ่ายรูปยืนยันตัวเลขกับร้านค้า',
+    resp: 'เจ้าหน้าที่การเงินลงพื้นที่',
+    duration: '30 นาที',
+    coop: 'ร้านค้า / ฝ่ายขาย',
+    freq: 'ณ วันตัดยอดและเริ่มจุดใหม่',
+    tasks: [
+      'จดเลขมิเตอร์น้ำและมิเตอร์ไฟจุดเดิม (เลขตัดกะสุดท้าย) และจุดใหม่ (เลขตั้งต้น)',
+      'ถ่ายภาพหน้าปัดมิเตอร์ทั้งสองจุดไว้เป็นหลักฐานเพื่อยืนยันตัวเลขกับร้านค้า',
+      'ร้านค้าลงนามรับทราบตัวเลขมิเตอร์เพื่อป้องกันข้อโต้แย้งบิลค่าน้ำไฟ'
+    ],
+    docs: ['บันทึกเลขมิเตอร์น้ำ-ไฟ', 'ภาพถ่ายหน้าปัดมิเตอร์'],
+    alertType: 'control',
+    alertTitle: '✓ พยานหลักฐานภาพถ่าย',
+    alertText: 'ภาพถ่ายหน้าปัดมิเตอร์เป็นหลักฐานสำคัญสูงสุดในการคำนวณค่าน้ำไฟส่งบัญชี'
+  },
+
+  // Tab 7: รับลูกค้ายกเลิกเช่า
+  '8-1': {
+    eyebrow: 'ขั้นตอนที่ 8.1 · ยกเลิกเช่า',
+    title: 'ทำเอกสารยกเลิกเช่า (ฟอร์ม ACC-SL-0001)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '10 นาที',
+    coop: 'ผู้ค้า / แผนกบัญชี',
+    freq: 'เมื่อมีคำขอยกเลิกเช่า',
+    tasks: [
+      'ตรวจสอบสาเหตุการยกเลิกเช่าและเงื่อนไขระยะเวลาตามสัญญา',
+      'กรอกแบบฟอร์มขอยกเลิกเช่า ACC-SL-0001 แนบสำเนาบัตรประชาชน 2 ชุด',
+      'แนบใบเสร็จเงินประกันแผง มิเตอร์น้ำ มิเตอร์ไฟ และระบบแก๊ส'
+    ],
+    docs: ['แบบฟอร์มยกเลิกเช่า ACC-SL-0001', 'ใบเสร็จเงินประกันตัวจริง'],
+    alertType: 'control',
+    alertTitle: '✓ ตรวจสอบสัญญาก่อนยกเลิก',
+    alertText: 'ต้องตรวจสอบว่าอยู่ครบตามอายุสัญญาหรือไม่ หากบอกเลิกก่อนกำหนดอาจถูกริบเงินประกันตามสัญญา'
+  },
+  '8-2': {
+    eyebrow: 'ขั้นตอนที่ 8.2 · ยกเลิกเช่า',
+    title: 'แจ้งรายละเอียดคืนเงินประกัน & ทำเอกสารขนย้ายของออก',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '10 นาที',
+    coop: 'ผู้ค้า / รปภ.',
+    freq: 'เมื่อผ่านการตรวจสอบหนี้',
+    tasks: [
+      'แจ้งเงื่อนไขและกำหนดเวลาการโอนเงินประกันคืนเข้าบัญชีผู้ค้า',
+      'ออกใบอนุญาตขอขนย้ายทรัพย์สินออกจากตลาด',
+      'ประสานงานแผนกรักษาความปลอดภัยเพื่อตรวจเช็คสิ่งของที่ขนย้ายออก'
+    ],
+    docs: ['ใบขออนุญาตขนย้ายของออก', 'หน้าสมุดบัญชีโอนคืน'],
+    alertType: 'control',
+    alertTitle: '✓ ใบอนุญาตขนของออก',
+    alertText: 'รปภ. จะอนุญาตให้ขนของออกจากตลาดได้เฉพาะร้านที่มีใบอนุญาตที่มีลายเซ็นฝ่ายขายเท่านั้น'
+  },
+  '8-3': {
+    eyebrow: 'ขั้นตอนที่ 8.3 · ยกเลิกเช่า (กรณีละทิ้งแผง)',
+    title: 'กรณีละทิ้งแผง/หนี้ค้าง: ตีราคาทรัพย์สินหักกลบลบหนี้',
+    resp: 'ฝ่ายขาย / ฝ่ายติดตามหนี้ / แผนกบัญชี',
+    duration: '1-2 วัน',
+    coop: 'ผู้บริหาร',
+    freq: 'เฉพาะกรณีผู้ค้าละทิ้งแผงและมีหนี้ค้าง',
+    tasks: [
+      'คณะทำงานร่วมลงพื้นที่ตรวจสอบทรัพย์สิน อุปกรณ์ และสินค้าที่ละทิ้งไว้ในแผง',
+      'จัดทำบัญชีทรัพย์สิน ถ่ายรูป และประเมินราคาตามสภาพความเป็นจริง',
+      'หากทรัพย์สินสามารถจำหน่ายได้ ให้นำส่งฝ่ายติดตามหนี้เพื่อนำเงินมาชำระตัดหนี้ค้าง',
+      'จัดทำบันทึกข้อความภายในเสนอผู้บริหาร (ผบห.) อนุมัติ และสำเนาส่งบัญชี/การเงิน'
+    ],
+    docs: ['บันทึกข้อความภายในเสนอ ผบห.', 'บัญชีตีราคาทรัพย์สินพร้อมภาพถ่าย'],
+    alertType: 'warning',
+    alertTitle: '⚠ จุดวิกฤตทางกฎหมายและนโยบายสุภาพ',
+    alertText: 'ต้องดำเนินการตามขั้นตอนกฎหมายอย่างรัดกุม มีกรรมการร่วมตรวจนับ และบันทึกภาพถ่ายครบทุกชิ้น'
+  },
+  '8-4': {
+    eyebrow: 'ขั้นตอนที่ 8.4 · ยกเลิกเช่า',
+    title: 'ตรวจสอบหนี้ยอดค้างจ่ายและเงินประกันทุกระบบ',
+    resp: 'แผนกการเงิน / คุณสาลี่ (ฝ่ายติดตามหนี้)',
+    duration: '15 นาที',
+    coop: 'แผนกบัญชี',
+    freq: 'ทุกรายที่ขอยกเลิกเช่า',
+    tasks: [
+      'เช็คยอดหนี้ค้างชำระทั้งหมด: ค่าเช่า, ค่าน้ำ, ค่าไฟ, ที่จอดรถ, และระบบแก๊ส',
+      'คำนวณยอดเงินประกันคงเหลือหลังหักหนี้ค้างชำระและค่ามิเตอร์คงค้าง',
+      'ลงนามรับรองยอดเงินสุทธิที่จะคืน หรือยอดหนี้ที่ต้องติดตามทวงถาม'
+    ],
+    docs: ['รายงานสถานะลูกหนี้รายตัว', 'เอกสารรับรองยอดเงินประกันสุทธิ'],
+    alertType: 'control',
+    alertTitle: '✓ จุดตัดยอดหนี้ค้าง',
+    alertText: 'ห้ามปล่อยคืนเงินประกันเด็ดขาดจนกว่าจะได้รับการเซ็นยืนยันจากฝ่ายติดตามหนี้'
+  },
+  '8-5': {
+    eyebrow: 'ขั้นตอนที่ 8.5 · ยกเลิกเช่า',
+    title: 'รับมอบพื้นที่ร้านค้าคืน (เอกสารเลขที่ YS-SAL-004 Re.02)',
+    resp: 'แผนกอาคาร / ฝ่ายวิศวกรรม',
+    duration: '30 นาที',
+    coop: 'ฝ่ายขาย / ผู้ค้า',
+    freq: 'วันส่งมอบพื้นที่คืน',
+    tasks: [
+      'ฝ่ายอาคารและวิศวกรเข้าตรวจสภาพแผงค้าหลังจากขนย้ายของออกเสร็จสิ้น',
+      'ตรวจสอบว่าไม่มีการดัดแปลงหรือความเสียหายต่อโครงสร้างและมิเตอร์',
+      'ลงนามรับมอบพื้นที่คืนในเอกสาร YS-SAL-004 Re.02 เพื่อเปลี่ยนสถานะแผงเป็น "ว่างพร้อมขาย"'
+    ],
+    docs: ['เอกสารรับมอบพื้นที่คืน เลขที่ YS-SAL-004 Re.02'],
+    alertType: 'control',
+    alertTitle: '✓ อัปเดตผังแผงว่าง',
+    alertText: 'เมื่อเซ็น YS-SAL-004 แล้ว แผงค้าจะถูกอัปเดตกลับเข้าสู่ฐานข้อมูลแผงว่างเพื่อเปิดขายทันที'
+  },
+
+  // Tab 8: ควบคุมข้อบังคับตลาด
+  '9-1': {
+    eyebrow: 'ขั้นตอนที่ 9.1 · ควบคุมข้อบังคับ',
+    title: 'ลงตรวจพื้นที่ขายตามแบบฟอร์มตรวจพื้นที่ SL-2567-0001',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '1 ชั่วโมง',
+    coop: 'ผู้ค้าในตลาด',
+    freq: 'ประจำวัน / ประจำสัปดาห์',
+    tasks: [
+      'เดินตรวจพื้นที่ขายตามเส้นทางที่กำหนดโดยใช้แบบฟอร์มมาตรฐาน SL-2567-0001',
+      'ตรวจเช็ค: การวางของล้ำแนวเส้น, ความสะอาด, การแต่งกาย, การแสดงป้ายราคา, สุขาภิบาล',
+      'บันทึกรายละเอียดเหตุการณ์: เกิดอะไรขึ้น ที่ไหน เวลาใด ใครเป็นผู้กระทำ'
+    ],
+    docs: ['แบบฟอร์มบันทึกการตรวจพื้นที่ เลขที่ SL-2567-0001'],
+    alertType: 'control',
+    alertTitle: '✓ แบบฟอร์มตรวจมาตรฐาน',
+    alertText: 'ต้องใช้แบบฟอร์ม SL-2567-0001 บันทึกให้ชัดเจน ห้ามตรวจโดยไม่มีหลักฐานลายลักษณ์อักษร'
+  },
+  '9-2': {
+    eyebrow: 'ขั้นตอนที่ 9.2 · ควบคุมข้อบังคับ',
+    title: 'ถ่ายภาพเพื่อเป็นหลักฐานประกอบเหตุที่ตรวจพบ',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: 'ตามเหตุการณ์',
+    coop: 'ร้านค้า',
+    freq: 'ทุกครั้งที่พบการกระทำผิดระเบียบ',
+    tasks: [
+      'ถ่ายภาพมุมกว้างแสดงป้ายชื่อร้าน/รหัสแผง และภาพมุมใกล้แสดงจุดที่ผิดระเบียบ',
+      'บันทึกเวลาและตำแหน่งพิกัดของภาพถ่ายลงในระบบรายงานประจำวัน'
+    ],
+    docs: ['ภาพถ่ายหลักฐานประกอบรายงาน'],
+    alertType: 'control',
+    alertTitle: '✓ หลักฐานเชิงประจักษ์',
+    alertText: 'ภาพถ่ายต้องเห็นรหัสแผงหรือป้ายชื่อร้านชัดเจนเพื่อป้องกันข้อโต้แย้ง'
+  },
+  '9-3': {
+    eyebrow: 'ขั้นตอนที่ 9.3 · ควบคุมข้อบังคับ',
+    title: 'ออกหนังสือแจ้งเตือนผู้ค้าตามลำดับ (ครั้งที่ 1, 2, 3)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '30 นาที',
+    coop: 'ผู้ค้า',
+    freq: 'เมื่อพบการฝ่าฝืนระเบียบ',
+    tasks: [
+      'ครั้งที่ 1: ตักเตือนด้วยวาจาและออกหนังสือแจ้งเตือนครั้งที่ 1 (เตือนเป็นลายลักษณ์อักษร)',
+      'ครั้งที่ 2: ออกหนังสือแจ้งเตือนครั้งที่ 2 พร้อมแจ้งบทกำหนดโทษปรับตามระเบียบ',
+      'ครั้งที่ 3: ออกหนังสือแจ้งเตือนครั้งที่ 3 ปรับเงิน และนำเสนอผู้บริหารพิจารณามาตรการขั้นเด็ดขาด',
+      'ให้ผู้ค้าลงลายมือชื่อรับทราบหนังสือแจ้งเตือนทุกครั้ง'
+    ],
+    docs: ['หนังสือแจ้งเตือนร้านค้า ครั้งที่ 1, 2, 3'],
+    alertType: 'warning',
+    alertTitle: '⚠ ลำดับขั้นตอนการตักเตือน',
+    alertText: 'ต้องดำเนินการตามลำดับ 1-2-3 เพื่อความเป็นธรรมและเป็นไปตามหลักธรรมาภิบาล'
+  },
+  '9-4': {
+    eyebrow: 'ขั้นตอนที่ 9.4 · ควบคุมข้อบังคับ',
+    title: 'มาตรการเด็ดขาด: พักการขายชั่วคราว หรือบอกเลิกสัญญาเช่า',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่ / ผบห.',
+    duration: 'ตามมติที่ประชุม',
+    coop: 'ฝ่ายนิติการ / รปภ.',
+    freq: 'กรณีฝ่าฝืนซ้ำซากหรือไม่ปฏิบัติตามคำเตือน',
+    tasks: [
+      'รวบรวมประวัติหนังสือแจ้งเตือนทั้ง 3 ครั้งพร้อมภาพถ่ายหลักฐาน',
+      'จัดทำบันทึกเสนอผู้บริหาร (ผบห.) เพื่อขออนุมัติพักการขาย (เช่น 3-7 วัน) หรือบอกเลิกสัญญา',
+      'เมื่อได้รับอนุมัติ ส่งหนังสือแจ้งร้านค้าและประสาน รปภ. ปิดกั้นพื้นที่ขาย'
+    ],
+    docs: ['บันทึกขออนุมัติพักการขาย/ยกเลิกสัญญา', 'คำสั่งฝ่ายบริหาร'],
+    alertType: 'warning',
+    alertTitle: '⚠ อำนาจอนุมัติ',
+    alertText: 'การพักการขายหรือบอกเลิกสัญญาต้องได้รับอนุมัติจากผู้บริหารระดับสูงเท่านั้น'
+  },
+  '9-5': {
+    eyebrow: 'ขั้นตอนที่ 9.5 · ควบคุมข้อบังคับ',
+    title: 'รับชำระค่าปรับเข้ามูลนิธิตลาดยิ่งเจริญ',
+    resp: 'แคชเชียร์แผนกการเงิน',
+    duration: '15 นาที',
+    coop: 'ผู้ค้า / มูลนิธิฯ',
+    freq: 'เมื่อมีการลงโทษปรับ',
+    tasks: [
+      'ตรวจสอบหนังสือแจ้งเตือนที่ระบุยอดเงินค่าปรับตามระเบียบ',
+      'รับชำระเงินค่าปรับและออกใบเสร็จรับเงินในนาม "มูลนิธิตลาดยิ่งเจริญ"',
+      'เงินค่าปรับทั้งหมดจะถูกนำไปใช้ในกิจกรรมสาธารณกุศล ไม่นำเข้าเป็นรายได้ของตลาด'
+    ],
+    docs: ['ใบเสร็จรับเงินบริจาคมูลนิธิตลาดยิ่งเจริญ'],
+    alertType: 'control',
+    alertTitle: '✓ ความโปร่งใสของเงินค่าปรับ',
+    alertText: 'เงินค่าปรับทุกบาทเข้ามูลนิธิฯ เพื่อสาธารณกุศลตามเจตนารมณ์ของผู้ก่อตั้งตลาด'
+  },
+
+  // Tab 9: ตลาดนัดริมคลอง
+  '10-1': {
+    eyebrow: 'ขั้นตอนที่ 10.1 · ตลาดนัดริมคลอง',
+    title: 'รับจองร้านค้า จัดกลุ่มครัวร้อน-ครัวเย็น ตาม Layout',
+    resp: 'แอดมินฝ่ายขายตลาดนัด',
+    duration: '2 ชั่วโมง',
+    coop: 'ผู้ค้าตลาดนัด',
+    freq: 'วันเปิดตลาดนัด (ช่วงเช้า-บ่าย)',
+    tasks: [
+      'ตรวจสอบรายชื่อร้านค้ารายวันที่มาลงชื่อจองล็อค',
+      'จัดล็อคตาม Layout โดยแยกโซนชัดเจน: ครัวร้อน (ใช้ความร้อน/แก๊ส) และครัวเย็น (เสื้อผ้า/ของแห้ง/เครื่องดื่ม)',
+      'บันทึกเบอร์โทรศัพท์และประเภทสินค้าลงทะเบียนคุมรายวัน'
+    ],
+    docs: ['ผัง Layout ตลาดนัดริมคลอง', 'ทะเบียนรับจองล็อค'],
+    alertType: 'control',
+    alertTitle: '✓ การจัดโซนครัวร้อน-เย็น',
+    alertText: 'ห้ามนำร้านครัวร้อนไปปะปนกับร้านขายเสื้อผ้าหรือของใช้เด็ดขาด เพื่อป้องกันอัคคีภัย'
+  },
+  '10-2': {
+    eyebrow: 'ขั้นตอนที่ 10.2 · ตลาดนัดริมคลอง',
+    title: 'ประสานเต็นท์ กระแสไฟฟ้า เครื่องเสียง และการรีดน้ำฝนตก',
+    resp: 'แอดมินฝ่ายขายตลาดนัด',
+    duration: '10-30 นาที',
+    coop: 'ทีมลานจอด 2 / ช่างไฟ / ทีมแม่บ้านสห',
+    freq: 'ก่อนเปิดตลาดนัด',
+    tasks: [
+      'ประสานทีมงานลานจอด 2 กางเต็นท์ ซ่อมแซม หรือเปลี่ยนเต็นท์ที่ชำรุด',
+      'ประสานช่างไฟฟ้าเปิดระบบจ่ายไฟ ตรวจสอบตู้เมน และเปิดเพลงตามระบบเสียงตามสาย',
+      'กรณีฝนตก ประสานทีมทำความสะอาดรีดน้ำ ดูดน้ำขัง และเคลียร์ร่องระบายน้ำทันที'
+    ],
+    docs: ['ใบแจ้งงานซ่อมบำรุงตลาดนัด'],
+    alertType: 'control',
+    alertTitle: '✓ ความพร้อมหน้างาน',
+    alertText: 'เต็นท์และระบบไฟฟ้าต้องพร้อม 100% ก่อนเวลา 14.00 น. เพื่อให้ผู้ค้าเข้าจัดร้านได้'
+  },
+  '10-3': {
+    eyebrow: 'ขั้นตอนที่ 10.3 · ตลาดนัดริมคลอง',
+    title: 'หาผู้สนับสนุน (สปอนเซอร์) เต็นท์แม่ค้าและกิจกรรมส่งเสริมการขาย',
+    resp: 'ผู้จัดการพื้นที่ขาย',
+    duration: '30 นาที',
+    coop: 'Supplier ธุรกิจขนาดใหญ่ (ธนาคาร, ไทยน้ำทิพย์ ฯลฯ)',
+    freq: 'สัปดาห์เว้นสัปดาห์',
+    tasks: [
+      'ติดต่อประสานงานองค์กรพันธมิตรเพื่อขอรับการสนับสนุนเต็นท์ ร่ม หรือสื่อประชาสัมพันธ์',
+      'เจรจาผลประโยชน์ร่วม เช่น สิทธิ์การตั้งบูธประชาสัมพันธ์ หรือการติดป้ายแบรนด์สินค้า',
+      'บริหารจัดการจัดสรรเต็นท์สปอนเซอร์ให้แก่ผู้ค้าอย่างทั่วถึงและเป็นธรรม'
+    ],
+    docs: ['บันทึกข้อตกลงการสนับสนุน (Sponsorship Agreement)'],
+    alertType: 'control',
+    alertTitle: '✓ การลดต้นทุนผู้ค้า',
+    alertText: 'การหาสปอนเซอร์เต็นท์ช่วยลดภาระค่าใช้จ่ายของผู้ค้าและสร้างทัศนียภาพที่สวยงามเป็นระเบียบ'
+  },
+  '10-4': {
+    eyebrow: 'ขั้นตอนที่ 10.4 · ตลาดนัดริมคลอง',
+    title: 'ตรวจเช็คความปลอดภัยก่อนเปิดร้าน เวลา 14.00 น.',
+    resp: 'ผจก.พื้นที่ / แอดมิน / รปภ.',
+    duration: '30 นาที',
+    coop: 'ผู้ค้าตลาดนัด',
+    freq: 'ทุกวันเปิดตลาด เวลา 14.00 น. ตรง',
+    tasks: [
+      'ตรวจปลั๊กไฟและสายไฟว่าไม่มีจุดฉีกขาดหรือเสี่ยงต่อไฟฟ้าลัดวงจร',
+      'ตรวจผ้าปูใต้พื้นร้านค้า (ต้องมีผ้าปูรองป้องกันคราบน้ำมันและสิ่งสกปรกเปื้อนพื้น)',
+      'ตรวจห้ามนำหญ้าเทียมมารองปูอาหารโดยตรงบนโต๊ะ (ต้องใช้วัสดุ Food Grade)',
+      'ตรวจคุณภาพน้ำมันทอด ห้ามใช้น้ำมันทอดซ้ำเกิน 2 ครั้ง เพื่อสุขภาพของผู้บริโภค'
+    ],
+    docs: ['แบบฟอร์มตรวจความปลอดภัยตลาดนัด 14.00 น.'],
+    alertType: 'warning',
+    alertTitle: '⚠ จุดควบคุมเวลา 14.00 น.',
+    alertText: 'หากร้านค้าไม่ผ่านเกณฑ์การตรวจความสะอาดและความปลอดภัย จะไม่อนุญาตให้เปิดขาย'
+  },
+  '10-5': {
+    eyebrow: 'ขั้นตอนที่ 10.5 · ตลาดนัดริมคลอง',
+    title: 'ตรวจระบบแก๊สและวาล์วนิรภัย (ใช้แก๊สยี่ห้อ PT 100%)',
+    resp: 'ผจก.พื้นที่ / แอดมิน / รปภ.',
+    duration: '30 นาที',
+    coop: 'ร้านค้าใช้แก๊ส / ทีม LP',
+    freq: 'ทุกวันเปิดตลาด เวลา 14.00 น.',
+    tasks: [
+      'ตรวจเช็คถังแก๊สทุกถัง: ต้องเป็นแก๊สยี่ห้อ PT ตามมาตรฐานความปลอดภัยของตลาดเท่านั้น',
+      'ตรวจสอบหัวปรับแรงดันแก๊สและเซฟตี้วาล์ว (Safety Valve) ว่าใช้งานได้สมบูรณ์',
+      'ตรวจสภาพสายส่งแก๊ส ยางรัดท่อ และไม่มีการรั่วซึม'
+    ],
+    docs: ['เช็คลิสต์ตรวจความปลอดภัยระบบแก๊ส'],
+    alertType: 'warning',
+    alertTitle: '🔴 จุดวิกฤตความปลอดภัยสูงสุด (Critical Point)',
+    alertText: 'ห้ามใช้ถังแก๊สยี่ห้ออื่นเด็ดขาด และถังแก๊สต้องมีเซฟตี้วาล์วทุกถัง หากฝ่าฝืนยึดถังออกนอกพื้นที่ทันที'
+  },
+  '10-6': {
+    eyebrow: 'ขั้นตอนที่ 10.6 · ตลาดนัดริมคลอง',
+    title: 'เดินเก็บค่าจองล็อค ออกบิลเงินสด และสรุปรายได้รายวัน',
+    resp: 'ฝ่ายการเงิน / แอดมินฝ่ายขาย',
+    duration: '1 ชั่วโมง',
+    coop: 'ผู้ค้าตลาดนัด',
+    freq: 'ทุกวันเปิดตลาดนัด',
+    tasks: [
+      'เจ้าหน้าที่การเงินร่วมกับแอดมินเดินเก็บค่าเช่าล็อคตามผัง Layout',
+      'เขียนบิลเงินสดเล่มตลาดนัดมอบให้ผู้ค้าทันที',
+      'กระทบยอดจำนวนเงินสดกับจำนวนล็อคที่ขายได้จริง และทำรายงานสรุปส่งการเงินส่วนกลาง'
+    ],
+    docs: ['บิลเงินสดค่าเช่าตลาดนัด', 'ใบสรุปยอดรายได้ตลาดนัดรายวัน'],
+    alertType: 'control',
+    alertTitle: '✓ สรุปส่งเงินรายวัน',
+    alertText: 'เงินสดที่เก็บได้ต้องส่งเข้าห้องการเงินพร้อมใบสรุปยอดในวันเดียวกัน ห้ามถือข้ามวัน'
+  },
+
+  // Tab 10: นโยบายตลาด & ราชการ
+  '11-1': {
+    eyebrow: 'ขั้นตอนที่ 11.1 · นโยบายตลาด',
+    title: 'จัดอบรมดับเพลิงประจำปีสำหรับร้านค้าในตลาด',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '4 ชั่วโมง',
+    coop: 'สถานีดับเพลิง / ทีม LP / ร้านค้า',
+    freq: 'ปีละ 1 ครั้ง',
+    tasks: [
+      'พิมพ์จดหมายแจ้งร้านค้าและลงแจกตามแผงค้าทุกโซน',
+      'รวบรวมรายชื่อตัวแทนร้านค้าเข้าร่วมอบรมภาคทฤษฎีและฝึกซ้อมดับเพลิงจริง',
+      'บันทึกสถิติร้านค้าที่ผ่านการอบรมลงในฐานข้อมูลประวัติผู้ค้า'
+    ],
+    docs: ['หนังสือเชิญอบรมดับเพลิง', 'ทะเบียนรายชื่อผู้ผ่านการอบรม'],
+    alertType: 'control',
+    alertTitle: '✓ มาตรฐานความปลอดภัยประจำปี',
+    alertText: 'ร้านค้าทุกแผงต้องส่งตัวแทนเข้ารับการอบรมอย่างน้อย 1 คนตามกฎกระทรวงความปลอดภัย'
+  },
+  '11-2': {
+    eyebrow: 'ขั้นตอนที่ 11.2 · นโยบายตลาด',
+    title: 'ต่ออายุใบอนุญาตค้าซากสัตว์ (ใบร.10) กับกรมปศุสัตว์',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '1 สัปดาห์',
+    coop: 'กรมปศุสัตว์เขต / ร้านค้าโซนเนื้อสัตว์',
+    freq: 'ประจำปี',
+    tasks: [
+      'ลงพื้นที่โซนหมู ไก่ เนื้อ ไข่ รวบรวมเอกสาร ใบร.10 เดิม และสำเนาบัตรประชาชน',
+      'ทำความสะอาดเอกสาร ใบร.10 สรุปยอดเงินค่าธรรมเนียม และประสานเจ้าหน้าที่ปศุสัตว์มารับเอกสาร',
+      'เมื่อได้รับเอกสารต่ออายุแล้ว สแกนเก็บเข้าไฟล์ดิจิทัล และนำส่งฉบับจริงคืนร้านค้า'
+    ],
+    docs: ['ใบอนุญาตค้าซากสัตว์ (ใบร.10)', 'สำเนาบัตรประชาชน'],
+    alertType: 'control',
+    alertTitle: '✓ ความถูกต้องตาม พ.ร.บ. โรคระบาดสัตว์',
+    alertText: 'แผงค้าเนื้อสัตว์ทุกแผงต้องมีใบร.10 ที่ยังไม่หมดอายุแสดงหน้าร้าน'
+  },
+  '11-3': {
+    eyebrow: 'ขั้นตอนที่ 11.3 · นโยบายตลาด',
+    title: 'ขับเคลื่อนโครงการ "ปศุสัตว์ OK" (7 รายการเอกสาร)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '2 สัปดาห์',
+    coop: 'กรมปศุสัตว์ / ร้านค้าเนื้อสัตว์',
+    freq: 'ประจำปี / ร้านค้าใหม่',
+    tasks: [
+      'รวบรวมเอกสาร 7 รายการ: 1.สำเนาบัตร ปปช. 2.ใบร.10 3.ใบรน. 4.ใบเคลื่อนย้าย 5.ใบมาตรฐานฟาร์ม 6.ใบสมัคร 7.รูปถ่ายร้าน 4 รูป',
+      'ประสานงานเจ้าหน้าที่กรมปศุสัตว์ลงพื้นที่ตรวจประเมินสุขอนามัยแผงค้า',
+      'ส่งมอบป้ายสัญลักษณ์ "ปศุสัตว์ OK" เพื่อติดแสดงหน้าร้าน'
+    ],
+    docs: ['ชุดเอกสารปศุสัตว์ OK 7 รายการ', 'ป้ายรับรองปศุสัตว์ OK'],
+    alertType: 'control',
+    alertTitle: '✓ มาตรฐานอาหารปลอดภัย',
+    alertText: 'เนื้อสัตว์ในตลาดยิ่งเจริญต้องมีแหล่งที่มาตรวจสอบย้อนกลับได้ถึงฟาร์มมาตรฐาน'
+  },
+  '11-4': {
+    eyebrow: 'ขั้นตอนที่ 11.4 · นโยบายตลาด',
+    title: 'ขอรับเครื่องหมายรับรองฮาลาล (คณะกรรมการอิสลามกลาง)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '2-4 สัปดาห์',
+    coop: 'คณะกรรมการอิสลามกลาง / ผู้ค้ามุสลิม',
+    freq: 'ประจำปี / ต่ออายุ',
+    tasks: [
+      'สำรวจและรวบรวมรายชื่อร้านค้าอาหารอิสลามที่ประสงค์ขอรับรองฮาลาล',
+      'เตรียมเอกสารสมัครและประสานเจ้าหน้าที่กรรมการอิสลามกลางเข้าตรวจแบบประเมิน',
+      'ส่งมอบใบประกาศและป้ายเครื่องหมายรับรองฮาลาลติดแสดงหน้าร้าน'
+    ],
+    docs: ['ใบสมัครรับรองฮาลาล', 'ใบประกาศรับรองฮาลาล'],
+    alertType: 'control',
+    alertTitle: '✓ ความเชื่อมั่นผู้บริโภคมุสลิม',
+    alertText: 'ร้านค้าที่แสดงป้ายฮาลาลต้องผ่านการตรวจประเมินวัตถุดิบและสุขอนามัยอย่างเคร่งครัด'
+  },
+  '11-5': {
+    eyebrow: 'ขั้นตอนที่ 11.5 · นโยบายตลาด',
+    title: 'อบรมและออกบัตรประจำตัวผู้สัมผัสอาหาร (สำนักงานเขต)',
+    resp: 'ฝ่ายบุคคล / ฝ่ายขาย / สำนักงานเขต',
+    duration: '1 เดือน',
+    coop: 'สำนักงานเขต / ร้านค้าอาหาร',
+    freq: 'ประจำปี',
+    tasks: [
+      'สำรวจร้านค้าที่ยังไม่มีบัตรผู้สัมผัสอาหาร และรวบรวมรายชื่อผู้เข้าอบรม',
+      'ประสานฝ่ายบุคคลเชิญวิทยากรจากสำนักงานเขตมาจัดอบรมและทดสอบความรู้',
+      'เตรียมเอกสาร: บัตร ปปช., ใบรับรองแพทย์ (ตรวจ 5 โรคต้องห้าม), รูปถ่าย',
+      'รับมอบบัตรผู้สัมผัสอาหารจากสำนักงานเขตและนำส่งให้แก่ผู้ค้า'
+    ],
+    docs: ['บัตรประจำตัวผู้สัมผัสอาหาร', 'ใบรับรองแพทย์ตรวจ 5 โรค'],
+    alertType: 'control',
+    alertTitle: '✓ สุขาภิบาลอาหารตามกฎหมาย',
+    alertText: 'ผู้ขายอาหารทุกคนต้องมีบัตรผู้สัมผัสอาหารและผ่านการตรวจสุขภาพตามเกณฑ์กระทรวงสาธารณสุข'
+  },
+
+  // Tab 11: บัตรอนุญาตทำงาน
+  '12-1': {
+    eyebrow: 'ขั้นตอนที่ 12.1 · บัตรอนุญาตทำงาน',
+    title: 'รับลงทะเบียนทำบัตรอนุญาตทำงานในตลาด (คนไทย / ต่างชาติ)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '5 นาที',
+    coop: 'ผู้ค้า / ลูกจ้างในตลาด',
+    freq: 'เมื่อมีแรงงานใหม่เข้าทำงาน',
+    tasks: [
+      'ตรวจสอบเอกสารคนไทย: สำเนาบัตรประชาชน + หลักฐานการฉีดวัคซีน',
+      'ตรวจสอบเอกสารคนต่างชาติ: สำเนาพาสปอร์ต หรือบัตรประจำตัวแรงงานข้ามชาติ (บัตรสีชมพู) + เอกสารวัคซีน',
+      'ตรวจสอบว่ามีนายจ้างซึ่งเป็นเจ้าของแผงในตลาดยืนยันการจ้างงาน'
+    ],
+    docs: ['สำเนาบัตร ปปช. / พาสปอร์ต', 'เอกสารรับรองการทำงานโดยเจ้าของแผง'],
+    alertType: 'control',
+    alertTitle: '✓ ตรวจสอบแรงงานถูกกฎหมาย',
+    alertText: 'แรงงานต่างด้าวต้องมีใบอนุญาตทำงาน (Work Permit) ถูกต้องตามกฎหมายเท่านั้น'
+  },
+  '12-2': {
+    eyebrow: 'ขั้นตอนที่ 12.2 · บัตรอนุญาตทำงาน',
+    title: 'บันทึกข้อมูลลงระบบ AppSheet & สร้างรหัสสมาชิกและ QR Code',
+    resp: 'แอดมินฝ่ายขาย',
+    duration: '10 นาที',
+    coop: 'ระบบสารสนเทศตลาด',
+    freq: 'ทุกรายที่ลงทะเบียน',
+    tasks: [
+      'คีย์ข้อมูลประวัติ รูปถ่าย ชื่อแผงที่ทำงาน ลงในระบบฐานข้อมูล AppSheet',
+      'ระบบทำการรันรหัสสมาชิกอัตโนมัติและสร้างลิงก์ QR Code ประจำตัว',
+      'แปลงลิงก์ QR Code เป็นภาพกราฟิกเพื่อนำไปประกอบการพิมพ์บัตร'
+    ],
+    docs: ['ระบบฐานข้อมูล AppSheet', 'ไฟล์ภาพ QR Code สมาชิก'],
+    alertType: 'control',
+    alertTitle: '✓ ระบบดิจิทัลตรวจสอบย้อนกลับ',
+    alertText: 'QR Code บนบัตรใช้สำหรับให้ รปภ. หรือฝ่ายตรวจสอบสแกนดูประวัติการอนุญาตได้ทันที'
+  },
+  '12-3': {
+    eyebrow: 'ขั้นตอนที่ 12.3 · บัตรอนุญาตทำงาน',
+    title: 'นำเข้า Template กราฟิก จัดวางรูปถ่าย และพิมพ์บัตรประจำตัว',
+    resp: 'แอดมินฝ่ายขาย',
+    duration: '10 นาที',
+    coop: 'ผู้ถือบัตร',
+    freq: 'เมื่อระบบสร้างข้อมูลเสร็จสิ้น',
+    tasks: [
+      'นำข้อมูล รูปถ่าย และ QR Code ใส่ลงในแม่แบบ (Template) มาตรฐาน',
+      'พิมพ์บัตรประจำตัวพลาสติกเคลือบแข็งมอบให้แรงงานนำไปคล้องคอแสดงขณะปฏิบัติงาน'
+    ],
+    docs: ['บัตรอนุญาตทำงานในตลาดตลาดยิ่งเจริญ'],
+    alertType: 'control',
+    alertTitle: '✓ การแสดงบัตรขณะทำงาน',
+    alertText: 'แรงงานทุกคนในตลาดต้องพกบัตรนี้ตลอดเวลาขณะอยู่ในพื้นที่ตลาด'
+  },
+  '12-4': {
+    eyebrow: 'ขั้นตอนที่ 12.4 · บัตรอนุญาตทำงาน',
+    title: 'รับชำระค่าธรรมเนียมทำบัตรและออกใบเสร็จรับเงิน',
+    resp: 'แคชเชียร์แผนกการเงิน',
+    duration: '10 นาที',
+    coop: 'ผู้ขอทำบัตร',
+    freq: 'ณ วันรับบัตร',
+    tasks: [
+      'เรียกเก็บค่าธรรมเนียมการออกบัตรตามระเบียบ',
+      'ออกใบเสร็จรับเงินจากระบบการเงินมอบให้ผู้ชำระ',
+      'บันทึกปิดรอบรายได้ค่าธรรมเนียมบัตรประจำวัน'
+    ],
+    docs: ['ใบเสร็จรับเงินค่าธรรมเนียมบัตร'],
+    alertType: 'control',
+    alertTitle: '✓ รายได้ค่าธรรมเนียม',
+    alertText: 'เงินค่าธรรมเนียมต้องบันทึกเข้าสู่ระบบบัญชีตลาดอย่างถูกต้อง'
+  },
+
+  // Tab 12: รับเรื่องร้องเรียน
+  '13-1': {
+    eyebrow: 'ขั้นตอนที่ 13.1 · รับเรื่องร้องเรียน',
+    title: 'รับเรื่องร้องเรียนจากผู้ค้าและลูกค้า (โทรศัพท์ / LINE / หน้าร้าน)',
+    resp: 'แอดมินฝ่ายขาย / แผนกประชาสัมพันธ์',
+    duration: '5 นาที',
+    coop: 'ผู้ร้องเรียน',
+    freq: 'เมื่อมีเหตุการณ์',
+    tasks: [
+      'รับเรื่องร้องเรียนทางโทรศัพท์ LINE กลุ่มตลาด หรือรับแจ้งผ่านห้องประชาสัมพันธ์',
+      'จำแนกประเภทเรื่องร้องเรียน: 1.งานแจ้งซ่อมระบบ (น้ำ/ไฟ/แอร์) 2.ข้อพิพาทระหว่างร้านค้า 3.ลูกค้าร้องเรียนบริการ/ราคาสินค้า',
+      'บันทึกข้อมูลผู้ร้องเรียน รหัสแผงที่เกี่ยวข้อง และรายละเอียดเหตุการณ์ลงในสมุดรับเรื่อง'
+    ],
+    docs: ['แบบฟอร์มรับเรื่องร้องเรียนประจำวัน'],
+    alertType: 'control',
+    alertTitle: '✓ SLA การรับเรื่อง',
+    alertText: 'ต้องบันทึกและตอบรับผู้ร้องเรียนทันที เพื่อแสดงถึงความใส่ใจในการแก้ปัญหา'
+  },
+  '13-2': {
+    eyebrow: 'ขั้นตอนที่ 13.2 · รับเรื่องร้องเรียน',
+    title: 'ลงพื้นที่สอบสวนข้อเท็จจริง & ประสานงานลูกค้าผู้ร้องเรียน',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '20 นาที',
+    coop: 'ร้านค้าที่ถูกร้องเรียน / ผู้ร้องเรียน',
+    freq: 'ภายใน 30 นาทีหลังรับเรื่อง',
+    tasks: [
+      'ลงพื้นที่แผงค้าเพื่อสอบถามข้อเท็จจริงและตรวจสอบพยานหลักฐาน (เช่น ตาชั่ง หรือป้ายราคา)',
+      'โทรศัพท์ติดต่อลูกค้าผู้ร้องเรียนเพื่อแจ้งความคืบหน้าและขอข้อมูลเพิ่มเติมด้วยความสุภาพ',
+      'จัดทำบันทึกสรุปข้อเท็จจริงเสนอผู้บังคับบัญชา'
+    ],
+    docs: ['บันทึกการสอบสวนข้อเท็จจริง'],
+    alertType: 'control',
+    alertTitle: '✓ ความเป็นกลางและสุภาพ',
+    alertText: 'การสอบสวนต้องรับฟังความทั้งสองฝ่ายอย่างเป็นธรรม และสื่อสารด้วยถ้อยคำสุภาพ'
+  },
+  '13-3': {
+    eyebrow: 'ขั้นตอนที่ 13.3 · รับเรื่องร้องเรียน',
+    title: 'ออกหนังสือแจ้งเตือนร้านค้า (กรณีพบความผิดจริงตามระเบียบ)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '30 นาที',
+    coop: 'ร้านค้า',
+    freq: 'เมื่อผลการสอบสวนสรุปว่าผิดระเบียบ',
+    tasks: [
+      'หากพบว่าร้านค้ากระทำผิดจริง เช่น ขายเกินราคา ตาชั่งไม่ได้มาตรฐาน หรือแสดงกิริยาไม่สุภาพ',
+      'ออกหนังสือแจ้งเตือนร้านค้าอย่างเป็นทางการตามข้อบังคับตลาด',
+      'ให้ร้านค้าลงนามรับทราบและปรับปรุงแก้ไขภายในเวลาที่กำหนด'
+    ],
+    docs: ['หนังสือแจ้งเตือนร้านค้า'],
+    alertType: 'warning',
+    alertTitle: '⚠ การบังคับใช้ระเบียบ',
+    alertText: 'หนังสือเตือนจะถูกบันทึกเข้าแฟ้มประวัติร้านค้าเพื่อใช้ประกอบการพิจารณาต่อสัญญาประจำปี'
+  },
+  '13-4': {
+    eyebrow: 'ขั้นตอนที่ 13.4 · รับเรื่องร้องเรียน',
+    title: 'คีย์งานเข้าระบบแจ้งซ่อมบำรุง (กรณีงานด่วนโทรแจ้งช่าง ≤ 3 นาที)',
+    resp: 'แอดมินฝ่ายขาย / เจ้าหน้าที่ช่างซ่อมบำรุง',
+    duration: '3-5 นาที',
+    coop: 'แผนกช่างซ่อมบำรุง',
+    freq: 'เมื่องานเกี่ยวข้องกับระบบสาธารณูปโภค',
+    tasks: [
+      'กรณีทั่วไป (ไฟดับจุดเดียว, ก๊อกน้ำหยด): คีย์ใบแจ้งงานลงระบบโปรแกรมแจ้งซ่อมออนไลน์',
+      'กรณีเร่งด่วนวิกฤต (ท่อเมนแตก, ไฟช็อต, ไฟฟ้าดับทั้งโซน): โทรศัพท์แจ้งหัวหน้าช่างทันทีภายใน 3 นาที',
+      'ติดตามช่างเข้าแก้ไขหน้างานและโทรแจ้งผู้ค้ารับทราบเมื่อซ่อมเสร็จสิ้น'
+    ],
+    docs: ['ระบบแจ้งซ่อมบำรุงออนไลน์'],
+    alertType: 'warning',
+    alertTitle: '⏱ ด่วนโทรช่างภายใน 3 นาที',
+    alertText: 'เหตุน้ำท่วมหรือไฟฟ้าช็อตต้องโทรศัพท์สายตรงถึงทีมช่างทันที ห้ามรอส่งเฉพาะระบบออนไลน์'
+  },
+
+  // Tab 13: ลูกค้าสัมพันธ์สวัสดิการ
+  '14-1': {
+    eyebrow: 'ขั้นตอนที่ 14.1 · ลูกค้าสัมพันธ์สวัสดิการ',
+    title: 'ตรวจสอบหลักฐานการขอรับเงินสวัสดิการช่วยเหลือผู้ค้า',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '20 นาที',
+    coop: 'ผู้ค้าเจ้าของแผง',
+    freq: 'เมื่อผู้ค้าขอรับสวัสดิการ',
+    tasks: [
+      'งานมงคล (งานแต่ง, งานบวช, ขึ้นบ้านใหม่): ตรวจสอบการ์ดเชิญ และสำเนาบัตร ปปช. เจ้าของแผง',
+      'งานอวมงคล: ตรวจสอบใบมรณบัตรของผู้เกี่ยวข้องโดยตรง (บิดา มารดา บุตร คู่สมรส) + บัตร ปปช. เจ้าของแผง',
+      'งานเยี่ยมไข้: ตรวจสอบหลักฐานการเข้ารับการรักษาพยาบาล (ผู้ค้าป่วยหรือประสบอุบัติเหตุ)'
+    ],
+    docs: ['การ์ดเชิญ / ใบมรณบัตร', 'สำเนาบัตรประชาชนเจ้าของแผง'],
+    alertType: 'control',
+    alertTitle: '✓ คุณสมบัติผู้มีสิทธิ์รับสวัสดิการ',
+    alertText: 'ต้องเป็นเจ้าของแผงตามสัญญาเช่าปัจจุบัน และไม่อยู่ในระหว่างถูกระงับสิทธิ์สัญญา'
+  },
+  '14-2': {
+    eyebrow: 'ขั้นตอนที่ 14.2 · ลูกค้าสัมพันธ์สวัสดิการ',
+    title: 'จัดทำบันทึกข้อความภายในเสนอขออนุมัติเบิกจ่ายเงินสวัสดิการ',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '10 นาที',
+    coop: 'ผู้บริหาร / แผนกบัญชี',
+    freq: 'ตามคำขอสวัสดิการ',
+    tasks: [
+      'จัดพิมพ์บันทึกข้อความภายใน ระบุชื่อร้าน รหัสแผง วัตถุประสงค์ และยอดเงินสวัสดิการตามเกณฑ์ที่กำหนด',
+      'แนบหลักฐานประกอบการขอเบิกครบถ้วน',
+      'เสนอผู้บริหาร (ผบห.) ลงนามอนุมัติการเบิกจ่าย'
+    ],
+    docs: ['บันทึกข้อความภายในขออนุมัติเบิกเงินสวัสดิการ'],
+    alertType: 'control',
+    alertTitle: '✓ เกณฑ์วงเงินสวัสดิการ',
+    alertText: 'วงเงินช่วยเหลือต้องเป็นไปตามระเบียบสวัสดิการผู้ค้าที่คณะกรรมการบริหารอนุมัติไว้'
+  },
+  '14-3': {
+    eyebrow: 'ขั้นตอนที่ 14.3 · ลูกค้าสัมพันธ์สวัสดิการ',
+    title: 'จัดซื้อของเยี่ยม / มอบเงินช่วยเหลือ และบันทึกภาพถ่าย',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '1-2 ชั่วโมง',
+    coop: 'ผู้ค้าและครอบครัว',
+    freq: 'เมื่อได้รับการอนุมัติเงิน',
+    tasks: [
+      'กรณีเยี่ยมไข้: จัดซื้อกระเช้าของขวัญเพื่อสุขภาพหรือของเยี่ยม',
+      'ตัวแทนฝ่ายขายลงพื้นที่เยี่ยมไข้หรือร่วมงานมงคล/อวมงคล พร้อมมอบเงินช่วยเหลือ',
+      'ถ่ายภาพเป็นหลักฐานประกอบการปิดยอดเบิกเงินสวัสดิการ'
+    ],
+    docs: ['ภาพถ่ายการมอบเงิน/ของเยี่ยม', 'ใบสำคัญรับเงิน'],
+    alertType: 'control',
+    alertTitle: '✓ ภาพถ่ายหลักฐาน',
+    alertText: 'ต้องมีภาพถ่ายการมอบเงินหรือของเยี่ยมแนบชุดเอกสารส่งคืนฝ่ายบัญชีทุกครั้ง'
+  },
+  '14-4': {
+    eyebrow: 'ขั้นตอนที่ 14.4 · ลูกค้าสัมพันธ์สวัสดิการ',
+    title: 'แผนกบัญชีตรวจสอบเอกสารและเบิกจ่ายเงินสวัสดิการ',
+    resp: 'เจ้าหน้าที่แผนกบัญชี',
+    duration: '10 นาที',
+    coop: 'ฝ่ายขาย / การเงิน',
+    freq: 'เมื่อได้รับบันทึกอนุมัติ',
+    tasks: [
+      'ตรวจสอบความถูกต้องของบันทึกอนุมัติและหลักฐานประกอบ',
+      'ตั้งเบิกเงินสดหรือโอนเงินผ่านระบบบัญชีเข้าบัญชีผู้ถือสิทธิ์',
+      'บันทึกบัญชีลงในหมวด "ค่าใช้จ่ายสวัสดิการผู้ค้าสัมพันธ์"'
+    ],
+    docs: ['ใบสำคัญจ่าย (Payment Voucher)', 'เอกสารบันทึกอนุมัติ'],
+    alertType: 'control',
+    alertTitle: '✓ การควบคุมการเบิกจ่าย',
+    alertText: 'บัญชีต้องสอบทานความถูกต้องของลายเซ็นอนุมัติก่อนจ่ายเงินทุกกรณี'
+  },
+
+  // Tab 14: ขอผ่อนชำระค่าเช่า
+  '15-1': {
+    eyebrow: 'ขั้นตอนที่ 15.1 · ขอผ่อนชำระค่าเช่า',
+    title: 'รับเรื่องและตรวจสอบรายละเอียดหนี้ค้างชำระ',
+    resp: 'เจ้าหน้าที่แผนกการเงิน (ฝ่ายติดตามหนี้)',
+    duration: '10 นาที',
+    coop: 'ผู้ค้า / ฝ่ายขาย',
+    freq: 'เมื่อผู้ค้าประสบปัญหาการชำระเงิน',
+    tasks: [
+      'ตรวจสอบยอดหนี้ค่าเช่าและค่าสาธารณูปโภคค้างชำระทั้งหมดในระบบ',
+      'ตรวจสอบประวัติการชำระเงินในอดีตของผู้ค้า',
+      'สรุปยอดหนี้สุทธิเพื่อใช้เป็นฐานในการจัดทำแผนผ่อนชำระ'
+    ],
+    docs: ['รายงานรายละเอียดหนี้ค้างชำระ'],
+    alertType: 'warning',
+    alertTitle: '⚠ จุดตรวจสอบยอดหนี้',
+    alertText: 'ต้องตรวจสอบว่าไม่มีหนี้ซ่อนอยู่นอกระบบ และดึงยอดคงค้างจริงจากระบบบัญชีเท่านั้น'
+  },
+  '15-2': {
+    eyebrow: 'ขั้นตอนที่ 15.2 · ขอผ่อนชำระค่าเช่า',
+    title: 'การเงินลงพื้นที่จัดเก็บเงินตามงวดที่ได้รับอนุมัติ',
+    resp: 'เจ้าหน้าที่การเงินลงพื้นที่',
+    duration: 'ตามงวดนัดหมาย',
+    coop: 'ผู้ค้า',
+    freq: 'ตามตารางงวดผ่อนชำระ (เช่น รายสัปดาห์ / รายเดือน)',
+    tasks: [
+      'ลงพื้นที่เก็บเงินค่างวดตามตารางที่ผู้บริหารอนุมัติ',
+      'ออกใบเสร็จรับเงินระบบการเงินมอบให้ผู้ค้าเป็นหลักฐาน',
+      'อัปเดตยอดหนี้คงเหลือในระบบติดตามหนี้แบบเรียลไทม์'
+    ],
+    docs: ['ใบเสร็จรับเงินค่างวดผ่อนชำระ', 'ตารางคุมการชำระหนี้'],
+    alertType: 'control',
+    alertTitle: '✓ การติดตามอย่างใกล้ชิด',
+    alertText: 'หากผิดนัดชำระเกิน 2 งวดติดต่อกัน ให้รายงานฝ่ายติดตามหนี้เพื่อระงับการผ่อนชำระทันที'
+  },
+  '15-3': {
+    eyebrow: 'ขั้นตอนที่ 15.3 · ขอผ่อนชำระค่าเช่า',
+    title: 'จัดทำแบบฟอร์มคำร้องและบันทึกข้อความภายในเสนอ ผบห.',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '10 นาที',
+    coop: 'ผู้ค้า / ฝ่ายติดตามหนี้',
+    freq: 'เมื่อมีคำร้องขอผ่อนชำระ',
+    tasks: [
+      'ให้ผู้ค้ากรอกและลงนามในแบบฟอร์มคำร้องขอผ่อนชำระค่าเช่า',
+      'จัดทำตารางงวดผ่อนชำระที่สอดคล้องกับความสามารถในการจ่ายของร้านค้า',
+      'จัดทำบันทึกข้อความภายในเสนอผู้บริหาร (ผบห.) พิจารณาอนุมัติ'
+    ],
+    docs: ['แบบฟอร์มคำร้องขอผ่อนชำระ', 'บันทึกข้อความภายใน'],
+    alertType: 'control',
+    alertTitle: '✓ ความชัดเจนของแผนผ่อน',
+    alertText: 'แผนผ่อนชำระต้องระบุวันที่ จำนวนเงินในแต่ละงวด และเงื่อนไขบอกเลิกสัญญาหากผิดนัด'
+  },
+  '15-4': {
+    eyebrow: 'ขั้นตอนที่ 15.4 · ขอผ่อนชำระค่าเช่า',
+    title: 'ผู้บริหาร (ผบห.) พิจารณาลงนามอนุมัติแผนผ่อนชำระ',
+    resp: 'ผู้บริหาร (ผบห.) / COO',
+    duration: '1 วันทำการ',
+    coop: 'ฝ่ายขาย / การเงิน',
+    freq: 'ตามเรื่องที่เสนอ',
+    tasks: [
+      'ผู้บริหารพิจารณาเหตุผลความจำเป็นและประวัติของร้านค้า',
+      'ลงนามอนุมัติหรือปรับแก้เงื่อนไขงวดชำระตามความเหมาะสม',
+      'ส่งเอกสารอนุมัติให้ฝ่ายติดตามหนี้และการเงินเพื่อดำเนินการตามแผน'
+    ],
+    docs: ['บันทึกอนุมัติแผนผ่อนชำระมีลายเซ็น ผบห.'],
+    alertType: 'control',
+    alertTitle: '✓ อำนาจอนุมัติผู้บริหาร',
+    alertText: 'ฝ่ายขายและการเงินไม่มีอำนาจผ่อนผันหนี้เอง ต้องได้รับอนุมัติจากผู้บริหารเท่านั้น'
+  },
+
+  // Tab 15: ขอปรับลดค่าเช่า
+  '16-1': {
+    eyebrow: 'ขั้นตอนที่ 16.1 · ขอปรับลดค่าเช่า',
+    title: 'รับคำร้องขอปรับลดค่าเช่า (ยอดขายลดลง / ปัญหาสุขภาพ)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '10 นาที',
+    coop: 'ผู้ค้า',
+    freq: 'เมื่อผู้ค้ายื่นคำร้อง',
+    tasks: [
+      'รับฟังปัญหาจากผู้ค้าและรับแบบฟอร์มคำร้องขอปรับลดค่าเช่า',
+      'ชี้แจงเกณฑ์การพิจารณาว่าต้องมีหลักฐานประกอบข้อเท็จจริงชัดเจน',
+      'ตรวจสอบสถานะสัญญาเช่าปัจจุบันและประวัติการค้า'
+    ],
+    docs: ['ใบคำร้องขอปรับลดค่าเช่า'],
+    alertType: 'warning',
+    alertTitle: '⚠ การคัดกรองคำร้อง',
+    alertText: 'คำร้องต้องมีเหตุผลและหลักฐานที่หนักแน่นเพียงพอ ไม่ใช่เพียงคำกล่าวอ้างเลื่อนลอย'
+  },
+  '16-2': {
+    eyebrow: 'ขั้นตอนที่ 16.2 · ขอปรับลดค่าเช่า',
+    title: 'ตรวจสอบหลักฐานประกอบ (บัญชีรายรับ-จ่าย / ใบรับรองแพทย์)',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '15 นาที',
+    coop: 'ผู้ค้า',
+    freq: 'ตามคำร้อง',
+    tasks: [
+      'กรณียอดขายลดลง: ตรวจสอบสมุดบัญชีรายรับ-รายจ่าย ยอดขายย้อนหลัง 3-6 เดือน',
+      'กรณีปัญหาสุขภาพ: ตรวจสอบใบรับรองแพทย์จากโรงพยาบาลที่ระบุอาการและระยะเวลาพักรักษาตัว',
+      'แนบหลักฐานทั้งหมดประกอบเข้ากับชุดใบคำร้อง'
+    ],
+    docs: ['บัญชีรายรับ-รายจ่ายร้านค้า', 'ใบรับรองแพทย์จากโรงพยาบาล'],
+    alertType: 'control',
+    alertTitle: '✓ เอกสารประกอบที่น่าเชื่อถือ',
+    alertText: 'ใบรับรองแพทย์ต้องออกโดยแพทย์แผนปัจจุบันจากสถานพยาบาลที่ได้รับการรับรอง'
+  },
+  '16-3': {
+    eyebrow: 'ขั้นตอนที่ 16.3 · ขอปรับลดค่าเช่า',
+    title: 'จัดทำบันทึกข้อความภายในเพื่อเสนอขออนุมัติปรับลดค่าเช่า',
+    resp: 'แอดมินฝ่ายขาย / ผจก.พื้นที่',
+    duration: '15 นาที',
+    coop: 'ผู้บริหาร',
+    freq: 'เมื่อเอกสารครบถ้วน',
+    tasks: [
+      'สรุปประวัติร้านค้า อัตราค่าเช่าปัจจุบัน อัตราที่ขอปรับลด และผลกระทบต่อตลาด',
+      'ระบุระยะเวลาที่ขอปรับลด (เช่น 3 เดือน หรือ 6 เดือน เพื่อประเมินใหม่)',
+      'จัดส่งบันทึกข้อความให้ผู้บริหาร (ผบห.) พิจารณาลงนาม'
+    ],
+    docs: ['บันทึกข้อความภายในเสนอขออนุมัติปรับลดค่าเช่า'],
+    alertType: 'control',
+    alertTitle: '✓ กำหนดกรอบเวลาส่วนลด',
+    alertText: 'การปรับลดค่าเช่าควรเป็นมาตรการชั่วคราว มีกำหนดระยะเวลาสิ้นสุดชัดเจน'
+  },
+  '16-4': {
+    eyebrow: 'ขั้นตอนที่ 16.4 · ขอปรับลดค่าเช่า',
+    title: 'ผู้บริหาร (ผบห.) พิจารณาลงนามอนุมัติการปรับลดค่าเช่า',
+    resp: 'ผู้บริหาร (ผบห.) / COO',
+    duration: '1-2 วันทำการ',
+    coop: 'ฝ่ายบริหาร',
+    freq: 'ตามเรื่องที่เสนอ',
+    tasks: [
+      'ผู้บริหารพิจารณาผลกระทบในภาพรวมของตลาดและความจำเป็นในการช่วยเหลือร้านค้า',
+      'ลงนามอนุมัติอัตราส่วนลดและระยะเวลาที่มีผลบังคับใช้',
+      'ส่งบันทึกข้อความที่อนุมัติแล้วให้ฝ่ายขายและแผนกบัญชีดำเนินการ'
+    ],
+    docs: ['บันทึกอนุมัติมีลายเซ็น ผบห.'],
+    alertType: 'control',
+    alertTitle: '✓ อำนาจพิจารณาของผู้บริหาร',
+    alertText: 'การให้ส่วนลดค่าเช่าเป็นอำนาจเฉพาะของผู้บริหารระดับสูงตามตารางอำนาจอนุมัติ'
+  },
+  '16-5': {
+    eyebrow: 'ขั้นตอนที่ 16.5 · ขอปรับลดค่าเช่า',
+    title: 'แผนกบัญชีรับบันทึกอนุมัติ & ปรับปรุงยอดตั้งหนี้ในระบบ',
+    resp: 'เจ้าหน้าที่แผนกบัญชี',
+    duration: '15 นาที',
+    coop: 'ฝ่ายขาย / การเงิน',
+    freq: 'เมื่อได้รับบันทึกอนุมัติจาก ผบห.',
+    tasks: [
+      'ตรวจสอบเงื่อนไขและระยะเวลาที่ได้รับอนุมัติจากบันทึกข้อความ',
+      'ปรับปรุงอัตราค่าเช่าในระบบ Billing/Kassone ตามรอบระยะเวลาที่อนุมัติ',
+      'ออกใบแจ้งหนี้รอบถัดไปด้วยอัตราค่าเช่าใหม่ที่ปรับลดเรียบร้อยแล้ว'
+    ],
+    docs: ['ระบบบัญชีและการเงิน', 'ใบแจ้งหนี้อัตราใหม่'],
+    alertType: 'control',
+    alertTitle: '✓ System Audit Anchor',
+    alertText: 'การปรับลดหนี้ในระบบบัญชีต้องมีเลขอ้างอิงบันทึกอนุมัติของ ผบห. กำกับเสมอ'
+  }
+
+};
+
+// Open Side Panel
+function showPanel(stepKey) {
+  const data = stepData[stepKey];
+  if (!data) return;
+
+  // Set active class on step
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  if (event && event.currentTarget) {
+    event.currentTarget.classList.add('active');
+  }
+
+  document.getElementById('pEyebrow').textContent = data.eyebrow || 'ขั้นตอนการปฏิบัติงาน';
+  document.getElementById('pTitle').textContent = data.title || '-';
+  document.getElementById('pResp').textContent = data.resp || '-';
+  document.getElementById('pDuration').textContent = data.duration || '-';
+  document.getElementById('pCoop').textContent = data.coop || '-';
+  document.getElementById('pFreq').textContent = data.freq || '-';
+
+  // Tasks
+  const taskUl = document.getElementById('pTasks');
+  taskUl.innerHTML = '';
+  if (data.tasks && data.tasks.length > 0) {
+    data.tasks.forEach(t => {
+      const li = document.createElement('li');
+      li.className = 'task-item';
+      li.innerHTML = `<span class="task-bullet"></span><span>${t}</span>`;
+      taskUl.appendChild(li);
+    });
+  }
+
+  // Docs
+  const docDiv = document.getElementById('pDocs');
+  docDiv.innerHTML = '';
+  if (data.docs && data.docs.length > 0) {
+    data.docs.forEach(d => {
+      const item = document.createElement('div');
+      item.className = 'doc-tag-item';
+      item.innerHTML = `<span>📄</span><span>${d}</span>`;
+      docDiv.appendChild(item);
+    });
+  }
+
+  // Alert Box
+  const alertBox = document.getElementById('pAlert');
+  if (data.alertTitle) {
+    alertBox.style.display = 'block';
+    alertBox.className = `panel-alert ${data.alertType || 'control'}`;
+    document.getElementById('pAlertTitle').textContent = data.alertTitle;
+    document.getElementById('pAlertText').textContent = data.alertText || '';
+  } else {
+    alertBox.style.display = 'none';
+  }
+
+  // Open Panel
+  document.getElementById('sidePanel').classList.add('open');
+  document.getElementById('contentCol').classList.add('shrunk');
+  if (window.innerWidth <= 768) {
+    document.getElementById('panelBackdrop').classList.add('open');
+  }
+}
+
+// Close Side Panel
+function closePanel() {
+  document.getElementById('sidePanel').classList.remove('open');
+  document.getElementById('contentCol').classList.remove('shrunk');
+  document.getElementById('panelBackdrop').classList.remove('open');
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+}
+
+// Read URL Parameter on Load
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabParam = urlParams.get('tab');
+  if (tabParam !== null) {
+    const idx = parseInt(tabParam, 10);
+    if (!isNaN(idx) && idx >= 0 && idx < 16) {
+      switchTab(idx);
+    }
+  }
+});
+</script>
+
+</body>
+</html>

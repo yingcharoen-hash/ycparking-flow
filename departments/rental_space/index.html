@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผังขั้นตอนการทำงาน — แผนกบริหารพื้นที่เช่า</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f5f5f7;
+  --card-bg: #ffffff;
+  --text-main: #1d1d1f;
+  --text-muted: #86868b;
+  --accent-blue: #0071e3;
+  --accent-blue-lt: #e8f2fc;
+  --gold: #d8a032; 
+  --gold-lt: #fdf6e3;
+  --red: #ff3b30;
+  --red-lt: #ffeceb;
+  --green: #34c759;
+  --green-lt: #ebf9ee;
+  --orange: #ff9500;
+  --orange-lt: #fff4e5;
+  --teal: #5ac8fa;
+  --teal-lt: #eaf8ff;
+  --purple: #af52de;
+  --purple-lt: #f4eafe;
+  --gray100: #f5f5f7;
+  --gray200: #e5e5ea;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Sarabun", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header (Dark Premium) */
+.header {
+  background: #000000;
+  color: #f5f5f7;
+  padding: 64px 56px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 50% 0%, rgba(0,113,227,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+.header-inner { position: relative; z-index: 1; }
+.header-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a1a1a6;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+.header-title {
+  font-size: 38px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+.header-title em {
+  color: var(--accent-blue);
+  font-style: normal;
+}
+.header-sub {
+  font-size: 16px;
+  color: #a1a1a6;
+  margin-top: 10px;
+  font-weight: 400;
+}
+.header-meta {
+  display: flex;
+  gap: 40px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  flex-wrap: wrap;
+}
+.meta-item { display: flex; flex-direction: column; gap: 4px; }
+.meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #86868b; font-weight: 600; }
+.meta-value { font-size: 14px; color: #f5f5f7; font-weight: 500; }
+
+/* Nav bar (Glassmorphism) */
+.nav-bar {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  padding: 0 56px;
+  display: flex;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-bar-inner { display: flex; width: 100%; gap: 16px; align-items: center; }
+.nav-btn {
+  padding: 16px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-btn:hover { color: var(--text-main); }
+.nav-btn.active {
+  color: var(--text-main);
+  border-bottom-color: var(--text-main);
+  font-weight: 600;
+}
+
+/* Main */
+.main { padding: 48px 56px 80px; max-width: 1440px; margin: 0 auto; }
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-line { flex: 1; height: 1px; background: var(--gray200); }
+
+/* Quick stats */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
+.stat-card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+.stat-num { font-size: 36px; font-weight: 700; color: var(--text-main); letter-spacing: -1px; }
+.stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
+.stat-card.b .stat-num { color: var(--accent-blue); }
+.stat-card.g .stat-num { color: var(--green); }
+.stat-card.p .stat-num { color: var(--purple); }
+.stat-card.o .stat-num { color: var(--orange); }
+
+/* Filter Tabs */
+.filter-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--gray200);
+  border-radius: 24px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover { color: var(--text-main); border-color: var(--text-main); }
+.filter-btn.active {
+  background: var(--text-main);
+  color: #fff;
+  border-color: var(--text-main);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+/* Process grid */
+.proc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+.proc-card {
+  background: var(--card-bg);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+.proc-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+  border-color: rgba(0,113,227,0.3);
+}
+.proc-card-top { padding: 24px 24px 16px; border-bottom: 1px solid var(--gray100); }
+.proc-category {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--accent-blue);
+  margin-bottom: 6px;
+}
+.proc-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.proc-icon-row { display: flex; align-items: flex-start; gap: 14px; }
+.proc-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.proc-title { font-size: 15px; font-weight: 700; color: var(--text-main); line-height: 1.4; }
+.proc-sub { font-size: 12px; color: var(--text-muted); font-weight: 400; margin-top: 4px; }
+.proc-card-body { padding: 18px 24px 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.proc-steps { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.proc-step-tag {
+  background: var(--gray100);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-main);
+}
+.proc-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+.proc-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { padding: 4px 10px; border-radius: 12px; font-size: 10.5px; font-weight: 600; }
+.chip.blue { background: var(--accent-blue-lt); color: var(--accent-blue); }
+.chip.green { background: var(--green-lt); color: var(--green); }
+.chip.orange { background: var(--orange-lt); color: var(--orange); }
+.chip.red { background: var(--red-lt); color: var(--red); }
+.chip.purple { background: var(--purple-lt); color: var(--purple); }
+.proc-link {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent-blue);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ======= PRINT ======= */
+@media print {
+  @page { size: A4 portrait; margin: 10mm; }
+  .nav-bar, .filter-tabs { display: none !important; }
+  body { background: #fff; }
+  .header { padding: 24px 0; background: none !important; border-bottom: 2px solid #e5e5ea; }
+  .header-title, .header-sub, .meta-label, .meta-value { color: #000 !important; }
+  .header-badge { color: #000; border: 1px solid #000; }
+  .proc-card, .stat-card { box-shadow: none !important; border: 1px solid #d1d1d6; break-inside: avoid; page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">เอกสารตรวจสอบภายใน · Internal Audit Document</div>
+    <div class="header-title">ผังขั้นตอนการทำงาน<br><em>การบริหารพื้นที่เช่า — แผนกบริหารพื้นที่เช่า</em></div>
+    <div class="header-sub">ฝ่ายบริหารกิจการภายในตลาด | สำนักประธานเจ้าหน้าที่ฝ่ายปฏิบัติการ</div>
+    <div class="header-meta">
+      <div class="meta-item"><span class="meta-label">หน่วยงาน</span><span class="meta-value">แผนกบริหารพื้นที่เช่า</span></div>
+      <div class="meta-item"><span class="meta-label">อัปเดตล่าสุด</span><span class="meta-value">ตุลาคม 2569</span></div>
+      <div class="meta-item"><span class="meta-label">หมวดหมู่หลัก</span><span class="meta-value">4 หมวด</span></div>
+      <div class="meta-item"><span class="meta-label">กระบวนการทั้งหมด</span><span class="meta-value">16 กระบวนการ</span></div>
+      <div class="meta-item"><span class="meta-label">หน่วยงานร่วมปฏิบัติ</span><span class="meta-value">7 ฝ่าย</span></div>
+      <div class="meta-item"><span class="meta-label">มาตรฐานการตรวจสอบ</span><span class="meta-value">System Audit 100%</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-bar-inner">
+    <a class="nav-btn" href="../../index.html">🏢 หน้าหลักบริษัท</a>
+    <a class="nav-btn active" href="index.html">🏠 หน้าหลักแผนก</a>
+    <a class="nav-btn" href="workflow_swimlane_tabs.html">📊 ผังกระบวนการทั้งหมด (1–16)</a>
+    <a class="nav-btn" href="../../guide.html">📖 คู่มือการใช้งาน</a>
+    <button class="nav-btn" onclick="window.print()" style="margin-left:auto;">🖨️ พิมพ์รายงาน</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Quick Stats -->
+  <div class="stats-row">
+    <div class="stat-card b">
+      <div class="stat-num">16</div>
+      <div class="stat-label">กระบวนการหลักครอบคลุมทุกมิติ</div>
+    </div>
+    <div class="stat-card g">
+      <div class="stat-num">4</div>
+      <div class="stat-label">หมวดหมู่ภารกิจเชิงกลยุทธ์</div>
+    </div>
+    <div class="stat-card p">
+      <div class="stat-num">25+</div>
+      <div class="stat-label">จุดควบคุมและเอกสารอ้างอิง</div>
+    </div>
+    <div class="stat-card o">
+      <div class="stat-num">7</div>
+      <div class="stat-label">ฝ่ายร่วมขับเคลื่อน (SLA ชัดเจน)</div>
+    </div>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="filter-tabs">
+    <button class="filter-btn active" onclick="filterCards('all', this)">ทั้งหมด (16)</button>
+    <button class="filter-btn" onclick="filterCards('sales', this)">🏷️ การขายและสัญญา (4)</button>
+    <button class="filter-btn" onclick="filterCards('ops', this)">🏗️ จัดการพื้นที่และแผงค้า (4)</button>
+    <button class="filter-btn" onclick="filterCards('compliance', this)">⚖️ ควบคุมระเบียบและนโยบาย (4)</button>
+    <button class="filter-btn" onclick="filterCards('service', this)">🤝 ผู้ค้าสัมพันธ์และการเงิน (4)</button>
+  </div>
+
+  <div class="section-title">
+    <span id="sectionLabel">กระบวนการทั้งหมด 16 กระบวนการ</span>
+    <span class="section-line"></span>
+  </div>
+
+  <!-- Process Grid -->
+  <div class="proc-grid" id="procGrid">
+
+    <!-- 1. รับลูกค้าเช่าพื้นที่ใหม่ -->
+    <a class="proc-card" data-cat="sales" href="workflow_swimlane_tabs.html?tab=0">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 1: การขายและสัญญา</div>
+        <div class="proc-num">กระบวนการที่ 1</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#e8f2fc;">🏪</div>
+          <div>
+            <div class="proc-title">การรับลูกค้าเช่าพื้นที่ใหม่ (แผงถาวร)</div>
+            <div class="proc-sub">New Permanent Tenant Leasing</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">ดูแผงว่าง Layout</span>
+          <span class="proc-step-tag">ใบเสนอราคา</span>
+          <span class="proc-step-tag">เปิดหน้าบัญชี ACC-SL-0001</span>
+          <span class="proc-step-tag">บันทึกข้อตกลงเช่า</span>
+          <span class="proc-step-tag">ชำระเงินประกัน</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip blue">✓ บัญชี/การเงิน</span>
+            <span class="chip orange">⏱ ตกแต่ง ≤ 15 วัน</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 2. สัญญาเช่าและสัญญาบริการ -->
+    <a class="proc-card" data-cat="sales" href="workflow_swimlane_tabs.html?tab=1">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 1: การขายและสัญญา</div>
+        <div class="proc-num">กระบวนการที่ 2</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#f4eafe;">📜</div>
+          <div>
+            <div class="proc-title">สัญญาเช่าและสัญญาบริการ (นิติบุคคล / VIP1 / VIP2)</div>
+            <div class="proc-sub">Corporate & VIP Long-term Contracts</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">นิติบุคคล (อากรแสตมป์)</span>
+          <span class="proc-step-tag">VIP1 (ส่วนลด 1-3 ปี)</span>
+          <span class="proc-step-tag">VIP2 เครดิตบูโร</span>
+          <span class="proc-step-tag">สินเชื่อ MSCW 30%</span>
+          <span class="proc-step-tag">ผบห. ลงนาม</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip purple">✓ สัญญา SL-xxxx</span>
+            <span class="chip blue">✓ ธนาคารกรุงเทพ</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 3. รับลูกค้าโปรโมชั่น -->
+    <a class="proc-card" data-cat="sales" href="workflow_swimlane_tabs.html?tab=2">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 1: การขายและสัญญา</div>
+        <div class="proc-num">กระบวนการที่ 3</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#ebf9ee;">🎪</div>
+          <div>
+            <div class="proc-title">การรับลูกค้าโปรโมชั่นและอีเวนต์</div>
+            <div class="proc-sub">Temporary Promotion & Event Booths</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">ดูพื้นที่โปรโมชั่น</span>
+          <span class="proc-step-tag">ใบเสนอราคา</span>
+          <span class="proc-step-tag">เปิดหน้าบัญชี</span>
+          <span class="proc-step-tag">ชำระเงิน+หัก ณ ที่จ่าย</span>
+          <span class="proc-step-tag">แจ้ง ปชส. / รปภ.</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip green">✓ ภพ.20/หัก ณ ที่จ่าย</span>
+            <span class="chip blue">✓ หน้าบัญชี ACC-SL</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 4. รับร้านค้ารายวัน -->
+    <a class="proc-card" data-cat="sales" href="workflow_swimlane_tabs.html?tab=3">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 1: การขายและสัญญา</div>
+        <div class="proc-num">กระบวนการที่ 4</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#fff4e5;">🛒</div>
+          <div>
+            <div class="proc-title">การรับร้านค้ารายวัน (รถเข็น / ขาจร)</div>
+            <div class="proc-sub">Daily Mobile & Hawker Vendors</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">ติดต่อ ปชส.</span>
+          <span class="proc-step-tag">แลกบัตร ปปช. + มัดจำ 100.-</span>
+          <span class="proc-step-tag">การเงินเก็บค่าที่ 100/200/300.-</span>
+          <span class="proc-step-tag">ขาย 03.00-16.00 น.</span>
+          <span class="proc-step-tag">แลกบัตรคืน</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip orange">✓ มัดจำบัตร 100.-</span>
+            <span class="chip red">⚠ บัตรหายริบมัดจำ</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 5. ประสานงานความพร้อมพื้นที่ -->
+    <a class="proc-card" data-cat="ops" href="workflow_swimlane_tabs.html?tab=4">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 2: จัดการพื้นที่และแผงค้า</div>
+        <div class="proc-num">กระบวนการที่ 5</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#eaf8ff;">📐</div>
+          <div>
+            <div class="proc-title">การเตรียมความพร้อมและส่งมอบพื้นที่</div>
+            <div class="proc-sub">Space Preparation & Handover</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">อนุมัติแบบร้าน</span>
+          <span class="proc-step-tag">ติดตั้งมิเตอร์น้ำ/ไฟ/แก๊ส</span>
+          <span class="proc-step-tag">เงินประกันตกแต่ง 30,000.-</span>
+          <span class="proc-step-tag">อบรมผู้รับเหมา</span>
+          <span class="proc-step-tag">ตรวจงานคืนประกัน (3 ด.)</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip blue">✓ ฝ่ายอาคาร/วิศวกร</span>
+            <span class="chip orange">✓ คืนประกันใน 3 เดือน</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 6. โอน ย้าย เปลี่ยน แผง -->
+    <a class="proc-card" data-cat="ops" href="workflow_swimlane_tabs.html?tab=5">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 2: จัดการพื้นที่และแผงค้า</div>
+        <div class="proc-num">กระบวนการที่ 6</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#fdf6e3;">🔄</div>
+          <div>
+            <div class="proc-title">การโอน ย้าย เปลี่ยน แผงค้าและเปลี่ยนชื่อ</div>
+            <div class="proc-sub">Stall Transfer, Relocation & Renaming</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">เช็คเงินประกันเดิม</span>
+          <span class="proc-step-tag">ตรวจสอบหนี้ค้างชำระ</span>
+          <span class="proc-step-tag">เอกสาร ACC-SL-002</span>
+          <span class="proc-step-tag">ค่าธรรมเนียมการโอน</span>
+          <span class="proc-step-tag">เปิดหน้าบัญชีผู้ค้าใหม่</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip blue">✓ บัญชี/การเงิน</span>
+            <span class="chip green">✓ ตรวจสอบสิทธิ์เครือญาติ</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 7. การย้ายร้านค้าและปรับปรุงพื้นที่ -->
+    <a class="proc-card" data-cat="ops" href="workflow_swimlane_tabs.html?tab=6">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 2: จัดการพื้นที่และแผงค้า</div>
+        <div class="proc-num">กระบวนการที่ 7</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#e8f2fc;">🚚</div>
+          <div>
+            <div class="proc-title">การย้ายร้านค้าและการปรับปรุงพื้นที่เช่า</div>
+            <div class="proc-sub">Shop Relocation & Renovation Workflow</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">สำรวจแผงเย็น/แอร์/มิเตอร์</span>
+          <span class="proc-step-tag">เขียนผังพื้นที่ใหม่</span>
+          <span class="proc-step-tag">เปรียบเทียบรายได้เดิม-ใหม่</span>
+          <span class="proc-step-tag">ประชุมหน่วยงานย้ายของ</span>
+          <span class="proc-step-tag">ถ่ายรูปยืนยันมิเตอร์</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip blue">✓ ฝ่ายออกแบบ/ช่าง</span>
+            <span class="chip purple">✓ บัญชีรายได้เปรียบเทียบ</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 8. รับลูกค้ายกเลิกเช่า -->
+    <a class="proc-card" data-cat="ops" href="workflow_swimlane_tabs.html?tab=7">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 2: จัดการพื้นที่และแผงค้า</div>
+        <div class="proc-num">กระบวนการที่ 8</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#ffeceb;">🚪</div>
+          <div>
+            <div class="proc-title">การยกเลิกเช่าพื้นที่ (ปกติ / ค้างชำระละทิ้งแผง)</div>
+            <div class="proc-sub">Lease Termination & Default Settlement</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">เช็คเงินประกัน/มิเตอร์</span>
+          <span class="proc-step-tag">ตรวจหนี้ค้างชำระ</span>
+          <span class="proc-step-tag">เอกสารขนย้ายของออก</span>
+          <span class="proc-step-tag">ส่งมอบพื้นที่ YS-SAL-004</span>
+          <span class="proc-step-tag">กรณีละทิ้งแผง: ตีราคาทรัพย์สิน</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip red">⚠ ตรวจสอบทรัพย์ค้างชำระ</span>
+            <span class="chip blue">✓ บันทึกภายในเสนอ ผบห.</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 9. ควบคุมดูแลตามข้อบังคับตลาด -->
+    <a class="proc-card" data-cat="compliance" href="workflow_swimlane_tabs.html?tab=8">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 3: ควบคุมระเบียบและนโยบาย</div>
+        <div class="proc-num">กระบวนการที่ 9</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#ffeceb;">🛡️</div>
+          <div>
+            <div class="proc-title">การควบคุมดูแลผู้ค้าตามข้อบังคับตลาด</div>
+            <div class="proc-sub">Market Regulation Enforcement & Inspection</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">ตรวจพื้นที่ SL-2567-0001</span>
+          <span class="proc-step-tag">ถ่ายรูปหลักฐาน</span>
+          <span class="proc-step-tag">หนังสือเตือน ครั้ง 1, 2, 3</span>
+          <span class="proc-step-tag">ปรับเงินเข้ามูลนิธิฯ</span>
+          <span class="proc-step-tag">พักการขาย/ยกเลิกเช่า</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip red">⚠ เตือน 3 ครั้งเป็นขั้นตอน</span>
+            <span class="chip green">✓ ใบเสร็จปรับเข้ามูลนิธิ</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 10. ตลาดนัดริมคลอง -->
+    <a class="proc-card" data-cat="compliance" href="workflow_swimlane_tabs.html?tab=9">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 3: ควบคุมระเบียบและนโยบาย</div>
+        <div class="proc-num">กระบวนการที่ 10</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#eef2f7;">⛺</div>
+          <div>
+            <div class="proc-title">การบริหารจัดการตลาดนัดริมคลอง</div>
+            <div class="proc-sub">Canal Flea Market Management</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">จองล็อค/ผัง Layout</span>
+          <span class="proc-step-tag">ตรวจความปลอดภัย 14.00 น.</span>
+          <span class="proc-step-tag">ตรวจถังแก๊ส PT & เซฟตี้วาล์ว</span>
+          <span class="proc-step-tag">เดินเก็บค่าจองรายวัน</span>
+          <span class="proc-step-tag">ผู้สนับสนุนเต็นท์สปอนเซอร์</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip red">🔴 จุดตรวจแก๊ส PT</span>
+            <span class="chip green">✓ รปภ. / การเงิน / ช่าง</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 11. นโยบายตลาดและมาตรฐานราชการ -->
+    <a class="proc-card" data-cat="compliance" href="workflow_swimlane_tabs.html?tab=10">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 3: ควบคุมระเบียบและนโยบาย</div>
+        <div class="proc-num">กระบวนการที่ 11</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#ebf9ee;">📋</div>
+          <div>
+            <div class="proc-title">นโยบายตลาดและมาตรฐานการค้าภาครัฐ</div>
+            <div class="proc-sub">Market Policies, Certifications & Training</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">อบรมดับเพลิงประจำปี</span>
+          <span class="proc-step-tag">ใบค้าซากสัตว์ ร.10 (ปศุสัตว์)</span>
+          <span class="proc-step-tag">ปศุสัตว์ OK 7 รายการ</span>
+          <span class="proc-step-tag">รับรองฮาลาล (อิสลามกลาง)</span>
+          <span class="proc-step-tag">บัตรผู้สัมผัสอาหาร (เขต)</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip green">✓ กรมปศุสัตว์/เขต/ฮาลาล</span>
+            <span class="chip blue">✓ บันทึกประวัติร้านค้า</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 12. บัตรอนุญาตทำงานในตลาด -->
+    <a class="proc-card" data-cat="compliance" href="workflow_swimlane_tabs.html?tab=11">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 3: ควบคุมระเบียบและนโยบาย</div>
+        <div class="proc-num">กระบวนการที่ 12</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#f4eafe;">🪪</div>
+          <div>
+            <div class="proc-title">การออกบัตรอนุญาตทำงานในตลาด (คนไทย / ต่างด้าว)</div>
+            <div class="proc-sub">Market Work Permit & AppSheet QR Registration</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">ลงทะเบียน / สำเนาพาสปอร์ต</span>
+          <span class="proc-step-tag">ชำระเงินค่าทำบัตร</span>
+          <span class="proc-step-tag">บันทึกระบบ AppSheet</span>
+          <span class="proc-step-tag">Gen QR Code & รหัสสมาชิก</span>
+          <span class="proc-step-tag">พิมพ์บัตรประจำตัว</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip purple">✓ AppSheet & QR Code</span>
+            <span class="chip blue">✓ การเงินออกใบเสร็จ</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 13. รับเรื่องร้องเรียนผู้ค้าและลูกค้า -->
+    <a class="proc-card" data-cat="service" href="workflow_swimlane_tabs.html?tab=12">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 4: ผู้ค้าสัมพันธ์และการเงิน</div>
+        <div class="proc-num">กระบวนการที่ 13</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#fff4e5;">📢</div>
+          <div>
+            <div class="proc-title">การรับเรื่องร้องเรียนจากผู้ค้าและลูกค้า</div>
+            <div class="proc-sub">Tenant & Customer Grievance Handling</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">รับแจ้งโทรศัพท์/LINE</span>
+          <span class="proc-step-tag">คีย์ระบบแจ้งซ่อมบำรุง</span>
+          <span class="proc-step-tag">แจ้งด่วนโทรช่างทันที (≤3 นาที)</span>
+          <span class="proc-step-tag">สอบสวนข้อเท็จจริง</span>
+          <span class="proc-step-tag">หนังสือแจ้งเตือนร้านค้า</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip orange">⏱ งานด่วน ≤ 3 นาที</span>
+            <span class="chip blue">✓ ปชส. / ช่างซ่อมบำรุง</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 14. งานลูกค้าสัมพันธ์และสวัสดิการ -->
+    <a class="proc-card" data-cat="service" href="workflow_swimlane_tabs.html?tab=13">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 4: ผู้ค้าสัมพันธ์และการเงิน</div>
+        <div class="proc-num">กระบวนการที่ 14</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#eaf8ff;">🎁</div>
+          <div>
+            <div class="proc-title">งานลูกค้าสัมพันธ์และเงินช่วยเหลือสวัสดิการ</div>
+            <div class="proc-sub">Tenant Welfare & Relationship Management</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">งานมงคล/งานบวช (การ์ดเชิญ)</span>
+          <span class="proc-step-tag">งานอวมงคล (ใบมรณบัตร)</span>
+          <span class="proc-step-tag">เยี่ยมไข้ผู้ค้า (กระเช้าของขวัญ)</span>
+          <span class="proc-step-tag">บันทึกภายในขออนุมัติเบิกเงิน</span>
+          <span class="proc-step-tag">ส่งบัญชีและมอบเงิน/ของ</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip green">✓ สวัสดิการผู้ค้าตลาด</span>
+            <span class="chip blue">✓ บัญชีตรวจสอบหลักฐาน</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 15. งานขอผ่อนชำระค่าเช่า -->
+    <a class="proc-card" data-cat="service" href="workflow_swimlane_tabs.html?tab=14">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 4: ผู้ค้าสัมพันธ์และการเงิน</div>
+        <div class="proc-num">กระบวนการที่ 15</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#fdf6e3;">🤝</div>
+          <div>
+            <div class="proc-title">งานพิจารณาคำขอผ่อนชำระค่าเช่า</div>
+            <div class="proc-sub">Rent Installment & Payment Plan Request</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">รับเรื่องฝ่ายติดตามหนี้</span>
+          <span class="proc-step-tag">ตรวจรายละเอียดหนี้ค้างชำระ</span>
+          <span class="proc-step-tag">แบบฟอร์มคำร้องผ่อนชำระ</span>
+          <span class="proc-step-tag">บันทึกภายในเสนอ ผบห.</span>
+          <span class="proc-step-tag">ประสานการเงินลงเก็บเงินตามงวด</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip orange">✓ ฝ่ายติดตามหนี้</span>
+            <span class="chip blue">✓ ผบห. อนุมัติแผนผ่อน</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 16. งานขอปรับลดค่าเช่า -->
+    <a class="proc-card" data-cat="service" href="workflow_swimlane_tabs.html?tab=15">
+      <div class="proc-card-top">
+        <div class="proc-category">หมวดที่ 4: ผู้ค้าสัมพันธ์และการเงิน</div>
+        <div class="proc-num">กระบวนการที่ 16</div>
+        <div class="proc-icon-row">
+          <div class="proc-icon" style="background:#fde8e8;">📉</div>
+          <div>
+            <div class="proc-title">งานพิจารณาคำขอปรับลดค่าเช่า</div>
+            <div class="proc-sub">Rent Reduction & Relief Request Review</div>
+          </div>
+        </div>
+      </div>
+      <div class="proc-card-body">
+        <div class="proc-steps">
+          <span class="proc-step-tag">รับเรื่องยอดขายตก/สุขภาพ</span>
+          <span class="proc-step-tag">แนบหลักฐานบัญชี/ใบรับรองแพทย์</span>
+          <span class="proc-step-tag">เขียนใบคำร้อง</span>
+          <span class="proc-step-tag">บันทึกภายในเสนอ ผบห. ลงนาม</span>
+          <span class="proc-step-tag">ส่งเอกสารให้ฝ่ายบัญชีปรับยอด</span>
+        </div>
+        <div class="proc-footer">
+          <div class="proc-badges">
+            <span class="chip red">⚠ หลักฐานประกอบชัดเจน</span>
+            <span class="chip blue">✓ ผบห. อนุมัติ & บัญชีรับทราบ</span>
+          </div>
+          <span class="proc-link">ดูผัง →</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+</div>
+
+<script>
+function filterCards(category, btn) {
+  // Update buttons
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const cards = document.querySelectorAll('.proc-card');
+  let count = 0;
+
+  cards.forEach(card => {
+    if (category === 'all' || card.getAttribute('data-cat') === category) {
+      card.style.display = 'flex';
+      count++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  const labelMap = {
+    'all': 'กระบวนการทั้งหมด 16 กระบวนการ',
+    'sales': 'หมวดที่ 1: การขายและสัญญา (4 กระบวนการ)',
+    'ops': 'หมวดที่ 2: จัดการพื้นที่และแผงค้า (4 กระบวนการ)',
+    'compliance': 'หมวดที่ 3: ควบคุมระเบียบและนโยบาย (4 กระบวนการ)',
+    'service': 'หมวดที่ 4: ผู้ค้าสัมพันธ์และการเงิน (4 กระบวนการ)'
+  };
+  document.getElementById('sectionLabel').textContent = labelMap[category] || `แสดง ${count} กระบวนการ`;
+}
+</script>
+
+</body>
+</html>

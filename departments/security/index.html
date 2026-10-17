@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แผนกรักษาความปลอดภัย — ระบบขั้นตอนการปฏิบัติงาน (SOP Portal)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --accent-navy: #1e3a8a;
+  --accent-navy-lt: #dbeafe;
+  --accent-blue: #0284c7;
+  --accent-blue-lt: #e0f2fe;
+  --accent-emerald: #059669;
+  --accent-emerald-lt: #d1fae5;
+  --accent-amber: #d97706;
+  --accent-amber-lt: #fef3c7;
+  --accent-rose: #e11d48;
+  --accent-rose-lt: #ffe4e6;
+  --accent-violet: #7c3aed;
+  --accent-violet-lt: #ede9fe;
+  --accent-teal: #0d9488;
+  --accent-teal-lt: #ccfbf1;
+  --accent-slate: #475569;
+  --accent-slate-lt: #f1f5f9;
+  --gray-border: #e2e8f0;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.03);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Sarabun", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header (Dark Premium) */
+.hero {
+  background: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e293b 100%);
+  color: #f8fafc;
+  padding: 56px 32px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40%; left: -20%; width: 140%; height: 180%;
+  background: radial-gradient(circle at 50% 20%, rgba(2, 132, 199, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(2, 132, 199, 0.2);
+  border: 1px solid rgba(2, 132, 199, 0.4);
+  color: #38bdf8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+.hero-title {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.25;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+.hero-subtitle {
+  font-size: 15px;
+  color: #94a3b8;
+  max-width: 860px;
+  margin: 0 auto;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Navigation Bar */
+.nav-bar {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--gray-border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 14px 24px;
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+.nav-link {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.15s;
+}
+.nav-link:hover { color: var(--accent-blue); }
+
+/* Main Container */
+.container {
+  max-width: 1200px;
+  margin: 40px auto 80px;
+  padding: 0 24px;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 36px;
+}
+.stat-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 20px 24px;
+  border: 1px solid var(--gray-border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+.stat-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+.stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Controls Bar */
+.controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  background: #ffffff;
+  border: 1px solid var(--gray-border);
+  color: var(--text-muted);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover {
+  background: #f1f5f9;
+  color: var(--text-main);
+}
+.filter-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+.search-box {
+  position: relative;
+  width: 280px;
+}
+.search-input {
+  width: 100%;
+  padding: 8px 16px 8px 36px;
+  border-radius: 999px;
+  border: 1px solid var(--gray-border);
+  font-size: 13px;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--accent-blue); }
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Process Cards Grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+.workflow-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid var(--gray-border);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.workflow-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: #cbd5e1;
+}
+.card-header-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.card-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.badge-reg { background: #e0f2fe; color: #0369a1; }
+.badge-coord { background: #dcfce7; color: #15803d; }
+.badge-permit { background: #fee2e2; color: #b91c1c; }
+.badge-patrol { background: #fef3c7; color: #b45309; }
+.badge-elec { background: #ede9fe; color: #6d28d9; }
+.badge-evap { background: #ccfbf1; color: #0f766e; }
+.badge-fan { background: #f1f5f9; color: #334155; }
+.badge-canvas { background: #ffedd5; color: #c2410c; }
+.badge-pump { background: #e0e7ff; color: #4338ca; }
+
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+.card-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 16px;
+  flex-grow: 1;
+  line-height: 1.5;
+}
+.card-meta {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.card-role {
+  font-weight: 600;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 32px 0 24px;
+  border-top: 1px solid var(--gray-border);
+}
+
+@media (max-width: 768px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .controls-bar { flex-direction: column; align-items: stretch; }
+  .search-box { width: 100%; }
+  .cards-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<div class="hero">
+  <div class="hero-badge">🛡️ SECURITY & FACILITY OPERATION</div>
+  <h1 class="hero-title">แผนกรักษาความปลอดภัย (ตลาดยิ่งเจริญ)</h1>
+  <p class="hero-subtitle">ระบบคู่มือปฏิบัติงานมาตรฐาน การรักษาความปลอดภัยในชีวิตและทรัพย์สิน 24 ชั่วโมง การลงทะเบียนผู้ค้ารายวัน การประสานงานระงับเหตุ การควบคุมความปลอดภัยผู้รับเหมา (Work Permit) การจัดระเบียบพื้นที่ และการควบคุมระบบสาธารณูปโภค (ไฟฟ้า, อีแว๊ป, พัดลม, ผ้าใบ, ปั๊มน้ำ)</p>
+</div>
+
+<!-- Sticky Navigation -->
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-links">
+      <a class="nav-link" href="../../index.html">🏠 หน้าหลักบริษัท</a>
+      <a class="nav-link" href="../../guide.html">📖 คู่มือการใช้งานมาตรฐาน</a>
+    </div>
+    <div style="font-size:13px;color:var(--text-muted);">
+      รหัสองค์กร: <strong>YINGCHAROEN-SECURITY</strong>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Quick Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number">9</div>
+      <div class="stat-label">หมวดงานหลัก (Core Workstreams)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">44</div>
+      <div class="stat-label">ขั้นตอนการปฏิบัติงานละเอียด (SOP Steps)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">24 ชม.</div>
+      <div class="stat-label">ดูแลความปลอดภัย & ประจำการจุด บก.รปภ.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">100%</div>
+      <div class="stat-label">ความปลอดภัย กวดขันระเบียบ & ตรวจสาธารณูปโภค</div>
+    </div>
+  </div>
+
+  <!-- Filter & Search Controls -->
+  <div class="controls-bar">
+    <div class="filter-tabs">
+      <button class="filter-btn active" onclick="filterCards('all', this)">ทั้งหมด (9 หมวดงาน)</button>
+      <button class="filter-btn" onclick="filterCards('reg', this)">1.0 ลงทะเบียน บก.</button>
+      <button class="filter-btn" onclick="filterCards('coord', this)">2.0 ประสานงานระงับเหตุ</button>
+      <button class="filter-btn" onclick="filterCards('permit', this)">3.0 ควบคุมผู้รับเหมา</button>
+      <button class="filter-btn" onclick="filterCards('patrol', this)">4.0 ตรวจสอบพื้นที่</button>
+      <button class="filter-btn" onclick="filterCards('elec', this)">5.0 ระบบไฟฟ้า</button>
+      <button class="filter-btn" onclick="filterCards('evap', this)">6.0 ระบบอีแว๊ป</button>
+      <button class="filter-btn" onclick="filterCards('fan', this)">7.0 ระบบพัดลม</button>
+      <button class="filter-btn" onclick="filterCards('canvas', this)">8.0 ระบบผ้าใบ</button>
+      <button class="filter-btn" onclick="filterCards('pump', this)">9.0 ระบบปั๊มน้ำ</button>
+    </div>
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="ค้นหาชื่องาน, ขั้นตอน หรือตำแหน่ง..." onkeyup="searchWorkflows()">
+    </div>
+  </div>
+
+  <!-- Process Cards Grid (9 Workstreams) -->
+  <div class="cards-grid" id="cardsGrid">
+
+    <!-- Card 1: 1.0 งานลงทะเบียน บก. รปภ -->
+    <a href="workflow_swimlane_tabs.html?tab=0" class="workflow-card" data-cat="reg">
+      <div class="card-header-line">
+        <span class="card-badge badge-reg">1.0 ลงทะเบียน บก.</span>
+        <span class="card-num">5 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">1.0 งานลงทะเบียน บก. รปภ.</h3>
+      <p class="card-desc">คัดกรองผู้ค้ารายวัน ตรวจสอบขนาดแผง S/M/L/XL (100-400 บาท) ตรวจสิทธิ์ลด 50% คนชรา คนพิการ เด็กไม่เกิน 12 ปี ใช้บัตรประชาชนและบันทึกสมุดคุม</p>
+      <div class="card-meta">
+        <span class="card-role">👤 เจ้าหน้าที่ บก.รปภ.</span>
+        <span style="color:var(--accent-blue);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 2: 2.0 งานประสานงาน -->
+    <a href="workflow_swimlane_tabs.html?tab=1" class="workflow-card" data-cat="coord">
+      <div class="card-header-line">
+        <span class="card-badge badge-coord">2.0 ประสานงาน</span>
+        <span class="card-num">4 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">2.0 งานประสานงาน & ระงับเหตุ</h3>
+      <p class="card-desc">รับแจ้งเหตุจากทุกแผนก จดบันทึกรายละเอียด วิทยุสื่อสารสั่งการเจ้าหน้าที่ รปภ. จุดใกล้เคียงเข้าระงับเหตุทันที และรายงานผู้บังคับบัญชา</p>
+      <div class="card-meta">
+        <span class="card-role">👤 วิทยุสื่อสาร / สายตรวจ รปภ.</span>
+        <span style="color:var(--accent-emerald);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 3: 3.0 งานเพิ่มเติม (ควบคุมผู้รับเหมา) -->
+    <a href="workflow_swimlane_tabs.html?tab=2" class="workflow-card" data-cat="permit">
+      <div class="card-header-line">
+        <span class="card-badge badge-permit">3.0 Work Permit</span>
+        <span class="card-num">6 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">3.0 ควบคุมความปลอดภัยผู้รับเหมา</h3>
+      <p class="card-desc">ตรวจคนงานไซต์งาน แจ้งระเบียบความปลอดภัย ตรวจใบอนุญาตทำงานความร้อน งานที่สูง งานอันตราย งานที่อับอากาศ อุปกรณ์ PPE หมวก-รองเท้าเซฟตี้ และแลกบัตรประชาชนคนต่อคน</p>
+      <div class="card-meta">
+        <span class="card-role">👤 จป. / เจ้าหน้าที่ บก.รปภ.</span>
+        <span style="color:var(--accent-rose);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 4: 4.0 งานตรวจสอบพื้นที่ -->
+    <a href="workflow_swimlane_tabs.html?tab=3" class="workflow-card" data-cat="patrol">
+      <div class="card-header-line">
+        <span class="card-badge badge-patrol">4.0 ตรวจพื้นที่</span>
+        <span class="card-num">6 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">4.0 ตรวจสอบพื้นที่ & จัดระเบียบ</h3>
+      <p class="card-desc">เดินตรวจร้านค้าห้ามวางสินค้ารุกล้ำเกินแนวร่องน้ำ/แนวกระเบื้อง คุมความสูงสินค้าไม่เกิน 1.50 ม. ตรวจความสะอาดฝุ่นหยากไย่ และห้ามวางรถเข็น/อุปกรณ์กีดขวางทางเดิน</p>
+      <div class="card-meta">
+        <span class="card-role">👤 สายตรวจ รปภ.</span>
+        <span style="color:var(--accent-amber);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 5: 5.0 งาน เปิด ปิด ไฟฟ้า -->
+    <a href="workflow_swimlane_tabs.html?tab=4" class="workflow-card" data-cat="elec">
+      <div class="card-header-line">
+        <span class="card-badge badge-elec">5.0 ไฟฟ้า</span>
+        <span class="card-num">6 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">5.0 งานเปิด - ปิด ระบบไฟฟ้า</h3>
+      <p class="card-desc">ควบคุมเปิด-ปิดไฟ 12 โซนตามตารางเวลา (ศาลเจ้าพ่อสมบุญ, ผัก 2, อาคารกลาง, อาคารยาว, หน้าเซเว่น, น้ำพุ, ราวตลาด, พลาซ่า, โรงรถลาน 4) ตรวจสอบหลอดชำรุด</p>
+      <div class="card-meta">
+        <span class="card-role">👤 เจ้าหน้าที่ รปภ. ประจำโซน</span>
+        <span style="color:var(--accent-violet);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 6: 6.0 งาน เปิด ปิด อีแว๊ป -->
+    <a href="workflow_swimlane_tabs.html?tab=5" class="workflow-card" data-cat="evap">
+      <div class="card-header-line">
+        <span class="card-badge badge-evap">6.0 อีแว๊ป</span>
+        <span class="card-num">4 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">6.0 งานเปิด - ปิด ระบบอีแว๊ป</h3>
+      <p class="card-desc">ตรวจระดับน้ำและควบคุมเปิด-ปิดเครื่องอีแว๊ป 3 โซนหลัก: ครัวยิ่งเจริญ (03.00-17.00 น.), ศูนย์อาหาร (05.00-20.00 น.), อาคารพลาซ่า (07.00-20.00 น.)</p>
+      <div class="card-meta">
+        <span class="card-role">👤 ผู้ปฏิบัติงาน รปภ.</span>
+        <span style="color:var(--accent-teal);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 7: 7.0 งาน เปิด ปิด พัดลม -->
+    <a href="workflow_swimlane_tabs.html?tab=6" class="workflow-card" data-cat="fan">
+      <div class="card-header-line">
+        <span class="card-badge badge-fan">7.0 พัดลม</span>
+        <span class="card-num">5 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">7.0 งานเปิด - ปิด ระบบพัดลม</h3>
+      <p class="card-desc">เปิด-ปิดพัดลมเพดานผัก 2, พัดลมยักษ์ 60 ปี, อาคารกลาง, ครัวยิ่งเจริญ, พลาซ่า และตรวจเช็กพัดลมอาคารยาวระบบออโต้ (22.00-18.00 น.)</p>
+      <div class="card-meta">
+        <span class="card-role">👤 ผู้ปฏิบัติงาน รปภ.</span>
+        <span style="color:var(--accent-slate);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 8: 8.0 งาน เปิด ปิด ผ้าใบ -->
+    <a href="workflow_swimlane_tabs.html?tab=7" class="workflow-card" data-cat="canvas">
+      <div class="card-header-line">
+        <span class="card-badge badge-canvas">8.0 ผ้าใบ</span>
+        <span class="card-num">4 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">8.0 งานเปิด - ปิด ผ้าใบกันแดด-ฝน</h3>
+      <p class="card-desc">ควบคุมผ้าใบอาคารกลาง (เปิด 06.30 น. ปิด 14.00 น.), ผ้าใบหน้าตลาด (เปิด 08.00 น. ปิด 15.00 น.) และมาตรการม้วนเก็บฉุกเฉินรับมือพายุฝนลมกระโชกแรง</p>
+      <div class="card-meta">
+        <span class="card-role">👤 เจ้าหน้าที่ รปภ. ประจำจุด</span>
+        <span style="color:#c2410c;font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 9: 9.0 งาน เปิด ปิด ปั๊มน้ำ -->
+    <a href="workflow_swimlane_tabs.html?tab=8" class="workflow-card" data-cat="pump">
+      <div class="card-header-line">
+        <span class="card-badge badge-pump">9.0 ปั๊มน้ำ</span>
+        <span class="card-num">4 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">9.0 งานเปิด - ปิด ปั๊มน้ำ</h3>
+      <p class="card-desc">ควบคุมเปิดปั๊มน้ำศาลเจ้าพ่อสมบุญ (เปิด 05.00 น. ปิด 20.00 น.) ตรวจเช็กมิเตอร์ แรงดันน้ำ การทำงานของลูกลอย และตรวจสอบการรั่วซึม</p>
+      <div class="card-meta">
+        <span class="card-role">👤 ผู้ปฏิบัติงาน รปภ.</span>
+        <span style="color:#4338ca;font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 ตลาดยิ่งเจริญ (Yingcharoen Market) — แผนกรักษาความปลอดภัย</p>
+  <p style="margin-top:4px;font-size:12px;color:#a1a1a6;">ระบบศูนย์รวมคู่มือปฏิบัติงานมาตรฐาน (Standard Operating Procedures Portal)</p>
+</footer>
+
+<script>
+// Filter Process Cards
+function filterCards(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('.workflow-card');
+  cards.forEach(card => {
+    if (cat === 'all' || card.dataset.cat === cat) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+// Search Workflows
+function searchWorkflows() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const cards = document.querySelectorAll('.workflow-card');
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    if (text.includes(q)) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+
+</body>
+</html>

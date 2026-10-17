@@ -1,0 +1,2808 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผังขั้นตอนการปฏิบัติงาน — แผนกรักษาความปลอดภัย</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-main: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --gray50: #f8fafc;
+  --gray100: #f1f5f9;
+  --gray200: #e2e8f0;
+  --gray300: #cbd5e1;
+  --gray600: #475569;
+  --gray800: #1e293b;
+  --accent-blue: #0284c7;
+  --accent-emerald: #059669;
+  --accent-amber: #d97706;
+  --accent-rose: #e11d48;
+  --accent-violet: #7c3aed;
+  --accent-teal: #0d9488;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.03);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Sarabun", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Top Header */
+.top-header {
+  background: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e293b 100%);
+  color: #f8fafc;
+  padding: 44px 32px 36px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+}
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(2, 132, 199, 0.2);
+  border: 1px solid rgba(2, 132, 199, 0.4);
+  color: #38bdf8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.header-title {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+.header-sub {
+  font-size: 14px;
+  color: #94a3b8;
+  max-width: 860px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Nav */
+.top-nav {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--gray200);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  padding: 12px 24px;
+}
+.nav-wrap {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.nav-btn {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.15s;
+}
+.nav-btn:hover { color: var(--accent-blue); }
+.print-btn {
+  background: var(--text-main);
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+.print-btn:hover { background: #334155; }
+
+/* Tabs Bar */
+.tabs-outer {
+  background: #ffffff;
+  border-bottom: 1px solid var(--gray200);
+  padding: 12px 24px 0;
+  position: sticky;
+  top: 53px;
+  z-index: 35;
+}
+.tabs-scroll {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+}
+.tab-btn {
+  background: var(--gray50);
+  border: 1px solid var(--gray200);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--gray600);
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.tab-btn:hover {
+  background: #e2e8f0;
+  color: var(--text-main);
+}
+.tab-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+.tab-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.25);
+  font-weight: 700;
+}
+.tab-btn:not(.active) .tab-badge {
+  background: var(--gray200);
+  color: var(--gray600);
+}
+
+/* Main Layout */
+.main-wrapper {
+  max-width: 1440px;
+  margin: 24px auto 80px;
+  padding: 0 24px;
+  display: flex;
+  gap: 24px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.content-col {
+  flex: 1;
+  min-width: 0;
+  transition: all 0.3s ease;
+}
+.content-col.shrunk {
+  margin-right: 440px;
+}
+
+/* Tab Content Panel */
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+/* Process Intro Header */
+.proc-intro {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px 28px;
+  border: 1px solid var(--gray200);
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.proc-title-box h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.proc-title-box p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  max-width: 820px;
+  line-height: 1.5;
+}
+.proc-meta-badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.pm-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--gray100);
+  color: var(--gray800);
+  border: 1px solid var(--gray200);
+}
+
+/* Swimlane Table Container */
+.swimlane-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid var(--gray200);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.swimlane-header {
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--gray200);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.swimlane-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.swimlane-table-wrap {
+  overflow-x: auto;
+}
+.swimlane-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+.swimlane-table th, .swimlane-table td {
+  border: 1px solid var(--gray200);
+  padding: 16px 18px;
+  vertical-align: top;
+}
+.swimlane-table th {
+  background: #f1f5f9;
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
+  text-align: left;
+}
+.lane-col-role {
+  width: 230px;
+  background: #fafafa;
+}
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+.role-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Step Node inside Swimlane */
+.steps-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.step-node {
+  background: #ffffff;
+  border: 1px solid var(--gray200);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.step-node:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-blue);
+  box-shadow: 0 6px 16px rgba(2, 132, 199, 0.12);
+}
+.step-node.active {
+  border-color: var(--accent-blue);
+  background: #f0f9ff;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+}
+.step-top-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.step-code {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.step-sla {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.step-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+.step-summary {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.5;
+}
+.step-footer-tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.step-tag-role {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.step-tag-doc {
+  font-size: 10px;
+  background: var(--gray100);
+  color: var(--gray600);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--gray200);
+}
+
+/* Slide-out Drawer / Side Detail Panel */
+.side-panel {
+  position: fixed;
+  top: 60px;
+  right: -480px;
+  width: 440px;
+  height: calc(100vh - 70px);
+  background: #ffffff;
+  border-left: 1px solid var(--gray200);
+  box-shadow: -8px 0 24px rgba(0,0,0,0.12);
+  z-index: 100;
+  overflow-y: auto;
+  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+.side-panel.open {
+  right: 0;
+}
+.panel-backdrop {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.3);
+  z-index: 90;
+}
+.panel-backdrop.open {
+  display: block;
+}
+.panel-head {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--gray200);
+  background: #fafafa;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-top-left-radius: 20px;
+}
+.panel-head-titles {
+  flex: 1;
+}
+.panel-step-code {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent-blue);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.panel-step-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.35;
+}
+.panel-close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  line-height: 1;
+}
+.panel-close-btn:hover { background: var(--gray200); color: var(--text-main); }
+
+.panel-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.panel-sec-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray600);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.panel-text {
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.6;
+}
+.panel-list {
+  list-style: none;
+}
+.panel-list li {
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.5;
+}
+.panel-list li::before {
+  content: "•";
+  position: absolute;
+  left: 4px;
+  color: var(--accent-blue);
+  font-weight: bold;
+}
+.panel-alert {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 4px;
+}
+.panel-alert-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e40af;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.panel-alert-text {
+  font-size: 12px;
+  color: #1e3a8a;
+  line-height: 1.5;
+}
+
+/* Print CSS */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
+  body { background: #fff; color: #000; font-size: 10pt; }
+  .top-header, .top-nav, .tabs-outer, .side-panel, .panel-backdrop, .print-btn { display: none !important; }
+  .main-wrapper { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+  .content-col { margin-right: 0 !important; }
+  .tab-content { display: block !important; page-break-after: always; }
+  .swimlane-card { border: 1px solid #999; box-shadow: none; break-inside: avoid; }
+  .step-node { border: 1px solid #aaa; break-inside: avoid; }
+}
+
+@media (max-width: 900px) {
+  .content-col.shrunk { margin-right: 0; }
+  .side-panel { width: 100%; right: -100%; border-radius: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="top-header">
+  <div class="header-badge">🛡️ SECURITY & FACILITY OPERATION</div>
+  <h1 class="header-title">ผังขั้นตอนการปฏิบัติงาน — แผนกรักษาความปลอดภัย</h1>
+  <p class="header-sub">ครอบคลุม 9 หมวดงานหลัก (1.0 ลงทะเบียน บก., 2.0 ประสานงานระงับเหตุ, 3.0 ควบคุมผู้รับเหมา Work Permit, 4.0 ตรวจสอบพื้นที่, 5.0 ระบบไฟฟ้า, 6.0 ระบบอีแว๊ป, 7.0 ระบบพัดลม, 8.0 ระบบผ้าใบ, 9.0 ระบบปั๊มน้ำ) รวม 44 ขั้นตอนปฏิบัติงาน</p>
+</div>
+
+<!-- Navigation -->
+<div class="top-nav">
+  <div class="nav-wrap">
+    <div class="nav-left">
+      <a class="nav-btn" href="index.html">← แดชบอร์ด รปภ.</a>
+      <a class="nav-btn" href="../../index.html">🏠 หน้าหลักบริษัท</a>
+      <a class="nav-btn" href="../../guide.html">📖 คู่มือการใช้งาน</a>
+    </div>
+    <button class="print-btn" onclick="window.print()">🖨️ พิมพ์ A4 Landscape</button>
+  </div>
+</div>
+
+<!-- Tabs Bar -->
+<div class="tabs-outer">
+  <div class="tabs-scroll">
+    <button class="tab-btn active" onclick="switchTab(0)">
+      <span>📝 1.0 ลงทะเบียน บก.</span>
+      <span class="tab-badge">5 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn " onclick="switchTab(1)">
+      <span>📻 2.0 ประสานงานระงับเหตุ</span>
+      <span class="tab-badge">4 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn " onclick="switchTab(2)">
+      <span>⛑️ 3.0 ควบคุมผู้รับเหมา</span>
+      <span class="tab-badge">6 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn " onclick="switchTab(3)">
+      <span>🔍 4.0 ตรวจสอบพื้นที่</span>
+      <span class="tab-badge">6 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn " onclick="switchTab(4)">
+      <span>💡 5.0 ระบบไฟฟ้า</span>
+      <span class="tab-badge">6 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn " onclick="switchTab(5)">
+      <span>❄️ 6.0 ระบบอีแว๊ป</span>
+      <span class="tab-badge">4 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn " onclick="switchTab(6)">
+      <span>🌀 7.0 ระบบพัดลม</span>
+      <span class="tab-badge">5 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn " onclick="switchTab(7)">
+      <span>⛺ 8.0 ระบบผ้าใบ</span>
+      <span class="tab-badge">4 ขั้นตอน</span>
+    </button>
+    <button class="tab-btn " onclick="switchTab(8)">
+      <span>🚰 9.0 ระบบปั๊มน้ำ</span>
+      <span class="tab-badge">4 ขั้นตอน</span>
+    </button>
+  </div>
+</div>
+
+<!-- Main Container -->
+<div class="main-wrapper">
+  <div class="content-col" id="contentCol">
+  <!-- Tab Content 0: 1.0 ลงทะเบียน บก. -->
+  <div class="tab-content active" id="tab-reg">
+    <div class="proc-intro">
+      <div class="proc-title-box">
+        <h2>📝 1.0 ลงทะเบียน บก.</h2>
+        <p>กระบวนการลงทะเบียนผู้ค้ารายวัน ณ กองอำนวยการรักษาความปลอดภัย (บก.รปภ.) คัดกรองสินค้า ตรวจวัดขนาดพื้นที่แผง S/M/L/XL (100-400 บาท) ตรวจสิทธิ์ส่วนลด 50% คนชรา คนพิการ เด็กไม่เกิน 12 ปี และออกใบเสร็จรับเงิน</p>
+      </div>
+      <div class="proc-meta-badges">
+        <span class="pm-badge">📊 5 ขั้นตอน</span>
+        <span class="pm-badge">👥 เจ้าหน้าที่ บก.รปภ. / สายตรวจ</span>
+        <span class="pm-badge">📄 สมุดลงทะเบียน / บัตรประชาชน / ใบเสร็จ</span>
+        <span class="pm-badge">⏱️ 3 นาที / ราย (วัดขนาด 1-2 นาที)</span>
+      </div>
+    </div>
+
+    <div class="swimlane-card">
+      <div class="swimlane-header">
+        <h3>ผังกระบวนการตามบทบาทหน้าที่ (Cross-Functional Swimlane)</h3>
+        <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูคู่มือและระเบียบบังคับอย่างละเอียด</span>
+      </div>
+      <div class="swimlane-table-wrap">
+        <table class="swimlane-table">
+          <thead>
+            <tr>
+              <th style="width:230px;">บทบาทผู้รับผิดชอบ (Role / Lane)</th>
+              <th>ผังลำดับขั้นตอนการปฏิบัติงาน (Operational Flow)</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#f1f5f9;color:#334155;">👤 ผู้ค้ารายวัน (ผู้ติดต่อ)</span>
+            <div class="role-desc">ติดต่อ บก.รปภ. แจ้งประเภทสินค้า แสดงบัตรประชาชน ชำระเงิน</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+<div style='font-size:12px;color:var(--text-muted);padding:8px 0;'>ประสานงานและรับการสนับสนุนในขั้นตอนที่เกี่ยวข้อง</div>            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#e0f2fe;color:#0369a1;">👤 เจ้าหน้าที่ บก.รปภ. (เคาน์เตอร์)</span>
+            <div class="role-desc">คัดกรองสินค้า วัดขนาดแผง ตรวจสิทธิ์ลด 50% ออกใบเสร็จ</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s1_1')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 1.1</span>
+              <span class="step-sla">⏱️ 1 นาที / ราย</span>
+            </div>
+            <div class="step-title">ต้อนรับและคัดกรองสินค้าผู้ค้ารายวัน</div>
+            <div class="step-summary">ต้อนรับผู้ค้าที่เข้ามาติดต่อ ตรวจสอบประเภทสินค้า และคัดกรองความเหมาะสมในการนำมาขายในตลาด</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0f2fe;color:#0369a1;">👤 เจ้าหน้าที่ บก.รปภ.</span>
+              <span class="step-tag-doc">📄 สมุดบันทึกรับลงทะเบียนผู้ค้ารายวัน</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s1_2')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 1.2</span>
+              <span class="step-sla">⏱️ 1-2 นาที / ราย</span>
+            </div>
+            <div class="step-title">ตรวจวัดขนาดพื้นที่และประเมินอัตราค่าบริการ (S/M/L/XL)</div>
+            <div class="step-summary">ตรวจวัดขนาดพื้นที่แผงค้าและคิดอัตราค่าธรรมเนียมตามเกณฑ์ขนาด S, M, L, XL อย่างถูกต้อง</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0f2fe;color:#0369a1;">👤 เจ้าหน้าที่ บก.รปภ.</span>
+              <span class="step-tag-doc">📄 ตารางอัตราค่าบริการแผงค้ารายวัน (S/M/L/XL)</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s1_3')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 1.3</span>
+              <span class="step-sla">⏱️ 1 นาที</span>
+            </div>
+            <div class="step-title">ตรวจสอบสิทธิ์ส่วนลดพิเศษ 50% (คนชรา คนพิการ เด็ก)</div>
+            <div class="step-summary">สนับสนุนนโยบายช่วยเหลือสังคม โดยตรวจสอบเอกสารสิทธิ์ส่วนลด 50% ให้แก่กลุ่มเปราะบาง</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0f2fe;color:#0369a1;">👤 เจ้าหน้าที่ บก.รปภ.</span>
+              <span class="step-tag-doc">📄 บัตรประจำตัวประชาชน</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s1_4')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 1.4</span>
+              <span class="step-sla">⏱️ 1 นาที</span>
+            </div>
+            <div class="step-title">ออกใบเสร็จรับเงิน ชำระเงิน และลงบันทึกสมุด บก.รปภ.</div>
+            <div class="step-summary">รับชำระค่าบริการ ออกใบเสร็จรับเงินอย่างเป็นทางการ และบันทึกข้อมูลรายรับเข้าสมุดคุม</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0f2fe;color:#0369a1;">👤 เจ้าหน้าที่ บก.รปภ.</span>
+              <span class="step-tag-doc">📄 ใบเสร็จรับเงินตลาดยิ่งเจริญ</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#fef3c7;color:#b45309;">👤 เจ้าหน้าที่ รปภ. สายตรวจ</span>
+            <div class="role-desc">จัดสรรและพาผู้ค้าเข้าจุดตั้งแผง กำชับระเบียบขอบเขตตลาด</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s1_5')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 1.5</span>
+              <span class="step-sla">⏱️ 2-3 นาที</span>
+            </div>
+            <div class="step-title">จัดสรรจุดวางแผงค้าและแนะนำข้อกำหนดตลาด</div>
+            <div class="step-summary">พาผู้ค้าไปยังจุดวางแผงค้าตามผังจัดสรร และกวดขันให้ตั้งวางสินค้าในขอบเขตที่กำหนด</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#fef3c7;color:#b45309;">👤 เจ้าหน้าที่ รปภ. สายตรวจ</span>
+              <span class="step-tag-doc">📄 ผังจัดสรรพื้นที่แผงค้ารายวัน</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content 1: 2.0 ประสานงานระงับเหตุ -->
+  <div class="tab-content " id="tab-coord">
+    <div class="proc-intro">
+      <div class="proc-title-box">
+        <h2>📻 2.0 ประสานงานระงับเหตุ</h2>
+        <p>กระบวนการรับแจ้งเหตุและประสานงานจากทุกแผนก บันทึกข้อมูล สั่งการทางวิทยุสื่อสารให้ รปภ. จุดใกล้เคียงเข้าระงับเหตุทันที เจรจาไกล่เกลี่ย สรุปผล และรายงานผู้บังคับบัญชา</p>
+      </div>
+      <div class="proc-meta-badges">
+        <span class="pm-badge">📊 4 ขั้นตอน</span>
+        <span class="pm-badge">👥 วิทยุสื่อสาร / สายตรวจ / หน.ชุด รปภ.</span>
+        <span class="pm-badge">📄 สมุดบันทึก บก. / รายงานเหตุการณ์</span>
+        <span class="pm-badge">⏱️ วิทยุ 30 วินาที / ถึงที่เกิดเหตุ 2-3 นาที</span>
+      </div>
+    </div>
+
+    <div class="swimlane-card">
+      <div class="swimlane-header">
+        <h3>ผังกระบวนการตามบทบาทหน้าที่ (Cross-Functional Swimlane)</h3>
+        <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูคู่มือและระเบียบบังคับอย่างละเอียด</span>
+      </div>
+      <div class="swimlane-table-wrap">
+        <table class="swimlane-table">
+          <thead>
+            <tr>
+              <th style="width:230px;">บทบาทผู้รับผิดชอบ (Role / Lane)</th>
+              <th>ผังลำดับขั้นตอนการปฏิบัติงาน (Operational Flow)</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#f1f5f9;color:#334155;">👤 ผู้แจ้งเหตุ (ทุกแผนก / ผู้ค้า)</span>
+            <div class="role-desc">แจ้งเหตุทาง ว. โทรศัพท์ วาจา หรือหนังสือ</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+<div style='font-size:12px;color:var(--text-muted);padding:8px 0;'>ประสานงานและรับการสนับสนุนในขั้นตอนที่เกี่ยวข้อง</div>            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#e0f2fe;color:#0369a1;">👤 เจ้าหน้าที่วิทยุสื่อสาร บก.รปภ.</span>
+            <div class="role-desc">รับแจ้งเหตุ บันทึกสมุด และวิทยุสั่งการ รปภ. จุดใกล้เคียง</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s2_1')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 2.1</span>
+              <span class="step-sla">⏱️ 1 นาที (ทันทีที่รับแจ้ง)</span>
+            </div>
+            <div class="step-title">รับแจ้งเหตุและบันทึกรายละเอียดในสมุด บก.รปภ.</div>
+            <div class="step-summary">รับแจ้งเหตุและข้อมูลประสานงานจากทุกแผนก บันทึกข้อมูลสำคัญลงสมุดคุมทันที</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0f2fe;color:#0369a1;">👤 เจ้าหน้าที่วิทยุสื่อสาร บก.รปภ.</span>
+              <span class="step-tag-doc">📄 สมุดบันทึกการประสานงานและรับแจ้งเหตุ บก.รปภ.</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s2_2')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 2.2</span>
+              <span class="step-sla">⏱️ ไม่เกิน 30 วินาที</span>
+            </div>
+            <div class="step-title">วิทยุสื่อสารประสานงาน รปภ. จุดใกล้เคียงเข้าระงับเหตุ</div>
+            <div class="step-summary">สั่งการเจ้าหน้าที่ รปภ. ที่ประจำจุดใกล้เคียงเข้าตรวจสอบและระงับเหตุตามขั้นตอน</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0f2fe;color:#0369a1;">👤 เจ้าหน้าที่วิทยุสื่อสาร บก.รปภ.</span>
+              <span class="step-tag-doc">📄 ตารางรหัสวิทยุสื่อสาร (รหัส ว.)</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#dcfce7;color:#15803d;">👤 เจ้าหน้าที่ รปภ. ประจำจุด / สายตรวจ</span>
+            <div class="role-desc">เข้าระงับเหตุ ประเมินสถานการณ์ และรักษาความสงบ</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s2_3')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 2.3</span>
+              <span class="step-sla">⏱️ เข้าถึงที่เกิดเหตุภายใน 2-3 นาที</span>
+            </div>
+            <div class="step-title">เข้าระงับเหตุ ประเมินสถานการณ์ และเจรจาไกล่เกลี่ย</div>
+            <div class="step-summary">เข้าถึงที่เกิดเหตุอย่างรวดเร็ว ควบคุมสถานการณ์ ป้องกันการลุกลาม และรักษาความสงบ</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#dcfce7;color:#15803d;">👤 เจ้าหน้าที่ รปภ. ประจำจุด / สายตรวจ</span>
+              <span class="step-tag-doc">📄 อุปกรณ์ประจำกาย (กระบอง</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#f3e8ff;color:#7e22ce;">👤 หัวหน้าชุด รปภ. / ผู้จัดการแผนก</span>
+            <div class="role-desc">สรุปรายงานเหตุการณ์ บันทึกสมุดเวร และรายงานผู้บริหาร</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s2_4')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 2.4</span>
+              <span class="step-sla">⏱️ ภายใน 30 นาทีหลังเหตุการณ์ยุติ</span>
+            </div>
+            <div class="step-title">สรุปผลการปฏิบัติงาน บันทึกสมุดเวร และรายงานผู้บริหาร</div>
+            <div class="step-summary">สรุปรายงานผลเหตุการณ์ บันทึกประวัติ และส่งต่อข้อมูลให้ผู้บริหารหรือหน่วยงานที่เกี่ยวข้อง</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#f3e8ff;color:#7e22ce;">👤 หัวหน้าชุด รปภ. / ผู้จัดการแผนก</span>
+              <span class="step-tag-doc">📄 รายงานเหตุการณ์ประจำวัน (Incident Report)</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content 2: 3.0 ควบคุมผู้รับเหมา -->
+  <div class="tab-content " id="tab-permit">
+    <div class="proc-intro">
+      <div class="proc-title-box">
+        <h2>⛑️ 3.0 ควบคุมผู้รับเหมา</h2>
+        <p>กระบวนการควบคุมความปลอดภัยผู้รับเหมาและงานก่อสร้าง (Work Permit) ตรวจคนงาน อบรมกฎระเบียบ ตรวจใบอนุญาตงานเสี่ยง 4 ประเภท (ความร้อน, ที่สูง, อันตราย, ที่อับอากาศ) ตรวจ PPE หมวก-รองเท้าเซฟตี้ แลกบัตรประชาชนคนต่อคน และตรวจตราไซต์งาน</p>
+      </div>
+      <div class="proc-meta-badges">
+        <span class="pm-badge">📊 6 ขั้นตอน</span>
+        <span class="pm-badge">👥 เจ้าหน้าที่ บก.รปภ. / จป. / ผู้รับเหมา</span>
+        <span class="pm-badge">📄 Work Permit (4 ประเภท) / บัตรประชาชน / Contractor Pass</span>
+        <span class="pm-badge">⏱️ ตรวจ 5 นาที / คน / ตรวจไซต์ทุก 1-2 ชม.</span>
+      </div>
+    </div>
+
+    <div class="swimlane-card">
+      <div class="swimlane-header">
+        <h3>ผังกระบวนการตามบทบาทหน้าที่ (Cross-Functional Swimlane)</h3>
+        <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูคู่มือและระเบียบบังคับอย่างละเอียด</span>
+      </div>
+      <div class="swimlane-table-wrap">
+        <table class="swimlane-table">
+          <thead>
+            <tr>
+              <th style="width:230px;">บทบาทผู้รับผิดชอบ (Role / Lane)</th>
+              <th>ผังลำดับขั้นตอนการปฏิบัติงาน (Operational Flow)</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#f1f5f9;color:#334155;">👤 ผู้รับเหมา / คนงานก่อสร้าง</span>
+            <div class="role-desc">รายงานตัว บก.รปภ. แสดง Work Permit แลกบัตรประชาชน สวม PPE</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+<div style='font-size:12px;color:var(--text-muted);padding:8px 0;'>ประสานงานและรับการสนับสนุนในขั้นตอนที่เกี่ยวข้อง</div>            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#e0f2fe;color:#0369a1;">👤 เจ้าหน้าที่ บก.รปภ. (ตรวจทางเข้า)</span>
+            <div class="role-desc">ตรวจรายชื่อคนงาน อบรมระเบียบ ตรวจ PPE และแลกบัตรคนต่อคน</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s3_1')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 3.1</span>
+              <span class="step-sla">⏱️ 1 นาที / คน</span>
+            </div>
+            <div class="step-title">ตรวจสอบคนงานก่อสร้าง ณ จุดตรวจ บก.รปภ.</div>
+            <div class="step-summary">ตรวจนับจำนวนคนงาน ตรวจสอบรายชื่อ และคัดกรองก่อนอนุญาตเข้าสู่ไซต์งานก่อสร้างในตลาด</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0f2fe;color:#0369a1;">👤 เจ้าหน้าที่ บก.รปภ.</span>
+              <span class="step-tag-doc">📄 เอกสารขออนุญาตเข้าทำงานของผู้รับเหมา</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s3_2')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 3.2</span>
+              <span class="step-sla">⏱️ 3-5 นาที</span>
+            </div>
+            <div class="step-title">ชี้แจงกฎระเบียบความปลอดภัยและข้อปฏิบัติของตลาด</div>
+            <div class="step-summary">อบรมชี้แจงกฎระเบียบ ข้อห้าม มาตรการความปลอดภัย และการป้องกันอัคคีภัยก่อนเริ่มงาน</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0f2fe;color:#0369a1;">👤 เจ้าหน้าที่ บก.รปภ. / จป.วิชาชีพ</span>
+              <span class="step-tag-doc">📄 คู่มือกฎระเบียบความปลอดภัยสำหรับผู้รับเหมา</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s3_4')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 3.4</span>
+              <span class="step-sla">⏱️ 1 นาที / คน</span>
+            </div>
+            <div class="step-title">ตรวจสอบอุปกรณ์คุ้มครองความปลอดภัยส่วนบุคคล (PPE)</div>
+            <div class="step-summary">ตรวจสอบอุปกรณ์ป้องกันภัยส่วนบุคคลของคนงานทุกคนให้ครบถ้วนถูกต้องตามมาตรฐาน</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#fee2e2;color:#b91c1c;">👤 เจ้าหน้าที่ บก.รปภ.</span>
+              <span class="step-tag-doc">📄 เช็กลิสต์การตรวจอุปกรณ์ PPE ประจำวัน</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s3_5')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 3.5</span>
+              <span class="step-sla">⏱️ 1 นาที / คน (แลกบัตรคนต่อคน)</span>
+            </div>
+            <div class="step-title">แลกบัตรประชาชนคนต่อคนและออกบัตรอนุญาตเข้างาน</div>
+            <div class="step-summary">เก็บบัตรประชาชนเป็นหลักประกันระบุตัวตน และออกบัตรแสดงตนเข้าปฏิบัติงานรายบุคคล</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0f2fe;color:#0369a1;">👤 เจ้าหน้าที่ บก.รปภ.</span>
+              <span class="step-tag-doc">📄 บัตรประจำตัวประชาชนคนงาน</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#fee2e2;color:#b91c1c;">👤 จป.วิชาชีพ & ตรวจ Work Permit</span>
+            <div class="role-desc">ตรวจสอบใบอนุญาตทำงานเสี่ยง 4 ประเภท มาตรการป้องกันไฟและตกหล่น</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s3_3')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 3.3</span>
+              <span class="step-sla">⏱️ 2-3 นาที</span>
+            </div>
+            <div class="step-title">ตรวจสอบใบอนุญาตทำงานเสี่ยงอันตราย 4 ประเภท (Work Permit)</div>
+            <div class="step-summary">ตรวจสอบความสมบูรณ์และเงื่อนไขของใบอนุญาตทำงานเสี่ยงอันตรายก่อนอนุญาตให้เริ่มงาน</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#fee2e2;color:#b91c1c;">👤 เจ้าหน้าที่ บก.รปภ. & จป.วิชาชีพ</span>
+              <span class="step-tag-doc">📄 ใบอนุญาตทำงานความร้อน (Hot Work)</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#fef3c7;color:#b45309;">👤 เจ้าหน้าที่ รปภ. สายตรวจไซต์งาน</span>
+            <div class="role-desc">ตรวจตราไซต์งาน กำกับมาตรการความปลอดภัย สั่งหยุดงานหากเสี่ยง</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s3_6')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 3.6</span>
+              <span class="step-sla">⏱️ ตรวจทุก 1-2 ชั่วโมง</span>
+            </div>
+            <div class="step-title">เดินตรวจตราไซต์งานและควบคุมมาตรการความปลอดภัย</div>
+            <div class="step-summary">ออกตรวจตราพื้นที่ทำงานของผู้รับเหมา กำกับให้ปฏิบัติตาม Work Permit และสั่งระงับงานทันทีหากไม่ปลอดภัย</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#fef3c7;color:#b45309;">👤 เจ้าหน้าที่ รปภ. สายตรวจ & จป.</span>
+              <span class="step-tag-doc">📄 แบบตรวจความปลอดภัยไซต์งานก่อสร้าง</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content 3: 4.0 ตรวจสอบพื้นที่ -->
+  <div class="tab-content " id="tab-patrol">
+    <div class="proc-intro">
+      <div class="proc-title-box">
+        <h2>🔍 4.0 ตรวจสอบพื้นที่</h2>
+        <p>กระบวนการตรวจตราพื้นที่และความเป็นระเบียบของแผงค้า กวดขันห้ามวางสินค้ารุกล้ำทางเดิน ห้ามวางทับแนวร่องน้ำและแนวกระเบื้อง คุมความสูงสินค้าไม่เกิน 1.50 ม. ตรวจสุขอนามัยฝุ่นหยากไย่ ห้ามจอดรถเข็นในพื้นที่ว่าง และส่งต่อแผนกบริหารพื้นที่เช่า</p>
+      </div>
+      <div class="proc-meta-badges">
+        <span class="pm-badge">📊 6 ขั้นตอน</span>
+        <span class="pm-badge">👥 สายตรวจ รปภ. / แผนกพื้นที่เช่า</span>
+        <span class="pm-badge">📄 ผังแนวเขตแผงค้า / ใบเตือนฝ่าฝืนระเบียบ</span>
+        <span class="pm-badge">⏱️ เดินตรวจต่อเนื่องรอบละ 30 นาที</span>
+      </div>
+    </div>
+
+    <div class="swimlane-card">
+      <div class="swimlane-header">
+        <h3>ผังกระบวนการตามบทบาทหน้าที่ (Cross-Functional Swimlane)</h3>
+        <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูคู่มือและระเบียบบังคับอย่างละเอียด</span>
+      </div>
+      <div class="swimlane-table-wrap">
+        <table class="swimlane-table">
+          <thead>
+            <tr>
+              <th style="width:230px;">บทบาทผู้รับผิดชอบ (Role / Lane)</th>
+              <th>ผังลำดับขั้นตอนการปฏิบัติงาน (Operational Flow)</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#f1f5f9;color:#334155;">👤 ร้านค้า / แผงค้าในตลาด</span>
+            <div class="role-desc">จัดวางสินค้าในแนวเขต สูงไม่เกิน 1.50 ม. ดูแลความสะอาด</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+<div style='font-size:12px;color:var(--text-muted);padding:8px 0;'>ประสานงานและรับการสนับสนุนในขั้นตอนที่เกี่ยวข้อง</div>            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#fef3c7;color:#b45309;">👤 เจ้าหน้าที่ รปภ. สายตรวจพื้นที่</span>
+            <div class="role-desc">เดินตรวจทางเดิน แนวร่องน้ำ ความสูง ฝุ่นหยากไย่ รถเข็นกีดขวาง</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s4_1')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 4.1</span>
+              <span class="step-sla">⏱️ เดินตรวจต่อเนื่องรอบละ 30 นาที</span>
+            </div>
+            <div class="step-title">เดินตรวจแนวทางเดินแผงค้าห้ามวางสินค้ารุกล้ำ</div>
+            <div class="step-summary">ตรวจตราพื้นที่ทางเดินส่วนกลาง ป้องกันไม่ให้แผงค้าวางสินค้ารุกล้ำทางเดินสัญจรของลูกค้า</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#fef3c7;color:#b45309;">👤 เจ้าหน้าที่ รปภ. สายตรวจ</span>
+              <span class="step-tag-doc">📄 สมุดบันทึกการตรวจพื้นที่สายตรวจ</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s4_2')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 4.2</span>
+              <span class="step-sla">⏱️ ตรวจเช็กประจำวัน</span>
+            </div>
+            <div class="step-title">ตรวจสอบแนวร่องน้ำและแนวกระเบื้องขอบเขตแผงค้า</div>
+            <div class="step-summary">กวดขันการวางสินค้าให้เป็นไปตามแนวร่องน้ำและแนวกระเบื้องที่ทางตลาดกำหนดไว้อย่างเคร่งครัด</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#fef3c7;color:#b45309;">👤 เจ้าหน้าที่ รปภ. สายตรวจ</span>
+              <span class="step-tag-doc">📄 ผังแนวเขตแผงค้าและร่องน้ำ</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s4_3')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 4.3</span>
+              <span class="step-sla">⏱️ ตรวจเช็กต่อเนื่องตลอดวัน</span>
+            </div>
+            <div class="step-title">ควบคุมความสูงการวางสินค้าไม่ให้เกิน 1.50 เมตร</div>
+            <div class="step-summary">ควบคุมระดับความสูงในการเรียงซ้อนและจัดแสดงสินค้าไม่ให้เกิน 1.50 เมตร เพื่อความปลอดภัยและทัศนวิสัย</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#fef3c7;color:#b45309;">👤 เจ้าหน้าที่ รปภ. สายตรวจ</span>
+              <span class="step-tag-doc">📄 ไม้บรรทัดวัดความสูงตรวจระเบียบ (1.50 ม.)</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s4_4')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 4.4</span>
+              <span class="step-sla">⏱️ ตรวจรอบเช้าและรอบบ่าย</span>
+            </div>
+            <div class="step-title">ตรวจสอบสุขอนามัย ฝุ่นละออง และหยากไย่ของร้านค้า</div>
+            <div class="step-summary">ตรวจตราความสะอาดแผงค้า กวดขันการปัดกวาดฝุ่นละอองและหยากไย่ตามหลักสุขาภิบาลตลาด</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#fef3c7;color:#b45309;">👤 เจ้าหน้าที่ รปภ. สายตรวจ</span>
+              <span class="step-tag-doc">📄 เช็กลิสต์ตรวจสุขาภิบาลแผงค้าประจำสัปดาห์</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s4_5')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 4.5</span>
+              <span class="step-sla">⏱️ ตรวจทุก 2 ชั่วโมง</span>
+            </div>
+            <div class="step-title">ตรวจสอบห้ามวางรถเข็นหรืออุปกรณ์ในพื้นที่ว่างส่วนกลาง</div>
+            <div class="step-summary">กวดขันห้ามนำรถเข็นของ ลังเปล่า หรืออุปกรณ์ใด ๆ มาตั้งวางทิ้งไว้ตามพื้นที่ว่างส่วนกลาง</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#fef3c7;color:#b45309;">👤 เจ้าหน้าที่ รปภ. สายตรวจ</span>
+              <span class="step-tag-doc">📄 สมุดบันทึกการจัดระเบียบพื้นที่ส่วนกลาง</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#f3e8ff;color:#7e22ce;">👤 แผนกบริหารพื้นที่เช่า & หัวหน้า รปภ.</span>
+            <div class="role-desc">ออกใบเตือน บันทึกประวัติความประพฤติ และพิจารณามาตรการลงโทษ</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s4_6')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 4.6</span>
+              <span class="step-sla">⏱️ บันทึกและส่งรายงานทุกสิ้นวัน</span>
+            </div>
+            <div class="step-title">ตักเตือน บันทึกประวัติ และประสานแผนกบริหารพื้นที่เช่า</div>
+            <div class="step-summary">ออกใบตักเตือนแก่ร้านค้าที่ฝ่าฝืน บันทึกประวัติ และส่งต่อแผนกบริหารพื้นที่เช่าพิจารณาโทษ</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#f3e8ff;color:#7e22ce;">👤 เจ้าหน้าที่ รปภ. สายตรวจ & แผนกพื้นที่เช่า</span>
+              <span class="step-tag-doc">📄 ใบเตือนการฝ่าฝืนระเบียบตลาด</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content 4: 5.0 ระบบไฟฟ้า -->
+  <div class="tab-content " id="tab-elec">
+    <div class="proc-intro">
+      <div class="proc-title-box">
+        <h2>💡 5.0 ระบบไฟฟ้า</h2>
+        <p>ขั้นตอนการควบคุมเปิด-ปิดระบบไฟฟ้าส่องสว่าง 12 จุดทั่วตลาดยิ่งเจริญตามตารางเวลา (ศาลเจ้าพ่อสมบุญ, ผัก 2, อาคารกลาง, อาคารยาว, หน้าเซเว่น, น้ำพุ, ราวตลาด, ศูนย์อาหาร, พลาซ่า, โรงรถลาน 4) และสำรวจหลอดไฟชำรุด</p>
+      </div>
+      <div class="proc-meta-badges">
+        <span class="pm-badge">📊 6 ขั้นตอน</span>
+        <span class="pm-badge">👥 เจ้าหน้าที่ รปภ. ประจำโซน / ช่างซ่อมบำรุง</span>
+        <span class="pm-badge">📄 ตารางเวลาเปิด-ปิดไฟ 12 โซน / ใบแจ้งซ่อมไฟฟ้า</span>
+        <span class="pm-badge">⏱️ เปิด-ปิดตรงเวลา / ตรวจหลอดไฟชำรุด 30 นาที</span>
+      </div>
+    </div>
+
+    <div class="swimlane-card">
+      <div class="swimlane-header">
+        <h3>ผังกระบวนการตามบทบาทหน้าที่ (Cross-Functional Swimlane)</h3>
+        <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูคู่มือและระเบียบบังคับอย่างละเอียด</span>
+      </div>
+      <div class="swimlane-table-wrap">
+        <table class="swimlane-table">
+          <thead>
+            <tr>
+              <th style="width:230px;">บทบาทผู้รับผิดชอบ (Role / Lane)</th>
+              <th>ผังลำดับขั้นตอนการปฏิบัติงาน (Operational Flow)</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#ede9fe;color:#6d28d9;">👤 เจ้าหน้าที่ รปภ. ประจำโซน (ผู้ปฏิบัติงาน)</span>
+            <div class="role-desc">ตรวจเช็กตู้ควบคุม สับเบรกเกอร์เปิด-ปิดไฟ 12 จุดตามตารางเวลา</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s5_1')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 5.1</span>
+              <span class="step-sla">⏱️ 5 นาที ก่อนรอบเวลาเปิด-ปิด</span>
+            </div>
+            <div class="step-title">ตรวจเช็กตู้ควบคุม สวิตช์ และอุปกรณ์ตัดไฟ</div>
+            <div class="step-summary">ตรวจสอบความปลอดภัยของตู้ควบคุมไฟฟ้า (MDB/DB) และอุปกรณ์เบรกเกอร์ก่อนเปิด-ปิดระบบ</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ede9fe;color:#6d28d9;">👤 เจ้าหน้าที่ รปภ. ประจำโซน</span>
+              <span class="step-tag-doc">📄 ตารางผังควบคุมตู้ไฟฟ้าประจำโซน</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s5_2')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 5.2</span>
+              <span class="step-sla">⏱️ เปิด 18.00 น. / ปิด 06.30 น.</span>
+            </div>
+            <div class="step-title">เปิด - ปิด ไฟฟ้าศาลเจ้าพ่อสมบุญ (18.00 - 06.30 น.)</div>
+            <div class="step-summary">ควบคุมการเปิดไฟส่องสว่างศาลเจ้าพ่อสมบุญช่วงค่ำและปิดไฟช่วงเช้าตามเวลาที่กำหนด</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ede9fe;color:#6d28d9;">👤 เจ้าหน้าที่ รปภ. ประจำจุดศาลเจ้าพ่อ</span>
+              <span class="step-tag-doc">📄 สมุดบันทึกการเปิด-ปิดระบบไฟฟ้าและสาธารณูปโภค</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s5_3')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 5.3</span>
+              <span class="step-sla">⏱️ เปิด 16.00-16.30 น. / ปิด 08.00-09.00 น.</span>
+            </div>
+            <div class="step-title">เปิด - ปิด ไฟฟ้าอาคารกลาง อาคารยาว และหน้าเซเว่น</div>
+            <div class="step-summary">ควบคุมไฟส่องสว่างทางเดินหลักและพื้นที่พาณิชย์ตามรอบเวลาที่ผู้ค้าเริ่มเตรียมของและตลาดเปิด</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ede9fe;color:#6d28d9;">👤 เจ้าหน้าที่ รปภ. โซนอาคารกลาง</span>
+              <span class="step-tag-doc">📄 ตารางเวลาเปิด-ปิดไฟอาคารกลางและอาคารยาว</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s5_4')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 5.4</span>
+              <span class="step-sla">⏱️ ผัก 2 (เปิด 23.30 ปิด 19.30) / 60 ปี (24 ชม.)</span>
+            </div>
+            <div class="step-title">ควบคุมไฟฟ้าอาคารผัก 2 และอาคาร 60 ปี (ตลอดเวลา / รอบดึก)</div>
+            <div class="step-summary">บริหารไฟส่องสว่างโซนค้าส่งผักรอบดึกและอาคาร 60 ปีที่มีการดำเนินงานต่อเนื่องตลอด 24 ชม.</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ede9fe;color:#6d28d9;">👤 เจ้าหน้าที่ รปภ. โซนผักและอาคาร 60 ปี</span>
+              <span class="step-tag-doc">📄 ตารางควบคุมไฟอาคารค้าส่งผักและอาคาร 60 ปี</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s5_5')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 5.5</span>
+              <span class="step-sla">⏱️ ตามรอบเวลาที่กำหนดแต่ละจุด</span>
+            </div>
+            <div class="step-title">เปิด - ปิด ไฟฟ้าป้ายแนวรั้ว น้ำพุ ราวหน้าตลาด ศูนย์อาหาร และพลาซ่า</div>
+            <div class="step-summary">ควบคุมไฟตกแต่ง ป้ายประชาสัมพันธ์ น้ำพุ และไฟส่องสว่างพลาซ่า-ศูนย์อาหารตามรอบเวลา</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ede9fe;color:#6d28d9;">👤 เจ้าหน้าที่ รปภ. โซนหน้าตลาดและพลาซ่า</span>
+              <span class="step-tag-doc">📄 ตารางเวลาเปิด-ปิดไฟตกแต่งและพื้นที่พาณิชย์</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s5_6')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 5.6</span>
+              <span class="step-sla">⏱️ เปิด 18.00 น. / ปิด 06.00 น.</span>
+            </div>
+            <div class="step-title">เปิด - ปิด ไฟฟ้าโรงรถ ลาน 4 (18.00 - 06.00 น.) และตรวจหลอดไฟชำรุด</div>
+            <div class="step-summary">ควบคุมไฟส่องสว่างลานจอดรถ 4 ป้องกันเหตุโจรกรรม และสำรวจหลอดไฟชำรุดทั่วทั้งตลาด</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ede9fe;color:#6d28d9;">👤 เจ้าหน้าที่ รปภ. โซนลานจอดรถ</span>
+              <span class="step-tag-doc">📄 สมุดบันทึกระบบไฟฟ้าลานจอดรถ</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#dbeafe;color:#1e40af;">👤 แผนกซ่อมบำรุง (ช่างไฟฟ้า)</span>
+            <div class="role-desc">รับรายงานหลอดไฟชำรุด และเข้าซ่อมแซมเปลี่ยนหลอดภายใน 24 ชม.</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+<div style='font-size:12px;color:var(--text-muted);padding:8px 0;'>ประสานงานและรับการสนับสนุนในขั้นตอนที่เกี่ยวข้อง</div>            </div>
+          </td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content 5: 6.0 ระบบอีแว๊ป -->
+  <div class="tab-content " id="tab-evap">
+    <div class="proc-intro">
+      <div class="proc-title-box">
+        <h2>❄️ 6.0 ระบบอีแว๊ป</h2>
+        <p>ขั้นตอนการควบคุมเปิด-ปิดระบบระบายอากาศอีแว๊ป (Evaporative Cooling System) 3 โซนหลัก ตรวจสอบระบบน้ำหล่อเย็น ป้องกันเครื่องรันขณะน้ำแห้ง และบันทึกสมุดควบคุม</p>
+      </div>
+      <div class="proc-meta-badges">
+        <span class="pm-badge">📊 4 ขั้นตอน</span>
+        <span class="pm-badge">👥 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+        <span class="pm-badge">📄 ตารางเวลาเปิด-ปิดอีแว๊ป / สมุดบันทึกสาธารณูปโภค</span>
+        <span class="pm-badge">⏱️ ครัว (03.00-17.00) / ศูนย์อาหาร (05.00-20.00) / พลาซ่า (07.00-20.00)</span>
+      </div>
+    </div>
+
+    <div class="swimlane-card">
+      <div class="swimlane-header">
+        <h3>ผังกระบวนการตามบทบาทหน้าที่ (Cross-Functional Swimlane)</h3>
+        <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูคู่มือและระเบียบบังคับอย่างละเอียด</span>
+      </div>
+      <div class="swimlane-table-wrap">
+        <table class="swimlane-table">
+          <thead>
+            <tr>
+              <th style="width:230px;">บทบาทผู้รับผิดชอบ (Role / Lane)</th>
+              <th>ผังลำดับขั้นตอนการปฏิบัติงาน (Operational Flow)</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#ccfbf1;color:#0f766e;">👤 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+            <div class="role-desc">ตรวจระดับน้ำ เปิดปั๊มน้ำก่อนพัดลม เปิด-ปิดอีแว๊ป 3 โซนตามตาราง</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s6_1')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 6.1</span>
+              <span class="step-sla">⏱️ 5 นาที ก่อนเวลาเปิดเครื่อง</span>
+            </div>
+            <div class="step-title">ตรวจระดับน้ำ ปั๊มน้ำหมุนเวียน และระบบท่อหล่อเย็น</div>
+            <div class="step-summary">ตรวจสอบความพร้อมของระบบน้ำหล่อเย็นและปั๊มน้ำหมุนเวียนของเครื่องอีแว๊ปก่อนเปิดเครื่อง</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ccfbf1;color:#0f766e;">👤 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+              <span class="step-tag-doc">📄 เช็กลิสต์ตรวจระบบน้ำอีแว๊ป</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s6_2')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 6.2</span>
+              <span class="step-sla">⏱️ เปิด 03.00 น. / ปิด 17.00 น.</span>
+            </div>
+            <div class="step-title">ควบคุมเปิด - ปิด อีแว๊ปครัวยิ่งเจริญ (03.00 - 17.00 น.)</div>
+            <div class="step-summary">ควบคุมระบบระบายอากาศลดความร้อนในพื้นที่ครัวยิ่งเจริญตามเวลาการปรุงประกอบอาหาร</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ccfbf1;color:#0f766e;">👤 เจ้าหน้าที่ รปภ. โซนครัวยิ่งเจริญ</span>
+              <span class="step-tag-doc">📄 ตารางเวลาควบคุมอีแว๊ปครัวยิ่งเจริญ</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s6_3')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 6.3</span>
+              <span class="step-sla">⏱️ เปิด 05.00 น. / ปิด 20.00 น.</span>
+            </div>
+            <div class="step-title">ควบคุมเปิด - ปิด อีแว๊ปศูนย์อาหาร (05.00 - 20.00 น.)</div>
+            <div class="step-summary">ควบคุมความเย็นและถ่ายเทอากาศในศูนย์อาหาร รองรับผู้มาใช้บริการตั้งแต่เช้าจรดค่ำ</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ccfbf1;color:#0f766e;">👤 เจ้าหน้าที่ รปภ. โซนศูนย์อาหาร</span>
+              <span class="step-tag-doc">📄 ตารางเวลาเปิด-ปิดอีแว๊ปศูนย์อาหาร</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s6_4')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 6.4</span>
+              <span class="step-sla">⏱️ เปิด 07.00 น. / ปิด 20.00 น.</span>
+            </div>
+            <div class="step-title">ควบคุมเปิด - ปิด อีแว๊ปอาคารพลาซ่า (07.00 - 20.00 น.) และบันทึกสมุดคุม</div>
+            <div class="step-summary">ควบคุมระบบปรับอากาศอีแว๊ปในอาคารพลาซ่า และสรุปบันทึกการทำงานของเครื่องอีแว๊ปทุกโซน</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ccfbf1;color:#0f766e;">👤 เจ้าหน้าที่ รปภ. โซนพลาซ่า</span>
+              <span class="step-tag-doc">📄 สมุดบันทึกควบคุมระบบอีแว๊ปพลาซ่า</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content 6: 7.0 ระบบพัดลม -->
+  <div class="tab-content " id="tab-fan">
+    <div class="proc-intro">
+      <div class="proc-title-box">
+        <h2>🌀 7.0 ระบบพัดลม</h2>
+        <p>ขั้นตอนการควบคุมเปิด-ปิดระบบพัดลมระบายอากาศ 7 จุด (พัดลมเพดานผัก 2, พัดลมยักษ์ 60 ปี, อาคารกลาง, ครัวยิ่งเจริญ, พลาซ่า และตรวจเช็กพัดลมอาคารยาวระบบออโต้) พร้อมตรวจจับเสียงผิดปกติของมอเตอร์</p>
+      </div>
+      <div class="proc-meta-badges">
+        <span class="pm-badge">📊 5 ขั้นตอน</span>
+        <span class="pm-badge">👥 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+        <span class="pm-badge">📄 ตารางเวลาพัดลม 7 จุด / เช็กลิสต์ตรวจพัดลมยักษ์</span>
+        <span class="pm-badge">⏱️ ตามรอบเวลาแต่ละจุด / ตรวจรอบละ 30 นาที</span>
+      </div>
+    </div>
+
+    <div class="swimlane-card">
+      <div class="swimlane-header">
+        <h3>ผังกระบวนการตามบทบาทหน้าที่ (Cross-Functional Swimlane)</h3>
+        <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูคู่มือและระเบียบบังคับอย่างละเอียด</span>
+      </div>
+      <div class="swimlane-table-wrap">
+        <table class="swimlane-table">
+          <thead>
+            <tr>
+              <th style="width:230px;">บทบาทผู้รับผิดชอบ (Role / Lane)</th>
+              <th>ผังลำดับขั้นตอนการปฏิบัติงาน (Operational Flow)</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#f1f5f9;color:#334155;">👤 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+            <div class="role-desc">ตรวจสภาพจุดยึด เปิด-ปิดพัดลมเพดานและพัดลมยักษ์ ตรวจระบบออโต้</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s7_1')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 7.1</span>
+              <span class="step-sla">⏱️ ตรวจก่อนรอบเวลาเปิด 10 นาที</span>
+            </div>
+            <div class="step-title">ตรวจสอบความพร้อมของพัดลมและระบบไฟจ่าย</div>
+            <div class="step-summary">ตรวจสภาพความแข็งแรงของขายึดพัดลม สวิตช์ควบคุม และความปลอดภัยก่อนเปิดใช้งาน</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#f1f5f9;color:#334155;">👤 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+              <span class="step-tag-doc">📄 เช็กลิสต์ตรวจความปลอดภัยพัดลมอุตสาหกรรม</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s7_2')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 7.2</span>
+              <span class="step-sla">⏱️ เปิด 23.30 น. / ปิด 19.30 น.</span>
+            </div>
+            <div class="step-title">เปิด - ปิด พัดลมเพดานอาคารผัก 2 (23.30 - 19.30 น.)</div>
+            <div class="step-summary">ควบคุมพัดลมเพดานระบายอากาศในอาคารผัก 2 ช่วยลดความร้อนและความชื้นสะสมของพืชผัก</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#f1f5f9;color:#334155;">👤 เจ้าหน้าที่ รปภ. โซนผัก 2</span>
+              <span class="step-tag-doc">📄 ตารางเวลาพัดลมอาคารผัก 2</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s7_3')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 7.3</span>
+              <span class="step-sla">⏱️ 60 ปี (เปิด 24.00 ปิด 17.00) / อาคารกลาง (เปิด 01.00 ปิด 19.00)</span>
+            </div>
+            <div class="step-title">เปิด - ปิด พัดลมยักษ์อาคาร 60 ปี และอาคารกลาง (24.00/01.00 - 17.00/19.00 น.)</div>
+            <div class="step-summary">ควบคุมพัดลมยักษ์อุตสาหกรรม (Giant HVLS Fans) สร้างการหมุนเวียนอากาศในอาคารหลัก</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#f1f5f9;color:#334155;">👤 เจ้าหน้าที่ รปภ. โซนอาคารกลาง</span>
+              <span class="step-tag-doc">📄 คู่มือควบคุมพัดลมยักษ์ HVLS</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s7_4')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 7.4</span>
+              <span class="step-sla">⏱️ ตรวจเวลา 22.00 น. และ 18.00 น.</span>
+            </div>
+            <div class="step-title">ตรวจสอบพัดลมอาคารยาวระบบออโต้ (22.00 - 18.00 น.)</div>
+            <div class="step-summary">ตรวจสอบการทำงานของระบบพัดลมอาคารยาวที่ทำงานด้วยระบบตั้งเวลาอัตโนมัติ (Auto Timer)</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#f1f5f9;color:#334155;">👤 เจ้าหน้าที่ รปภ. โซนอาคารยาว</span>
+              <span class="step-tag-doc">📄 ผังวงจรไทม์เมอร์พัดลมอัตโนมัติอาคารยาว</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s7_5')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 7.5</span>
+              <span class="step-sla">⏱️ ตามรอบเวลาแต่ละจุด (ใช้เวลาตรวจ 30 นาที)</span>
+            </div>
+            <div class="step-title">เปิด - ปิด พัดลมพลาซ่าและครัวยิ่งเจริญ พร้อมตรวจเสียงผิดปกติ</div>
+            <div class="step-summary">ควบคุมพัดลมในพลาซ่าและครัวยิ่งเจริญ และตรวจจับความผิดปกติของมอเตอร์ทุกจุด</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#f1f5f9;color:#334155;">👤 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+              <span class="step-tag-doc">📄 สมุดบันทึกควบคุมระบบพัดลมระบายอากาศทุกโซน</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content 7: 8.0 ระบบผ้าใบ -->
+  <div class="tab-content " id="tab-canvas">
+    <div class="proc-intro">
+      <div class="proc-title-box">
+        <h2>⛺ 8.0 ระบบผ้าใบ</h2>
+        <p>ขั้นตอนการควบคุมเปิด-ปิดผ้าใบกันแดด-กันฝนอาคารกลาง (เปิด 06.30 น. ปิด 14.00 น.) ผ้าใบหน้าตลาด (เปิด 08.00 น. ปิด 15.00 น.) ตรวจเช็กรอกสลิง และแผนม้วนเก็บฉุกเฉินเมื่อเกิดพายุลมแรง</p>
+      </div>
+      <div class="proc-meta-badges">
+        <span class="pm-badge">📊 4 ขั้นตอน</span>
+        <span class="pm-badge">👥 เจ้าหน้าที่ รปภ. ประจำจุด / หัวหน้าชุด</span>
+        <span class="pm-badge">📄 ตารางเวลาผ้าใบ / แผนเผชิญเหตุพายุลมแรง</span>
+        <span class="pm-badge">⏱️ อาคารกลาง (10 นาที) / หน้าตลาด (20 นาที) / ฉุกเฉิน (5-10 นาที)</span>
+      </div>
+    </div>
+
+    <div class="swimlane-card">
+      <div class="swimlane-header">
+        <h3>ผังกระบวนการตามบทบาทหน้าที่ (Cross-Functional Swimlane)</h3>
+        <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูคู่มือและระเบียบบังคับอย่างละเอียด</span>
+      </div>
+      <div class="swimlane-table-wrap">
+        <table class="swimlane-table">
+          <thead>
+            <tr>
+              <th style="width:230px;">บทบาทผู้รับผิดชอบ (Role / Lane)</th>
+              <th>ผังลำดับขั้นตอนการปฏิบัติงาน (Operational Flow)</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#ffedd5;color:#c2410c;">👤 เจ้าหน้าที่ รปภ. ประจำจุดผ้าใบ</span>
+            <div class="role-desc">ตรวจเช็กรอกสลิง ดึงเปิดผ้าใบบังแดดเช้า ม้วนเก็บช่วงบ่าย ล็อกสลัก</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s8_1')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 8.1</span>
+              <span class="step-sla">⏱️ 5 นาที ก่อนเวลาชักผ้าใบ</span>
+            </div>
+            <div class="step-title">ตรวจสอบสภาพรอก สลิง เชือก และผืนผ้าใบก่อนใช้งาน</div>
+            <div class="step-summary">ตรวจเช็กความสมบูรณ์ของกลไกชักรอก สลิงยึด และผืนผ้าใบป้องกันการร่วงหล่นหรือติดขัด</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ffedd5;color:#c2410c;">👤 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+              <span class="step-tag-doc">📄 เช็กลิสต์ตรวจสภาพผ้าใบและอุปกรณ์ชักรอกประจำสัปดาห์</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s8_2')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 8.2</span>
+              <span class="step-sla">⏱️ เปิด 06.30 น. / ปิด 14.00 น. (ใช้เวลา 10 นาที)</span>
+            </div>
+            <div class="step-title">เปิด - ปิด ผ้าใบอาคารกลาง (เปิด 06.30 น. ปิด 14.00 น.)</div>
+            <div class="step-summary">ควบคุมการดึงเปิดผ้าใบรับแสงแดดช่วงเช้าและม้วนเก็บช่วงบ่ายตามทิศทางแดด</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ffedd5;color:#c2410c;">👤 เจ้าหน้าที่ รปภ. โซนอาคารกลาง</span>
+              <span class="step-tag-doc">📄 ตารางเวลาควบคุมผ้าใบอาคารกลาง</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s8_3')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 8.3</span>
+              <span class="step-sla">⏱️ เปิด 08.00 น. / ปิด 15.00 น. (ใช้เวลา 20 นาที)</span>
+            </div>
+            <div class="step-title">เปิด - ปิด ผ้าใบหน้าตลาด (เปิด 08.00 น. ปิด 15.00 น.)</div>
+            <div class="step-summary">ควบคุมผ้าใบขนาดใหญ่บริเวณหน้าตลาดเพื่อบังแดดให้ลูกค้าและผู้ค้าตามรอบเวลา</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#ffedd5;color:#c2410c;">👤 เจ้าหน้าที่ รปภ. โซนหน้าตลาด</span>
+              <span class="step-tag-doc">📄 ตารางเวลาควบคุมผ้าใบหน้าตลาด</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#fee2e2;color:#b91c1c;">👤 หัวหน้าชุด รปภ. & รปภ. ทุกโซน</span>
+            <div class="role-desc">วิทยุสั่งการม้วนเก็บผ้าใบฉุกเฉินทันทีเมื่อเกิดพายุลมกรรโชกแรง</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s8_4')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 8.4</span>
+              <span class="step-sla">⏱️ ปฏิบัติการทันทีภายใน 5-10 นาทีเมื่อมีพายุ</span>
+            </div>
+            <div class="step-title">แผนเผชิญเหตุม้วนเก็บผ้าใบฉุกเฉินเมื่อเกิดพายุฝนลมกระโชกแรง</div>
+            <div class="step-summary">ตอบสนองต่อสภาพอากาศเลวร้าย ม้วนเก็บผ้าใบฉุกเฉินทันทีเพื่อป้องกันโครงสร้างตลาดพังเสียหาย</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#fee2e2;color:#b91c1c;">👤 เจ้าหน้าที่ รปภ. ทุกโซน & หัวหน้าชุด</span>
+              <span class="step-tag-doc">📄 แผนเผชิญเหตุสาธารณภัยและลมพายุตลาดยิ่งเจริญ</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content 8: 9.0 ระบบปั๊มน้ำ -->
+  <div class="tab-content " id="tab-pump">
+    <div class="proc-intro">
+      <div class="proc-title-box">
+        <h2>🚰 9.0 ระบบปั๊มน้ำ</h2>
+        <p>ขั้นตอนการควบคุมเปิด-ปิดระบบปั๊มน้ำศาลเจ้าพ่อสมบุญ (เปิด 05.00 น. ปิด 20.00 น.) ตรวจเช็กมิเตอร์ ระดับน้ำถังพัก แรงดันน้ำ ลูกลอยตัดน้ำ และตรวจหารอยรั่วซึมระหว่างวัน</p>
+      </div>
+      <div class="proc-meta-badges">
+        <span class="pm-badge">📊 4 ขั้นตอน</span>
+        <span class="pm-badge">👥 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+        <span class="pm-badge">📄 คู่มือปั๊มน้ำ / สมุดบันทึก บก.รปภ.</span>
+        <span class="pm-badge">⏱️ เปิด 05.00 น. (5 นาที) / ปิด 20.00 น. (5 นาที)</span>
+      </div>
+    </div>
+
+    <div class="swimlane-card">
+      <div class="swimlane-header">
+        <h3>ผังกระบวนการตามบทบาทหน้าที่ (Cross-Functional Swimlane)</h3>
+        <span style="font-size:12px;color:var(--text-muted);">คลิกที่กล่องขั้นตอนเพื่อดูคู่มือและระเบียบบังคับอย่างละเอียด</span>
+      </div>
+      <div class="swimlane-table-wrap">
+        <table class="swimlane-table">
+          <thead>
+            <tr>
+              <th style="width:230px;">บทบาทผู้รับผิดชอบ (Role / Lane)</th>
+              <th>ผังลำดับขั้นตอนการปฏิบัติงาน (Operational Flow)</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td class="lane-col-role">
+            <span class="role-badge" style="background:#e0e7ff;color:#4338ca;">👤 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+            <div class="role-desc">ตรวจระดับน้ำถังพัก เปิดปั๊ม 05.00 น. ตรวจแรงดัน ปิดปั๊ม 20.00 น.</div>
+          </td>
+          <td class="lane-col-flow">
+            <div class="steps-flow">
+          <div class="step-node" onclick="openPanel('s9_1')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 9.1</span>
+              <span class="step-sla">⏱️ 5 นาที ก่อนเวลา 05.00 น.</span>
+            </div>
+            <div class="step-title">ตรวจสอบมิเตอร์น้ำ ระดับน้ำถังพัก และระบบวาล์วท่อส่งน้ำ</div>
+            <div class="step-summary">ตรวจสอบความพร้อมของระบบประปาและระดับน้ำในถังพักก่อนเปิดปั๊มน้ำศาลเจ้าพ่อสมบุญ</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0e7ff;color:#4338ca;">👤 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+              <span class="step-tag-doc">📄 เช็กลิสต์ตรวจระบบปั๊มน้ำประจำวัน</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s9_2')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 9.2</span>
+              <span class="step-sla">⏱️ เปิดเวลา 05.00 น. (ใช้เวลา 5 นาที)</span>
+            </div>
+            <div class="step-title">เปิดระบบปั๊มน้ำศาลเจ้าพ่อสมบุญ (เปิด 05.00 น.)</div>
+            <div class="step-summary">เปิดสวิตช์ปั๊มน้ำจ่ายน้ำประปาสะอาดรองรับผู้มาสักการะและทำความสะอาดศาลเจ้าพ่อสมบุญช่วงเช้า</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0e7ff;color:#4338ca;">👤 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+              <span class="step-tag-doc">📄 สมุดบันทึกการเปิด-ปิดระบบปั๊มน้ำ บก.รปภ.</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s9_3')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 9.3</span>
+              <span class="step-sla">⏱️ สุ่มตรวจวันละ 2 รอบ</span>
+            </div>
+            <div class="step-title">ตรวจสอบแรงดันน้ำ เสียงมอเตอร์ และตรวจหารอยรั่วซึมระหว่างวัน</div>
+            <div class="step-summary">สุ่มตรวจเช็กแรงดันน้ำและท่อประปาระหว่างวัน ป้องกันการสูญเสียน้ำและการรั่วไหล</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0e7ff;color:#4338ca;">👤 เจ้าหน้าที่ รปภ. สายตรวจ</span>
+              <span class="step-tag-doc">📄 เช็กลิสต์ตรวจการรั่วซึมระบบน้ำประปา</span>
+            </div>
+          </div>
+          <div class="step-node" onclick="openPanel('s9_4')">
+            <div class="step-top-line">
+              <span class="step-code">ขั้นตอน 9.4</span>
+              <span class="step-sla">⏱️ ปิดเวลา 20.00 น. (ใช้เวลา 5 นาที)</span>
+            </div>
+            <div class="step-title">ปิดระบบปั๊มน้ำช่วงค่ำ (ปิด 20.00 น.) และบันทึกสมุด บก.รปภ.</div>
+            <div class="step-summary">ปิดการทำงานของปั๊มน้ำเมื่อสิ้นสุดเวลาทำการ เพื่อความปลอดภัยและประหยัดพลังงาน</div>
+            <div class="step-footer-tags">
+              <span class="step-tag-role" style="background:#e0e7ff;color:#4338ca;">👤 เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน</span>
+              <span class="step-tag-doc">📄 สมุดบันทึกการเปิด-ปิดระบบปั๊มน้ำ บก.รปภ.</span>
+            </div>
+          </div>
+            </div>
+          </td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  </div>
+</div>
+
+<!-- Slide-out Side Detail Drawer -->
+<div class="panel-backdrop" id="panelBackdrop" onclick="closePanel()"></div>
+<div class="side-panel" id="sidePanel">
+  <div class="panel-head">
+    <div class="panel-head-titles">
+      <div class="panel-step-code" id="pCode">ขั้นตอน -</div>
+      <div class="panel-step-title" id="pTitle">ชื่องานขั้นตอน</div>
+    </div>
+    <button class="panel-close-btn" onclick="closePanel()">✕</button>
+  </div>
+  <div class="panel-body">
+    <div class="panel-section">
+      <div class="panel-sec-title">👤 บทบาทผู้รับผิดชอบ</div>
+      <div><span class="role-badge" id="pBadgeRole" style="background:#e0f2fe;color:#0369a1;">-</span></div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-sec-title">🎯 วัตถุประสงค์ & เจตนารมณ์</div>
+      <div class="panel-text" id="pObjective">-</div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-sec-title">📋 รายละเอียดขั้นตอนการปฏิบัติงาน (SOP)</div>
+      <ul class="panel-list" id="pDetails"></ul>
+    </div>
+    <div class="panel-section">
+      <div class="panel-sec-title">🛡️ จุดควบคุมคุณภาพ & ความปลอดภัย (Quality & Safety Controls)</div>
+      <ul class="panel-list" id="pControls"></ul>
+    </div>
+    <div class="panel-section">
+      <div class="panel-sec-title">📄 เอกสารและหลักฐานที่เกี่ยวข้อง</div>
+      <div class="panel-text" id="pDocs" style="font-weight:600;color:var(--text-main);">-</div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-sec-title">⏱️ ระยะเวลามาตรฐาน (SLA)</div>
+      <div class="panel-text" id="pSla" style="font-weight:600;color:var(--accent-blue);">-</div>
+    </div>
+    <div class="panel-alert" id="pAlert" style="display:none;">
+      <div class="panel-alert-title">⚠️ ข้อกำหนดสำคัญ</div>
+      <div class="panel-alert-text" id="pAlertText"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Step Data JSON
+const stepData = {
+  "s1_1": {
+    "code": "1.1",
+    "title": "ต้อนรับและคัดกรองสินค้าผู้ค้ารายวัน",
+    "role": "เจ้าหน้าที่ บก.รปภ.",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "ต้อนรับผู้ค้าที่เข้ามาติดต่อ ตรวจสอบประเภทสินค้า และคัดกรองความเหมาะสมในการนำมาขายในตลาด",
+    "details": [
+      "ผู้ค้าเดินทางเข้ามาติดต่อ ณ กองอำนวยการรักษาความปลอดภัย (บก.รปภ.) เพื่อขอลงทะเบียนขายสินค้ารายวัน",
+      "เจ้าหน้าที่ รปภ. สอบถามประเภทสินค้าที่จะนำมาวางจำหน่าย (ของสด, ผักผลไม้, อาหารปรุงสำเร็จ, สินค้าเบ็ดเตล็ด)",
+      "ตรวจสอบว่าสินค้าไม่เป็นสิ่งผิดกฎหมาย สินค้าละเมิดลิขสิทธิ์ วัตถุไวไฟ หรือสินค้าที่มีกลิ่นรุนแรงขัดต่อสุขอนามัย",
+      "ชี้แจงระเบียบการจำหน่ายสินค้ารายวันของตลาดยิ่งเจริญให้ผู้ค้ารับทราบเบื้องต้น"
+    ],
+    "controls": [
+      "สินค้าต้องได้รับอนุญาตตามระเบียบตลาด ห้ามจำหน่ายสินค้าต้องห้ามหรือผิดกฎหมายเด็ดขาด",
+      "ผู้ค้าต้องปฏิบัติตามมาตรฐานสุขอนามัยและสวมใส่เครื่องแต่งกายสุภาพเรียบร้อย"
+    ],
+    "docs": "สมุดบันทึกรับลงทะเบียนผู้ค้ารายวัน, ระเบียบการจำหน่ายสินค้าตลาดยิ่งเจริญ",
+    "sla": "1 นาที / ราย",
+    "alertTitle": "⚠️ คัดกรองสินค้าต้องห้าม",
+    "alertText": "หากตรวจพบสินค้าผิดกฎหมาย วัตถุอันตราย หรือสินค้าที่ไม่ได้รับอนุญาต ต้องปฏิเสธการลงทะเบียนทันที"
+  },
+  "s1_2": {
+    "code": "1.2",
+    "title": "ตรวจวัดขนาดพื้นที่และประเมินอัตราค่าบริการ (S/M/L/XL)",
+    "role": "เจ้าหน้าที่ บก.รปภ.",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "ตรวจวัดขนาดพื้นที่แผงค้าและคิดอัตราค่าธรรมเนียมตามเกณฑ์ขนาด S, M, L, XL อย่างถูกต้อง",
+    "details": [
+      "ใช้ตลับเมตรตรวจวัดขนาดความกว้างและความยาวของพื้นที่แผงค้าที่ผู้ค้าต้องการใช้",
+      "แยกประเภทขนาดและคำนวณอัตราค่าบริการตามมาตรฐานของตลาด:",
+      "- Size S: ขนาดไม่เกิน 1.20 เมตร = 100 บาท",
+      "- Size M: ขนาดไม่เกิน 1.60 เมตร = 200 บาท",
+      "- Size L: ขนาดไม่เกิน 2.00 เมตร = 300 บาท",
+      "- Size XL: ขนาดเกิน 2.00 เมตรขึ้นไป = 400 บาท",
+      "แจ้งยอดค่าบริการให้ผู้ค้ารับทราบก่อนชำระเงิน"
+    ],
+    "controls": [
+      "วัดขนาดตามมาตรฐานด้วยอุปกรณ์วัดที่ได้มาตรฐาน ห้ามกะประมาณด้วยสายตา",
+      "อัตราค่าบริการต้องเป็นไปตามตารางราคามาตรฐานที่ฝ่ายบริหารกำหนด ห้ามเรียกเก็บเกินอัตรา"
+    ],
+    "docs": "ตารางอัตราค่าบริการแผงค้ารายวัน (S/M/L/XL), ตลับเมตรตรวจวัดขนาด",
+    "sla": "1-2 นาที / ราย",
+    "alertTitle": "📏 เกณฑ์ขนาดมาตรฐาน 4 ไซส์",
+    "alertText": "S <= 1.20 ม. (100 บ.), M <= 1.60 ม. (200 บ.), L <= 2.00 ม. (300 บ.), XL > 2.00 ม. (400 บ.)"
+  },
+  "s1_3": {
+    "code": "1.3",
+    "title": "ตรวจสอบสิทธิ์ส่วนลดพิเศษ 50% (คนชรา คนพิการ เด็ก)",
+    "role": "เจ้าหน้าที่ บก.รปภ.",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "สนับสนุนนโยบายช่วยเหลือสังคม โดยตรวจสอบเอกสารสิทธิ์ส่วนลด 50% ให้แก่กลุ่มเปราะบาง",
+    "details": [
+      "ตรวจสอบสิทธิ์ส่วนลด 50% สำหรับผู้ค้ากลุ่มเปราะบาง:",
+      "1. คนชรา (ผู้สูงอายุตามเกณฑ์กฎหมาย): แสดงบัตรประจำตัวประชาชน",
+      "2. คนพิการ: แสดงบัตรประจำตัวคนพิการของกระทรวง พม.",
+      "3. เด็กอายุไม่เกิน 12 ปี: แสดงบัตรประจำตัวประชาชนหรือหลักฐานแสดงวันเดือนปีเกิด",
+      "คำนวณปรับลดยอดค่าบริการลง 50% จากอัตราปกติ (เช่น ไซส์ S จาก 100 บาท เหลือ 50 บาท)",
+      "บันทึกหมายเลขบัตรประชาชนและประเภทส่วนลดลงในสมุดทะเบียนคุม"
+    ],
+    "controls": [
+      "ต้องแสดงบัตรตัวจริงเพื่อยืนยันตัวตนต่อหน้าเจ้าหน้าที่ บก.รปภ.",
+      "บันทึกหลักฐานการให้ส่วนลดอย่างโปร่งใสเพื่อรองรับการตรวจสอบบัญชีประจำวัน"
+    ],
+    "docs": "บัตรประจำตัวประชาชน, บัตรคนพิการ, สมุดบันทึกสิทธิ์ส่วนลด 50%",
+    "sla": "1 นาที",
+    "alertTitle": "♿ ส่วนลด 50% ต้องแสดงบัตรตัวจริง",
+    "alertText": "สิทธิ์ส่วนลด 50% ให้เฉพาะผู้ค้าที่แสดงบัตรตัวจริงเท่านั้น และต้องบันทึกเลขที่บัตรกำกับในใบเสร็จรับเงิน"
+  },
+  "s1_4": {
+    "code": "1.4",
+    "title": "ออกใบเสร็จรับเงิน ชำระเงิน และลงบันทึกสมุด บก.รปภ.",
+    "role": "เจ้าหน้าที่ บก.รปภ.",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "รับชำระค่าบริการ ออกใบเสร็จรับเงินอย่างเป็นทางการ และบันทึกข้อมูลรายรับเข้าสมุดคุม",
+    "details": [
+      "รับชำระเงินสดหรือสแกนชำระผ่าน QR Code บัญชีธนาคารของตลาดยิ่งเจริญ",
+      "ออกใบเสร็จรับเงินชั่วคราว/ใบกำกับการจำหน่ายสินค้าแผงค้ารายวันให้แก่ผู้ค้า",
+      "ระบุชื่อ-สกุล เลขบัตรประชาชน ขนาดแผงค้า (S/M/L/XL) จำนวนเงิน และเลขที่ใบเสร็จ",
+      "ลงบันทึกรายการใน 'สมุดลงทะเบียนผู้ค้ารายวัน บก.รปภ.' และเก็บเงินสดในตู้เซฟประจำกะ"
+    ],
+    "controls": [
+      "ต้องออกใบเสร็จรับเงินให้ผู้ค้าทุกราย 100% ห้ามรับเงินโดยไม่ออกใบเสร็จ",
+      "ยอดเงินสดและสลิปโอนเงินต้องกระทบยอดตรงกับสมุดคุมและใบเสร็จทุกสิ้นกะ",
+      "ส่งมอบเงินและสมุดบัญชีให้แผนกการเงิน/บัญชีตรวจสอบตามรอบเวลา"
+    ],
+    "docs": "ใบเสร็จรับเงินตลาดยิ่งเจริญ, สมุดลงทะเบียนผู้ค้ารายวัน บก.รปภ., บัญชีคุมเงินสด",
+    "sla": "1 นาที",
+    "alertTitle": "🧾 ออกใบเสร็จรับเงินทุกครั้ง 100%",
+    "alertText": "ห้ามรับเงินค่าบริการโดยไม่มีใบเสร็จรับเงินของตลาดเด็ดขาด เพื่อความโปร่งใสและป้องกันการทุจริต"
+  },
+  "s1_5": {
+    "code": "1.5",
+    "title": "จัดสรรจุดวางแผงค้าและแนะนำข้อกำหนดตลาด",
+    "role": "เจ้าหน้าที่ รปภ. สายตรวจ",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "พาผู้ค้าไปยังจุดวางแผงค้าตามผังจัดสรร และกวดขันให้ตั้งวางสินค้าในขอบเขตที่กำหนด",
+    "details": [
+      "เจ้าหน้าที่ รปภ. ตรวจสอบพื้นที่ว่างตามผังจัดสรรของแผนกบริหารพื้นที่เช่า",
+      "นำผู้ค้าไปยังจุดวางแผงค้าที่ได้รับอนุญาต",
+      "กำชับแนวเขตห้ามวางรุกล้ำเกินกระเบื้องหรือแนวกำหนด และความสูงสินค้าไม่เกิน 1.50 ม.",
+      "แนะนำจุดทิ้งขยะ จุดล้างทำความสะอาด และห้องน้ำส่วนกลาง",
+      "ผู้ค้าติดแสดงใบเสร็จรับเงินไว้ที่หน้าร้านเพื่อให้เจ้าหน้าที่สายตรวจสามารถตรวจสอบได้ตลอดเวลา"
+    ],
+    "controls": [
+      "จัดแผงค้าเฉพาะในจุดที่ตลาดกำหนด ห้ามจัดวางในทางหนีไฟ ทางเดินหลัก หรือจุดห้ามขาย",
+      "ผู้ค้าต้องติดใบเสร็จรับเงินไว้ในจุดที่มองเห็นได้ชัดเจนตลอดเวลาที่วางขาย"
+    ],
+    "docs": "ผังจัดสรรพื้นที่แผงค้ารายวัน, บัตรประจำแผงค้าชั่วคราว",
+    "sla": "2-3 นาที",
+    "alertTitle": "📍 วางขายในจุดที่กำหนดเท่านั้น",
+    "alertText": "ห้ามผู้ค้าตั้งวางสินค้านอกเหนือจากจุดที่ระบุในใบอนุญาต และต้องเปิดทางเดินสัญจรไม่น้อยกว่าเกณฑ์ตลาด"
+  },
+  "s2_1": {
+    "code": "2.1",
+    "title": "รับแจ้งเหตุและบันทึกรายละเอียดในสมุด บก.รปภ.",
+    "role": "เจ้าหน้าที่วิทยุสื่อสาร บก.รปภ.",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "รับแจ้งเหตุและข้อมูลประสานงานจากทุกแผนก บันทึกข้อมูลสำคัญลงสมุดคุมทันที",
+    "details": [
+      "รับแจ้งเหตุผ่านช่องทางต่าง ๆ: วิทยุสื่อสาร (ว.), โทรศัพท์สายตรง บก., ผู้มาติดต่อด้วยวาจา หรือเอกสารทางการ",
+      "ซักถามข้อมูลสำคัญ: สถานที่เกิดเหตุ (โซน/อาคาร/ซอยแผงค้า), ลักษณะเหตุการณ์, บุคคลที่เกี่ยวข้อง, ระดับความเร่งด่วน",
+      "บันทึกเวลาที่รับแจ้ง ชื่อผู้แจ้ง รายละเอียดเหตุการณ์ และเลขที่รับแจ้งลงใน 'สมุดบันทึกการประสานงาน บก.รปภ.'",
+      "ประเมินระดับความรุนแรงของเหตุการณ์ (เหตุปกติ / เหตุเร่งด่วน / เหตุฉุกเฉินระดับสูง)"
+    ],
+    "controls": [
+      "ต้องบันทึกเวลาและรายละเอียดทันทีที่ได้รับแจ้ง ห้ามผัดผ่อน",
+      "ทวนซ้ำสถานที่และสาระสำคัญกับผู้แจ้งเพื่อป้องกันความคลาดเคลื่อน",
+      "กรณีเหตุฉุกเฉินไฟไหม้ ทะเลาะวิวาท หรืออุบัติเหตุ ให้ข้ามขั้นตอนและสั่งการทางวิทยุทันที"
+    ],
+    "docs": "สมุดบันทึกการประสานงานและรับแจ้งเหตุ บก.รปภ., เครื่องวิทยุสื่อสารแม่ข่าย",
+    "sla": "1 นาที (ทันทีที่รับแจ้ง)",
+    "alertTitle": "📻 ความแม่นยำในการรับแจ้งเหตุ",
+    "alertText": "ต้องระบุพิกัดสถานที่เกิดเหตุให้ชัดเจนที่สุด เพื่อให้เจ้าหน้าที่สายตรวจเข้าถึงพื้นที่ได้เร็วที่สุด"
+  },
+  "s2_2": {
+    "code": "2.2",
+    "title": "วิทยุสื่อสารประสานงาน รปภ. จุดใกล้เคียงเข้าระงับเหตุ",
+    "role": "เจ้าหน้าที่วิทยุสื่อสาร บก.รปภ.",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "สั่งการเจ้าหน้าที่ รปภ. ที่ประจำจุดใกล้เคียงเข้าตรวจสอบและระงับเหตุตามขั้นตอน",
+    "details": [
+      "กดคีย์วิทยุสื่อสารเรียกขานรหัสเจ้าหน้าที่ รปภ. ที่ปฏิบัติหน้าที่ในจุดหรือโซนใกล้เคียงสถานที่เกิดเหตุมากที่สุด",
+      "แจ้งพิกัดและลักษณะเหตุการณ์อย่างกระชับ ชัดเจน และใช้รหัส ว. มาตรฐาน",
+      "สั่งการให้เข้าระงับเหตุและประเมินสถานการณ์เบื้องต้นทันที",
+      "กรณีเหตุรุนแรง สั่งการเจ้าหน้าที่จุดข้างเคียงเข้าร่วมสนับสนุนเป็นกำลังเสริม (Back-up Team)"
+    ],
+    "controls": [
+      "ใช้คลื่นความถี่วิทยุสื่อสารภายในตลาดยิ่งเจริญอย่างเคร่งครัด",
+      "เจ้าหน้าที่ผู้รับคำสั่งต้อง ว.60 ตอบรับทราบคำสั่งทันทีภายใน 10 วินาที",
+      "หากไม่มีการตอบรับ ต้องสั่งการสายตรวจเคลื่อนที่เร็ว (Mobile Patrol) เข้าตรวจสอบแทน"
+    ],
+    "docs": "ตารางรหัสวิทยุสื่อสาร (รหัส ว.), ผังการวางกำลังพล รปภ. ประจำจุด",
+    "sla": "ไม่เกิน 30 วินาที",
+    "alertTitle": "🚨 รหัส ว. สั่งการฉุกเฉิน",
+    "alertText": "การสื่อสารทางวิทยุต้องกระชับ ไม่ใช้ถ้อยคำสับสน และต้องมีเจ้าหน้าที่ขานตอบรับคำสั่งทันที"
+  },
+  "s2_3": {
+    "code": "2.3",
+    "title": "เข้าระงับเหตุ ประเมินสถานการณ์ และเจรจาไกล่เกลี่ย",
+    "role": "เจ้าหน้าที่ รปภ. ประจำจุด / สายตรวจ",
+    "roleBadge": "background:#dcfce7;color:#15803d;",
+    "objective": "เข้าถึงที่เกิดเหตุอย่างรวดเร็ว ควบคุมสถานการณ์ ป้องกันการลุกลาม และรักษาความสงบ",
+    "details": [
+      "เจ้าหน้าที่ รปภ. เดินทางถึงจุดเกิดเหตุภายใน 2-3 นาทีหลังรับแจ้ง",
+      "ประเมินความปลอดภัยของพื้นที่และแยกคู่กรณี (กรณีทะเลาะวิวาทหรือขัดแย้ง)",
+      "ใช้หลักวาจาเจรจาไกล่เกลี่ยอย่างสุภาพ สุขุม และเป็นกลาง ห้ามใช้กำลังเกินกว่าเหตุ",
+      "กรณีทรัพย์สินสูญหายหรือถูกโจรกรรม: กักพื้นที่เกิดเหตุ ตรวจสอบกล้องวงจรปิด CCTV และสอบถามพยาน",
+      "กรณีเหตุพยาบาล/บาดเจ็บ: ปฐมพยาบาลเบื้องต้นและประสานหน่วยกู้ภัยหรือรถพยาบาลทันที"
+    ],
+    "controls": [
+      "ต้องถึงจุดเกิดเหตุภายใน 3 นาทีสำหรับเหตุทั่วไป และ 1 นาทีสำหรับเหตุฉุกเฉิน",
+      "ห้ามใช้ความรุนแรงหรือถ้อยคำหยาบคาย ให้เน้นการระงับเหตุและป้องกันอันตราย",
+      "รายงานความคืบหน้าสถานการณ์กลับมายัง บก.รปภ. เป็นระยะผ่านวิทยุสื่อสาร"
+    ],
+    "docs": "อุปกรณ์ประจำกาย (กระบอง, นกหวีด, วิทยุสื่อสาร), กล่องปฐมพยาบาลเบื้องต้น",
+    "sla": "เข้าถึงที่เกิดเหตุภายใน 2-3 นาที",
+    "alertTitle": "🛡️ การระงับเหตุอย่างสันติวิธี",
+    "alertText": "ยึดหลักความปลอดภัยในชีวิตและทรัพย์สินเป็นสำคัญ แยกคู่กรณีออกจากกันทันทีและป้องกันบุคคลภายนอกมุงดู"
+  },
+  "s2_4": {
+    "code": "2.4",
+    "title": "สรุปผลการปฏิบัติงาน บันทึกสมุดเวร และรายงานผู้บริหาร",
+    "role": "หัวหน้าชุด รปภ. / ผู้จัดการแผนก",
+    "roleBadge": "background:#f3e8ff;color:#7e22ce;",
+    "objective": "สรุปรายงานผลเหตุการณ์ บันทึกประวัติ และส่งต่อข้อมูลให้ผู้บริหารหรือหน่วยงานที่เกี่ยวข้อง",
+    "details": [
+      "เมื่อสถานการณ์คลี่คลาย เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงานรายงานผลสรุปต่อหัวหน้าชุด รปภ.",
+      "จัดทำ 'บันทึกรายงานเหตุการณ์ประจำวัน (Daily Incident Report)' ระบุไทม์ไลน์และผลการแก้ไขปัญหา",
+      "กรณีคดีอาญาหรือความเสียหายทางทรัพย์สิน: ประสานฝ่ายกฎหมายและนำส่งเจ้าหน้าที่ตำรวจ สน.บางเขน",
+      "ลงลายมือชื่อผู้ปฏิบัติงานและหัวหน้าชุดตรวจในสมุดเวร บก.รปภ.",
+      "รายงานสรุปเสนอต่อผู้จัดการฝ่ายบริหารอาคารสถานที่และประธานเจ้าหน้าที่ฝ่ายปฏิบัติการ (COO)"
+    ],
+    "controls": [
+      "รายงานต้องมีข้อเท็จจริงครบถ้วน วัน เวลา สถานที่ ชื่อพยาน และความเสียหาย (ถ้ามี)",
+      "สมุดเวร บก.รปภ. ต้องได้รับการตรวจทานและลงนามกำกับทุกกะการทำงาน (กะเช้า/กะบ่าย/กะดึก)",
+      "เก็บสำเนารายงานเข้าแฟ้มบันทึกเหตุการณ์เพื่อใช้เป็นข้อมูลสถิติและการประเมินความเสี่ยง"
+    ],
+    "docs": "รายงานเหตุการณ์ประจำวัน (Incident Report), สมุดส่งมอบเวร บก.รปภ., บันทึกแจ้งความ (ถ้ามี)",
+    "sla": "ภายใน 30 นาทีหลังเหตุการณ์ยุติ",
+    "alertTitle": "📑 รายงานข้อเท็จจริงครบถ้วน",
+    "alertText": "รายงานเหตุการณ์ต้องบันทึกตามความจริง พร้อมภาพถ่ายประกอบ (ถ้ามี) เพื่อใช้เป็นหลักฐานทางกฎหมาย"
+  },
+  "s3_1": {
+    "code": "3.1",
+    "title": "ตรวจสอบคนงานก่อสร้าง ณ จุดตรวจ บก.รปภ.",
+    "role": "เจ้าหน้าที่ บก.รปภ.",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "ตรวจนับจำนวนคนงาน ตรวจสอบรายชื่อ และคัดกรองก่อนอนุญาตเข้าสู่ไซต์งานก่อสร้างในตลาด",
+    "details": [
+      "ผู้รับเหมาและคนงานก่อสร้างทุกคนต้องมารายงานตัว ณ จุด บก.รปภ. ก่อนเริ่มงานทุกวัน",
+      "เจ้าหน้าที่ รปภ. ตรวจนับจำนวนคนงานและเปรียบเทียบกับรายชื่อที่ได้รับอนุมัติล่วงหน้าจากแผนกซ่อมบำรุง/อาคารสถานที่",
+      "ตรวจสอบว่าคนงานทุกคนมีสภาพร่างกายพร้อมทำงาน ไม่เมาสุรา สารเสพติด หรือมีอาการเจ็บป่วยรุนแรง",
+      "ลงทะเบียนเวลาเข้าพื้นที่ใน 'สมุดควบคุมผู้รับเหมาและงานก่อสร้าง'"
+    ],
+    "controls": [
+      "คนงานที่ไม่มีรายชื่อในเอกสารขออนุญาตล่วงหน้า จะไม่อนุญาตให้เข้าพื้นที่โดยเด็ดขาด",
+      "ตรวจวัดแอลกอฮอล์สุ่มตรวจ (กรณีมีพฤติกรรมสงสัย)"
+    ],
+    "docs": "เอกสารขออนุญาตเข้าทำงานของผู้รับเหมา, สมุดควบคุมการเข้า-ออกผู้รับเหมา",
+    "sla": "1 นาที / คน",
+    "alertTitle": "⛔ ห้ามคนงานไม่มีชื่อเข้าพื้นที่",
+    "alertText": "คนงานทุกคนต้องมีชื่อตรงกับเอกสารที่ผู้รับเหมาแจ้งไว้ล่วงหน้าเท่านั้น หากมีคนงานใหม่ต้องติดต่อแผนกอาคารสถานที่ก่อน"
+  },
+  "s3_2": {
+    "code": "3.2",
+    "title": "ชี้แจงกฎระเบียบความปลอดภัยและข้อปฏิบัติของตลาด",
+    "role": "เจ้าหน้าที่ บก.รปภ. / จป.วิชาชีพ",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "อบรมชี้แจงกฎระเบียบ ข้อห้าม มาตรการความปลอดภัย และการป้องกันอัคคีภัยก่อนเริ่มงาน",
+    "details": [
+      "ชี้แจงข้อบังคับความปลอดภัยของตลาดยิ่งเจริญให้คนงานทุกคนรับทราบ:",
+      "- ห้ามสูบบุหรี่ในพื้นที่ตลาดเด็ดขาด (สูบได้เฉพาะจุดที่กำหนด)",
+      "- ห้ามดื่มสุรา เล่นการพนัน หรือส่งเสียงดังรบกวนผู้ค้าและลูกค้า",
+      "- กำหนดเวลาทำงานและเส้นทางการขนย้ายเศษวัสดุอุปกรณ์",
+      "- การป้องกันฝุ่นละออง กลิ่น และเศษวัสดุร่วงหล่นในโซนจำหน่ายอาหาร",
+      "- จุดรวมพลฉุกเฉินและตำแหน่งถังดับเพลิงใกล้เคียงไซต์งาน"
+    ],
+    "controls": [
+      "คนงานทุกคนต้องรับฟังการชี้แจงระเบียบและลงลายมือชื่อรับทราบ",
+      "ผู้รับเหมาต้องมีหัวหน้างาน (Foreman) ประจำไซต์งานตลอดเวลาการปฏิบัติงาน"
+    ],
+    "docs": "คู่มือกฎระเบียบความปลอดภัยสำหรับผู้รับเหมา, ใบลงชื่อรับทราบกฎระเบียบความปลอดภัย",
+    "sla": "3-5 นาที",
+    "alertTitle": "🚭 เขตห้ามสูบบุหรี่เด็ดขาด",
+    "alertText": "ตลาดเป็นพื้นที่จำหน่ายสินค้าและมีวัสดุติดไฟง่าย ห้ามสูบบุหรี่หรือก่อประกายไฟนอกจุดที่ได้รับอนุญาตเด็ดขาด"
+  },
+  "s3_3": {
+    "code": "3.3",
+    "title": "ตรวจสอบใบอนุญาตทำงานเสี่ยงอันตราย 4 ประเภท (Work Permit)",
+    "role": "เจ้าหน้าที่ บก.รปภ. & จป.วิชาชีพ",
+    "roleBadge": "background:#fee2e2;color:#b91c1c;",
+    "objective": "ตรวจสอบความสมบูรณ์และเงื่อนไขของใบอนุญาตทำงานเสี่ยงอันตรายก่อนอนุญาตให้เริ่มงาน",
+    "details": [
+      "ตรวจสอบใบอนุญาตทำงานที่มีความเสี่ยงสูง (Work Permit) ตามลักษณะงาน:",
+      "1. ใบอนุญาตทำงานความร้อนและประกายไฟ (Hot Work Permit): งานเชื่อม ตัด เจียร ต้องมีถังดับเพลิงประจำจุดและผ้ากันไฟ",
+      "2. ใบอนุญาตทำงานที่สูง (Working at Height Permit): งานที่สูงเกิน 2.00 เมตร ต้องมีนั่งร้านและสายนิรภัย Safety Harness",
+      "3. ใบอนุญาตทำงานอันตราย (Hazardous Work Permit): งานไฟฟ้าแรงสูง งานทุบรื้อถอนโครงสร้าง หรืองานเครื่องจักรหนัก",
+      "4. ใบอนุญาตทำงานในที่อับอากาศ (Confined Space Permit): งานท่อระบายน้ำ บ่อบำบัด ต้องมีเครื่องตรวจวัดก๊าซและอุปกรณ์ช่วยชีวิต",
+      "ตรวจสอบวันหมดอายุ ลายมือชื่อวิศวกร/จป. และมาตรการป้องกันความปลอดภัยที่ระบุในใบอนุญาต"
+    ],
+    "controls": [
+      "ต้องมีใบอนุญาตตัวจริงที่มีลายมือชื่ออนุมัติจากผู้จัดการแผนกซ่อมบำรุง/อาคารสถานที่และ จป. ครบถ้วน",
+      "ใบอนุญาตมีอายุเฉพาะวันที่ระบุเท่านั้น หากงานข้ามวันต้องต่ออายุใหม่ทุกวัน",
+      "หากไม่มีใบอนุญาตทำงานเสี่ยง ห้ามเปิดพื้นที่ไซต์งานเด็ดขาด"
+    ],
+    "docs": "ใบอนุญาตทำงานความร้อน (Hot Work), ใบอนุญาตทำงานที่สูง, ใบอนุญาตทำงานอันตราย, ใบอนุญาตทำงานในที่อับอากาศ",
+    "sla": "2-3 นาที",
+    "alertTitle": "🔥 มาตรการความปลอดภัยสูงสุด (Work Permit)",
+    "alertText": "งานที่มีประกายไฟ งานที่สูง งานอันตราย และงานที่อับอากาศ ต้องมี Work Permit ที่ลงนามอนุมัติครบถ้วน 100%"
+  },
+  "s3_4": {
+    "code": "3.4",
+    "title": "ตรวจสอบอุปกรณ์คุ้มครองความปลอดภัยส่วนบุคคล (PPE)",
+    "role": "เจ้าหน้าที่ บก.รปภ.",
+    "roleBadge": "background:#fee2e2;color:#b91c1c;",
+    "objective": "ตรวจสอบอุปกรณ์ป้องกันภัยส่วนบุคคลของคนงานทุกคนให้ครบถ้วนถูกต้องตามมาตรฐาน",
+    "details": [
+      "ตรวจสอบการสวมใส่อุปกรณ์คุ้มครองความปลอดภัยส่วนบุคคล (PPE) หน้าทางเข้า:",
+      "- หมวกนิรภัย (Safety Helmet): มีสายรัดคางแน่นหนา",
+      "- รองเท้าเซฟตี้ (Safety Shoes): หัวเหล็กป้องกันของหล่นทับและกันตะปูแทงทะลุ",
+      "- เสื้อกั๊กสะท้อนแสง หรือชุดแต่งกายพร้อมทำงานที่รัดกุมเรียบร้อย (ห้ามสวมกางเกงขาสั้น/เสื้อกล้าม)",
+      "- อุปกรณ์เฉพาะทาง: แว่นตานิรภัย/หน้ากากเชื่อม (งานเชื่อม), ถุงมือกันบาด, สายนิรภัยเต็มตัว (งานที่สูง)",
+      "หากตรวจพบคนงานสวมใส่ PPE ไม่ครบถ้วน ไม่อนุญาตให้เข้าพื้นที่จนกว่าจะแก้ไขให้ถูกต้อง"
+    ],
+    "controls": [
+      "คนงานทุกคนต้องสวมหมวกนิรภัยและรองเท้าเซฟตี้ 100% ไม่มีข้อยกเว้น",
+      "อุปกรณ์ PPE ต้องอยู่ในสภาพสมบูรณ์ ไม่ชำรุดเสียหายและพร้อมใช้งาน",
+      "ห้ามคนงานสวมรองเท้าแตะหรือรองเท้าผ้าใบทั่วไปเข้าไซต์งานก่อสร้างเด็ดขาด"
+    ],
+    "docs": "เช็กลิสต์การตรวจอุปกรณ์ PPE ประจำวัน, ป้ายมาตรฐานการแต่งกายเข้าพื้นที่ก่อสร้าง",
+    "sla": "1 นาที / คน",
+    "alertTitle": "⛑️ No PPE = No Entry",
+    "alertText": "หากไม่มีหมวกนิรภัยและรองเท้าเซฟตี้ ห้ามเข้าพื้นที่ปฏิบัติงานเด็ดขาด เพื่อป้องกันอุบัติเหตุร้ายแรง"
+  },
+  "s3_5": {
+    "code": "3.5",
+    "title": "แลกบัตรประชาชนคนต่อคนและออกบัตรอนุญาตเข้างาน",
+    "role": "เจ้าหน้าที่ บก.รปภ.",
+    "roleBadge": "background:#e0f2fe;color:#0369a1;",
+    "objective": "เก็บบัตรประชาชนเป็นหลักประกันระบุตัวตน และออกบัตรแสดงตนเข้าปฏิบัติงานรายบุคคล",
+    "details": [
+      "คนงานก่อสร้างทุกคนต้องนำบัตรประจำตัวประชาชนตัวจริงมาแสดงต่อเจ้าหน้าที่ บก.รปภ.",
+      "ดำเนินการแลกบัตร 'คนต่อคน' (1 คนต่อ 1 บัตรประชาชน ห้ามแลกบัตรแทนกัน)",
+      "เจ้าหน้าที่มอบ 'บัตรอนุญาตปฏิบัติงานผู้รับเหมา (Contractor Pass)' ที่มีหมายเลขกำกับ",
+      "คนงานต้องคล้องคอหรือติดบัตรไว้ที่หน้าอกในตำแหน่งที่มองเห็นได้ชัดเจนตลอดเวลาที่อยู่ในพื้นที่ตลาด",
+      "เก็บบัตรประชาชนไว้ในกล่องเก็บเอกสารควบคุมอย่างปลอดภัย"
+    ],
+    "controls": [
+      "ต้องแลกบัตรคนต่อคนเท่านั้น ห้ามหัวหน้างานนำบัตรประชาชนใบเดียวมาแลกให้คนงานทั้งชุด",
+      "บัตรประชาชนตัวจริงต้องไม่หมดอายุและเป็นของบุคคลผู้เข้าทำงานจริง",
+      "เมื่อเลิกงาน คนงานต้องนำบัตรเข้างานมาคืนเพื่อแลกบัตรประชาชนกลับไปพร้อมบันทึกเวลาออก"
+    ],
+    "docs": "บัตรประจำตัวประชาชนคนงาน, บัตรอนุญาตปฏิบัติงานผู้รับเหมา (Contractor Pass), แผงเก็บรักษาบัตร",
+    "sla": "1 นาที / คน (แลกบัตรคนต่อคน)",
+    "alertTitle": "🪪 แลกบัตรคนต่อคนเท่านั้น",
+    "alertText": "ห้ามใช้บัตรประชาชนใบเดียวแลกแทนคนงานหลายคน เพื่อให้สามารถระบุตัวตนและรับผิดชอบความปลอดภัยได้รายบุคคล"
+  },
+  "s3_6": {
+    "code": "3.6",
+    "title": "เดินตรวจตราไซต์งานและควบคุมมาตรการความปลอดภัย",
+    "role": "เจ้าหน้าที่ รปภ. สายตรวจ & จป.",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "ออกตรวจตราพื้นที่ทำงานของผู้รับเหมา กำกับให้ปฏิบัติตาม Work Permit และสั่งระงับงานทันทีหากไม่ปลอดภัย",
+    "details": [
+      "เจ้าหน้าที่สายตรวจเดินตรวจตราไซต์งานก่อสร้างทุก 1-2 ชั่วโมง",
+      "ตรวจสอบว่าคนงานสวมใส่ PPE ตลอดเวลาที่ปฏิบัติงาน",
+      "ตรวจจุดเสี่ยง: ถังดับเพลิงมีพร้อม ณ จุดทำงานความร้อน, นั่งร้านมีความมั่นคงแข็งแรง, มีป้ายเตือนอันตรายและแนวกั้น",
+      "ตรวจสอบการปิดกั้นฝุ่นละอองด้วยผ้าใบสแลนรอบไซต์งาน ไม่ให้ฟุ้งกระจายไปกระทบแผงค้าข้างเคียง",
+      "หากพบการละเมิดกฎความปลอดภัย ให้ว่ากล่าวตักเตือนและสั่งระงับงานชั่วคราว (Stop Work Authority) จนกว่าจะแก้ไขเสร็จ"
+    ],
+    "controls": [
+      "เจ้าหน้าที่ รปภ. มีอำนาจสั่งหยุดงานชั่วคราวทันทีหากพบสภาพแวดล้อมที่ไม่ปลอดภัยร้ายแรง (Imminent Danger)",
+      "บันทึกผลการตรวจตราไซต์งานในแบบฟอร์มตรวจความปลอดภัยผู้รับเหมาประจำวัน",
+      "ตรวจสอบความสะอาดและการเก็บกวาดเศษวัสดุก่อนปิดไซต์งานประจำวัน"
+    ],
+    "docs": "แบบตรวจความปลอดภัยไซต์งานก่อสร้าง, ใบบันทึกสั่งระงับงานชั่วคราว (Stop Work Notice)",
+    "sla": "ตรวจทุก 1-2 ชั่วโมง",
+    "alertTitle": "🛑 อำนาจสั่งหยุดงาน (Stop Work)",
+    "alertText": "หากพบการทำงานเสี่ยงอันตรายร้ายแรงโดยไม่มีอุปกรณ์ป้องกัน เจ้าหน้าที่มีอำนาจสั่งหยุดงานทันที"
+  },
+  "s4_1": {
+    "code": "4.1",
+    "title": "เดินตรวจแนวทางเดินแผงค้าห้ามวางสินค้ารุกล้ำ",
+    "role": "เจ้าหน้าที่ รปภ. สายตรวจ",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "ตรวจตราพื้นที่ทางเดินส่วนกลาง ป้องกันไม่ให้แผงค้าวางสินค้ารุกล้ำทางเดินสัญจรของลูกค้า",
+    "details": [
+      "เจ้าหน้าที่สายตรวจเดินตรวจตรารอบตลาดตามรอบเวลาทุกชั่วโมง",
+      "สังเกตแนวทางเดินสัญจรของลูกค้าในทุกอาคาร (อาคารสด, อาคารกลาง, พลาซ่า, อาคารผัก 2)",
+      "ตรวจสอบแผงค้าที่นำสินค้า ลัง กล่องโฟม หรือชั้นวางออกมาตั้งวางล้ำแนวขอบเขตทางเดิน",
+      "แจ้งผู้ค้าด้วยวาจาสุภาพให้จัดเก็บสินค้า ลัง หรือตะกร้ากลับเข้าสู่ขอบเขตแผงค้าของตนเองทันที"
+    ],
+    "controls": [
+      "ทางเดินสัญจรต้องมีความกว้างไม่น้อยกว่าที่กำหนดไว้ในผังตลาด เพื่อให้ลูกค้าเดินสะดวกและเป็นทางหนีไฟฉุกเฉิน",
+      "แจ้งเตือนผู้ค้าอย่างสุภาพและให้ความร่วมมือแก้ไขทันทีใน 5 นาที"
+    ],
+    "docs": "สมุดบันทึกการตรวจพื้นที่สายตรวจ, ผังแนวกำหนดทางเดินสัญจร",
+    "sla": "เดินตรวจต่อเนื่องรอบละ 30 นาที",
+    "alertTitle": "🚶 เปิดทางเดินสัญจรโล่ง",
+    "alertText": "ทางเดินสัญจรต้องไม่มีสิ่งกีดขวาง เพื่อความปลอดภัยในการสัญจรและการอพยพเมื่อเกิดเหตุฉุกเฉิน"
+  },
+  "s4_2": {
+    "code": "4.2",
+    "title": "ตรวจสอบแนวร่องน้ำและแนวกระเบื้องขอบเขตแผงค้า",
+    "role": "เจ้าหน้าที่ รปภ. สายตรวจ",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "กวดขันการวางสินค้าให้เป็นไปตามแนวร่องน้ำและแนวกระเบื้องที่ทางตลาดกำหนดไว้อย่างเคร่งครัด",
+    "details": [
+      "ตรวจสอบเส้นแบ่งเขตแผงค้าที่ตลาดกำหนดไว้ (แนวร่องระบายน้ำ และแนวกระเบื้องสีแบ่งโซน)",
+      "ห้ามมิให้แผงค้าใดตั้งวางโต๊ะ ตะกร้าสินค้า หรือต่อเติมโครงสร้างยื่นล้ำแนวร่องน้ำ",
+      "ห้ามนำสิ่งของหรือแผ่นไม้มาปิดทับแนวร่องน้ำที่ขัดขวางการระบายน้ำและการทำความสะอาด",
+      "หากพบการวางล้ำแนว ให้ผู้ค้าขยับสิ่งของกลับเข้าแนวขอบกระเบื้องภายในทันที"
+    ],
+    "controls": [
+      "แนวร่องน้ำต้องเปิดโล่ง 100% สำหรับระบายน้ำและทำความสะอาดตลาดประจำวัน",
+      "แนวกระเบื้องขอบแผงถือเป็นเส้นแบ่งสิทธิ์การเช่าตามสัญญาของตลาด"
+    ],
+    "docs": "ผังแนวเขตแผงค้าและร่องน้ำ, ภาพถ่ายแนวกระเบื้องมาตรฐาน",
+    "sla": "ตรวจเช็กประจำวัน",
+    "alertTitle": "🌊 ห้ามวางทับแนวร่องน้ำ",
+    "alertText": "แนวร่องน้ำต้องเปิดโล่งเสมอเพื่อให้น้ำระบายได้สะดวก ป้องกันน้ำท่วมขังและปัญหาด้านสุขอนามัย"
+  },
+  "s4_3": {
+    "code": "4.3",
+    "title": "ควบคุมความสูงการวางสินค้าไม่ให้เกิน 1.50 เมตร",
+    "role": "เจ้าหน้าที่ รปภ. สายตรวจ",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "ควบคุมระดับความสูงในการเรียงซ้อนและจัดแสดงสินค้าไม่ให้เกิน 1.50 เมตร เพื่อความปลอดภัยและทัศนวิสัย",
+    "details": [
+      "ตรวจสอบการจัดวางสินค้า การแขวนสินค้า และการวางซ้อนกล่อง/ตะกร้าสินค้าในแผงค้า",
+      "ใช้เกณฑ์มาตรฐาน: การวางสินค้าต้องมีความสูงไม่เกิน 1.50 เมตรจากระดับพื้น",
+      "ป้องกันไม่ให้สินค้าบดบังทัศนวิสัย บดบังกล้องวงจรปิด CCTV หรือบดบังป้ายบอกทาง/ทางหนีไฟ",
+      "ป้องกันอุบัติเหตุสินค้า ลังกล่อง หล่นทับผู้ค้าข้างเคียงหรือลูกค้าที่เดินเลือกซื้อสินค้า",
+      "แจ้งให้ร้านค้าปรับลดระดับความสูงในการเรียงสินค้าลงมาให้อยู่ในเกณฑ์ 1.50 ม. ทันที"
+    ],
+    "controls": [
+      "ความสูงไม่เกิน 1.50 เมตรวัดจากระดับพื้นทางเดิน",
+      "ห้ามแขวนสินค้าห้อยระโยงระยางในระดับที่บดบังทางเดินหรือไฟส่องสว่าง"
+    ],
+    "docs": "ไม้บรรทัดวัดความสูงตรวจระเบียบ (1.50 ม.), เกณฑ์มาตรฐานความปลอดภัยแผงค้า",
+    "sla": "ตรวจเช็กต่อเนื่องตลอดวัน",
+    "alertTitle": "📏 ความสูงห้ามเกิน 1.50 เมตร",
+    "alertText": "การวางสินค้าสูงเกิน 1.50 เมตร บดบังทัศนวิสัย กล้อง CCTV และเสี่ยงต่อการหล่นทับ ต้องแก้ไขทันที"
+  },
+  "s4_4": {
+    "code": "4.4",
+    "title": "ตรวจสอบสุขอนามัย ฝุ่นละออง และหยากไย่ของร้านค้า",
+    "role": "เจ้าหน้าที่ รปภ. สายตรวจ",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "ตรวจตราความสะอาดแผงค้า กวดขันการปัดกวาดฝุ่นละอองและหยากไย่ตามหลักสุขาภิบาลตลาด",
+    "details": [
+      "ส่องไฟตรวจสอบโครงสร้างเพดาน คาน ผนัง และใต้โต๊ะวางสินค้าของร้านค้า",
+      "ตรวจสอบคราบฝุ่นละออง สะสมของหยากไย่ และรังแมลงตามมุมแผงค้า",
+      "แจ้งเตือนให้เจ้าของร้านค้าทำความสะอาด ปัดหยากไย่ และเช็ดคราบสกปรกอย่างสม่ำเสมอ",
+      "กำชับการเก็บขยะและเศษอาหารใส่ถุงดำมัดปากถุงให้มิดชิด ป้องกันสัตว์พาหะนำโรค",
+      "ประสานแผนกรักษาความสะอาดกรณีพบขยะตกค้างในพื้นที่ส่วนกลาง"
+    ],
+    "controls": [
+      "แผงค้าต้องสะอาดตามมาตรฐานสุขาภิบาลตลาดตลาดยิ่งเจริญ",
+      "ร้านค้าที่มีคราบสกปรกหรือหยากไย่หนาแน่น ต้องทำความสะอาดภายในวันที่แจ้งเตือน"
+    ],
+    "docs": "เช็กลิสต์ตรวจสุขาภิบาลแผงค้าประจำสัปดาห์, ใบแจ้งเตือนทำความสะอาด",
+    "sla": "ตรวจรอบเช้าและรอบบ่าย",
+    "alertTitle": "🕸️ กำจัดฝุ่นและหยากไย่อย่างสม่ำเสมอ",
+    "alertText": "ร้านค้าต้องรักษาความสะอาด ปราศจากฝุ่นและหยากไย่ เพื่อภาพลักษณ์และมาตรฐานสุขอนามัยตลาดสดน่าซื้อ"
+  },
+  "s4_5": {
+    "code": "4.5",
+    "title": "ตรวจสอบห้ามวางรถเข็นหรืออุปกรณ์ในพื้นที่ว่างส่วนกลาง",
+    "role": "เจ้าหน้าที่ รปภ. สายตรวจ",
+    "roleBadge": "background:#fef3c7;color:#b45309;",
+    "objective": "กวดขันห้ามนำรถเข็นของ ลังเปล่า หรืออุปกรณ์ใด ๆ มาตั้งวางทิ้งไว้ตามพื้นที่ว่างส่วนกลาง",
+    "details": [
+      "เดินตรวจสอบพื้นที่ว่าง ซอยตัน มุมอาคาร และใต้บันไดในตลาด",
+      "ห้ามมิให้ผู้ค้านำรถเข็นของ ลังเปล่า ถังน้ำแข็ง หรืออุปกรณ์ต่าง ๆ มาจอดทิ้งไว้ในพื้นที่ว่างส่วนกลาง",
+      "กรณีพบรถเข็นหรือสิ่งของวางกีดขวาง ให้ติดตามหาเจ้าของร้านค้าเพื่อนำกลับเข้าแผงของตนเอง",
+      "หากไม่มีผู้แสดงตนเป็นเจ้าของ ให้เคลื่อนย้ายไปเก็บรักษาไว้ ณ จุดรวมอุปกรณ์ส่วนกลางของตลาด",
+      "ติดป้ายเตือนห้ามจอดรถเข็นหรือวางสิ่งของในจุดห้ามวางอย่างชัดเจน"
+    ],
+    "controls": [
+      "พื้นที่ว่างส่วนกลางและซอกมุมต้องโล่ง สะอาด ไม่เป็นแหล่งสะสมขยะหรือสิ่งกีดขวาง",
+      "รถเข็นของที่จอดทิ้งเกิน 2 ชั่วโมงโดยไม่มีเจ้าของ เจ้าหน้าที่ รปภ. มีอำนาจเคลื่อนย้ายทันที"
+    ],
+    "docs": "สมุดบันทึกการจัดระเบียบพื้นที่ส่วนกลาง, ป้ายเตือนห้ามวางสิ่งของ",
+    "sla": "ตรวจทุก 2 ชั่วโมง",
+    "alertTitle": "🛒 ห้ามจอดรถเข็นกีดขวาง",
+    "alertText": "ห้ามนำรถเข็นหรือสิ่งของมาวางทิ้งในพื้นที่ว่างส่วนกลาง หากฝ่าฝืนเจ้าหน้าที่จะเคลื่อนย้ายไปเก็บที่ บก.รปภ."
+  },
+  "s4_6": {
+    "code": "4.6",
+    "title": "ตักเตือน บันทึกประวัติ และประสานแผนกบริหารพื้นที่เช่า",
+    "role": "เจ้าหน้าที่ รปภ. สายตรวจ & แผนกพื้นที่เช่า",
+    "roleBadge": "background:#f3e8ff;color:#7e22ce;",
+    "objective": "ออกใบตักเตือนแก่ร้านค้าที่ฝ่าฝืน บันทึกประวัติ และส่งต่อแผนกบริหารพื้นที่เช่าพิจารณาโทษ",
+    "details": [
+      "กรณีร้านค้าได้รับการแจ้งเตือนด้วยวาจาแล้วแต่ไม่แก้ไข หรือกระทำผิดซ้ำซาก",
+      "เจ้าหน้าที่ รปภ. ถ่ายภาพความผิดไว้เป็นหลักฐาน (วางรุกล้ำ, วางสูงเกิน 1.50 ม., วางทับร่องน้ำ)",
+      "ออก 'ใบเตือนการฝ่าฝืนระเบียบตลาด' มอบให้เจ้าของแผงค้าลงนามรับทราบ",
+      "ส่งรายงานพร้อมภาพถ่ายให้ 'แผนกบริหารพื้นที่เช่า' เพื่อบันทึกประวัติและพิจารณาตัดคะแนนความประพฤติ",
+      "กรณีฝ่าฝืนต่อเนื่อง แผนกพื้นที่เช่าจะพิจารณามาตรการพักการจำหน่ายหรือยกเลิกสัญญาเช่าตามระเบียบ"
+    ],
+    "controls": [
+      "ต้องมีภาพถ่ายหลักฐานชัดเจนพร้อมระบุ วัน เวลา และเลขที่แผงค้า",
+      "การตักเตือนต้องเป็นไปตามขั้นตอน: เตือนด้วยวาจา (ครั้งที่ 1) -> ออกใบเตือน (ครั้งที่ 2) -> ส่งพื้นที่เช่าปรับ/ระงับแผง (ครั้งที่ 3)"
+    ],
+    "docs": "ใบเตือนการฝ่าฝืนระเบียบตลาด, ภาพถ่ายหลักฐาน, สมุดส่งต่อแผนกบริหารพื้นที่เช่า",
+    "sla": "บันทึกและส่งรายงานทุกสิ้นวัน",
+    "alertTitle": "📋 บันทึกประวัติความประพฤติแผงค้า",
+    "alertText": "การกระทำผิดซ้ำซากจะถูกส่งเรื่องให้แผนกบริหารพื้นที่เช่าตัดสิทธิ์และมีผลต่อการต่อสัญญาเช่าแผงค้า"
+  },
+  "s5_1": {
+    "code": "5.1",
+    "title": "ตรวจเช็กตู้ควบคุม สวิตช์ และอุปกรณ์ตัดไฟ",
+    "role": "เจ้าหน้าที่ รปภ. ประจำโซน",
+    "roleBadge": "background:#ede9fe;color:#6d28d9;",
+    "objective": "ตรวจสอบความปลอดภัยของตู้ควบคุมไฟฟ้า (MDB/DB) และอุปกรณ์เบรกเกอร์ก่อนเปิด-ปิดระบบ",
+    "details": [
+      "เดินทางไปยังตู้ควบคุมระบบไฟฟ้าตามโซนที่รับผิดชอบ",
+      "ตรวจสอบภายนอกตู้ควบคุม: ประตูปิดสนิท มีกุญแจล็อก ไม่มีกลิ่นไหม้ ไม่มีเสียงประกายไฟ และไม่มีน้ำรั่วซึมเข้าตู้",
+      "ตรวจสอบสวิตช์ เบรกเกอร์ และตัวตั้งเวลาอัตโนมัติ (Timer) ว่าอยู่ในสภาพปกติพร้อมใช้งาน",
+      "สวมใส่อุปกรณ์ป้องกันความปลอดภัย (รองเท้าพื้นยาง, มือแห้งสนิท) ก่อนสัมผัสอุปกรณ์ไฟฟ้า"
+    ],
+    "controls": [
+      "ห้ามสัมผัสสวิตช์หรือตู้ควบคุมขณะมือเปียกหรือยืนในพื้นที่แฉะชื้นโดยเด็ดขาด",
+      "หากพบกลิ่นไหม้ เสียงอาร์ก หรือความร้อนผิดปกติ ห้ามสับสวิตช์ และให้แจ้งแผนกช่างทันที"
+    ],
+    "docs": "ตารางผังควบคุมตู้ไฟฟ้าประจำโซน, เช็กลิสต์ตรวจตู้ไฟฟ้ารายวัน",
+    "sla": "5 นาที ก่อนรอบเวลาเปิด-ปิด",
+    "alertTitle": "⚡ ความปลอดภัยทางไฟฟ้า 100%",
+    "alertText": "มือแห้ง สวมรองเท้าพื้นยาง ห้ามสัมผัสอุปกรณ์ขณะร่างกายเปียกน้ำ หากพบสิ่งผิดปกติแจ้งช่างทันที"
+  },
+  "s5_2": {
+    "code": "5.2",
+    "title": "เปิด - ปิด ไฟฟ้าศาลเจ้าพ่อสมบุญ (18.00 - 06.30 น.)",
+    "role": "เจ้าหน้าที่ รปภ. ประจำจุดศาลเจ้าพ่อ",
+    "roleBadge": "background:#ede9fe;color:#6d28d9;",
+    "objective": "ควบคุมการเปิดไฟส่องสว่างศาลเจ้าพ่อสมบุญช่วงค่ำและปิดไฟช่วงเช้าตามเวลาที่กำหนด",
+    "details": [
+      "เวลา 18.00 น.: ดำเนินการเปิดสวิตช์ไฟฟ้าส่องสว่างบริเวณศาลเจ้าพ่อสมบุญ ศาลตายาย และบริเวณโดยรอบ",
+      "ตรวจสอบความสว่างของหลอดไฟทุกจุด ให้แสงสว่างเพียงพอสำหรับผู้มาสักการะบูชาช่วงค่ำคืน",
+      "เวลา 06.30 น. ของวันถัดไป: ดำเนินการปิดสวิตช์ไฟฟ้าส่องสว่างบริเวณศาลเจ้าพ่อสมบุญ",
+      "บันทึกเวลาที่เปิดและปิดลงใน 'สมุดคุมระบบไฟฟ้า บก.รปภ.'"
+    ],
+    "controls": [
+      "ต้องเปิดเวลา 18.00 น. และปิดเวลา 06.30 น. ตรงเวลาอย่างสม่ำเสมอ",
+      "ตรวจสอบหลอดไฟขาดหรือกะพริบ หากพบให้แจ้งแผนกซ่อมบำรุงเปลี่ยนหลอดใหม่"
+    ],
+    "docs": "สมุดบันทึกการเปิด-ปิดระบบไฟฟ้าและสาธารณูปโภค",
+    "sla": "เปิด 18.00 น. / ปิด 06.30 น.",
+    "alertTitle": "🏮 ควบคุมไฟศาลเจ้าพ่อสมบุญตรงเวลา",
+    "alertText": "เปิด 18.00 น. และปิด 06.30 น. เพื่อให้มีแสงสว่างปลอดภัยและประหยัดพลังงานขององค์กร"
+  },
+  "s5_3": {
+    "code": "5.3",
+    "title": "เปิด - ปิด ไฟฟ้าอาคารกลาง อาคารยาว และหน้าเซเว่น",
+    "role": "เจ้าหน้าที่ รปภ. โซนอาคารกลาง",
+    "roleBadge": "background:#ede9fe;color:#6d28d9;",
+    "objective": "ควบคุมไฟส่องสว่างทางเดินหลักและพื้นที่พาณิชย์ตามรอบเวลาที่ผู้ค้าเริ่มเตรียมของและตลาดเปิด",
+    "details": [
+      "ไฟฟ้าอาคารกลาง: เปิดเวลา 16.30 น. และปิดเวลา 08.00 น. ของวันถัดไป",
+      "ไฟฟ้าอาคารยาว: เปิดเวลา 16.30 น. และปิดเวลา 08.00 น. ของวันถัดไป",
+      "ไฟฟ้าอาคารกลางหน้าเซเว่น: เปิดเวลา 16.00 น. และปิดเวลา 09.00 น. ของวันถัดไป",
+      "เดินตรวจความสว่างตลอดแนวทางเดินสัญจร ให้แสงสว่างครอบคลุมไม่เกิดจุดมืดจุดอับสายตา"
+    ],
+    "controls": [
+      "สับเบรกเกอร์ตามลำดับขั้นตอนทีละวงจรเพื่อป้องกันไฟกระชาก (Inrush Current)",
+      "เปิดและปิดตรงตามเวลาที่ระบุในตารางมาตรฐานของตลาด"
+    ],
+    "docs": "ตารางเวลาเปิด-ปิดไฟอาคารกลางและอาคารยาว, สมุดคุมไฟฟ้า",
+    "sla": "เปิด 16.00-16.30 น. / ปิด 08.00-09.00 น.",
+    "alertTitle": "💡 ป้องกันจุดมืดจุดอับสายตา",
+    "alertText": "อาคารกลางและอาคารยาวเป็นหัวใจของการสัญจร ต้องมีแสงสว่างเพียงพอตลอดคืนเพื่อความปลอดภัย"
+  },
+  "s5_4": {
+    "code": "5.4",
+    "title": "ควบคุมไฟฟ้าอาคารผัก 2 และอาคาร 60 ปี (ตลอดเวลา / รอบดึก)",
+    "role": "เจ้าหน้าที่ รปภ. โซนผักและอาคาร 60 ปี",
+    "roleBadge": "background:#ede9fe;color:#6d28d9;",
+    "objective": "บริหารไฟส่องสว่างโซนค้าส่งผักรอบดึกและอาคาร 60 ปีที่มีการดำเนินงานต่อเนื่องตลอด 24 ชม.",
+    "details": [
+      "ไฟฟ้าอาคารผัก 2: เปิดเวลา 23.30 น. (ช่วงเริ่มลงของค้าส่งรอบดึก) และปิดเวลา 19.30 น. ของวันถัดไป",
+      "ไฟฟ้าอาคาร 60 ปี: เปิดตลอดเวลา (24 ชั่วโมง) เนื่องจากเป็นศูนย์กลางค้าขายและการสัญจรหลัก",
+      "ตรวจสอบสวิตช์และหลอดไฟไฮเบย์ (High Bay) ในอาคาร 60 ปี ให้สว่างสม่ำเสมอทุกช่องทางเดิน",
+      "ตรวจสอบอุณหภูมิของตู้เบรกเกอร์อาคารผัก 2 เนื่องจากมีการใช้กระแสไฟฟ้าต่อเนื่องเป็นเวลานาน"
+    ],
+    "controls": [
+      "อาคาร 60 ปีต้องมีแสงสว่างตลอด 24 ชั่วโมง ห้ามปิดสวิตช์เมนโดยเด็ดขาด",
+      "อาคารผัก 2 เปิดตรงเวลา 23.30 น. เพื่อรองรับรถบรรทุกขนส่งสินค้าเกษตรและผู้ค้าส่ง"
+    ],
+    "docs": "ตารางควบคุมไฟอาคารค้าส่งผักและอาคาร 60 ปี",
+    "sla": "ผัก 2 (เปิด 23.30 ปิด 19.30) / 60 ปี (24 ชม.)",
+    "alertTitle": "🕒 อาคาร 60 ปี เปิดไฟ 24 ชม.",
+    "alertText": "อาคาร 60 ปีเป็นพื้นที่ค้าขายหลัก เปิดไฟส่องสว่างตลอด 24 ชม. ตรวจเช็กหลอดขาดทุกวัน"
+  },
+  "s5_5": {
+    "code": "5.5",
+    "title": "เปิด - ปิด ไฟฟ้าป้ายแนวรั้ว น้ำพุ ราวหน้าตลาด ศูนย์อาหาร และพลาซ่า",
+    "role": "เจ้าหน้าที่ รปภ. โซนหน้าตลาดและพลาซ่า",
+    "roleBadge": "background:#ede9fe;color:#6d28d9;",
+    "objective": "ควบคุมไฟตกแต่ง ป้ายประชาสัมพันธ์ น้ำพุ และไฟส่องสว่างพลาซ่า-ศูนย์อาหารตามรอบเวลา",
+    "details": [
+      "ไฟฟ้าป้ายอาคารกลางแนวรั้ว: เปิดเวลา 18.00 น. ปิดเวลา 08.00 น. (ใช้เวลา 30 นาทีในการตรวจรอบ)",
+      "ไฟฟ้าน้ำพุหน้าตลาด และไฟฟ้าราวหน้าตลาด: เปิดเวลา 17.30 น. ปิดเวลา 06.00 น.",
+      "ไฟฟ้าราวในศูนย์อาหาร: เปิดเวลา 17.00 น. ปิดเวลา 20.00 น. (เมื่อศูนย์อาหารปิดบริการ)",
+      "ไฟฟ้าในอาคารพลาซ่า: เปิดเวลา 05.00 น. ปิดเวลา 20.00 น. (ตามเวลาเปิด-ปิดห้างพลาซ่า)",
+      "ตรวจเช็กความเรียบร้อยของสายไฟและหลอดประดับตกแต่ง ไม่ให้มีสายไฟเปลือยหรือรั่วซึม"
+    ],
+    "controls": [
+      "ไฟฟ้าราวและน้ำพุต้องปิดตรงเวลาเพื่อประหยัดพลังงาน",
+      "ไฟฟ้าพลาซ่าปิดเวลา 20.00 น. หลังตรวจสอบว่าผู้ค้าและลูกค้าออกจากอาคารเรียบร้อยแล้ว"
+    ],
+    "docs": "ตารางเวลาเปิด-ปิดไฟตกแต่งและพื้นที่พาณิชย์, รายงานตรวจเช็กระบบไฟ",
+    "sla": "ตามรอบเวลาที่กำหนดแต่ละจุด",
+    "alertTitle": "✨ สภาพแวดล้อมและความปลอดภัยหน้าตลาด",
+    "alertText": "ไฟหน้าร้าน ป้ายแนวรั้ว และน้ำพุ สร้างภาพลักษณ์และแสงสว่างป้องกันเหตุร้ายริมถนนพหลโยธิน"
+  },
+  "s5_6": {
+    "code": "5.6",
+    "title": "เปิด - ปิด ไฟฟ้าโรงรถ ลาน 4 (18.00 - 06.00 น.) และตรวจหลอดไฟชำรุด",
+    "role": "เจ้าหน้าที่ รปภ. โซนลานจอดรถ",
+    "roleBadge": "background:#ede9fe;color:#6d28d9;",
+    "objective": "ควบคุมไฟส่องสว่างลานจอดรถ 4 ป้องกันเหตุโจรกรรม และสำรวจหลอดไฟชำรุดทั่วทั้งตลาด",
+    "details": [
+      "เวลา 18.00 น.: เปิดสวิตช์ไฟฟ้าส่องสว่างโรงรถ ลานจอดรถที่ 4 ให้สว่างทั่วถึงทุกช่องจอด",
+      "เวลา 06.00 น.: ปิดสวิตช์ไฟฟ้าโรงรถ ลานจอดรถที่ 4 เมื่อท้องฟ้าสว่าง",
+      "ระหว่างเข้าเวรดึก: เดินสำรวจหลอดไฟส่องสว่างทั่วทั้งตลาด จดบันทึกตำแหน่งหลอดไฟขาด กะพริบ หรือชำรุด",
+      "รวบรวมรายการหลอดไฟชำรุดส่ง 'ใบแจ้งซ่อม' ให้แผนกซ่อมบำรุงดำเนินการเปลี่ยนหลอดในเช้าวันถัดไป",
+      "สรุปยอดการเปิด-ปิดไฟทุกจุดลงในสมุดรายงาน บก.รปภ. ประจำวัน"
+    ],
+    "controls": [
+      "ลานจอดรถต้องมีแสงสว่างสม่ำเสมอทุกจุด เพื่อให้กล้อง CCTV บันทึกภาพป้ายทะเบียนได้ชัดเจน",
+      "ส่งรายงานหลอดไฟชำรุดให้ช่างซ่อมบำรุงทุกวัน เพื่อแก้ไขภายใน 24 ชั่วโมง"
+    ],
+    "docs": "สมุดบันทึกระบบไฟฟ้าลานจอดรถ, ใบแจ้งซ่อมไฟฟ้า (Maintenance Request)",
+    "sla": "เปิด 18.00 น. / ปิด 06.00 น.",
+    "alertTitle": "🚗 ลานจอดรถต้องสว่างปลอดภัย",
+    "alertText": "ลานจอดรถ 4 ต้องสว่างชัดเจนเพื่อความปลอดภัยในชีวิตและทรัพย์สินของผู้ใช้บริการตลอดคืน"
+  },
+  "s6_1": {
+    "code": "6.1",
+    "title": "ตรวจระดับน้ำ ปั๊มน้ำหมุนเวียน และระบบท่อหล่อเย็น",
+    "role": "เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน",
+    "roleBadge": "background:#ccfbf1;color:#0f766e;",
+    "objective": "ตรวจสอบความพร้อมของระบบน้ำหล่อเย็นและปั๊มน้ำหมุนเวียนของเครื่องอีแว๊ปก่อนเปิดเครื่อง",
+    "details": [
+      "เดินทางไปยังห้องเครื่องหรือแผงควบคุมระบบระบายอากาศอีแว๊ป (Evaporative Cooling System)",
+      "ตรวจสอบระดับน้ำในถังพักน้ำ (Water Sump Tank) ว่ามีน้ำเพียงพอ ไม่แห้งขอด",
+      "ตรวจสอบวาล์วจ่ายน้ำและระบบท่อน้ำหล่อเย็นเข้าสู่แผงคูลลิ่งแพด (Cooling Pad) ว่าไม่มีรอยรั่วซึมรุนแรง",
+      "ตรวจสอบการทำงานของปั๊มน้ำหมุนเวียนและลูกลอยเติมน้ำอัตโนมัติ",
+      "หากพบว่าไม่มีน้ำหรือปั๊มน้ำขัดข้อง ห้ามเปิดพัดลมดูดอากาศเด็ดขาดเพื่อป้องกันมอเตอร์ไหม้"
+    ],
+    "controls": [
+      "ระบบอีแว๊ปต้องมีน้ำหล่อเย็นสมบูรณ์ก่อนเปิดเครื่อง ห้ามรันเครื่องขณะน้ำแห้ง (Dry Run)",
+      "หากพบน้ำรั่วซึมหยดลงบนแผงค้า ให้ประสานช่างซ่อมบำรุงแก้ไขทันที"
+    ],
+    "docs": "เช็กลิสต์ตรวจระบบน้ำอีแว๊ป, คู่มือการใช้งานระบบ Evaporative Cooling",
+    "sla": "5 นาที ก่อนเวลาเปิดเครื่อง",
+    "alertTitle": "💧 ห้ามรันเครื่องขณะไม่มีน้ำหล่อเย็น",
+    "alertText": "ต้องตรวจเช็กระดับน้ำก่อนเปิดเครื่องทุกครั้ง หากน้ำแห้ง มอเตอร์และแผงคูลลิ่งแพดจะเสียหายได้"
+  },
+  "s6_2": {
+    "code": "6.2",
+    "title": "ควบคุมเปิด - ปิด อีแว๊ปครัวยิ่งเจริญ (03.00 - 17.00 น.)",
+    "role": "เจ้าหน้าที่ รปภ. โซนครัวยิ่งเจริญ",
+    "roleBadge": "background:#ccfbf1;color:#0f766e;",
+    "objective": "ควบคุมระบบระบายอากาศลดความร้อนในพื้นที่ครัวยิ่งเจริญตามเวลาการปรุงประกอบอาหาร",
+    "details": [
+      "เวลา 03.00 น.: ดำเนินการเปิดระบบอีแว๊ปครัวยิ่งเจริญ เพื่อระบายความร้อนและถ่ายเทอากาศก่อนผู้ค้าเริ่มปรุงอาหารเช้า",
+      "เปิดสวิตช์ปั๊มน้ำหล่อเย็นให้แผงคูลลิ่งแพดเปียกชุ่มประมาณ 2-3 นาที แล้วจึงเปิดพัดลมส่งลมเย็น",
+      "ตรวจสอบทิศทางลมและความเย็นของอากาศที่เป่าออกมาในบริเวณครัว",
+      "เวลา 17.00 น.: ปิดระบบอีแว๊ปครัวยิ่งเจริญเมื่อสิ้นสุดรอบการประกอบอาหาร",
+      "ปิดปั๊มน้ำก่อนปิดพัดลม 5 นาทีเพื่อให้แผงคูลลิ่งแห้ง ป้องกันกลิ่นอับชื้นและเชื้อรา"
+    ],
+    "controls": [
+      "เปิดเวลา 03.00 น. และปิดเวลา 17.00 น. ตรงเวลา",
+      "ใช้เวลาตรวจสอบการทำงานประมาณ 30 นาที",
+      "ปิดปั๊มน้ำก่อนปิดพัดลมเพื่อไล่ความชื้นออกจากแผงคูลลิ่งแพด"
+    ],
+    "docs": "ตารางเวลาควบคุมอีแว๊ปครัวยิ่งเจริญ, สมุดคุมสาธารณูปโภค",
+    "sla": "เปิด 03.00 น. / ปิด 17.00 น.",
+    "alertTitle": "🍳 ระบายอากาศครัวยิ่งเจริญ",
+    "alertText": "เปิด 03.00 น. เพื่อรองรับการปรุงอาหารรอบเช้ามืด และปิด 17.00 น. พร้อมไล่ความชื้นออกจากแผง"
+  },
+  "s6_3": {
+    "code": "6.3",
+    "title": "ควบคุมเปิด - ปิด อีแว๊ปศูนย์อาหาร (05.00 - 20.00 น.)",
+    "role": "เจ้าหน้าที่ รปภ. โซนศูนย์อาหาร",
+    "roleBadge": "background:#ccfbf1;color:#0f766e;",
+    "objective": "ควบคุมความเย็นและถ่ายเทอากาศในศูนย์อาหาร รองรับผู้มาใช้บริการตั้งแต่เช้าจรดค่ำ",
+    "details": [
+      "เวลา 05.00 น.: ดำเนินการเปิดระบบอีแว๊ปศูนย์อาหาร (Food Center) เพื่อเตรียมอากาศสดชื่นก่อนลูกค้าเข้าใช้บริการ",
+      "ตรวจสอบให้แน่ใจว่าระบบน้ำหล่อเย็นทำงานปกติและพัดลมทุกตัวหมุนราบรื่น ไม่มีเสียงดังผิดปกติ",
+      "ระหว่างวัน: เดินสังเกตอุณหภูมิและความชื้นในพื้นที่ศูนย์อาหาร ไม่ให้ชื้นเกินไปหรือมีละอองน้ำหยด",
+      "เวลา 20.00 น.: ปิดระบบอีแว๊ปศูนย์อาหารหลังสิ้นสุดเวลาให้บริการของศูนย์อาหาร",
+      "บันทึกเวลาเปิด-ปิดและสถานะเครื่องลงในสมุดคุมประจำจุด"
+    ],
+    "controls": [
+      "เปิดเวลา 05.00 น. และปิดเวลา 20.00 น. สอดคล้องกับเวลาเปิดให้บริการศูนย์อาหาร",
+      "ห้ามให้ละอองน้ำหยดลงบนโต๊ะอาหารหรือทางเดินลูกค้าเด็ดขาด"
+    ],
+    "docs": "ตารางเวลาเปิด-ปิดอีแว๊ปศูนย์อาหาร, บันทึกการตรวจความชื้น",
+    "sla": "เปิด 05.00 น. / ปิด 20.00 น.",
+    "alertTitle": "🍜 ความสะดวกสบายของศูนย์อาหาร",
+    "alertText": "เปิด 05.00-20.00 น. รักษาอุณหภูมิที่สบายแก่ลูกค้าผู้มาใช้บริการศูนย์อาหารตลอดทั้งวัน"
+  },
+  "s6_4": {
+    "code": "6.4",
+    "title": "ควบคุมเปิด - ปิด อีแว๊ปอาคารพลาซ่า (07.00 - 20.00 น.) และบันทึกสมุดคุม",
+    "role": "เจ้าหน้าที่ รปภ. โซนพลาซ่า",
+    "roleBadge": "background:#ccfbf1;color:#0f766e;",
+    "objective": "ควบคุมระบบปรับอากาศอีแว๊ปในอาคารพลาซ่า และสรุปบันทึกการทำงานของเครื่องอีแว๊ปทุกโซน",
+    "details": [
+      "เวลา 07.00 น.: เปิดระบบอีแว๊ปอาคารพลาซ่า ก่อนร้านค้าในพลาซ่าเปิดให้บริการ",
+      "ตรวจสอบความเรียบร้อยของท่อลม แดมเปอร์ปรับทิศทางลม และแรงลมเป่าในอาคาร",
+      "เวลา 20.00 น.: ปิดระบบอีแว๊ปอาคารพลาซ่าพร้อมกับระบบไฟฟ้าหลักของพลาซ่า",
+      "รวบรวมข้อมูลเวลาเปิด-ปิดของระบบอีแว๊ปทั้ง 3 โซน (ครัว, ศูนย์อาหาร, พลาซ่า)",
+      "ลงบันทึกใน 'สมุดรายงานการควบคุมระบบระบายอากาศอีแว๊ป บก.รปภ.' และรายงานกรณีเครื่องชำรุด"
+    ],
+    "controls": [
+      "เปิดเวลา 07.00 น. ปิดเวลา 20.00 น. ตรงเวลา",
+      "หากพบเครื่องอีแว๊ปตัวใดมีเสียงมอเตอร์ดังผิดปกติ สั่นสะเทือน หรือมีกลิ่นไหม้ ให้ปิดเบรกเกอร์ตัวนั้นทันที"
+    ],
+    "docs": "สมุดบันทึกควบคุมระบบอีแว๊ปพลาซ่า, ใบแจ้งซ่อมระบบระบายอากาศ",
+    "sla": "เปิด 07.00 น. / ปิด 20.00 น.",
+    "alertTitle": "🛍️ ดูแลระบบพลาซ่าและรายงานประจำวัน",
+    "alertText": "ปิดระบบเวลา 20.00 น. พร้อมตรวจล็อกประตูพลาซ่า และบันทึกรายงานการทำงานของอีแว๊ปทุกโซน"
+  },
+  "s7_1": {
+    "code": "7.1",
+    "title": "ตรวจสอบความพร้อมของพัดลมและระบบไฟจ่าย",
+    "role": "เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน",
+    "roleBadge": "background:#f1f5f9;color:#334155;",
+    "objective": "ตรวจสภาพความแข็งแรงของขายึดพัดลม สวิตช์ควบคุม และความปลอดภัยก่อนเปิดใช้งาน",
+    "details": [
+      "ตรวจสอบพัดลมเพดาน พัดลมผนัง และพัดลมยักษ์อุตสาหกรรม (Giant Fans) ในแต่ละอาคาร",
+      "ตรวจสอบด้วยสายตา: ขายึดและสลิงเซฟตี้พัดลมยึดแน่นหนา ใบพัดไม่บิดเบี้ยว ไม่แกว่งผิดรูป",
+      "ตรวจสอบสวิตช์และตู้ควบคุมไฟฟ้าพัดลมว่าไม่มีเศษวัสดุหรือสิ่งกีดขวาง",
+      "เตรียมพร้อมเปิดพัดลมตามรอบเวลาของแต่ละโซนตลาด"
+    ],
+    "controls": [
+      "หากพบพัดลมตัวใดสั่นคลอน น็อตยึดหลวม หรือมีเสียงดังผิดปกติ ห้ามเปิดใช้งานเด็ดขาด",
+      "ติดป้าย 'งดใช้งานชั่วคราว' และแจ้งช่างซ่อมบำรุงเข้ามาขันยึดให้แน่นหนา"
+    ],
+    "docs": "เช็กลิสต์ตรวจความปลอดภัยพัดลมอุตสาหกรรม, ตารางเวลาควบคุมพัดลม",
+    "sla": "ตรวจก่อนรอบเวลาเปิด 10 นาที",
+    "alertTitle": "⚠️ ตรวจความแข็งแรงของจุดยึดพัดลม",
+    "alertText": "พัดลมยักษ์และพัดลมเพดานต้องมีจุดยึดที่แข็งแรงและมีสลิงนิรภัย หากพบสั่นคลอนห้ามเปิดเด็ดขาด"
+  },
+  "s7_2": {
+    "code": "7.2",
+    "title": "เปิด - ปิด พัดลมเพดานอาคารผัก 2 (23.30 - 19.30 น.)",
+    "role": "เจ้าหน้าที่ รปภ. โซนผัก 2",
+    "roleBadge": "background:#f1f5f9;color:#334155;",
+    "objective": "ควบคุมพัดลมเพดานระบายอากาศในอาคารผัก 2 ช่วยลดความร้อนและความชื้นสะสมของพืชผัก",
+    "details": [
+      "เวลา 23.30 น.: ดำเนินการเปิดพัดลมติดเพดานในอาคารผัก 2 ทุกชุดพร้อมกับการเปิดไฟโซนผัก",
+      "ช่วยระบายกลิ่นอับ ความร้อน และถ่ายเทอากาศให้ผักสดไม่เน่าเสียในช่วงค้าส่งรอบดึกและเช้า",
+      "ตรวจเช็กความเร็วรอบพัดลมให้หมุนสม่ำเสมอทุกตัว",
+      "เวลา 19.30 น. ของวันถัดไป: ปิดพัดลมติดเพดานอาคารผัก 2 หลังเสร็จสิ้นรอบการค้าขาย",
+      "บันทึกเวลาเปิด-ปิดลงในสมุดคุมระบบพัดลม บก.รปภ."
+    ],
+    "controls": [
+      "เปิดเวลา 23.30 น. ปิดเวลา 19.30 น. ตรงเวลา",
+      "สังเกตพัดลมที่อาจมีเศษเชือกฟางหรือถุงพลาสติกปลิวเข้าไปติดใบพัดและนำออกอย่างปลอดภัย"
+    ],
+    "docs": "ตารางเวลาพัดลมอาคารผัก 2, สมุดบันทึกสาธารณูปโภค",
+    "sla": "เปิด 23.30 น. / ปิด 19.30 น.",
+    "alertTitle": "🥦 ระบายอากาศโซนผัก 2",
+    "alertText": "เปิดพัดลม 23.30 น. รองรับการลงผักสด และปิด 19.30 น. ช่วยรักษาคุณภาพสินค้าเกษตร"
+  },
+  "s7_3": {
+    "code": "7.3",
+    "title": "เปิด - ปิด พัดลมยักษ์อาคาร 60 ปี และอาคารกลาง (24.00/01.00 - 17.00/19.00 น.)",
+    "role": "เจ้าหน้าที่ รปภ. โซนอาคารกลาง",
+    "roleBadge": "background:#f1f5f9;color:#334155;",
+    "objective": "ควบคุมพัดลมยักษ์อุตสาหกรรม (Giant HVLS Fans) สร้างการหมุนเวียนอากาศในอาคารหลัก",
+    "details": [
+      "พัดลมยักษ์ 60 ปี: เปิดเวลา 24.00 น. (เที่ยงคืน) และปิดเวลา 17.00 น.",
+      "พัดลมยักษ์ อาคารกลาง: เปิดเวลา 01.00 น. และปิดเวลา 19.00 น.",
+      "ควบคุมผ่านตู้คอนโทรลอินเวอร์เตอร์ (Inverter Speed Control): ค่อยๆ ปรับเร่งความเร็วรอบตามลำดับ",
+      "ตรวจสอบรัศมีการหมุนของใบพัดยักษ์ ไม่มีสิ่งกีดขวาง ไม่มีป้ายโฆษณาห้อยล้ำเข้ามาในแนวหมุน",
+      "เมื่อถึงเวลาปิด ให้ลดความเร็วรอบลงจนหยุดสนิทแล้วจึงปิดสวิตช์เมน"
+    ],
+    "controls": [
+      "ห้ามสับสวิตช์ตัดไฟกะทันหันขณะพัดลมยักษ์หมุนด้วยความเร็วสูง ให้ลดสปีดผ่านอินเวอร์เตอร์ก่อน",
+      "ตรวจสอบสลิงเซฟตี้ของพัดลมยักษ์ทุกตัวให้อยู่ในสภาพสมบูรณ์ 100%"
+    ],
+    "docs": "คู่มือควบคุมพัดลมยักษ์ HVLS, ตารางเวลาเปิด-ปิดพัดลมยักษ์",
+    "sla": "60 ปี (เปิด 24.00 ปิด 17.00) / อาคารกลาง (เปิด 01.00 ปิด 19.00)",
+    "alertTitle": "🌀 ควบคุมพัดลมยักษ์อย่างปลอดภัย",
+    "alertText": "พัดลมยักษ์ต้องค่อยๆ ปรับความเร็วรอบผ่านอินเวอร์เตอร์ ห้ามตัดไฟกะทันหัน และตรวจแนวหมุนห้ามมีสิ่งกีดขวาง"
+  },
+  "s7_4": {
+    "code": "7.4",
+    "title": "ตรวจสอบพัดลมอาคารยาวระบบออโต้ (22.00 - 18.00 น.)",
+    "role": "เจ้าหน้าที่ รปภ. โซนอาคารยาว",
+    "roleBadge": "background:#f1f5f9;color:#334155;",
+    "objective": "ตรวจสอบการทำงานของระบบพัดลมอาคารยาวที่ทำงานด้วยระบบตั้งเวลาอัตโนมัติ (Auto Timer)",
+    "details": [
+      "พัดลมอาคารยาวถูกตั้งโปรแกรมทำงานอัตโนมัติ: เริ่มเปิด 22.00 น. และหยุดการทำงาน 18.00 น.",
+      "เวลา 22.00 น.: เจ้าหน้าที่ รปภ. เดินตรวจสอบตู้ควบคุมไทม์เมอร์ว่าระบบสั่งเปิดพัดลมทำงานถูกต้องทุกตัว",
+      "เวลา 18.00 น.: เดินตรวจสอบซ้ำว่าระบบตัดการทำงานตามเวลาที่ตั้งไว้เรียบร้อยแล้ว",
+      "กรณีระบบออโต้ไม่ทำงานหรือไทม์เมอร์ขัดข้อง ให้ปรับสวิตช์เป็นโหมด Manual เพื่อเปิดหรือปิดตามเวลา และแจ้งช่างซ่อมบำรุง"
+    ],
+    "controls": [
+      "ตรวจสอบเวลาของนาฬิกาไทม์เมอร์ให้ตรงกับเวลาจริงสม่ำเสมอ",
+      "หากระบบออโต้ขัดข้อง ต้องสับสวิตช์ควบคุมแบบแมนนวลทันที ไม่ให้กระทบต่ออากาศในอาคาร"
+    ],
+    "docs": "ผังวงจรไทม์เมอร์พัดลมอัตโนมัติอาคารยาว, สมุดบันทึกตรวจระบบออโต้",
+    "sla": "ตรวจเวลา 22.00 น. และ 18.00 น.",
+    "alertTitle": "⏱️ ตรวจสอบระบบอัตโนมัติ (Auto Timer)",
+    "alertText": "แม้เป็นระบบออโต้ เจ้าหน้าที่ต้องเดินตรวจจริงทั้งตอน 22.00 น. และ 18.00 น. เพื่อให้มั่นใจว่าเครื่องทำงานตามเวลา"
+  },
+  "s7_5": {
+    "code": "7.5",
+    "title": "เปิด - ปิด พัดลมพลาซ่าและครัวยิ่งเจริญ พร้อมตรวจเสียงผิดปกติ",
+    "role": "เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน",
+    "roleBadge": "background:#f1f5f9;color:#334155;",
+    "objective": "ควบคุมพัดลมในพลาซ่าและครัวยิ่งเจริญ และตรวจจับความผิดปกติของมอเตอร์ทุกจุด",
+    "details": [
+      "พัดลมในพลาซ่า: เปิดเวลา 07.00 น. ปิดเวลา 20.00 น.",
+      "พัดลมยักษ์ ครัวยิ่งเจริญ: เปิดเวลา 06.00 น. ปิดเวลา 18.00 น.",
+      "พัดลมครัวยิ่งเจริญ (พัดลมระบายอากาศ): เปิดเวลา 03.00 น. ปิดเวลา 18.00 น.",
+      "ฟังเสียงการทำงานของลูกปืนมอเตอร์พัดลมและตรวจเช็กความร้อนสะสม",
+      "ลงบันทึกเวลาเปิด-ปิดพัดลมครบทุก 7 จุดในตลาดลงในสมุดรายงาน บก.รปภ."
+    ],
+    "controls": [
+      "เปิดและปิดตรงตามเวลาที่กำหนด",
+      "หากพบพัดลมมีเสียงเอี๊ยดอ๊าด เสียงลูกปืนแตก หรือมอเตอร์ร้อนจัด ให้ปิดเครื่องและแจ้งช่างทันที"
+    ],
+    "docs": "สมุดบันทึกควบคุมระบบพัดลมระบายอากาศทุกโซน, ใบแจ้งซ่อมบำรุง",
+    "sla": "ตามรอบเวลาแต่ละจุด (ใช้เวลาตรวจ 30 นาที)",
+    "alertTitle": "🔊 ตรวจจับเสียงผิดปกติของมอเตอร์",
+    "alertText": "เสียงลูกปืนแตกหรือความร้อนสูงเป็นสัญญาณเตือนของมอเตอร์ชำรุด ต้องหยุดใช้และแจ้งช่างทันทีก่อนเกิดไฟไหม้"
+  },
+  "s8_1": {
+    "code": "8.1",
+    "title": "ตรวจสอบสภาพรอก สลิง เชือก และผืนผ้าใบก่อนใช้งาน",
+    "role": "เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน",
+    "roleBadge": "background:#ffedd5;color:#c2410c;",
+    "objective": "ตรวจเช็กความสมบูรณ์ของกลไกชักรอก สลิงยึด และผืนผ้าใบป้องกันการร่วงหล่นหรือติดขัด",
+    "details": [
+      "เดินทางไปยังจุดติดตั้งผืนผ้าใบกันแดด-กันฝน (หน้าตลาด และอาคารกลาง)",
+      "ตรวจสอบสายสลิง เชือกชักรอก รอกทด และแกนหมุนผ้าใบ ว่าอยู่ในสภาพสมบูรณ์ ไม่เปื่อยยุ่ยหรือขาดรุ่ย",
+      "ตรวจสอบจุดยึดโครงสร้างเหล็กกับเสาอาคารว่ามีความมั่นคงแข็งแรง น็อตไม่หลุดหลวม",
+      "ตรวจสอบผืนผ้าใบว่าไม่มีรอยฉีกขาดรุนแรงหรือมีสิ่งแปลกปลอมค้างอยู่บนผ้าใบ",
+      "หากพบสลิงชำรุดหรือรอกติดขัด ให้ทำเครื่องหมายและแจ้งแผนกซ่อมบำรุงแก้ไขทันที"
+    ],
+    "controls": [
+      "ห้ามออกแรงดึงกระชากเชือกชักรอกที่ติดขัดอย่างรุนแรง เพราะอาจทำให้รอกหลุดร่วงหล่นลงมาได้",
+      "ตรวจสอบความปลอดภัยด้านล่างก่อนชักรอกผ้าใบทุกครั้ง"
+    ],
+    "docs": "เช็กลิสต์ตรวจสภาพผ้าใบและอุปกรณ์ชักรอกประจำสัปดาห์",
+    "sla": "5 นาที ก่อนเวลาชักผ้าใบ",
+    "alertTitle": "🪢 ตรวจความแข็งแรงของสลิงและรอก",
+    "alertText": "รอกและสลิงต้องแข็งแรง ปลอดภัย ห้ามกระชากเชือกแรงขณะติดขัดเพื่อป้องกันอุปกรณ์หล่นทับบุคคลด้านล่าง"
+  },
+  "s8_2": {
+    "code": "8.2",
+    "title": "เปิด - ปิด ผ้าใบอาคารกลาง (เปิด 06.30 น. ปิด 14.00 น.)",
+    "role": "เจ้าหน้าที่ รปภ. โซนอาคารกลาง",
+    "roleBadge": "background:#ffedd5;color:#c2410c;",
+    "objective": "ควบคุมการดึงเปิดผ้าใบรับแสงแดดช่วงเช้าและม้วนเก็บช่วงบ่ายตามทิศทางแดด",
+    "details": [
+      "เวลา 06.30 น.: ดำเนินการคลี่เปิดผ้าใบอาคารกลาง เพื่อป้องกันแสงแดดยามเช้าส่องกระทบแผงค้าและสินค้าสด",
+      "ดึงเชือกชักรอกอย่างสม่ำเสมอ ผูกมัดเชือกเข้ากับหลักยึดให้แน่นหนาป้องกันผ้าใบหลุดลอย",
+      "ตรวจสอบระดับความตึงของผ้าใบให้เรียบร้อย ไม่หย่อนคล้อยกีดขวางทางเดิน",
+      "เวลา 14.00 น.: ดำเนินการม้วนเก็บผ้าใบอาคารกลางขึ้นด้านบนเมื่อแดดคล้อย",
+      "ใช้เวลาปฏิบัติการประมาณ 10 นาที และบันทึกเวลาลงสมุด บก.รปภ."
+    ],
+    "controls": [
+      "เปิดเวลา 06.30 น. และปิดม้วนเก็บเวลา 14.00 น. ตรงเวลา",
+      "ผูกเชือกล็อกกับหลักยึดให้แน่นหนาทุกครั้ง ป้องกันลมพัดสะบัด"
+    ],
+    "docs": "ตารางเวลาควบคุมผ้าใบอาคารกลาง, สมุดบันทึกสาธารณูปโภค",
+    "sla": "เปิด 06.30 น. / ปิด 14.00 น. (ใช้เวลา 10 นาที)",
+    "alertTitle": "☀️ ควบคุมผ้าใบอาคารกลางตามแนวแดด",
+    "alertText": "เปิด 06.30 น. กันแดดส่องสินค้าสด และม้วนเก็บ 14.00 น. ผูกเชือกให้แน่นหนาป้องกันลมตี"
+  },
+  "s8_3": {
+    "code": "8.3",
+    "title": "เปิด - ปิด ผ้าใบหน้าตลาด (เปิด 08.00 น. ปิด 15.00 น.)",
+    "role": "เจ้าหน้าที่ รปภ. โซนหน้าตลาด",
+    "roleBadge": "background:#ffedd5;color:#c2410c;",
+    "objective": "ควบคุมผ้าใบขนาดใหญ่บริเวณหน้าตลาดเพื่อบังแดดให้ลูกค้าและผู้ค้าตามรอบเวลา",
+    "details": [
+      "เวลา 08.00 น.: ดำเนินการคลี่เปิดผ้าใบหน้าตลาดเพื่อบังแสงแดดช่วงสายและบ่าย",
+      "หมุนแกนชักรอกหรือดึงเชือกด้วยความระมัดระวัง สังเกตคนเดินเท้าด้านล่าง",
+      "ล็อกสลักนิรภัยของชุดกว้านผ้าใบให้แน่นหนา",
+      "เวลา 15.00 น.: ดำเนินการม้วนเก็บผ้าใบหน้าตลาดขึ้นสู่ตำแหน่งบนสุด",
+      "ใช้เวลาปฏิบัติการประมาณ 20 นาที เนื่องจากเป็นผ้าใบผืนยาวหน้าตลาด"
+    ],
+    "controls": [
+      "เปิดเวลา 08.00 น. และปิดม้วนเก็บเวลา 15.00 น. ตรงเวลา",
+      "ต้องล็อกสลักนิรภัยของกว้านสลิงทุกครั้งหลังปรับระดับผ้าใบ"
+    ],
+    "docs": "ตารางเวลาควบคุมผ้าใบหน้าตลาด, สมุดรายงาน บก.รปภ.",
+    "sla": "เปิด 08.00 น. / ปิด 15.00 น. (ใช้เวลา 20 นาที)",
+    "alertTitle": "🏢 ผ้าใบหน้าตลาดขนาดใหญ่",
+    "alertText": "ผ้าใบหน้าตลาดมีขนาดใหญ่ ต้องใช้ความระมัดระวังในการหมุนกว้าน และล็อกสลักนิรภัยทุกครั้ง"
+  },
+  "s8_4": {
+    "code": "8.4",
+    "title": "แผนเผชิญเหตุม้วนเก็บผ้าใบฉุกเฉินเมื่อเกิดพายุฝนลมกระโชกแรง",
+    "role": "เจ้าหน้าที่ รปภ. ทุกโซน & หัวหน้าชุด",
+    "roleBadge": "background:#fee2e2;color:#b91c1c;",
+    "objective": "ตอบสนองต่อสภาพอากาศเลวร้าย ม้วนเก็บผ้าใบฉุกเฉินทันทีเพื่อป้องกันโครงสร้างตลาดพังเสียหาย",
+    "details": [
+      "เฝ้าระวังสภาพอากาศ: เมื่อท้องฟ้ามืดครึ้ม ลมพัดแรง หรือมีสัญญาณเตือนพายุฝนฟ้าคะนอง",
+      "หัวหน้าชุด รปภ. สั่งการทางวิทยุสื่อสารให้เจ้าหน้าที่ทุกโซนดำเนินการ 'ม้วนเก็บผ้าใบฉุกเฉินทันที' โดยไม่ต้องรอถึงเวลาปิดปกติ",
+      "เจ้าหน้าที่ รปภ. ทุกนายเข้าประจำจุดผ้าใบหน้าตลาดและอาคารกลาง ม้วนเก็บผ้าใบขึ้นสู่ด้านบนอย่างรวดเร็วและปลอดภัย",
+      "ผูกล็อกสลิงและเชือกให้แน่นหนาที่สุด เพื่อป้องกันลมกระโชกพัดผ้าใบฉีกขาดหรือดึงโครงหลังคาพังถล่ม",
+      "รายงานการม้วนเก็บผ้าใบเสร็จสิ้นกลับมายัง บก.รปภ. ทางวิทยุสื่อสาร"
+    ],
+    "controls": [
+      "เมื่อมีลมพายุรุนแรง ต้องเก็บผ้าใบให้เสร็จสิ้นภายใน 5-10 นาทีทั่วทั้งตลาด",
+      "ความปลอดภัยของเจ้าหน้าที่: ระวังเศษกิ่งไม้ ป้ายโฆษณา หรือกระเบื้องปลิวขณะปฏิบัติหน้าที่ท่ามกลางพายุลมแรง"
+    ],
+    "docs": "แผนเผชิญเหตุสาธารณภัยและลมพายุตลาดยิ่งเจริญ, บันทึกการปฏิบัติการฉุกเฉิน",
+    "sla": "ปฏิบัติการทันทีภายใน 5-10 นาทีเมื่อมีพายุ",
+    "alertTitle": "⛈️ พายุลมแรง = ม้วนเก็บฉุกเฉินทันที",
+    "alertText": "เมื่อมีลมกรรโชกแรง ต้องสั่งม้วนเก็บผ้าใบทุกจุดทันทีโดยไม่ต้องรอเวลา เพื่อป้องกันโครงสร้างอาคารถูกลมดึงเสียหาย"
+  },
+  "s9_1": {
+    "code": "9.1",
+    "title": "ตรวจสอบมิเตอร์น้ำ ระดับน้ำถังพัก และระบบวาล์วท่อส่งน้ำ",
+    "role": "เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน",
+    "roleBadge": "background:#e0e7ff;color:#4338ca;",
+    "objective": "ตรวจสอบความพร้อมของระบบประปาและระดับน้ำในถังพักก่อนเปิดปั๊มน้ำศาลเจ้าพ่อสมบุญ",
+    "details": [
+      "เดินทางไปยังบริเวณตู้ควบคุมปั๊มน้ำศาลเจ้าพ่อสมบุญ",
+      "ตรวจสอบมิเตอร์น้ำประปาหลักว่ามีการจ่ายน้ำเข้าสู่ระบบปกติ",
+      "ตรวจเช็กระดับน้ำในถังพักน้ำใต้ดินหรือถังพักน้ำบนดินว่ามีปริมาณน้ำเกินกว่าระดับครึ่งถัง",
+      "ตรวจสอบวาล์วน้ำหลัก (Gate Valve) ท่อดูดและท่อส่งว่าอยู่ในตำแหน่งเปิดถูกต้อง",
+      "หากพบว่าไม่มีน้ำในถังพัก ห้ามเปิดปั๊มน้ำเด็ดขาดเพราะจะทำให้ใบพัดปั๊มและซีลปั๊มไหม้เสียหาย"
+    ],
+    "controls": [
+      "ระดับน้ำในถังพักต้องมีเพียงพอก่อนสตาร์ตปั๊มน้ำเสมอ (ห้าม Dry Run)",
+      "วาล์วด้านดูดและด้านจ่ายต้องเปิดอยู่ในตำแหน่งพร้อมใช้งาน"
+    ],
+    "docs": "เช็กลิสต์ตรวจระบบปั๊มน้ำประจำวัน, คู่มือการใช้งานปั๊มน้ำศาลเจ้าพ่อสมบุญ",
+    "sla": "5 นาที ก่อนเวลา 05.00 น.",
+    "alertTitle": "💧 ตรวจระดับน้ำก่อนเดินเครื่อง",
+    "alertText": "ห้ามเปิดปั๊มน้ำขณะไม่มีน้ำในถังพักเด็ดขาด เพื่อป้องกันมอเตอร์และใบพัดปั๊มน้ำไหม้เสียหาย"
+  },
+  "s9_2": {
+    "code": "9.2",
+    "title": "เปิดระบบปั๊มน้ำศาลเจ้าพ่อสมบุญ (เปิด 05.00 น.)",
+    "role": "เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน",
+    "roleBadge": "background:#e0e7ff;color:#4338ca;",
+    "objective": "เปิดสวิตช์ปั๊มน้ำจ่ายน้ำประปาสะอาดรองรับผู้มาสักการะและทำความสะอาดศาลเจ้าพ่อสมบุญช่วงเช้า",
+    "details": [
+      "เวลา 05.00 น. ตรง: เดินทางมายังตู้สวิตช์ควบคุมปั๊มน้ำศาลเจ้าพ่อสมบุญ",
+      "ตรวจสอบไฟแสดงสถานะเพาเวอร์ (Power Light) บนตู้สวิตช์",
+      "กดปุ่มสตาร์ตปั๊มน้ำ (Start / Run) เข้าสู่ระบบการทำงาน",
+      "ฟังเสียงสตาร์ตของมอเตอร์ปั๊มน้ำ ต้องสตาร์ตติดราบรื่น ไม่มีเสียงครางอึดอัด",
+      "ตรวจสอบว่าน้ำไหลออกจากก๊อกน้ำและจุดจ่ายน้ำบริเวณศาลเจ้าพ่อสมบุญอย่างสม่ำเสมอ"
+    ],
+    "controls": [
+      "เปิดเวลา 05.00 น. ตรงเวลาทุกวัน",
+      "ใช้เวลาในการปฏิบัติการประมาณ 5 นาที",
+      "หากสตาร์ตแล้วมอเตอร์ไม่หมุนหรือเบรกเกอร์ทริปตัดวงจร ห้ามฝืนกดสตาร์ตซ้ำ ให้แจ้งแผนกช่างทันที"
+    ],
+    "docs": "สมุดบันทึกการเปิด-ปิดระบบปั๊มน้ำ บก.รปภ.",
+    "sla": "เปิดเวลา 05.00 น. (ใช้เวลา 5 นาที)",
+    "alertTitle": "⏰ เปิดปั๊มน้ำศาลเจ้าพ่อตรงเวลา 05.00 น.",
+    "alertText": "เปิดปั๊มน้ำเวลา 05.00 น. ทุกเช้า เพื่อรองรับการใช้น้ำทำความสะอาดและสาธุชนผู้มาสักการะยามเช้า"
+  },
+  "s9_3": {
+    "code": "9.3",
+    "title": "ตรวจสอบแรงดันน้ำ เสียงมอเตอร์ และตรวจหารอยรั่วซึมระหว่างวัน",
+    "role": "เจ้าหน้าที่ รปภ. สายตรวจ",
+    "roleBadge": "background:#e0e7ff;color:#4338ca;",
+    "objective": "สุ่มตรวจเช็กแรงดันน้ำและท่อประปาระหว่างวัน ป้องกันการสูญเสียน้ำและการรั่วไหล",
+    "details": [
+      "เจ้าหน้าที่สายตรวจเดินตรวจเช็กบริเวณศาลเจ้าพ่อสมบุญระหว่างวัน",
+      "ตรวจดูเกจวัดแรงดันน้ำ (Pressure Gauge) บนท่อส่งน้ำว่าอยู่ในเกณฑ์ปกติ (2-3 บาร์)",
+      "ฟังเสียงการทำงานของปั๊มน้ำ: มอเตอร์ต้องหมุนเรียบ ไม่มีเสียงกระแทกของน้ำ (Water Hammer) หรือเสียงเสียดสีของโลหะ",
+      "ตรวจเช็กก๊อกน้ำ สายยาง และข้อต่อท่อประปารอบศาลเจ้าพ่อสมบุญว่าไม่มีจุดน้ำรั่วซึมหรือเปิดน้ำทิ้งไว้",
+      "ตรวจเช็กลูกลอยตัดน้ำอัตโนมัติในอ่างพักน้ำว่าตัดน้ำสนิทเมื่อน้ำเต็ม ไม่ล้นทิ้งลงท่อระบาย"
+    ],
+    "controls": [
+      "หากพบท่อประปาแตกหรือน้ำรั่วไหลรุนแรง ให้ปิดวาล์วฉุกเฉินทันทีและแจ้งช่างซ่อมบำรุง",
+      "ป้องกันการสูญเสียทรัพยากรน้ำประปาขององค์กร"
+    ],
+    "docs": "เช็กลิสต์ตรวจการรั่วซึมระบบน้ำประปา, ใบแจ้งซ่อมท่อประปา",
+    "sla": "สุ่มตรวจวันละ 2 รอบ",
+    "alertTitle": "🔍 ตรวจรอยรั่วซึมและลูกลอยตัดน้ำ",
+    "alertText": "สังเกตลูกลอยและก๊อกน้ำรอบศาลเจ้าพ่อ หากพบน้ำไหลล้นทิ้งต้องปิดก๊อกและแจ้งซ่อมทันที"
+  },
+  "s9_4": {
+    "code": "9.4",
+    "title": "ปิดระบบปั๊มน้ำช่วงค่ำ (ปิด 20.00 น.) และบันทึกสมุด บก.รปภ.",
+    "role": "เจ้าหน้าที่ รปภ. ผู้ปฏิบัติงาน",
+    "roleBadge": "background:#e0e7ff;color:#4338ca;",
+    "objective": "ปิดการทำงานของปั๊มน้ำเมื่อสิ้นสุดเวลาทำการ เพื่อความปลอดภัยและประหยัดพลังงาน",
+    "details": [
+      "เวลา 20.00 น. ตรง: เจ้าหน้าที่ รปภ. เดินทางไปยังตู้ควบคุมปั๊มน้ำศาลเจ้าพ่อสมบุญ",
+      "กดปุ่มหยุดการทำงาน (Stop) ปิดสวิตช์ตัดไฟของปั๊มน้ำอย่างถูกต้อง",
+      "ตรวจเช็กความเรียบร้อยรอบบริเวณ: ปิดก๊อกน้ำทุกจุดให้สนิท ปิดประตูล็อกตู้ควบคุมไฟฟ้า",
+      "ตรวจสอบว่าไม่มีเสียงน้ำไหลหรือน้ำรั่วซึมหลงเหลืออยู่",
+      "ลงบันทึกเวลาปิดระบบปั๊มน้ำ (20.00 น.) ใน 'สมุดรายงานการควบคุมระบบสาธารณูปโภค บก.รปภ.' พร้อมลงลายมือชื่อผู้ปฏิบัติงาน"
+    ],
+    "controls": [
+      "ต้องปิดปั๊มน้ำเวลา 20.00 น. ทุกวันอย่างเคร่งครัด",
+      "ตรวจสอบให้แน่ใจว่าปิดก๊อกน้ำสนิททุกจุดก่อนออกจากพื้นที่",
+      "หัวหน้าชุด รปภ. ลงนามตรวจรับรองรายงานประจำวัน"
+    ],
+    "docs": "สมุดบันทึกการเปิด-ปิดระบบปั๊มน้ำ บก.รปภ., รายงานสรุปสาธารณูปโภคประจำวัน",
+    "sla": "ปิดเวลา 20.00 น. (ใช้เวลา 5 นาที)",
+    "alertTitle": "🔒 ปิดปั๊มน้ำเวลา 20.00 น. และล็อกตู้ควบคุม",
+    "alertText": "ปิดระบบเวลา 20.00 น. ตรวจปิดก๊อกน้ำทุกจุดให้สนิท ล็อกตู้สวิตช์ และลงบันทึกในสมุด บก.รปภ."
+  }
+};
+
+// Switch Tabs
+function switchTab(index) {
+  const tabs = document.querySelectorAll('.tab-btn');
+  const contents = document.querySelectorAll('.tab-content');
+
+  tabs.forEach((t, i) => {
+    if (i === index) {
+      t.classList.add('active');
+    } else {
+      t.classList.remove('active');
+    }
+  });
+
+  contents.forEach((c, i) => {
+    if (i === index) {
+      c.classList.add('active');
+    } else {
+      c.classList.remove('active');
+    }
+  });
+
+  closePanel();
+  window.scrollTo({ top: 160, behavior: 'smooth' });
+}
+
+// Open Side Detail Panel
+function openPanel(stepId) {
+  const data = stepData[stepId];
+  if (!data) return;
+
+  // Active step styling
+  document.querySelectorAll('.step-node').forEach(s => s.classList.remove('active'));
+  if (window.event && window.event.currentTarget) {
+    window.event.currentTarget.classList.add('active');
+  }
+
+  // Populate data
+  document.getElementById('pCode').textContent = `ขั้นตอน ${data.code}`;
+  document.getElementById('pTitle').textContent = data.title;
+  
+  const badge = document.getElementById('pBadgeRole');
+  badge.textContent = `👤 ${data.role}`;
+  badge.style = data.roleBadge || 'background:#e0f2fe;color:#0369a1;';
+
+  document.getElementById('pObjective').textContent = data.objective || '-';
+
+  // Details List
+  const detailsUl = document.getElementById('pDetails');
+  detailsUl.innerHTML = '';
+  if (data.details && data.details.length > 0) {
+    data.details.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      detailsUl.appendChild(li);
+    });
+  }
+
+  // Controls List
+  const controlsUl = document.getElementById('pControls');
+  controlsUl.innerHTML = '';
+  if (data.controls && data.controls.length > 0) {
+    data.controls.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      controlsUl.appendChild(li);
+    });
+  }
+
+  // Docs
+  document.getElementById('pDocs').textContent = data.docs || 'ไม่มีเอกสารระบุ';
+
+  // SLA
+  document.getElementById('pSla').textContent = data.sla || '-';
+
+  // Alert Box
+  const alertBox = document.getElementById('pAlert');
+  if (data.alertTitle) {
+    alertBox.style.display = 'block';
+    alertBox.querySelector('.panel-alert-title').textContent = data.alertTitle;
+    document.getElementById('pAlertText').textContent = data.alertText || '';
+  } else {
+    alertBox.style.display = 'none';
+  }
+
+  // Open Panel
+  document.getElementById('sidePanel').classList.add('open');
+  document.getElementById('contentCol').classList.add('shrunk');
+  if (window.innerWidth <= 900) {
+    document.getElementById('panelBackdrop').classList.add('open');
+  }
+}
+
+// Close Side Panel
+function closePanel() {
+  document.getElementById('sidePanel').classList.remove('open');
+  document.getElementById('contentCol').classList.remove('shrunk');
+  document.getElementById('panelBackdrop').classList.remove('open');
+  document.querySelectorAll('.step-node').forEach(s => s.classList.remove('active'));
+}
+
+// Handle URL query parameters on load (e.g. ?tab=3)
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabParam = urlParams.get('tab');
+  if (tabParam !== null) {
+    const idx = parseInt(tabParam, 10);
+    if (!isNaN(idx) && idx >= 0 && idx < 9) {
+      switchTab(idx);
+    }
+  }
+});
+</script>
+
+</body>
+</html>

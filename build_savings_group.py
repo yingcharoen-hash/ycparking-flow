@@ -1,0 +1,527 @@
+# -*- coding: utf-8 -*-
+"""
+Builder script for Savings Group (กลุ่มออมทรัพย์เพื่อบุคลากรตลาดยิ่งเจริญ)
+Generates:
+1. departments/savings_group/index.html (Clean minimalist landing page)
+2. departments/savings_group/workflow_swimlane_tabs.html (Interactive 6-tab swimlane workflow)
+"""
+
+import os
+import json
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TARGET_DIR = os.path.join(BASE_DIR, "departments", "savings_group")
+os.makedirs(TARGET_DIR, exist_ok=True)
+
+# ==========================================
+# 1. BUILD index.html
+# ==========================================
+index_html = """<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>กลุ่มออมทรัพย์เพื่อบุคลากรตลาดยิ่งเจริญ — ระบบขั้นตอนการปฏิบัติงาน (SOP Portal)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --accent-gold: #d97706;
+  --accent-gold-lt: #fef3c7;
+  --accent-blue: #0284c7;
+  --accent-blue-lt: #e0f2fe;
+  --accent-green: #16a34a;
+  --accent-green-lt: #dcfce7;
+  --accent-purple: #9333ea;
+  --accent-purple-lt: #f3e8ff;
+  --accent-rose: #e11d48;
+  --accent-rose-lt: #ffe4e6;
+  --accent-indigo: #4f46e5;
+  --accent-indigo-lt: #e0e7ff;
+  --gray-border: #e2e8f0;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.03);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Sarabun", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header (Dark Premium) */
+.hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  color: #f8fafc;
+  padding: 56px 32px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40%; left: -20%; width: 140%; height: 180%;
+  background: radial-gradient(circle at 50% 20%, rgba(217, 119, 6, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(217, 119, 6, 0.2);
+  border: 1px solid rgba(217, 119, 6, 0.4);
+  color: #fbbf24;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+.hero-title {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.25;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+.hero-subtitle {
+  font-size: 15px;
+  color: #94a3b8;
+  max-width: 820px;
+  margin: 0 auto;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Navigation Bar */
+.nav-bar {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--gray-border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 14px 24px;
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+.nav-link {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.15s;
+}
+.nav-link:hover { color: var(--accent-gold); }
+
+/* Main Container */
+.container {
+  max-width: 1200px;
+  margin: 40px auto 80px;
+  padding: 0 24px;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 36px;
+}
+.stat-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 20px 24px;
+  border: 1px solid var(--gray-border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+.stat-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+.stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Controls Bar */
+.controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  background: #ffffff;
+  border: 1px solid var(--gray-border);
+  color: var(--text-muted);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover {
+  background: #f1f5f9;
+  color: var(--text-main);
+}
+.filter-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+.search-box {
+  position: relative;
+  width: 280px;
+}
+.search-input {
+  width: 100%;
+  padding: 8px 16px 8px 36px;
+  border-radius: 999px;
+  border: 1px solid var(--gray-border);
+  font-size: 13px;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--accent-gold); }
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Process Cards Grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+.workflow-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid var(--gray-border);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.workflow-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: #cbd5e1;
+}
+.card-header-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.card-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.badge-setup { background: var(--accent-gold-lt); color: var(--accent-gold); }
+.badge-member { background: var(--accent-blue-lt); color: var(--accent-blue); }
+.badge-loan { background: var(--accent-green-lt); color: var(--accent-green); }
+.badge-audit { background: var(--accent-purple-lt); color: var(--accent-purple); }
+.badge-deposit { background: var(--accent-rose-lt); color: var(--accent-rose); }
+.badge-meeting { background: var(--accent-indigo-lt); color: var(--accent-indigo); }
+
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+.card-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 16px;
+  flex-grow: 1;
+  line-height: 1.5;
+}
+.card-meta {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.card-role {
+  font-weight: 600;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 32px 0 24px;
+  border-top: 1px solid var(--gray-border);
+}
+
+@media (max-width: 768px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .controls-bar { flex-direction: column; align-items: stretch; }
+  .search-box { width: 100%; }
+  .cards-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<div class="hero">
+  <div class="hero-badge">💰 SAVINGS & WELFARE GROUP</div>
+  <h1 class="hero-title">กลุ่มออมทรัพย์เพื่อบุคลากรตลาดยิ่งเจริญ</h1>
+  <p class="hero-subtitle">ระบบคู่มือปฏิบัติงานมาตรฐาน การจัดตั้งกลุ่มออมทรัพย์ การรับสมาชิกใหม่ การให้กู้ยืมและชำระคืนเงินกู้ การตรวจสอบบัญชี การโอนเงินประกันความเสียหายเป็นทุนเรือนหุ้น และการประชุมใหญ่วิสามัญ</p>
+</div>
+
+<!-- Sticky Navigation -->
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-links">
+      <a class="nav-link" href="../../index.html">🏠 หน้าหลักบริษัท</a>
+      <a class="nav-link" href="../../guide.html">📖 คู่มือการใช้งานมาตรฐาน</a>
+    </div>
+    <div style="font-size:13px;color:var(--text-muted);">
+      รหัสองค์กร: <strong>YINGCHAROEN-SAVINGS</strong>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Quick Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number">6</div>
+      <div class="stat-label">หมวดงานหลัก (Core Workstreams)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">36</div>
+      <div class="stat-label">ขั้นตอนการปฏิบัติงานละเอียด (SOP Steps)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">3,000฿</div>
+      <div class="stat-label">ทุนเรือนหุ้นแรกเข้า / เงินประกันความเสียหาย</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">100%</div>
+      <div class="stat-label">ความโปร่งใส ตรวจสอบบัญชี & กระทบยอดเงินกู้</div>
+    </div>
+  </div>
+
+  <!-- Filter & Search Controls -->
+  <div class="controls-bar">
+    <div class="filter-tabs">
+      <button class="filter-btn active" onclick="filterCards('all', this)">ทั้งหมด (6 หมวดงาน)</button>
+      <button class="filter-btn" onclick="filterCards('setup', this)">1.0 จัดตั้ง & เลือกตั้ง กก.</button>
+      <button class="filter-btn" onclick="filterCards('member', this)">2.0 รับสมาชิกใหม่</button>
+      <button class="filter-btn" onclick="filterCards('loan', this)">3.0 เงินกู้ยืม & ชำระหนี้</button>
+      <button class="filter-btn" onclick="filterCards('audit', this)">4.0 ตรวจสอบบัญชี</button>
+      <button class="filter-btn" onclick="filterCards('deposit', this)">5.0 โอนเงินประกัน</button>
+      <button class="filter-btn" onclick="filterCards('meeting', this)">6.0 ประชุมใหญ่วิสามัญ</button>
+    </div>
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="ค้นหาชื่องาน, ขั้นตอน หรือตำแหน่ง..." onkeyup="searchWorkflows()">
+    </div>
+  </div>
+
+  <!-- Process Cards Grid (6 Workstreams) -->
+  <div class="cards-grid" id="cardsGrid">
+
+    <!-- Card 1: 1.0 การจัดตั้งและเลือกตั้งคณะกรรมการ -->
+    <a href="workflow_swimlane_tabs.html?tab=0" class="workflow-card" data-cat="setup">
+      <div class="card-header-line">
+        <span class="card-badge badge-setup">1.0 โครงสร้าง & เลือกตั้ง</span>
+        <span class="card-num">6 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">1.0 การจัดตั้ง & เลือกตั้งคณะกรรมการ</h3>
+      <p class="card-desc">เตรียมการประชุมใหญ่สามัญ ประกาศแจ้งสมาชิกล่วงหน้า 7 วัน ตรวจสอบบัญชีรายชื่อผู้มีสิทธิ์ เสนอชื่อผู้สมัคร จัดการลงคะแนน นับคะแนน และประกาศผลอย่างเป็นธรรม</p>
+      <div class="card-meta">
+        <span class="card-role">👤 คณะกรรมการกลุ่ม / แผนกบุคคล</span>
+        <span style="color:var(--accent-gold);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 2: 2.0 การเข้าเป็นสมาชิกกลุ่มออมทรัพย์ -->
+    <a href="workflow_swimlane_tabs.html?tab=1" class="workflow-card" data-cat="member">
+      <div class="card-header-line">
+        <span class="card-badge badge-member">2.0 รับสมาชิกใหม่</span>
+        <span class="card-num">6 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">2.0 การรับสมาชิกใหม่เข้ากลุ่มออมทรัพย์</h3>
+      <p class="card-desc">รับแบบฟอร์มคำขอ ตรวจคุณสมบัติผ่านทดลองงาน 119 วันและเงินประกัน 3,000 บาท คณะกรรมการอนุมัติ ชำระทุนเรือนหุ้นแรกเข้า ออกใบหุ้นและใบเสร็จรับเงิน</p>
+      <div class="card-meta">
+        <span class="card-role">👤 จนท.บุคคล / ฝ่ายทะเบียน / เหรัญญิก</span>
+        <span style="color:var(--accent-blue);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 3: 3.0 การให้กู้ยืมเงินของสมาชิกและการชำระคืน -->
+    <a href="workflow_swimlane_tabs.html?tab=2" class="workflow-card" data-cat="loan">
+      <div class="card-header-line">
+        <span class="card-badge badge-loan">3.0 เงินกู้ & ผ่อนชำระ</span>
+        <span class="card-num">8 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">3.0 การให้กู้ยืมเงิน & การชำระคืน</h3>
+      <p class="card-desc">ยื่นขอกู้ไม่เกินวันที่ 15 ของเดือน ตรวจสิทธิ์กระทบเงินเดือน คณะกรรมการเงินกู้สัมภาษณ์และอนุมัติ โอนเงินไม่เกินวันที่ 2 ชำระคืนตามงวดพร้อมมาตรการค่าปรับ</p>
+      <div class="card-meta">
+        <span class="card-role">👤 คณะกรรมการเงินกู้ / เหรัญญิก</span>
+        <span style="color:var(--accent-green);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 4: 4.0 การตรวจสอบบัญชีกลุ่มออมทรัพย์ -->
+    <a href="workflow_swimlane_tabs.html?tab=3" class="workflow-card" data-cat="audit">
+      <div class="card-header-line">
+        <span class="card-badge badge-audit">4.0 ตรวจสอบบัญชี</span>
+        <span class="card-num">5 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">4.0 การตรวจสอบบัญชี & การเงิน</h3>
+      <p class="card-desc">วางแผนตรวจสอบ ประเมินความเสี่ยง ตรวจสอบหลักฐานใบเสร็จ-ใบสำคัญ-สมุดเงินฝาก สัมภาษณ์บุคลากร วิเคราะห์งบการเงิน จัดทำ Audit Report และติดตามผลการปรับปรุง</p>
+      <div class="card-meta">
+        <span class="card-role">👤 ผู้ตรวจสอบบัญชี / คณะกรรมการ</span>
+        <span style="color:var(--accent-purple);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 5: 5.0 โอนเงินประกันความเสียหายเข้ากลุ่มออมทรัพย์ -->
+    <a href="workflow_swimlane_tabs.html?tab=4" class="workflow-card" data-cat="deposit">
+      <div class="card-header-line">
+        <span class="card-badge badge-deposit">5.0 โอนเงินประกัน</span>
+        <span class="card-num">5 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">5.0 โอนเงินประกันความเสียหายเป็นหุ้น</h3>
+      <p class="card-desc">ตรวจสิทธิ์พนักงานผ่านทดลองงานครบ 119 วัน สมาชิกยื่นความจำนงโอนเงินประกัน 3,000 บาท ตัดโอนเข้าบัญชีกลุ่มออมทรัพย์ ออกใบหุ้นและใบเสร็จเพื่อรับสิทธิ์เงินปันผล</p>
+      <div class="card-meta">
+        <span class="card-role">👤 ฝ่ายบุคคล / การเงิน / เหรัญญิก</span>
+        <span style="color:var(--accent-rose);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+    <!-- Card 6: 6.0 การประชุมใหญ่วิสามัญของสมาชิก -->
+    <a href="workflow_swimlane_tabs.html?tab=5" class="workflow-card" data-cat="meeting">
+      <div class="card-header-line">
+        <span class="card-badge badge-meeting">6.0 ประชุมใหญ่วิสามัญ</span>
+        <span class="card-num">6 ขั้นตอน</span>
+      </div>
+      <h3 class="card-title">6.0 การประชุมใหญ่วิสามัญของสมาชิก</h3>
+      <p class="card-desc">กำหนดวัตถุประสงค์และวาระเร่งด่วน นัดวันเวลาสถานที่ ประกาศสมาชิกล่วงหน้า 7-14 วัน จัดเตรียมเอกสารและสถานที่ ดำเนินการประชุม บันทึกมติ และสรุปรายงานผล</p>
+      <div class="card-meta">
+        <span class="card-role">👤 ประธานกลุ่ม / คณะกรรมการ / แผนกบุคคล</span>
+        <span style="color:var(--accent-indigo);font-weight:600;">ดูผังงาน →</span>
+      </div>
+    </a>
+
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 ตลาดยิ่งเจริญ (Yingcharoen Market) — กลุ่มออมทรัพย์เพื่อบุคลากรตลาดยิ่งเจริญ</p>
+  <p style="margin-top:4px;font-size:12px;color:#a1a1a6;">ระบบศูนย์รวมคู่มือปฏิบัติงานมาตรฐาน (Standard Operating Procedures Portal)</p>
+</footer>
+
+<script>
+// Filter Process Cards
+function filterCards(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('.workflow-card');
+  cards.forEach(card => {
+    if (cat === 'all' || card.dataset.cat === cat) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+// Search Workflows
+function searchWorkflows() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const cards = document.querySelectorAll('.workflow-card');
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    if (text.includes(q)) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+
+</body>
+</html>
+"""
+
+with open(os.path.join(TARGET_DIR, "index.html"), "w", encoding="utf-8") as f:
+    f.write(index_html)
+print("Saved departments/savings_group/index.html")
